@@ -1,0 +1,12 @@
+Metadata-Version: 1.0
+Name: swagger-client
+Version: 1.0.0
+Summary: Tree of Life public name API
+Home-page: UNKNOWN
+Author: UNKNOWN
+Author-email: kh14@sanger.ac.uk
+License: UNKNOWN
+Description:     API for ToL Public name registry  # noqa: E501
+            
+Keywords: Swagger,Tree of Life public name API
+Platform: UNKNOWN
