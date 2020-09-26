@@ -66,7 +66,8 @@ def search_public_name(search_string=None, skip=None, limit=None):  # noqa: E501
             #json_row = jsonify(row)
             name_dict = map_public_names_dict(row)
             public_names_list.append(name_dict)
-    return jsonify(public_names_list)
+
+    return jsonify({"data": public_names_list})
 
 
 def map_public_names_dict(data):

@@ -12,8 +12,8 @@ Python 3.5.2+
 
 ## Setup
 - First read and run the pre-reqs in setup.py
-- Please install connexion with extra install: pip install 'connexion[swagger-ui]'
-or provide the path to your local installation by passing swagger_path=<your path>
+- Please install connexion with extra install: "pip install 'connexion[swagger-ui]'"
+or provide the path to your local installation by passing swagger_path=YOUR_PATH
 
 ## Usage
 To run the server, please execute the following from the root directory:
