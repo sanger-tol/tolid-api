@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import os
+import time
+
 
 def read_tsv(file_name=None):
     table_df = pd.DataFrame() 
@@ -27,3 +29,17 @@ def read_tsv(file_name=None):
 
     table_df = table_df.replace(np.nan, '', regex=True)  # Remove NaN
     return table_df
+
+def get_file_times(directory, file_name):
+    file_date_format = "%B %d %Y %H:%M:%S"  # 20180724092134
+    date_format = "%Y%m%d%H%M%S"  # 20180724092134
+    file_time = ""
+    raw_time = ""
+    try:
+        dt = time.gmtime(os.path.getmtime(os.path.join(directory, file_name)))
+        raw_time = time.strftime(date_format, dt)  
+        file_time = time.strftime(file_date_format, dt) 
+    except Exception as e:
+        print(str(e))
+
+    return file_time, raw_time

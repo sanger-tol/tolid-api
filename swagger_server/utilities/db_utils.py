@@ -22,8 +22,12 @@ def populate_db():
     conn, cur = get_db(conn=None)
     try:
         with conn:
-            # cur.execute('truncate table public_names;')
-            # cur.execute('drop table public_names;')
+            try:
+                print('drop table public_names;')
+                cur.execute('drop table public_names;')
+            except Exception as e:
+                print('Could not drop the public_names table. Error: ' + str(e))
+
             cur.execute('create table public_names(prefix varchar, species varchar, taxid int, common_name varchar, genus varchar, family varchar, tax_order varchar, class varchar, phylum varchar);')
     except Exception as e:
         print('Database creation failed. Error: ' + str(e))

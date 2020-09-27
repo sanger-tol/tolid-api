@@ -53,7 +53,6 @@ def search_public_name(search_string=None, skip=None, limit=None):  # noqa: E501
         print('Database connection failed. Error: ' + str(e))
         return str(e)
 
-    rows = []
     try:
         public_names = query_local_database(conn=conn, cur=cur, query_str=search_string, print_all=False)
     except Exception as e:
@@ -72,6 +71,7 @@ def search_public_name(search_string=None, skip=None, limit=None):  # noqa: E501
 
 def map_public_names_dict(data):
     # Database columns ['prefix', 'species', 'taxid', 'common_name', 'genus', 'family', 'tax_order', 'class', 'phylum']
+    # prefix is the public name
     d = {'prefix': data[0], 
          'species': data[1], 
          'taxid': data[2], 

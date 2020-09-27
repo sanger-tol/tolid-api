@@ -12,7 +12,7 @@ servers:
 - url: /
 tags:
 - name: curators
-  description: Secured curator-only access
+  description: Curator tools
 - name: consumers
   description: Browsing public names
 paths:
@@ -23,7 +23,7 @@ paths:
       summary: searches DToL public names
       description: |
         By passing in the appropriate options, you can search for
-        available public names in the system
+        available public names in the system. <b>prefix is the public name</b>
       operationId: search_public_name
       parameters:
       - name: searchString
@@ -68,18 +68,33 @@ paths:
         "400":
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.consumers_controller
-    post:
+    # post:
+    #   tags:
+    #   - curators
+    #   summary: adds a public name
+    #   description: Adds a new public name to the system
+    #   operationId: add_public_name
+    #   requestBody:
+    #     description: Public name to add
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: '#/components/schemas/PublicName'
+    #   responses:
+    #     "201":
+    #       description: item created
+    #     "400":
+    #       description: invalid input, object invalid
+    #     "409":
+    #       description: an existing item already exists
+    #   x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /verify-database: 
+    get:
       tags:
       - curators
-      summary: adds a public name
-      description: Adds a new public name to the system
-      operationId: add_public_name
-      requestBody:
-        description: Public name to add
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PublicName'
+      summary: verifies database integrity
+      description: Verifies and rebuilds the local database if required
+      operationId: verify_database
       responses:
         "201":
           description: item created
@@ -87,7 +102,7 @@ paths:
           description: invalid input, object invalid
         "409":
           description: an existing item already exists
-      x-openapi-router-controller: swagger_server.controllers.curators_controller
+      x-openapi-router-controller: swagger_server.controllers.curators_controller  
 components:
   schemas:
     PublicName:
@@ -105,7 +120,7 @@ components:
       properties:
         prefix:
           type: string
-          example: a
+          example: mHomSap
         species:
           type: string
           example: Homo sapiens
@@ -135,9 +150,8 @@ components:
         phylum: Chordata
         species: Homo sapiens
         genus: Homo
-        prefix: a
+        prefix: mHomSap
         taxID: 9606
         taxaClass: Mammalia
         family: Hominidae
         order: Primates
-
