@@ -1,7 +1,6 @@
 #!/bin/bash
 APPDIR=$PWD
 VENVDIR=$APPDIR/venv
-PYTHONPATH=$PYTHONPATH:$APPDIR
 
 # Tidy up local files and database
 [ ! -f public_names.db ] || mv public_names.db public_names.db.old

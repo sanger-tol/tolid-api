@@ -22,7 +22,7 @@ source venv/bin/activate
 
 - Read and run the pre-reqs in setup.py
 ```
-python setup.py install
+python3 setup.py install
 ```
 
 - Install all required Python libraries
@@ -73,6 +73,42 @@ To launch the integration tests, use tox:
 sudo pip install tox
 tox
 ```
+
+## Example usage and output
+You can search for NCBI taxonomy ids in the "/public-name" end-point. You can also use CURL like this:
+```
+curl -X GET "http://localhost:8080/public-name?searchString=6344" -H  "accept: application/json"
+```
+
+The output for NCBI tax id 6344 will look something like this:
+```
+{
+  "data": [
+    {
+      "class": "Polychaeta",
+      "common_name": "lugworm",
+      "family": "Arenicolidae",
+      "genus": "Arenicola",
+      "order": "None",
+      "phylum": "Annelida",
+      "prefix": "wuAreMari",
+      "species": "Arenicola marina",
+      "taxid": "6344"
+    }
+  ]
+}
+```
+In the DToL manifest this maps to
+
+ORDER_OR_GROUP: Capitellida	
+FAMILY: Arenicolidae	
+GENUS: Arenicola	
+TAXON_ID: 6344	
+SCIENTIFIC_NAME: Arenicola marina
+COMMON_NAME: lugworm			
+
+This is the URL from NCBI for id [6344](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=6344)
+
 
 ## Rebuild the local sqlite3 database
 The database is rebuilt from scratch each time you use the "start.sh" script. 
