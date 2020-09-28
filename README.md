@@ -91,22 +91,23 @@ The output for NCBI tax id 6344 will look something like this:
       "genus": "Arenicola",
       "order": "None",
       "phylum": "Annelida",
-      "prefix": "wuAreMari",
+      "prefix": "wuAreMari",   <- This is the PUBLIC_NAME field
       "species": "Arenicola marina",
       "taxid": "6344"
     }
   ]
 }
 ```
-In the DToL manifest this maps to
 
-ORDER_OR_GROUP: Capitellida	
+In the DToL manifest this maps to:
+```
+ORDER_OR_GROUP: Capitellida
 FAMILY: Arenicolidae	
 GENUS: Arenicola	
 TAXON_ID: 6344	
 SCIENTIFIC_NAME: Arenicola marina
 COMMON_NAME: lugworm			
-
+```
 This is the URL from NCBI for id [6344](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=6344)
 
 
