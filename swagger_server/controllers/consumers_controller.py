@@ -68,19 +68,24 @@ def search_public_name(search_string=None, skip=None, limit=None):  # noqa: E501
 
     return jsonify({"data": public_names_list})
 
+def isMissing(data=None, query_type=None):
+    if data and data.lower() == 'none':
+        # ToDo, query NCBI/OLS for missing data and type
+        return ""
+    return data
 
 def map_public_names_dict(data):
     # Database columns ['prefix', 'species', 'taxid', 'common_name', 'genus', 'family', 'tax_order', 'class', 'phylum']
     # prefix is the public name
     d = {'prefix': data[0], 
-         'species': data[1], 
+         'species': isMissing(data=data[1], query_type='species'), 
          'taxid': data[2], 
-         'common_name': data[3], 
-         'genus': data[4], 
-         'family': data[5], 
-         'order': data[6], 
-         'class': data[7], 
-         'phylum': data[8]}
+         'common_name': isMissing(data=data[3], query_type='common_name'), 
+         'genus': isMissing(data=data[4], query_type='genus'), 
+         'family': isMissing(data=data[5], query_type='family'), 
+         'order': isMissing(data=data[6], query_type='order'), 
+         'class': isMissing(data=data[7], query_type='class'), 
+         'phylum': isMissing(data=data[8], query_type='phylum')}
 
     return d   
 

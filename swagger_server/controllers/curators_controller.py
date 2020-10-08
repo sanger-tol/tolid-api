@@ -5,10 +5,11 @@ import os
 from swagger_server.models.public_name import PublicName  # noqa: E501
 from swagger_server import util
 from swagger_server.utilities.file_utils import get_file_times
-from swagger_server.utilities.db_utils import populate_db
+from swagger_server.utilities.db_utils import populate_db, get_db_cols_and_file_name
 
 db_file_name = 'public_names.db'
-tsv_file_name = 'final_merged.txt'
+db_cols, tsv_pub_file_name = get_db_cols_and_file_name(table_name='public_names')
+db_cols, tsv_unique_file_name = get_db_cols_and_file_name(table_name='unique_names')
 
 def verify_database():  
     """verifies the integrigty of the local database
@@ -18,34 +19,35 @@ def verify_database():
 
     integrity_verified = False
     db_found = False
-    source_file_found = False
 
     try:
         db_found = os.path.isfile(db_file_name)  # Database file exists
-        source_file_found = os.path.isfile(tsv_file_name)  # TSV file with all public names exist
+        source_file_pub_found = os.path.isfile(tsv_pub_file_name)  # TSV file with all public names exist
+        source_file_unique_found = os.path.isfile(tsv_unique_file_name)  # TSV file with all allocated public names exist
     except Exception as e:
         print(str(e))
 
-    if db_found and source_file_found:
+    if db_found and source_file_pub_found and source_file_unique_found:
         # ToDo count rows in both
         db_file_time, db_raw_time = get_file_times(directory='.', file_name=db_file_name)
-        tsv_file_time, tsv_raw_time = get_file_times(directory='.', file_name=tsv_file_name)
+        tsv_pub_file_time, tsv_pub_raw_time = get_file_times(directory='.', file_name=tsv_pub_file_name)
+        tsv_unique_file_time, tsv_unique_raw_time = get_file_times(directory='.', file_name=tsv_pub_file_name)
         integrity_verified = True
-        print('TSV timestamp: ' + tsv_file_time)
+        print('TSV pub timestamp: ' + tsv_pub_file_time)
+        print('TSV unique timestamp: ' + tsv_unique_file_time)
         print('DB timestamp: ' + db_file_time)
 
-        if tsv_raw_time > db_raw_time:  
-            # The TSV file should not be newer than the database files, re-download and rebuild the database
+        if tsv_pub_raw_time > db_raw_time or tsv_unique_raw_time > db_raw_time:  
+            # The TSV files should not be newer than the database files, re-download and rebuild the database
             integrity_verified = False
 
-    if not source_file_found:
+    # if not source_file_found:
         # ToDo curl the file
-        source_file_found = os.path.isfile(tsv_file_name) 
+
 
     if not db_found or not integrity_verified:
         database_created = None
         row_count = 0
-        conn = None
         try:
             database_created, row_count, conn = populate_db()
         except Exception as e:
@@ -55,7 +57,7 @@ def verify_database():
             return str(row_count) + ' rows added to the newly created local database, please try a valid search term'
 
 
-    return 'Database and TSV file validates!'
+    return 'Success: Database and TSV files validates'
 
 
 def add_public_name(body=None):  # noqa: E501

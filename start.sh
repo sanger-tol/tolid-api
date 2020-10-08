@@ -8,8 +8,9 @@ VENVDIR=$APPDIR/venv
 rm -f save_pid.txt
 rm -f nohup.out
 
-# Re-download the latest tsv file so we can rebuild the database
+# Re-download the latest tsv files so we can rebuild the database
 curl -s https://gitlab.com/wtsi-grit/darwin-tree-of-life-sample-naming/-/raw/master/final_merged.txt -o final_merged.txt
+curl -s https://gitlab.com/wtsi-grit/darwin-tree-of-life-sample-naming/-/raw/master/unique_ids_assigned.txt -o unique_ids_assigned.txt
 
 # activate Python virtual environment
 source $VENVDIR/bin/activate
