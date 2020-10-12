@@ -8,7 +8,7 @@ from flask import jsonify
 from swagger_server.db_utils import get_db, populate_db, query_local_database
 
 
-def search_public_name(taxonomy_id=None, skip=None, limit=None):  
+def search_public_name(taxonomy_id=None, specimen_id=None, skip=None, limit=None):  
     """searches DToL public names
 
     By passing in the appropriate taxonomy string, you can search for available public names in the system 
@@ -23,7 +23,6 @@ def search_public_name(taxonomy_id=None, skip=None, limit=None):
     :rtype: List[PublicName]
     """
 
-    # ToDo
     # If database:
     #     search for string, return public_name array
     # else:
@@ -34,17 +33,8 @@ def search_public_name(taxonomy_id=None, skip=None, limit=None):
     if not taxonomy_id:
         return 'Please provide a taxon id to search for'
 
-    # if taxonomy_id == 'force_database_rebuild':  # ToDo, implement a server startup check
-    #     database_created = None
-    #     row_count = 0
-    #     conn = None
-    #     try:
-    #         database_created, row_count, conn = populate_db()
-    #     except Exception as e:
-    #         print('Database connection failed. Error: ' + str(e))
-    #         return str(e)
-    #     if database_created:
-    #         return str(row_count) + ' rows added to the newly created local database, please try a valid search term'
+    if not specimen_id:
+        return 'Please provide a GAL specimen id to search for'
 
     # Normal search string passed as input parameter
     try:
@@ -54,7 +44,7 @@ def search_public_name(taxonomy_id=None, skip=None, limit=None):
         return str(e)
 
     try:
-        public_names = query_local_database(conn=conn, cur=cur, query_str=taxonomy_id, print_all=False)
+        public_names = query_local_database(conn=conn, cur=cur, tax_id=taxonomy_id, specimen_id=specimen_id, print_all=False)
     except Exception as e:
         print('Database Query failed. Error: ' + str(e))
         return str(e)

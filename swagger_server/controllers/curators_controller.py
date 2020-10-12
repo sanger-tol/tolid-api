@@ -60,17 +60,33 @@ def verify_database():
     return 'Success: Database and TSV files validates'
 
 
-def add_public_name(body=None):  # noqa: E501
+def add_public_name(taxonomy_id=None, specimen_id=None): 
     """adds a public name
 
-    Adds a new public name to the system # noqa: E501
+    Adds a new public name to the system 
 
-    :param body: Public name to add
-    :type body: dict | bytes
+    :param taxonomyId: valid NCBI Taxonomy identifier
+    :type taxonomyId: str
+    :param specimenId: valid GAL specimen identifier
+    :type specimenId: str
 
-    :rtype: None
+    :rtype: String
     """
-    if connexion.request.is_json:
-        body = PublicName.from_dict(connexion.request.get_json())  # noqa: E501
+    # Todo
+    # Check if we have already allocated a public name for this specimen:
+    #   return existing id
+    # else:
+    #   Do we already have a public name for this taxa but not for this specimen:
+    #       select the latest id number used (number after prefix)
+    #   else
+    #       allocate a new sequence = 1
+    #  
+    #   Select the existing prefix
+    #   
+    #   new public name = combine prefix and sequence
+    #   add new public name and specimen into allocated id's file and database
+    # 
+    #   return new public name 
 
-    return 'do some magic!'
+
+    return 'taxonomy_id='+ taxonomy_id

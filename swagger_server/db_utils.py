@@ -7,7 +7,7 @@ from swagger_server.file_utils import read_tsv
 
 def get_db_cols_and_file_name(table_name=None):
     db_cols_public_names = ['prefix', 'species', 'taxid', 'common_name', 'genus', 'family', 'tax_order', 'class', 'phylum']
-    db_cols_unique_ids = ['public_name', 'species', 'donor_id', 'pub_number']
+    db_cols_unique_ids = ['public_name', 'species', 'specimen_id', 'pub_number', 'ignore']
 
     if table_name == 'public_names':
         return db_cols_public_names, 'final_merged.txt'
@@ -29,13 +29,13 @@ def populate_db():
         with conn:
             for table_name in ['public_names', 'unique_ids']:
                 try:
-                    print('drop table {table_name};')
-                    cur.execute('drop table {table_name};')
+                    print("drop table " + table_name + ";")
+                    cur.execute("drop table " + table_name + ";")
                 except Exception as e:
-                    print('Could not drop the {table_name} table. Ignore this error if the database is new. Error: ' + str(e))
+                    print("Could not drop the " + table_name + " table. Ignore this error if the database is new. Error: " + str(e))
 
             cur.execute('create table public_names(prefix varchar, species varchar, taxid int, common_name varchar, genus varchar, family varchar, tax_order varchar, class varchar, phylum varchar);')
-            cur.execute('create table unique_ids(public_name varchar, species varchar, donor_id varchar, pub_number varchar);')
+            cur.execute('create table unique_ids(public_name varchar, species varchar, specimen_id varchar, pub_number varchar, ignore varchar);')
 
     except Exception as e:
         print('Database creation failed. Error: ' + str(e))
@@ -64,7 +64,34 @@ def populate_db():
 
     return True, row_count, conn
 
-def query_local_database(conn=None, cur=None, query_str=None, print_all=False):
+def query_local_database(conn=None, cur=None, tax_id=None, specimen_id=None, print_all=False):
+    """
+    Query rows in the public_name table
+    :param conn: the Connection object
+    :param cur: the Cursor object
+    :param tax_id: the Taxon id to search for
+    :param print_all: print results to screen
+    :return:
+    """
+    if not conn:
+        conn, cur = get_db(conn=None)
+
+    if not cur:    
+        cur = conn.cursor()
+
+    # public_names = ['prefix', 'species', 'taxid', 'common_name', 'genus', 'family', 'tax_order', 'class', 'phylum']
+    # unique_ids = ['public_name', 'species', 'specimen_id', 'pub_number']
+    if tax_id and specimen_id:
+        cur.execute("SELECT a.prefix, b.public_name, a.species, a.taxid, a.common_name, a.genus, a.family, a.tax_order, a.class, a.phylum, b.specimen_id FROM public_names a, unique_ids b where a.species = b.species AND a.taxid=? and b.specimen_id=?", (tax_id,specimen_id))
+
+    rows = cur.fetchall()
+
+    if print_all:
+        for row in rows:
+            print(row)
+    return rows
+
+def update_local_database(conn=None, cur=None, query_str=None, tax_id=None, specimen_id=None, print_all=False):
     """
     Query rows in the public_name table
     :param conn: the Connection object
@@ -74,15 +101,15 @@ def query_local_database(conn=None, cur=None, query_str=None, print_all=False):
     :return:
     """
     if not conn:
-        return False
+        conn, cur = get_db(conn=None)
 
     if not cur:    
         cur = conn.cursor()
 
-    if query_str and query_str != 'all':
-        cur.execute("SELECT * FROM public_names where taxid=?", (query_str,))  # ToDo, join with the unique_ids table
-    else:
-        cur.execute("SELECT * FROM public_names")
+
+
+    if query_str:
+        cur.execute("SELECT * FROM public_names LEFT JOIN where taxid=?", (query_str,))  # ToDo, join with the unique_ids table
 
     rows = cur.fetchall()
 

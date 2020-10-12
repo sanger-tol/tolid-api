@@ -7,20 +7,20 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.1.1
+  version: 1.2.0
 servers:
   - description: Tree of Life public name Swagger API
     url: http://0.0.0.0:8080
 tags:
 - name: curators
   description: Curator tools
-- name: consumers
+- name: users
   description: Browsing public names
 paths:
   /public-name:
     get:
       tags:
-      - consumers
+      - users
       summary: searches DToL public names
       description: |
         By passing in the appropriate options, you can search for
@@ -29,7 +29,15 @@ paths:
       parameters:
       - name: taxonomyId
         in: query
-        description: pass an NCBI taxid for looking up public name and taxonomy information
+        description: pass an NCBI taxonomy ID for looking up public name and taxonomy information
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: specimenId
+        in: query
+        description: pass a GAL specime ID
         required: true
         style: form
         explode: true
@@ -69,31 +77,48 @@ paths:
         "400":
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.consumers_controller
-    # post:
-    #   tags:
-    #   - curators
-    #   summary: adds a public name
-    #   description: Adds a new public name to the system
-    #   operationId: add_public_name
-    #   requestBody:
-    #     description: Public name to add
-    #     content:
-    #       application/json:
-    #         schema:
-    #           $ref: '#/components/schemas/PublicName'
-    #   responses:
-    #     "201":
-    #       description: item created
-    #     "400":
-    #       description: invalid input, object invalid
-    #     "409":
-    #       description: an existing item already exists
-    #   x-openapi-router-controller: swagger_server.controllers.curators_controller
-  /verify-database: 
-    get:
+    put:
       tags:
       - curators
-      summary: verifies database integrity
+      summary: adds a public name
+      description: Adds a new public name to the system
+      operationId: add_public_name
+      parameters:
+      - name: taxonomyId
+        in: query
+        description: NCBI taxonomy ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: specimenId
+        in: query
+        description: specimen ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      # requestBody:
+      #   description: Public name to add
+      #   content:
+      #     application/json:
+      #       schema:
+      #         $ref: '#/components/schemas/PublicName'
+      responses:
+        "201":
+          description: item created
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /verify-database: 
+    post:
+      tags:
+      - curators
+      summary: verifies and maintains database integrity
       description: Verifies and rebuilds the local database if required
       operationId: verify_database
       responses:
