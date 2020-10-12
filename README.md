@@ -95,7 +95,8 @@ The output for NCBI tax id 6344 will look something like this:
       "genus": "Arenicola",
       "order": "None",
       "phylum": "Annelida",
-      "prefix": "wuAreMari",   <- This is the PUBLIC_NAME field
+      "prefix": "wuAreMari",   
+      "public_name": "wuAreMari1"
       "species": "Arenicola marina",
       "taxid": "6344"
     }

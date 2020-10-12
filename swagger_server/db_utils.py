@@ -2,7 +2,7 @@ import sqlite3
 import json
 import pandas as pd
 
-from swagger_server.utilities.file_utils import read_tsv
+from swagger_server.file_utils import read_tsv
 
 
 def get_db_cols_and_file_name(table_name=None):

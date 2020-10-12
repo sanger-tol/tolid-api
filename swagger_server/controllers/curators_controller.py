@@ -4,8 +4,8 @@ import os
 
 from swagger_server.models.public_name import PublicName  # noqa: E501
 from swagger_server import util
-from swagger_server.utilities.file_utils import get_file_times
-from swagger_server.utilities.db_utils import populate_db, get_db_cols_and_file_name
+from swagger_server.file_utils import get_file_times
+from swagger_server.db_utils import populate_db, get_db_cols_and_file_name
 
 db_file_name = 'public_names.db'
 db_cols, tsv_pub_file_name = get_db_cols_and_file_name(table_name='public_names')

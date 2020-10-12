@@ -5,7 +5,7 @@ import json
 from swagger_server.models.public_name import PublicName  
 from swagger_server import util
 from flask import jsonify
-from swagger_server.utilities.db_utils import get_db, populate_db, query_local_database
+from swagger_server.db_utils import get_db, populate_db, query_local_database
 
 
 def search_public_name(taxonomy_id=None, skip=None, limit=None):  
