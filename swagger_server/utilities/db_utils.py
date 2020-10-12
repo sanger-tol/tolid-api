@@ -27,15 +27,15 @@ def populate_db():
     conn, cur = get_db(conn=None)
     try:
         with conn:
-            for table_name in ['public_names', 'unique_ids']:
+            for table_name in ['public_names']:
                 try:
-                    print('drop table {table_name};')
-                    cur.execute('drop table {table_name};')
+                    print('drop table ' + table_name + ';')
+                    cur.execute('drop table ' + table_name + ';')
                 except Exception as e:
-                    print('Could not drop the {table_name} table. Ignore this error if the database is new. Error: ' + str(e))
+                    print('Could not drop the ' + table_name + ' table. Ignore this error if the database is new. Error: ' + str(e))
 
             cur.execute('create table public_names(prefix varchar, species varchar, taxid int, common_name varchar, genus varchar, family varchar, tax_order varchar, class varchar, phylum varchar);')
-            cur.execute('create table unique_ids(public_name varchar, species varchar, donor_id varchar, pub_number varchar);')
+            # cur.execute('create table unique_ids(public_name varchar, species varchar, donor_id varchar, pub_number varchar);')
 
     except Exception as e:
         print('Database creation failed. Error: ' + str(e))
@@ -43,7 +43,7 @@ def populate_db():
 
     df = None
     row_count = 0
-    for table_name in ['public_names', 'unique_ids']:
+    for table_name in ['public_names']:
         db_cols, tsv_file_name = get_db_cols_and_file_name(table_name=table_name)
         try:
             df = read_tsv(file_name=tsv_file_name)
