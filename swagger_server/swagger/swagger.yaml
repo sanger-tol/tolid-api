@@ -7,7 +7,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.1.0
+  version: 1.1.1
 servers:
   - description: Tree of Life public name Swagger API
     url: http://0.0.0.0:8080
@@ -27,35 +27,35 @@ paths:
         available public names in the system. <b>prefix is the public name</b>
       operationId: search_public_name
       parameters:
-      - name: searchString
+      - name: taxonomyId
         in: query
-        description: pass an optional search string for looking up a public name
-        required: false
+        description: pass an NCBI taxid for looking up public name and taxonomy information
+        required: true
         style: form
         explode: true
         schema:
           type: string
-      - name: skip
-        in: query
-        description: number of records to skip for pagination
-        required: false
-        style: form
-        explode: true
-        schema:
-          minimum: 0
-          type: integer
-          format: int32
-      - name: limit
-        in: query
-        description: maximum number of records to return
-        required: false
-        style: form
-        explode: true
-        schema:
-          maximum: 10000000
-          minimum: 0
-          type: integer
-          format: int32
+      # - name: skip
+      #   in: query
+      #   description: number of records to skip for pagination
+      #   required: false
+      #   style: form
+      #   explode: true
+      #   schema:
+      #     minimum: 0
+      #     type: integer
+      #     format: int32
+      # - name: limit
+      #   in: query
+      #   description: maximum number of records to return
+      #   required: false
+      #   style: form
+      #   explode: true
+      #   schema:
+      #     maximum: 10000000
+      #     minimum: 0
+      #     type: integer
+      #     format: int32
       responses:
         "200":
           description: search results matching criteria
@@ -114,6 +114,7 @@ components:
       - order
       - phylum
       - prefix
+      - publicName
       - species
       - taxID
       - taxaClass
@@ -122,6 +123,9 @@ components:
         prefix:
           type: string
           example: mHomSap
+        publicName:
+          type: string
+          example: mHomSap1
         species:
           type: string
           example: Homo sapiens
@@ -148,6 +152,7 @@ components:
           example: Chordata
       example:
         commonName: human
+        publicName: mHomSap1
         phylum: Chordata
         species: Homo sapiens
         genus: Homo

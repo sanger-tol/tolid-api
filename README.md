@@ -64,7 +64,7 @@ http://localhost:8080/ui/
 
 You can directly test the server:
 ```
-curl -X GET "http://localhost:8080/public-name?searchString=9606" -H  "accept: application/json"
+curl -X GET "http://localhost:8080/public-name?taxonomyId=9606" -H  "accept: application/json"
 ```
 
 The Swagger definition lives here:
@@ -81,7 +81,7 @@ tox
 ## Example usage and output
 You can search for NCBI taxonomy ids in the "/public-name" end-point. You can also use CURL like this:
 ```
-curl -X GET "http://localhost:8080/public-name?searchString=6344" -H  "accept: application/json"
+curl -X GET "http://localhost:8080/public-name?taxonomyId=6344" -H  "accept: application/json"
 ```
 
 The output for NCBI tax id 6344 will look something like this:

@@ -24,4 +24,4 @@ sleep 5  # Wait for the server to start, could change to use "wait"
 curl http://localhost:8080/verify-database  # Rebuild
 echo "Server running. To stop the Python server use 'kill -9 `cat save_pid.txt`'"
 echo "Testing the local database by searching for Homo sapiens, taxid 9606"
-curl -X GET "http://localhost:8080/public-name?searchString=9606" -H  "accept: application/json"
+curl -X GET "http://localhost:8080/public-name?taxonomyId=9606" -H  "accept: application/json"
