@@ -5,7 +5,7 @@ import json
 from swagger_server.models.public_name import PublicName  
 from swagger_server import util
 from flask import jsonify
-from swagger_server.db_utils import get_db, populate_db, query_local_database
+from swagger_server.db_utils import get_db, populate_db, query_local_database, map_public_names_dict
 
 
 def search_public_name(taxonomy_id=None, specimen_id=None, skip=None, limit=None):  
@@ -57,33 +57,6 @@ def search_public_name(taxonomy_id=None, specimen_id=None, skip=None, limit=None
 
     return jsonify({"data": public_names_list})
 
-def is_missing(data=None, query_type=None):
-    if data and data.lower() == 'none':
-        # ToDo, query NCBI/OLS for missing data and type
-        return ""
-    return data
-
-def get_public_name(taxid=None, specimen_id=None):
-    public_name = "None"  # ToDo
-    return public_name
-
-def map_public_names_dict(data=None, specimen_id=None):
-    # Database columns ['prefix', 'species', 'taxid', 'common_name', 'genus', 'family', 'tax_order', 'class', 'phylum']
-    # prefix is the first part of the public name
-    # ToDo, change to generate a real public name. i.e. prefix + number
-    taxid = data[2]
-    d = {'prefix': data[0], 
-         'species': is_missing(data=data[1], query_type='species'), 
-         'taxid': taxid, 
-         'common_name': is_missing(data=data[3], query_type='common_name'), 
-         'genus': is_missing(data=data[4], query_type='genus'), 
-         'family': is_missing(data=data[5], query_type='family'), 
-         'order': is_missing(data=data[6], query_type='order'), 
-         'class': is_missing(data=data[7], query_type='class'), 
-         'phylum': is_missing(data=data[8], query_type='phylum'),
-         'public_name': get_public_name(taxid=taxid, specimen_id=specimen_id)}
-
-    return d   
 
 def map_public_names_class(data):
     # Database columns ['prefix', 'species', 'taxid', 'common_name', 'genus', 'family', 'tax_order', 'class', 'phylum']

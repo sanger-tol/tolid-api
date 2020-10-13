@@ -2,19 +2,19 @@ import connexion
 import six
 import os
 
-from swagger_server.models.public_name import PublicName  # noqa: E501
-from swagger_server import util
-from swagger_server.file_utils import get_file_times
-from swagger_server.db_utils import populate_db, get_db_cols_and_file_name
+# from swagger_server.models.public_name import PublicName 
+# from swagger_server import util
+from flask import jsonify
+from swagger_server.file_utils import get_file_times, read_tsv, write_tsv
+from swagger_server.db_utils import populate_db, get_db_cols_and_file_name, update_local_database, map_public_names_dict
 
 db_file_name = 'public_names.db'
-db_cols, tsv_pub_file_name = get_db_cols_and_file_name(table_name='public_names')
-db_cols, tsv_unique_file_name = get_db_cols_and_file_name(table_name='unique_names')
+db_cols, tsv_pub_file_name, update_floats = get_db_cols_and_file_name(table_name='public_names')
+unique_db_cols, tsv_unique_file_name, unique_update_floats = get_db_cols_and_file_name(table_name='unique_names')
 
 def verify_database():  
     """verifies the integrigty of the local database
-
-    :rtype: None
+    :rtype: Verification message (str)
     """
 
     integrity_verified = False
@@ -65,28 +65,28 @@ def add_public_name(taxonomy_id=None, specimen_id=None):
 
     Adds a new public name to the system 
 
-    :param taxonomyId: valid NCBI Taxonomy identifier
-    :type taxonomyId: str
-    :param specimenId: valid GAL specimen identifier
-    :type specimenId: str
+    :param taxonomy_id: valid NCBI Taxonomy identifier
+    :type taxonomy_id: str
+    :param specimen_id: valid GAL specimen identifier
+    :type specimen_id: str
 
-    :rtype: String
+    :return: JSON with complete public name and taxa structure
     """
-    # Todo
-    # Check if we have already allocated a public name for this specimen:
-    #   return existing id
-    # else:
-    #   Do we already have a public name for this taxa but not for this specimen:
-    #       select the latest id number used (number after prefix)
-    #   else
-    #       allocate a new sequence = 1
-    #  
-    #   Select the existing prefix
-    #   
-    #   new public name = combine prefix and sequence
-    #   add new public name and specimen into allocated id's file and database
-    # 
-    #   return new public name 
 
+    public_names, new_public_name, q_species, specimen_id, pub_number, new_record = update_local_database(conn=None, cur=None, tax_id=taxonomy_id, specimen_id=specimen_id, print_all=True)
 
-    return 'taxonomy_id='+ taxonomy_id
+    if new_record:
+        # Now, update the local tsv file with the new allocation
+        file_df = read_tsv(file_name=tsv_unique_file_name, columns=unique_db_cols, update_floats=unique_update_floats)  # Read the TSV file
+        # Adding a row. We need 'public_name', 'species', 'specimen_id', 'pub_number' for the new entry
+        file_df.loc[-1] = [new_public_name, q_species, specimen_id, pub_number, None] 
+        write_tsv(dataframe=file_df, file_name=tsv_unique_file_name)
+
+    public_names_list = []
+    if public_names:
+        for row in public_names:
+            name_dict = map_public_names_dict(data=row)
+            public_names_list.append(name_dict)
+
+    return jsonify({"data": public_names_list})
+
