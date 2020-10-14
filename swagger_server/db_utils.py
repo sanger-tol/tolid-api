@@ -202,10 +202,13 @@ def update_local_database(conn=None, cur=None, tax_id=None, specimen_id=None, pr
         all_rows = cur.fetchall()
 
         # pub_number is the max number allready used, so pub_number+1 will be added to the public name
-        pub_number = None
+        pub_number = 0
         for row in all_rows:
-            pub_number = row[0]
-            pub_number = pub_number + 1
+            max_number = row[0]
+            if max_number:
+                pub_number = max_number + 1
+            else:
+                pub_number = 1
 
         new_public_name = q_public_name+str(pub_number)
         # Insert new record into the database
