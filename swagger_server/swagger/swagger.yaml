@@ -26,7 +26,17 @@ paths:
       summary: searches DToL public names
       description: |
         By passing in the appropriate options, you can search for
-        available public names in the system. <b>prefix is the public name</b>
+        available public names in the system.
+        ```
+        {
+          "data": [
+            {"taxid": 12312, "specimen_id": "ASDFASD123"},
+            {"taxid": 12313, "specimen_id": "ASDFASD123"},
+            {"taxid": 12314, "specimen_id": "ASDFASD12"},
+            {"taxid": 12315, "specimen_id": "ASDFASD123"}
+          ]
+        }
+        ```
       operationId: search_public_name
       parameters:
       - name: taxonomyId

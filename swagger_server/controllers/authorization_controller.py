@@ -3,10 +3,7 @@ import connexion
 import json
 import os
 from connexion.exceptions import OAuthProblem
-"""
-controller generated to handled auth operation described at:
-https://connexion.readthedocs.io/en/latest/security.html
-"""
+
 
 def get_api_keys(api_token=None):
     token_owner = None 
