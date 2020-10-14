@@ -152,6 +152,9 @@ def query_local_database(conn=None, cur=None, tax_id=None, specimen_id=None, pri
 
     rows = cur.fetchall()
 
+    if not rows:
+        rows = [(None, None, None, tax_id, None, None, None, None, None, None, specimen_id)]
+
     if print_all:
         for row in rows:
             print(row)

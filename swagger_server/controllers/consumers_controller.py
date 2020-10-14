@@ -24,13 +24,13 @@ def get_public_names(public_names_list=None, taxonomy_id=None, specimen_id=None,
         return str(e)
 
     try:
-        public_names = query_local_database(conn=conn, cur=cur, tax_id=taxonomy_id, specimen_id=specimen_id, print_all=False)
+        local_public_names = query_local_database(conn=conn, cur=cur, tax_id=taxonomy_id, specimen_id=specimen_id, print_all=False)
     except Exception as e:
         print('Database Query failed. Error: ' + str(e))
         return str(e)
 
-    if public_names:
-        for row in public_names:
+    if local_public_names:
+        for row in local_public_names:
             name_dict = map_public_names_dict(data=row)
             public_names_list.append(name_dict)
 
