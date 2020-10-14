@@ -39,6 +39,13 @@ pip3 install -r requirements.txt
 pip3 install 'connexion[swagger-ui]'
 ```
 
+- Create a local config.json file in the "instance" folder for API-key storage
+```
+{
+    "b06810c5-2bdc-4faf-b5a9-4d3b52ed5fab":  { "user": "Test User 1", "uid": 100},
+    "f95ebeae-5efe-45f9-a0b1-f44be9ae105e": { "user": "Test User 2", "uid": 101}
+}
+```
 
 ## Usage
 To run the server, first make the "start.sh" executable 
