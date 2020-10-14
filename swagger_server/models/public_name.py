@@ -14,15 +14,17 @@ class PublicName(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, prefix: str=None, species: str=None, tax_id: int=None, common_name: str=None, genus: str=None, family: str=None, order: str=None, taxa_class: str=None, phylum: str=None):  # noqa: E501
+    def __init__(self, prefix: str=None, public_name: str=None, species: str=None, tax_id: float=None, common_name: str=None, genus: str=None, family: str=None, order: str=None, taxa_class: str=None, phylum: str=None):  # noqa: E501
         """PublicName - a model defined in Swagger
 
         :param prefix: The prefix of this PublicName.  # noqa: E501
         :type prefix: str
+        :param public_name: The public_name of this PublicName.  # noqa: E501
+        :type public_name: str
         :param species: The species of this PublicName.  # noqa: E501
         :type species: str
         :param tax_id: The tax_id of this PublicName.  # noqa: E501
-        :type tax_id: int
+        :type tax_id: float
         :param common_name: The common_name of this PublicName.  # noqa: E501
         :type common_name: str
         :param genus: The genus of this PublicName.  # noqa: E501
@@ -38,8 +40,9 @@ class PublicName(Model):
         """
         self.swagger_types = {
             'prefix': str,
+            'public_name': str,
             'species': str,
-            'tax_id': int,
+            'tax_id': float,
             'common_name': str,
             'genus': str,
             'family': str,
@@ -50,6 +53,7 @@ class PublicName(Model):
 
         self.attribute_map = {
             'prefix': 'prefix',
+            'public_name': 'publicName',
             'species': 'species',
             'tax_id': 'taxID',
             'common_name': 'commonName',
@@ -60,6 +64,7 @@ class PublicName(Model):
             'phylum': 'phylum'
         }
         self._prefix = prefix
+        self._public_name = public_name
         self._species = species
         self._tax_id = tax_id
         self._common_name = common_name
@@ -104,6 +109,29 @@ class PublicName(Model):
         self._prefix = prefix
 
     @property
+    def public_name(self) -> str:
+        """Gets the public_name of this PublicName.
+
+
+        :return: The public_name of this PublicName.
+        :rtype: str
+        """
+        return self._public_name
+
+    @public_name.setter
+    def public_name(self, public_name: str):
+        """Sets the public_name of this PublicName.
+
+
+        :param public_name: The public_name of this PublicName.
+        :type public_name: str
+        """
+        if public_name is None:
+            raise ValueError("Invalid value for `public_name`, must not be `None`")  # noqa: E501
+
+        self._public_name = public_name
+
+    @property
     def species(self) -> str:
         """Gets the species of this PublicName.
 
@@ -127,22 +155,22 @@ class PublicName(Model):
         self._species = species
 
     @property
-    def tax_id(self) -> int:
+    def tax_id(self) -> float:
         """Gets the tax_id of this PublicName.
 
 
         :return: The tax_id of this PublicName.
-        :rtype: int
+        :rtype: float
         """
         return self._tax_id
 
     @tax_id.setter
-    def tax_id(self, tax_id: int):
+    def tax_id(self, tax_id: float):
         """Sets the tax_id of this PublicName.
 
 
         :param tax_id: The tax_id of this PublicName.
-        :type tax_id: int
+        :type tax_id: float
         """
         if tax_id is None:
             raise ValueError("Invalid value for `tax_id`, must not be `None`")  # noqa: E501
