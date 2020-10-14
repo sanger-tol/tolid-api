@@ -20,10 +20,48 @@ tags:
   description: Browsing public names
 paths:
   /public-name:
+    get:
+      tags:
+      - users
+      summary: Search for a single public name
+      description: |
+        By passing in the appropriate options, you can search for
+        available public names in the system.
+      operationId: search_public_name
+      parameters:
+      - name: taxonomyId
+        in: query
+        description: pass an NCBI taxonomy ID for looking up public name and taxonomy information
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: specimenId
+        in: query
+        description: pass a GAL specime ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PublicName'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.consumers_controller
     post:
       tags:
       - users
-      summary: searches DToL public names
+      summary: Bulk search for public names
       description: |
         By passing in the appropriate options, you can search for
         available public names in the system.
@@ -35,7 +73,7 @@ paths:
           ]
         }
         ```
-      operationId: search_public_name
+      operationId: bulk_search_public_name
       requestBody:
         required: true
         content:
