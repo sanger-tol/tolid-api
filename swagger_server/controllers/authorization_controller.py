@@ -12,7 +12,8 @@ def get_api_keys(api_token=None):
     token_owner = None 
     try:
         with open(os.path.join('instance', 'config.json')) as config_file:
-            tokens = json.load(config_file)
+            config = json.load(config_file)
+            tokens = config['api-keys']  # Read API-Tokens from the global config file
         token_owner = tokens[api_token]
         if token_owner:
             print("AUTHENTICATION INFO: Found valid api-token for user " + token_owner["user"])
