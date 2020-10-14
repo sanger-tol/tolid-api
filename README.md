@@ -64,7 +64,7 @@ http://localhost:8080/ui/
 
 You can directly test the server:
 ```
-curl -X GET "http://localhost:8080/public-name?taxonomyId=9606" -H  "accept: application/json"
+curl -X GET "http://localhost:8080/public-name?taxonomyId=6344&specimenId=SAN0000100" -H  "accept: application/json"
 ```
 
 The Swagger definition lives here:
@@ -81,7 +81,7 @@ tox
 ## Example usage and output
 You can search for NCBI taxonomy ids in the "/public-name" end-point. You can also use CURL like this:
 ```
-curl -X GET "http://localhost:8080/public-name?taxonomyId=6344" -H  "accept: application/json"
+curl -X GET "http://localhost:8080/public-name?taxonomyId=6344&specimenId=SAN0000100" -H  "accept: application/json"
 ```
 
 The output for NCBI tax id 6344 will look something like this:
@@ -119,6 +119,10 @@ This is the URL from NCBI for id [6344](https://www.ncbi.nlm.nih.gov/Taxonomy/Br
 ## Rebuild the local sqlite3 database
 The database is rebuilt from scratch each time you use the "start.sh" script. 
 You can alternatively run the script "reset_database.sh"
+
+```
+curl -X POST "http://localhost:8080/verify-database" -H  "accept: */*" -H  "api-key: 1234" -d ""
+```
 
 ## Running with Docker
 
