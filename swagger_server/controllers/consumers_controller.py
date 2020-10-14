@@ -8,7 +8,7 @@ from flask import jsonify
 from swagger_server.db_utils import get_db, populate_db, query_local_database, map_public_names_dict
 
 
-def search_public_name(taxonomy_id=None, specimen_id=None, skip=None, limit=None):  
+def search_public_name(body=None):  
     """searches DToL public names
 
     By passing in the appropriate taxonomy string, you can search for available public names in the system 
@@ -23,37 +23,39 @@ def search_public_name(taxonomy_id=None, specimen_id=None, skip=None, limit=None
     :rtype: List[PublicName]
     """
 
-    # If database:
-    #     search for string, return public_name array
-    # else:
-    #     download file from repo
-    #     create sqlite3 database 
-    #     search for string, return public_name array
 
-    if not taxonomy_id:
-        return 'Please provide a taxon id to search for'
+    # ToDo, body now contains the rows of data
+    if body:
+        data_rows = body['dataRows']
+        public_names_list = []
+        for row in data_rows:
+            specimen_id = row['specimenId']
+            taxonomy_id = row['taxId']
+            print(specimen_id, taxonomy_id)
 
-    if not specimen_id:
-        return 'Please provide a GAL specimen id to search for'
+            if not taxonomy_id:
+                return 'Please provide a taxon id to search for'
 
-    # Normal search string passed as input parameter
-    try:
-        conn, cur = get_db(conn=None)
-    except Exception as e:
-        print('Database connection failed. Error: ' + str(e))
-        return str(e)
+            if not specimen_id:
+                return 'Please provide a GAL specimen id to search for'
 
-    try:
-        public_names = query_local_database(conn=conn, cur=cur, tax_id=taxonomy_id, specimen_id=specimen_id, print_all=False)
-    except Exception as e:
-        print('Database Query failed. Error: ' + str(e))
-        return str(e)
+            # Normal search string passed as input parameter
+            try:
+                conn, cur = get_db(conn=None)
+            except Exception as e:
+                print('Database connection failed. Error: ' + str(e))
+                return str(e)
+
+            try:
+                public_names = query_local_database(conn=conn, cur=cur, tax_id=taxonomy_id, specimen_id=specimen_id, print_all=False)
+            except Exception as e:
+                print('Database Query failed. Error: ' + str(e))
+                return str(e)
     
-    public_names_list = []
-    if public_names:
-        for row in public_names:
-            name_dict = map_public_names_dict(data=row)
-            public_names_list.append(name_dict)
+            if public_names:
+                for row in public_names:
+                    name_dict = map_public_names_dict(data=row)
+                    public_names_list.append(name_dict)
 
     return jsonify({"data": public_names_list})
 

@@ -20,7 +20,7 @@ tags:
   description: Browsing public names
 paths:
   /public-name:
-    get:
+    post:
       tags:
       - users
       summary: searches DToL public names
@@ -29,32 +29,19 @@ paths:
         available public names in the system.
         ```
         {
-          "data": [
-            {"taxid": 12312, "specimen_id": "ASDFASD123"},
-            {"taxid": 12313, "specimen_id": "ASDFASD123"},
-            {"taxid": 12314, "specimen_id": "ASDFASD12"},
-            {"taxid": 12315, "specimen_id": "ASDFASD123"}
+          "dataRows": [
+            {"taxId": 6344, "specimenId": "SAN0000100"},
+            {"taxId": 55617, "specimenId": "SAN0000101"}
           ]
         }
         ```
       operationId: search_public_name
-      parameters:
-      - name: taxonomyId
-        in: query
-        description: pass an NCBI taxonomy ID for looking up public name and taxonomy information
+      requestBody:
         required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: specimenId
-        in: query
-        description: pass a GAL specime ID
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaxonSpecimen'
       responses:
         "200":
           description: search results matching criteria
@@ -143,18 +130,40 @@ paths:
       x-openapi-router-controller: swagger_server.controllers.curators_controller  
 components:
   schemas:
+    TaxSpec:
+      type: object
+      required:
+        - taxId
+        - specimenId
+      properties:
+        taxId:
+          type: integer
+          example: 6344
+        specimenId:
+          type: string
+          example: "SAN0000100"
+    TaxonSpecimen:
+      type: object
+      properties:    
+        dataRows:
+          items:
+            $ref: '#/components/schemas/TaxSpec'
+            required:
+            - dataRows
+            - TaxSpec
+          type: array
     PublicName:
       required:
-      - commonName
-      - family
-      - genus
-      - order
-      - phylum
-      - prefix
-      - publicName
-      - species
-      - taxID
-      - taxaClass
+        - commonName
+        - family
+        - genus
+        - order
+        - phylum
+        - prefix
+        - publicName
+        - species
+        - taxID
+        - taxaClass
       type: object
       properties:
         prefix:
