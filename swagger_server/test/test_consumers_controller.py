@@ -17,7 +17,8 @@ class TestConsumersController(BaseTestCase):
 
         searches DToL public names
         """
-        query_string = [('search_string', 'search_string_example'),
+        query_string = [('taxonomyId', '1234'),
+                        ('specimenId', '5678'),
                         ('skip', 1),
                         ('limit', 10000000)]
         response = self.client.open(
