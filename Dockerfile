@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM alpine:3.10
 FROM python:buster
 FROM gcc:latest
 

@@ -5,3 +5,11 @@ dist/
 instance/
 __pycache__
 swagger_server.egg-info/
+final_merged.txt.old
+nohup.out
+public_names.db
+save_pid.txt
+__init__.pyc
+launch.json
+public_names.db.old
+final_merged.txt
