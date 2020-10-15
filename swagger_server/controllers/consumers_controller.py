@@ -60,7 +60,7 @@ def search_public_name(taxonomy_id=None, specimen_id=None, skip=None, limit=None
 
     public_names_list = get_public_names(public_names_list=public_names_list, taxonomy_id=taxonomy_id, specimen_id=specimen_id, conn=conn, cur=cur)
 
-    return jsonify({"data": public_names_list})
+    return jsonify(public_names_list)
 
 
 def bulk_search_public_name(body=None):  
@@ -91,7 +91,7 @@ def bulk_search_public_name(body=None):
             
             public_names_list = get_public_names(public_names_list=public_names_list, taxonomy_id=taxonomy_id, specimen_id=specimen_id, conn=conn, cur=cur)
 
-    return jsonify({"data": public_names_list})
+    return jsonify(public_names_list)
 
 
 def map_public_names_class(data):

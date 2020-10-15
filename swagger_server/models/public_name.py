@@ -14,7 +14,7 @@ class PublicName(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, prefix: str=None, public_name: str=None, species: str=None, tax_id: float=None, common_name: str=None, genus: str=None, family: str=None, order: str=None, taxa_class: str=None, phylum: str=None):  # noqa: E501
+    def __init__(self, prefix: str=None, public_name: str=None, species: str=None, taxonomy_id: int=None, specimen_id: str=None, common_name: str=None, genus: str=None, family: str=None, order: str=None, taxa_class: str=None, phylum: str=None):  # noqa: E501
         """PublicName - a model defined in Swagger
 
         :param prefix: The prefix of this PublicName.  # noqa: E501
@@ -23,8 +23,10 @@ class PublicName(Model):
         :type public_name: str
         :param species: The species of this PublicName.  # noqa: E501
         :type species: str
-        :param tax_id: The tax_id of this PublicName.  # noqa: E501
-        :type tax_id: float
+        :param taxonomy_id: The taxonomy_id of this PublicName.  # noqa: E501
+        :type taxonomy_id: int
+        :param specimen_id: The specimen_id of this PublicName.  # noqa: E501
+        :type specimen_id: str
         :param common_name: The common_name of this PublicName.  # noqa: E501
         :type common_name: str
         :param genus: The genus of this PublicName.  # noqa: E501
@@ -42,7 +44,8 @@ class PublicName(Model):
             'prefix': str,
             'public_name': str,
             'species': str,
-            'tax_id': float,
+            'taxonomy_id': int,
+            'specimen_id': str,
             'common_name': str,
             'genus': str,
             'family': str,
@@ -55,7 +58,8 @@ class PublicName(Model):
             'prefix': 'prefix',
             'public_name': 'publicName',
             'species': 'species',
-            'tax_id': 'taxonomyId',
+            'taxonomy_id': 'taxonomyId',
+            'specimen_id': 'specimenId',
             'common_name': 'commonName',
             'genus': 'genus',
             'family': 'family',
@@ -66,7 +70,8 @@ class PublicName(Model):
         self._prefix = prefix
         self._public_name = public_name
         self._species = species
-        self._tax_id = tax_id
+        self._taxonomy_id = taxonomy_id
+        self._specimen_id = specimen_id
         self._common_name = common_name
         self._genus = genus
         self._family = family
@@ -155,27 +160,50 @@ class PublicName(Model):
         self._species = species
 
     @property
-    def tax_id(self) -> float:
-        """Gets the tax_id of this PublicName.
+    def taxonomy_id(self) -> int:
+        """Gets the taxonomy_id of this PublicName.
 
 
-        :return: The tax_id of this PublicName.
-        :rtype: float
+        :return: The taxonomy_id of this PublicName.
+        :rtype: int
         """
-        return self._tax_id
+        return self._taxonomy_id
 
-    @tax_id.setter
-    def tax_id(self, tax_id: float):
-        """Sets the tax_id of this PublicName.
+    @taxonomy_id.setter
+    def taxonomy_id(self, taxonomy_id: int):
+        """Sets the taxonomy_id of this PublicName.
 
 
-        :param tax_id: The tax_id of this PublicName.
-        :type tax_id: float
+        :param taxonomy_id: The taxonomy_id of this PublicName.
+        :type taxonomy_id: int
         """
-        if tax_id is None:
-            raise ValueError("Invalid value for `tax_id`, must not be `None`")  # noqa: E501
+        if taxonomy_id is None:
+            raise ValueError("Invalid value for `taxonomy_id`, must not be `None`")  # noqa: E501
 
-        self._tax_id = tax_id
+        self._taxonomy_id = taxonomy_id
+
+    @property
+    def specimen_id(self) -> str:
+        """Gets the specimen_id of this PublicName.
+
+
+        :return: The specimen_id of this PublicName.
+        :rtype: str
+        """
+        return self._specimen_id
+
+    @specimen_id.setter
+    def specimen_id(self, specimen_id: str):
+        """Sets the specimen_id of this PublicName.
+
+
+        :param specimen_id: The specimen_id of this PublicName.
+        :type specimen_id: str
+        """
+        if specimen_id is None:
+            raise ValueError("Invalid value for `specimen_id`, must not be `None`")  # noqa: E501
+
+        self._specimen_id = specimen_id
 
     @property
     def common_name(self) -> str:
