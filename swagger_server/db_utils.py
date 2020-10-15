@@ -16,16 +16,16 @@ def map_public_names_dict(data=None):
     d = {}
     if data:
         d = {'prefix': data[0], 
-            'public_name': data[1],
+            'publicName': data[1],
             'species': is_missing(data=data[2], query_type='species'), 
-            'taxid': data[3], 
-            'common_name': is_missing(data=data[4], query_type='common_name'), 
+            'taxonomyId': data[3], 
+            'commonName': is_missing(data=data[4], query_type='common_name'), 
             'genus': is_missing(data=data[5], query_type='genus'), 
             'family': is_missing(data=data[6], query_type='family'), 
             'order': is_missing(data=data[7], query_type='order'), 
-            'class': is_missing(data=data[8], query_type='class'), 
+            'taxaClass': is_missing(data=data[8], query_type='class'), 
             'phylum': is_missing(data=data[9], query_type='phylum'),
-            'specimen_id': data[10]
+            'specimenId': data[10]
             }
 
     return d   

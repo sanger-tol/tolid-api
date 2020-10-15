@@ -87,7 +87,7 @@ def bulk_search_public_name(body=None):
         data_rows = body['dataRows']
         for row in data_rows:
             specimen_id = row['specimenId']
-            taxonomy_id = row['taxId']
+            taxonomy_id = row['taxonomyId']
             
             public_names_list = get_public_names(public_names_list=public_names_list, taxonomy_id=taxonomy_id, specimen_id=specimen_id, conn=conn, cur=cur)
 

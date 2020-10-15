@@ -55,7 +55,7 @@ class PublicName(Model):
             'prefix': 'prefix',
             'public_name': 'publicName',
             'species': 'species',
-            'tax_id': 'taxID',
+            'tax_id': 'taxonomyId',
             'common_name': 'commonName',
             'genus': 'genus',
             'family': 'family',
