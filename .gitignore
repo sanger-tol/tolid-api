@@ -1,0 +1,7 @@
+.tox/
+venv/
+build/
+dist/
+instance/
+__pycache__
+swagger_server.egg-info/
