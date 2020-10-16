@@ -7,12 +7,9 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.3.3
+  version: 1.3.4
 servers:
-  - description: Tree of Life public name Swagger API
-    url: http://0.0.0.0:8080
-  - description: Tree of Life public name Swagger API 1.3.0
-    url: http://0.0.0.0:8080/1.3.0
+  - url: http://0.0.0.0:8080/public_name_api
 tags:
 - name: curators
   description: Curator tools
@@ -207,54 +204,54 @@ components:
       properties:
         prefix:
           type: string
-          example: mHomSap
+          example: wuAreMari
         publicName:
           type: string
-          example: mHomSap1
+          example: wuAreMari1
         species:
           type: string
-          example: Homo sapiens
+          example: Arenicola marina
         taxonomyId:
           type: integer
-          example: 9606
+          example: 6344
         specimenId:
           type: string
-          example: SAN0001234
+          example: SAN0000100
         commonName:
           type: string
-          example: human
+          example: lugworm
         genus:
           type: string
-          example: Homo
+          example: Arenicola
         family:
           type: string
-          example: Hominidae
+          example: Arenicolidae
         order:
           type: string
-          example: Primates
+          example: Capitellida
         taxaClass:
           type: string
-          example: Mammalia
+          example: Polychaeta
         phylum:
           type: string
-          example: Chordata
+          example: Annelida
       example:
-        commonName: human
-        publicName: mHomSap1
-        phylum: Chordata
-        species: Homo sapiens
-        genus: Homo
-        prefix: mHomSap
-        taxonomyId: 9606
-        specimenId: SAN0001234
-        taxaClass: Mammalia
-        family: Hominidae
-        order: Primates
+        commonName: lugworm
+        publicName: wuAreMari1
+        phylum: Annelida
+        species: Arenicola marina
+        genus: Arenicola
+        prefix: wuAreMari
+        taxonomyId: 6344
+        specimenId: SAN0000100
+        taxaClass: Polychaeta
+        family: Arenicolidae
+        order: Capitellida
   securitySchemes:
     ApiKeyAuth:        # name for the security scheme
       type: apiKey
       in: header       # can be "header", "query" or "cookie"
-      name: api-key  # name of the header, query parameter or cookie
+      name: api-key    # name of the header, query parameter or cookie
       x-apikeyInfoFunc: swagger_server.controllers.authorization_controller.apikey_auth
 # security:
 #   - ApiKeyAuth: []     # 2) Apply the API key globally to all operations

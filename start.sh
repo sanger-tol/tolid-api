@@ -21,7 +21,7 @@ echo $! > save_pid.txt
 
 # Rebuild the database
 sleep 5  # Wait for the server to start, could change to use "wait"
-curl -X POST "http://localhost:8080/verify-database" -H  "accept: */*" -H  "api-key: 123456789" -d ""  # Rebuild
+curl -X POST "http://localhost:8080/public_name_api/verify-database" -H  "accept: */*" -H  "api-key: 123456789" -d ""  # Rebuild
 echo "Server running. To stop the Python server use 'kill -9 `cat save_pid.txt`'"
 echo "Testing the local database by searching for Homo sapiens, taxid 9606"
-curl -X GET "http://localhost:8080/public-name?taxonomyId=6344&specimenId=SAN0000100" -H  "accept: application/json"
+curl -X GET "http://localhost:8080/public_name_api/public-name?taxonomyId=6344&specimenId=SAN0000100" -H  "accept: application/json"

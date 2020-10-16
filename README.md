@@ -39,7 +39,7 @@ pip3 install -r requirements.txt
 pip3 install 'connexion[swagger-ui]'
 ```
 
-- Create a local config.json file in the "instance" folder for API-key storage
+- Create a local config.json file in the "instance" folder for API-key storage. There is a version on the root folder you can copy into the "instance" folder
 ```
 {
   "api-keys": {
@@ -68,17 +68,17 @@ python -m swagger_server
 
 and open your browser to here:
 ```
-http://localhost:8080/ui/
+http://localhost:8080/public_name_api/ui/
 ```
 
 You can directly test the server:
 ```
-curl -X GET "http://localhost:8080/public-name?taxonomyId=6344&specimenId=SAN0000100" -H  "accept: application/json"
+curl -X GET "http://localhost:8080/public_name_api/public-name?taxonomyId=6344&specimenId=SAN0000100" -H  "accept: application/json"
 ```
 
 The Swagger definition lives here:
 ```
-http://localhost:8080/swagger.json
+http://localhost:8080/public_name_api/openapi.json
 ```
 
 To launch the integration tests, use tox:
@@ -90,7 +90,7 @@ tox
 ## Example usage and output
 You can search for NCBI taxonomy ids in the "/public-name" end-point. You can also use CURL like this:
 ```
-curl -X GET "http://localhost:8080/public-name?taxonomyId=6344&specimenId=SAN0000100" -H  "accept: application/json"
+curl -X GET "http://localhost:8080/public_name_api/public-name?taxonomyId=6344&specimenId=SAN0000100" -H  "accept: application/json"
 ```
 
 The output for NCBI tax id 6344 will look something like this:
@@ -102,7 +102,7 @@ The output for NCBI tax id 6344 will look something like this:
       "common_name": "lugworm",
       "family": "Arenicolidae",
       "genus": "Arenicola",
-      "order": "None",
+      "order": "Capitellida",
       "phylum": "Annelida",
       "prefix": "wuAreMari",   
       "public_name": "wuAreMari1"
@@ -130,7 +130,7 @@ The database is rebuilt from scratch each time you use the "start.sh" script.
 You can alternatively run the script "reset_database.sh"
 
 ```
-curl -X POST "http://localhost:8080/verify-database" -H  "accept: */*" -H  "api-key: 123456789" -d ""
+curl -X POST "http://localhost:8080/public_name_api/verify-database" -H  "accept: */*" -H  "api-key: 123456789" -d ""
 ```
 
 ## Running with Docker
