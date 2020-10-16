@@ -130,7 +130,7 @@ The database is rebuilt from scratch each time you use the "start.sh" script.
 You can alternatively run the script "reset_database.sh"
 
 ```
-curl -X POST "http://localhost:8080/verify-database" -H  "accept: */*" -H  "api-key: 1234" -d ""
+curl -X POST "http://localhost:8080/verify-database" -H  "accept: */*" -H  "api-key: 123456789" -d ""
 ```
 
 ## Running with Docker

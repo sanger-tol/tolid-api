@@ -1,0 +1,11 @@
+{
+    "api-keys": {
+        "123456789": { "user": "Test User 1", "uid": 100},
+        "abcdefghi": { "user": "Test User 2", "uid": 200}
+    },
+    "database_connection": {
+        "prod": "jdbc prod database",
+        "uat": "jdbc uat database",
+        "dev": "jdbc dev database"
+    }
+}

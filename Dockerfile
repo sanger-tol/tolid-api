@@ -2,12 +2,14 @@ FROM alpine:3.10
 FROM python:buster
 FROM gcc:latest
 
-RUN mkdir -p /usr/src/app
+RUN mkdir -p /usr/src/app/instance
 WORKDIR /usr/src/app
 
 COPY requirements.txt /usr/src/app/
 COPY setup.py /usr/src/app/
 COPY start.sh /usr/src/app/
+COPY config.json /usr/src/app/
+
 
 RUN apt-get update -y
 RUN apt-get install -y python3-pip python3-setuptools
@@ -18,6 +20,10 @@ RUN pip3 --no-cache-dir install 'connexion[swagger-ui]'
 
 RUN curl -s https://gitlab.com/wtsi-grit/darwin-tree-of-life-sample-naming/-/raw/master/final_merged.txt -o final_merged.txt
 RUN curl -s https://gitlab.com/wtsi-grit/darwin-tree-of-life-sample-naming/-/raw/master/unique_ids_assigned.txt -o unique_ids_assigned.txt
+
+# Copy the test config file into the local instance if it does not exist
+RUN cp -n config.json /usr/src/app/instance/config.json 
+RUN cat /usr/src/app/instance/config.json 
 
 #RUN chmod +x start.sh
 COPY . /usr/src/app
