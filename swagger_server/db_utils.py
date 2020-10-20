@@ -65,7 +65,7 @@ def map_prefix_pub_names(data=None, specimen_id=None):
         public_name = str(prefix) + str(pub_number)
         species = is_missing(data=data[1], query_type='species')
 
-    return specimen_id, public_name, species
+    return specimen_id, public_name, species, prefix
 
 
 def get_db_cols_and_file_name(table_name=None):
@@ -152,8 +152,8 @@ def query_local_database(conn=None, cur=None, tax_id=None, specimen_id=None, pri
 
     rows = cur.fetchall()
 
-    if not rows:
-        rows = [(None, None, None, tax_id, None, None, None, None, None, None, specimen_id)]
+    #if not rows:
+    #    rows = [(None, None, None, tax_id, None, None, None, None, None, None, specimen_id)]
 
     if print_all:
         for row in rows:
@@ -197,7 +197,7 @@ def update_local_database(conn=None, cur=None, tax_id=None, specimen_id=None, pr
         
         if rows:
             for row in rows:
-                q_specimen_id, q_public_name, q_species = map_prefix_pub_names(data=row, specimen_id=specimen_id)
+                q_specimen_id, q_public_name, q_species, q_prefix = map_prefix_pub_names(data=row, specimen_id=specimen_id)
     
         # Now we have the entry from the pre-allocated names list, so next is to get the entries for this species already allocated public names
         # We need 'public_name', 'species', 'specimen_id', 'pub_number' for the new entry
@@ -213,7 +213,7 @@ def update_local_database(conn=None, cur=None, tax_id=None, specimen_id=None, pr
             else:
                 pub_number = 1
 
-        new_public_name = q_public_name+str(pub_number)
+        new_public_name = q_prefix+str(pub_number)
         # Insert new record into the database
         with conn:
             cur.execute("INSERT INTO unique_ids('public_name','species','specimen_id','pub_number') values(?,?,?,?)", (new_public_name, q_species, specimen_id, pub_number))
