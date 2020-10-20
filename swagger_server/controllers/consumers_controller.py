@@ -6,9 +6,10 @@ from swagger_server.models.public_name import PublicName
 from swagger_server import util
 from flask import jsonify
 from swagger_server.db_utils import get_db, populate_db, query_local_database, map_public_names_dict
+from swagger_server.controllers.curators_controller import create_public_name
 
 
-def get_public_names(public_names_list=None, taxonomy_id=None, specimen_id=None, conn=None, cur=None):
+def get_public_names(public_names_list=None, taxonomy_id=None, specimen_id=None, conn=None, cur=None, create_new=False):
 
     if not taxonomy_id:
         return 'Please provide a taxon id to search for'
@@ -29,10 +30,16 @@ def get_public_names(public_names_list=None, taxonomy_id=None, specimen_id=None,
         print('Database Query failed. Error: ' + str(e))
         return str(e)
 
+    # If we have existing
     if local_public_names:
         for row in local_public_names:
             name_dict = map_public_names_dict(data=row)
             public_names_list.append(name_dict)
+    else:
+        if create_new:
+            new_public_names_list = create_public_name(taxonomy_id=taxonomy_id, specimen_id=specimen_id)
+            for row in new_public_names_list:
+                public_names_list.append(row)
 
     return public_names_list
 
@@ -88,7 +95,7 @@ def bulk_search_public_name(body=None):
             specimen_id = row['specimenId']
             taxonomy_id = row['taxonomyId']
             
-            public_names_list = get_public_names(public_names_list=public_names_list, taxonomy_id=taxonomy_id, specimen_id=specimen_id, conn=conn, cur=cur)
+            public_names_list = get_public_names(public_names_list=public_names_list, taxonomy_id=taxonomy_id, specimen_id=specimen_id, conn=conn, cur=cur, create_new=True)
 
     return jsonify(public_names_list)
 

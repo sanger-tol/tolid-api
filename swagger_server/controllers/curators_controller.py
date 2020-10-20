@@ -73,6 +73,10 @@ def add_public_name(taxonomy_id=None, specimen_id=None):
     :return: JSON with complete public name and taxa structure
     """
 
+    public_names_list = create_public_name(taxonomy_id=taxonomy_id, specimen_id=specimen_id)
+    return jsonify(public_names_list)
+
+def create_public_name(taxonomy_id=None, specimen_id=None):
     public_names, new_public_name, q_species, specimen_id, pub_number, new_record = update_local_database(conn=None, cur=None, tax_id=taxonomy_id, specimen_id=specimen_id, print_all=True)
 
     if new_record:
@@ -88,5 +92,5 @@ def add_public_name(taxonomy_id=None, specimen_id=None):
             name_dict = map_public_names_dict(data=row)
             public_names_list.append(name_dict)
 
-    return jsonify(public_names_list)
-
+    return public_names_list
+  
