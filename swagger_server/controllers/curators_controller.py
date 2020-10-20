@@ -88,5 +88,5 @@ def add_public_name(taxonomy_id=None, specimen_id=None):
             name_dict = map_public_names_dict(data=row)
             public_names_list.append(name_dict)
 
-    return jsonify({"data": public_names_list})
+    return jsonify(public_names_list)
 
