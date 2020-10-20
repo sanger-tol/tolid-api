@@ -56,21 +56,31 @@ paths:
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.consumers_controller
     post:
+      security:
+        - ApiKeyAuth: []
       tags:
       - users
       summary: Bulk search for public names
       description: |
         By passing in the appropriate options, you can search for
-        available public names in the system.
+        available public names in the system. Public names will be
+        created if new.
         ```
-        {
-          "dataRows": [
-            {"taxonomyId": 6344, "specimenId": "SAN0000100"},
-            {"taxonomyId": 55617, "specimenId": "SAN0000101"}
-          ]
-        }
+        [
+          {"taxonomyId": 6344, "specimenId": "SAN0000100"},
+          {"taxonomyId": 55617, "specimenId": "SAN0000101"}
+        ]
         ```
       operationId: bulk_search_public_name
+      parameters:
+        - name: api-key
+          in: header
+          description: API-Key
+          required: True
+          style: simple
+          explode: true
+          schema:
+            type: string  
       requestBody:
         required: true
         content:
@@ -178,15 +188,11 @@ components:
           type: string
           example: "SAN0000100"
     TaxonSpecimen:
-      type: object
-      properties:    
-        dataRows:
-          items:
-            $ref: '#/components/schemas/TaxSpec'
-            required:
-            - dataRows
-            - TaxSpec
-          type: array
+      type: array
+      items:
+        $ref: '#/components/schemas/TaxSpec'
+        required:
+        - TaxSpec
     PublicName:
       required:
         - commonName

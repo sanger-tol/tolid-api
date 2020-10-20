@@ -18,7 +18,7 @@ def map_public_names_dict(data=None):
         d = {'prefix': data[0], 
             'publicName': data[1],
             'species': is_missing(data=data[2], query_type='species'), 
-            'taxonomyId': data[3], 
+            'taxonomyId': int(data[3]), 
             'commonName': is_missing(data=data[4], query_type='common_name'), 
             'genus': is_missing(data=data[5], query_type='genus'), 
             'family': is_missing(data=data[6], query_type='family'), 

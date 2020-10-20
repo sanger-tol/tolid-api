@@ -84,8 +84,7 @@ def bulk_search_public_name(body=None):
 
     # body contains the rows of data
     if body:
-        data_rows = body['dataRows']
-        for row in data_rows:
+        for row in body:
             specimen_id = row['specimenId']
             taxonomy_id = row['taxonomyId']
             
