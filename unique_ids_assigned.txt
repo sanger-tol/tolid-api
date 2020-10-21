@@ -2317,3 +2317,15 @@ gfHetAnno1	Heterobasidion annosum	KDTOL00025	1
 gfPluPouz1	Pluteus pouzarianus	KDTOL00017	1	
 gfDecMont1	Deconica montana	KDTOL00009	1	
 gfCliOdor1	Clitocybe odora	KDTOL00001	1	
+ddAraThal2	Arabidopsis thaliana	KDTOL10044	2	
+ddAraThal3	Arabidopsis thaliana	KDTOL10115	3	
+ddAraThal4	Arabidopsis thaliana	KDTOL10116	4	
+ddAraThal5	Arabidopsis thaliana	KDTOL10117	5	
+ddAraThal6	Arabidopsis thaliana	KDTOL10118	6	
+ddAraThal7	Arabidopsis thaliana	KDTOL10119	7	
+ddAraThal8	Arabidopsis thaliana	KDTOL10120	8	
+daChaMinu2	Chaenorhinum minus	KDTOL10121	2	
+daChaMinu3	Chaenorhinum minus	KDTOL10122	3	
+daChaMinu4	Chaenorhinum minus	KDTOL10123	4	
+daChaMinu5	Chaenorhinum minus	KDTOL10124	5	
+daChaMinu6	Chaenorhinum minus	KDTOL10125	6
