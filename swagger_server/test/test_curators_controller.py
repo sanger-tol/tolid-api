@@ -59,9 +59,19 @@ class TestCuratorsController(BaseTestCase):
             method='PUT',
             headers={"api-key": self.api_key},
             query_string=query_string)
-        #TODO
-        #self.assert400(response,
-        #               'Response body is : ' + response.data.decode('utf-8'))
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Taxonomy ID not correct for specimen
+        query_string = [('taxonomyId', '9606'),
+                        ('specimenId', 'SAN0000100')]
+        response = self.client.open(
+            '/public_name_api/public-name',
+            method='PUT',
+            headers={"api-key": self.api_key},
+            query_string=query_string)
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
 
         # Specimen ID not in database - should create it
         query_string = [('taxonomyId', 6344),
@@ -83,6 +93,31 @@ class TestCuratorsController(BaseTestCase):
             "specimenId": "SAN0000100xxxxx",
             "taxaClass": "Polychaeta",
             "taxonomyId": 6344
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # Specimen ID not in database and first for species - should create it
+        query_string = [('taxonomyId', 9606),
+                ('specimenId', 'SAN0000999xxxxx')]
+        response = self.client.open(
+            '/public_name_api/public-name',
+            method='PUT',
+            headers={"api-key": self.api_key},
+            query_string=query_string)
+        expect = [{
+            "commonName": "human",
+            "family": "Hominidae",
+            "genus": "Homo",
+            "order": "Primates",
+            "phylum": "Chordata",
+            "prefix": "mHomSap",
+            "publicName": "mHomSap1",
+            "species": "Homo sapiens",
+            "specimenId": "SAN0000999xxxxx",
+            "taxaClass": "Mammalia",
+            "taxonomyId": 9606
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))

@@ -36,9 +36,18 @@ class TestConsumersController(BaseTestCase):
             '/public_name_api/public-name',
             method='GET',
             query_string=query_string)
-        #TODO
-        #self.assert400(response,
-        #               'Response body is : ' + response.data.decode('utf-8'))
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Taxonomy ID not correct for specimen
+        query_string = [('taxonomyId', '9606'),
+                        ('specimenId', 'SAN0000100')]
+        response = self.client.open(
+            '/public_name_api/public-name',
+            method='GET',
+            query_string=query_string)
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
 
         # Specimen ID not in database
         query_string = [('taxonomyId', '6344'),
@@ -223,6 +232,30 @@ class TestConsumersController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
+
+        # Error on later query
+        body = [{'taxonomyId': 6344,
+                'specimenId': 'SAN0000100bbbbb'},
+                {'taxonomyId': 9606,
+                'specimenId': 'SAN0000100'}]
+        response = self.client.open(
+            '/public_name_api/public-name',
+            method='POST',
+            headers={"api-key": self.api_key},
+            json=body)
+
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # And the new one should not have been inserted
+        query_string = [('taxonomyId', '6344'),
+                        ('specimenId', 'SAN0000100bbbbb')]
+        response = self.client.open(
+            '/public_name_api/public-name',
+            method='GET',
+            query_string=query_string)
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals([], response.json)
 
 if __name__ == '__main__':
     import unittest

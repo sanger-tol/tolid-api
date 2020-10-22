@@ -2,10 +2,10 @@ import connexion
 import six
 import json
 
-from swagger_server.models.public_name import PublicName  
+from swagger_server.model import db, PnaSpecies, PnaSpecimen  
 from swagger_server import util
 from flask import jsonify
-from swagger_server.db_utils import get_db, populate_db, query_local_database, map_public_names_dict
+from swagger_server.db_utils import get_db, populate_db, query_local_database, map_public_names_dict, create_new_specimen
 from swagger_server.controllers.curators_controller import create_public_name
 
 
@@ -57,18 +57,23 @@ def search_public_name(taxonomy_id=None, specimen_id=None, skip=None, limit=None
 
     :rtype: List[PublicName]
     """
-    public_names_list = []
 
-    try:
-        conn, cur = get_db(conn=None)
-    except Exception as e:
-        print('Database connection failed. Error: ' + str(e))
-        return str(e)
+    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).first()
 
-    public_names_list = get_public_names(public_names_list=public_names_list, taxonomy_id=taxonomy_id, specimen_id=specimen_id, conn=conn, cur=cur)
+    if not species:
+        print("NO SPECIES FOUND")
+        return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
 
-    return jsonify(public_names_list)
+    specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).first()
 
+    if not specimen:
+        print("NO SPECIMEN FOUND")
+        return jsonify([])
+
+    if specimen.species.taxonomy_id != species.taxonomy_id:
+        return "Species of specimen "+str(specimen_id)+" is "+ specimen.species.name + " but was expecting "+species.name, 400
+
+    return jsonify([specimen])
 
 def bulk_search_public_name(body=None):  
     """searches DToL public names in bulk
@@ -80,24 +85,33 @@ def bulk_search_public_name(body=None):
 
     :rtype: List[PublicName]
     """
-    
-    public_names_list = []
 
-    try:
-        conn, cur = get_db(conn=None)
-    except Exception as e:
-        print('Database connection failed. Error: ' + str(e))
-        return str(e)
-
+    specimens = []
     # body contains the rows of data
     if body:
         for row in body:
             specimen_id = row['specimenId']
             taxonomy_id = row['taxonomyId']
-            
-            public_names_list = get_public_names(public_names_list=public_names_list, taxonomy_id=taxonomy_id, specimen_id=specimen_id, conn=conn, cur=cur, create_new=True)
+            species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).first()
 
-    return jsonify(public_names_list)
+            if not species:
+                return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
+
+            specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).first()
+
+            if specimen:
+                if specimen.species.taxonomy_id != species.taxonomy_id:
+                    return "Species of specimen "+str(specimen_id)+" is "+ specimen.species.name + " but was expecting "+species.name, 400
+            else:
+                specimen = create_new_specimen(species, specimen_id)
+
+            specimens.append(specimen)
+
+        for specimen in specimens:
+            db.session.add(specimen)
+        db.session.commit()
+
+    return jsonify(specimens)
 
 
 def map_public_names_class(data):

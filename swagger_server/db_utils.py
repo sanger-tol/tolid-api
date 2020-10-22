@@ -2,7 +2,19 @@ import sqlite3
 import json
 import pandas as pd
 
+from sqlalchemy import func
 from swagger_server.file_utils import read_tsv
+from swagger_server.model import db, PnaSpecies, PnaSpecimen
+
+def create_new_specimen(species, specimen_id):
+    # What is the current highest specimen number?
+    highest = db.session.query(func.max(PnaSpecimen.number)).filter(PnaSpecimen.species_id == species.taxonomy_id).scalar()
+    if not highest:
+        highest = 0
+    specimen = PnaSpecimen(specimen_id=specimen_id, number=highest+1)
+    specimen.species = species
+    return specimen
+
 
 def is_missing(data=None, query_type=None):
     if data and data.lower() == 'none':

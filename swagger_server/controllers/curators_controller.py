@@ -6,7 +6,8 @@ import os
 # from swagger_server import util
 from flask import jsonify
 from swagger_server.file_utils import get_file_times, read_tsv, write_tsv
-from swagger_server.db_utils import populate_db, get_db_cols_and_file_name, update_local_database, map_public_names_dict
+from swagger_server.db_utils import populate_db, get_db_cols_and_file_name, update_local_database, map_public_names_dict, create_new_specimen
+from swagger_server.model import db, PnaSpecies, PnaSpecimen  
 
 db_file_name = 'public_names.db'
 db_cols, tsv_pub_file_name, update_floats = get_db_cols_and_file_name(table_name='public_names')
@@ -72,6 +73,25 @@ def add_public_name(taxonomy_id=None, specimen_id=None):
 
     :return: JSON with complete public name and taxa structure
     """
+
+    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).first()
+
+    if not species:
+        print("NO SPECIES FOUND")
+        return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
+
+    specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).first()
+
+    if specimen:
+        if specimen.species.taxonomy_id != species.taxonomy_id:
+            return "Species of specimen "+str(specimen_id)+" is "+ specimen.species.name + " but was expecting "+species.name, 400
+    else:
+        specimen = create_new_specimen(species, specimen_id)
+        db.session.add(specimen)
+        db.session.commit()
+
+    return jsonify([specimen])
+
 
     public_names_list = create_public_name(taxonomy_id=taxonomy_id, specimen_id=specimen_id)
     return jsonify(public_names_list)
