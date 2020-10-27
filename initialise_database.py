@@ -1,5 +1,9 @@
 import re
 
+def escape(val):
+    val = re.sub('\'','\'\'',val)
+    return val
+
 print("CREATE TABLE species_temp(prefix varchar, name varchar, taxonomy_id varchar, common_name varchar, genus varchar, family varchar, tax_order varchar, tax_class varchar, phylum varchar);")
 
 file1 = open('final_merged.txt', 'r')
@@ -7,10 +11,11 @@ Lines = file1.readlines()
 
 count = 0
 # Strips the newline character
+print('BEGIN;')
 for line in Lines:
     values = line.strip().split("\t")
-    print('INSERT INTO species_temp(prefix, name, taxonomy_id, common_name, genus, family, tax_order, tax_class, phylum) VALUES ("'+values[0]+'","'+values[1]+'","'+values[2]+'","'+values[3]+'","'+values[4]+'","'+values[5]+'","'+values[6]+'","'+values[7]+'","'+values[8]+'");')
-
+    print('INSERT INTO species_temp(prefix, name, taxonomy_id, common_name, genus, family, tax_order, tax_class, phylum) VALUES (\''+escape(values[0])+'\',\''+escape(values[1])+'\',\''+values[2]+'\',\''+escape(values[3])+'\',\''+escape(values[4])+'\',\''+escape(values[5])+'\',\''+escape(values[6])+'\',\''+escape(values[7])+'\',\''+escape(values[8])+'\');')
+print('COMMIT;')
 print("CREATE TABLE specimen_temp(taxonomy_id varchar, prefix varchar, public_name varchar, species_name varchar, specimen_id varchar, number integer);")
 file1 = open('unique_ids_assigned.txt', 'r')
 Lines = file1.readlines()
@@ -28,7 +33,13 @@ for line in Lines:
         number = values[3]
     except IndexError:
         number = 1 # To solve problem 7 below
-    print('INSERT INTO specimen_temp(prefix, public_name, species_name, specimen_id, number) VALUES ("'+prefix+'","'+values[0]+'",\''+name+'\',"'+values[2]+'",'+str(number)+');')
+    print('INSERT INTO specimen_temp(prefix, public_name, species_name, specimen_id, number) VALUES (\''+escape(prefix)+'\',\''+escape(values[0])+'\',\''+escape(name)+'\',\''+values[2]+'\','+str(number)+');')
+
+# Problem 8: Some public names have been assigned to specimens without a taxonomy ID
+# Solution: Add them in now - TWO OF THEM ARE NOT KNOWN
+updates = [(-1, 'idChrVerr'),(-2, 'ieParWern'),(36187, 'fParCha')]
+for pair in updates:
+    print('UPDATE species_temp set taxonomy_id=\''+str(pair[0])+'\' where prefix=\''+pair[1]+'\';')
 
 # Update taxonomy IDs for specimens by prefix.
 print("UPDATE specimen_temp SET taxonomy_id = (SELECT taxonomy_id FROM species_temp WHERE species_temp.prefix = specimen_temp.prefix);")
@@ -90,6 +101,7 @@ correct = [(1028678, "Cyrillia aequalis"),
 (304430, "Hygrohypnella polaris"),
 (30804, "Chelon ramada"),
 (319549, "Platyhypnum molle"),
+(36187, "Parachaenichthys charcoti"),
 (39935, "Myriolecis dispersa"),
 (414934, "Phosphuga atrata"),
 (419956, "Calvia quattuordecimguttata"),
@@ -127,11 +139,11 @@ correct = [(1028678, "Cyrillia aequalis"),
 (987424, "Eilema sororcula"),
 (987447, "Pterostoma palpinum")]
 for pair in correct:
-    print("DELETE FROM species_temp where taxonomy_id = "+str(pair[0])+" and name != \""+pair[1]+"\";")
+    print('DELETE FROM species_temp where taxonomy_id = \''+str(pair[0])+'\' and name != \''+pair[1]+'\';')
 
 # Problem 2: Some taxonomy IDs are None
 # Solution: Remove and add if it ever becomes necessary
-print ("DELETE FROM species_temp where taxonomy_id =\"None\";")
+print ('DELETE FROM species_temp where taxonomy_id =\'None\';')
 
 # Problem 3: Some public names are duplicated
 # Solution: Leave in and ensure API returns correct
@@ -152,15 +164,16 @@ print("UPDATE specimen_temp SET taxonomy_id = (SELECT taxonomy_id FROM species_t
 
 # Problem 8: Multiple entries with same specimen ID
 # Solution: Correct manually
-print('DELETE FROM specimen_temp where specimen_id = "SAN0001265" and taxonomy_id = 5802;')
-print('DELETE FROM specimen_temp where specimen_id = "SAN0001266" and number = 1;')
+print('DELETE FROM specimen_temp where specimen_id = \'SAN0001265\' and taxonomy_id = \'5802\';')
+print('DELETE FROM specimen_temp where specimen_id = \'SAN0001266\' and number = 1;')
+
 
 # Now create the actual tables
 print('CREATE TABLE species (taxonomy_id INTEGER NOT NULL, prefix VARCHAR, name VARCHAR, common_name VARCHAR, genus VARCHAR, family VARCHAR, tax_order VARCHAR, tax_class VARCHAR, phylum VARCHAR, PRIMARY KEY (taxonomy_id));')
 print('CREATE TABLE specimen (specimen_id VARCHAR NOT NULL, species_id INTEGER, public_name VARCHAR NOT NULL, number INTEGER NOT NULL, PRIMARY KEY (specimen_id), FOREIGN KEY(species_id) REFERENCES species (taxonomy_id));')
 
-print('INSERT INTO species(taxonomy_id,prefix,name,common_name,genus,family,tax_order,tax_class,phylum) SELECT taxonomy_id,prefix,name,common_name,genus,family,tax_order,tax_class,phylum from species_temp;')
-print('INSERT INTO specimen(specimen_id, species_id, public_name, number) select specimen_id, taxonomy_id, public_name, number from specimen_temp;')
+print('INSERT INTO species(taxonomy_id,prefix,name,common_name,genus,family,tax_order,tax_class,phylum) SELECT CAST(taxonomy_id AS INTEGER),prefix,name,common_name,genus,family,tax_order,tax_class,phylum from species_temp;')
+print('INSERT INTO specimen(specimen_id, species_id, public_name, number) select specimen_id, CAST(taxonomy_id AS INTEGER), public_name, number from specimen_temp;')
 
-#print('DROP TABLE species_temp;')
-#print('DROP TABLE specimen_temp;')
+print('DROP TABLE species_temp;')
+print('DROP TABLE specimen_temp;')

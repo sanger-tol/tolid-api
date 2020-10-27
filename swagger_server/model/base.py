@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-print("INIT DB")
+
 class Base(db.Model):
     __abstract__ = True
 
