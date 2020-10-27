@@ -6,7 +6,6 @@ import os
 import json
 
 from swagger_server.encoder import JSONEncoder
-from swagger_server.controllers.curators_controller import db_file_name, verify_database
 
 from swagger_server.model import db, PnaSpecies, PnaSpecimen
 
@@ -44,10 +43,6 @@ class BaseTestCase(TestCase):
         specimen1.species = species1
         db.session.add(specimen1)
         db.session.commit()
-        
-        # For now, a new version of the database for each test
-        os.remove(db_file_name)
-        verify_database()
 
     def tearDown(self):
         db.session.query(PnaSpecimen).delete()

@@ -154,32 +154,6 @@ paths:
         "409":
           description: an existing item already exists
       x-openapi-router-controller: swagger_server.controllers.curators_controller
-  /verify-database: 
-    post:
-      security:
-        - ApiKeyAuth: []
-      tags:
-      - curators
-      summary: verifies and maintains database integrity
-      description: Verifies and rebuilds the local database if required
-      operationId: verify_database
-      parameters:
-      - name: api-key
-        in: header
-        description: API-Key
-        required: True
-        style: simple
-        explode: true
-        schema:
-          type: string 
-      responses:
-        "201":
-          description: item created
-        "400":
-          description: invalid input, object invalid
-        "409":
-          description: an existing item already exists
-      x-openapi-router-controller: swagger_server.controllers.curators_controller  
 components:
   schemas:
     TaxSpec:
