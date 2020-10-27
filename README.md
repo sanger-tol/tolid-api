@@ -138,12 +138,8 @@ curl -X POST "http://localhost:8080/public_name_api/verify-database" -H  "accept
 To run the server on a Docker container, please execute the following from the root directory:
 
 ```bash
-# building the image
-docker build -t swagger_server .
-
-# starting up a container
-docker run -p 8080:8080 swagger_server
-
+# running the app (devlopment)
+docker-compose --env-file .env.dev up --build --abort-on-container-exit api
 # setting up test environment and running tests
-docker-compose up --build --abort-on-container-exit
+docker-compose --env-file .env.dev up --build --abort-on-container-exit api-tests
 ```

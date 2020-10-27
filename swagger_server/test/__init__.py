@@ -40,7 +40,7 @@ class BaseTestCase(TestCase):
                 tax_class="Mammalia",
                 taxonomy_id=9606)
         db.session.add(species2)
-        specimen1 = PnaSpecimen(specimen_id="SAN0000100", number=1)
+        specimen1 = PnaSpecimen(specimen_id="SAN0000100", number=1, public_name="wuAreMari1")
         specimen1.species = species1
         db.session.add(specimen1)
         db.session.commit()
@@ -59,7 +59,7 @@ class BaseTestCase(TestCase):
         app = connexion.App(__name__, specification_dir='../swagger/')
         app.app.json_encoder = JSONEncoder
         app.add_api('swagger.yaml', pythonic_params=True)
-        app.app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+        app.app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URI']
         app.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         db.init_app(app.app)
         return app.app

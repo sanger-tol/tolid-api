@@ -11,7 +11,8 @@ def create_new_specimen(species, specimen_id):
     highest = db.session.query(func.max(PnaSpecimen.number)).filter(PnaSpecimen.species_id == species.taxonomy_id).scalar()
     if not highest:
         highest = 0
-    specimen = PnaSpecimen(specimen_id=specimen_id, number=highest+1)
+    number = highest + 1
+    specimen = PnaSpecimen(specimen_id=specimen_id, number=number, public_name=species.prefix+str(number))
     specimen.species = species
     return specimen
 

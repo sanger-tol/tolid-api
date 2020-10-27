@@ -6,12 +6,13 @@ class PnaSpecimen(Base):
 
     species_id = db.Column(db.Integer, db.ForeignKey('species.taxonomy_id'))
     species = db.relationship("PnaSpecies", uselist=False, foreign_keys=[species_id])
+    public_name = db.Column(db.String(), nullable=False)
     number = db.Column(db.Integer, nullable=False)
 
     def to_dict(cls):
         print("JSONIFYING")
         return {'prefix': cls.species.prefix, 
-            'publicName': cls.species.prefix + str(cls.number),
+            'publicName': cls.public_name,
             'species': cls.species.name, 
             'taxonomyId': cls.species.taxonomy_id, 
             'commonName': cls.species.common_name, 
