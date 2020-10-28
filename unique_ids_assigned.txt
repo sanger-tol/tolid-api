@@ -2327,9 +2327,10 @@ daChaMinu3	Chaenorhinum minus	KDTOL10122	3
 daChaMinu4	Chaenorhinum minus	KDTOL10123	4	
 daChaMinu5	Chaenorhinum minus	KDTOL10124	5	
 daChaMinu6	Chaenorhinum minus	KDTOL10125	6	
-keSacKowa1	Saccoglossus kowalevskii	SAN1100004	1	
-keSacKowa2	Saccoglossus kowalevskii	SAN1100005	2	
-keSacKowa3	Saccoglossus kowalevskii	SAN1100006	3	
-keSacKowa4	Saccoglossus kowalevskii	SAN1100007	4	
-keSacKowa5	Saccoglossus kowalevskii	SAN1100008	5	
-keSacKowa6	Saccoglossus kowalevskii	SAN1100009	6	
+xgBioGlab1	Biomphalaria glabrata	SAN3000136	1
+keSacKowa1	Saccoglossus kowalevskii	SAN1100004	1
+keSacKowa2	Saccoglossus kowalevskii	SAN1100005	2
+keSacKowa3	Saccoglossus kowalevskii	SAN1100006	3
+keSacKowa4	Saccoglossus kowalevskii	SAN1100007	4
+keSacKowa5	Saccoglossus kowalevskii	SAN1100008	5
+keSacKowa6	Saccoglossus kowalevskii	SAN1100009	6

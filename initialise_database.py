@@ -35,15 +35,15 @@ for line in Lines:
         number = 1 # To solve problem 7 below
     print('INSERT INTO specimen_temp(prefix, public_name, species_name, specimen_id, number) VALUES (\''+escape(prefix)+'\',\''+escape(values[0])+'\',\''+escape(name)+'\',\''+values[2]+'\','+str(number)+');')
 
-# Problem 8: Some public names have been assigned to specimens without a taxonomy ID
-# Solution: Add them in now - TWO OF THEM ARE NOT KNOWN
-updates = [(-1, 'idChrVerr'),(-2, 'ieParWern'),(36187, 'fParCha')]
-for pair in updates:
-    print('UPDATE species_temp set taxonomy_id=\''+str(pair[0])+'\' where prefix=\''+pair[1]+'\';')
-
 # Update taxonomy IDs for specimens by prefix.
 print("UPDATE specimen_temp SET taxonomy_id = (SELECT taxonomy_id FROM species_temp WHERE species_temp.prefix = specimen_temp.prefix);")
 
+# Problem 8: Some public names have been assigned to specimens without a taxonomy ID
+# Solution: Add them in now - ONE OF THEM IS NOT KNOWN
+updates = [(-2, 'ieParWern'),(36187, 'fParCha')]
+for pair in updates:
+    print('UPDATE specimen_temp set taxonomy_id=\''+str(pair[0])+'\' where prefix=\''+pair[1]+'\';')
+print('UPDATE species_temp set taxonomy_id=\'-2\' where prefix=\'ieParWern\';')
 # Problem 1: Duplicate taxonomy IDs
 # Solution - remove legacy entries
 correct = [(1028678, "Cyrillia aequalis"),
@@ -101,7 +101,6 @@ correct = [(1028678, "Cyrillia aequalis"),
 (304430, "Hygrohypnella polaris"),
 (30804, "Chelon ramada"),
 (319549, "Platyhypnum molle"),
-(36187, "Parachaenichthys charcoti"),
 (39935, "Myriolecis dispersa"),
 (414934, "Phosphuga atrata"),
 (419956, "Calvia quattuordecimguttata"),
