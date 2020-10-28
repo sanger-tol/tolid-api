@@ -14,7 +14,12 @@ You can easily generate a server stub by using the [OpenAPI-Spec](https://github
 Python 3.5.2+
 
 ## Setup
-- First create a local Python virtual enviroment
+- Set up a PostgreSQL/SQLlite database and set environment variable
+```
+export DB_URI=sqlite:///dev.db
+```
+
+- Create a local Python virtual enviroment
 ```
 python3 -m venv venv
 ```
@@ -50,17 +55,7 @@ pip3 install 'connexion[swagger-ui]'
 ```
 
 ## Usage
-To run the server, first make the "start.sh" executable 
-```
-chmod +x ./start.sh
-```
-
-then run "start.sh" 
-```
-./start.sh
-```
-
-or alternatively execute the following from the root directory:
+To run the server:
 ```
 source venv/bin/activate
 python -m swagger_server
@@ -107,7 +102,7 @@ The output for NCBI tax id 6344 will look something like this:
       "prefix": "wuAreMari",   
       "public_name": "wuAreMari1"
       "species": "Arenicola marina",
-      "taxid": "6344"
+      "taxonomy_id": "6344"
     }
   ]
 }
@@ -124,22 +119,20 @@ COMMON_NAME: lugworm
 ```
 This is the URL from NCBI for id [6344](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=6344)
 
-
-## Rebuild the local sqlite3 database
-The database is rebuilt from scratch each time you use the "start.sh" script. 
-You can alternatively run the script "reset_database.sh"
-
-```
-curl -X POST "http://localhost:8080/public_name_api/verify-database" -H  "accept: */*" -H  "api-key: 123456789" -d ""
-```
-
 ## Running with Docker
 
 To run the server on a Docker container, please execute the following from the root directory:
 
 ```bash
-# running the app (devlopment)
-docker-compose --env-file .env.dev up --build --abort-on-container-exit api
+# running the app (devlopment) - N.B. database will need initialising
+docker-compose --env-file .env.dev up --build --abort-on-container-exit api db
 # setting up test environment and running tests
 docker-compose --env-file .env.dev up --build --abort-on-container-exit api-tests
+
+# UAT
+docker-compose --env-file .env.uat up --build --abort-on-container-exit api
+
+# Prod
+docker-compose --env-file .env.prod up --build --abort-on-container-exit api
+
 ```

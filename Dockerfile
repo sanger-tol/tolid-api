@@ -13,7 +13,6 @@ WORKDIR /usr/src/app
 
 COPY requirements.txt /usr/src/app/
 COPY setup.py /usr/src/app/
-COPY start.sh /usr/src/app/
 COPY config.json /usr/src/app/
 
 RUN apt-get update -y
@@ -22,9 +21,6 @@ RUN pip3 install --upgrade setuptools
 RUN python3 setup.py install
 RUN pip3 --no-cache-dir install -r requirements.txt
 RUN pip3 --no-cache-dir install 'connexion[swagger-ui]' 
-
-#RUN curl -s https://gitlab.com/wtsi-grit/darwin-tree-of-life-sample-naming/-/raw/master/final_merged.txt -o final_merged.txt
-#RUN curl -s https://gitlab.com/wtsi-grit/darwin-tree-of-life-sample-naming/-/raw/master/unique_ids_assigned.txt -o unique_ids_assigned.txt
 
 # Copy the test config file into the local instance if it does not exist
 RUN cp -n config.json /usr/src/app/instance/config.json 
@@ -35,4 +31,3 @@ COPY . /usr/src/app
 
 EXPOSE 8080
 CMD ["python3", "-m", "swagger_server"]
-# RUN ./start.sh
