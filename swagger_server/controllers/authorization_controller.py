@@ -1,33 +1,12 @@
-from typing import List
-import connexion
-import json
-import os
 from connexion.exceptions import OAuthProblem
-
-
-def get_api_keys(api_token=None):
-    token_owner = None 
-    try:
-        with open(os.path.join('instance', 'config.json')) as config_file:
-            config = json.load(config_file)
-            tokens = config['api-keys']  # Read API-Tokens from the global config file
-        token_owner = tokens[api_token]
-        if token_owner:
-            print("AUTHENTICATION INFO: Found valid api-token for user " + token_owner["user"])
-        else:
-            print("AUTHENTICATION ERROR: Could not find a user for token " + api_token)
-    except Exception as e:
-        print(str(e))
-
-    return token_owner
-
+from swagger_server.model import db, PnaUser
 
 def apikey_auth(token, required_scopes):
 
     # info = TOKEN_DB.get(token, None)
-    token_found = get_api_keys(api_token=token)
+    user = db.session.query(PnaUser).filter(PnaUser.api_key == token).one_or_none()
 
-    if not token_found:
+    if user is None:
         raise OAuthProblem('Invalid api-key token')
 
-    return token_found
+    return { "user": user.name, "uid": user.user_id}

@@ -1,4 +1,4 @@
-from swagger_server.model import db, PnaSpecies, PnaSpecimen  
+from swagger_server.model import db, PnaSpecies, PnaSpecimen, PnaUser
 from flask import jsonify
 from swagger_server.db_utils import create_new_specimen
 
@@ -17,16 +17,14 @@ def search_public_name(taxonomy_id=None, specimen_id=None, skip=None, limit=None
     :rtype: List[PublicName]
     """
 
-    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).first()
+    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).one_or_none()
 
-    if not species:
-        print("NO SPECIES FOUND")
+    if species is None:
         return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
 
-    specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).first()
+    specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).one_or_none()
 
-    if not specimen:
-        print("NO SPECIMEN FOUND")
+    if specimen is None:
         return jsonify([])
 
     if specimen.species.taxonomy_id != species.taxonomy_id:
@@ -34,7 +32,7 @@ def search_public_name(taxonomy_id=None, specimen_id=None, skip=None, limit=None
 
     return jsonify([specimen])
 
-def bulk_search_public_name(body=None):  
+def bulk_search_public_name(body=None, api_key=None):  
     """searches DToL public names in bulk
 
     By passing in the appropriate taxonomy string, you can search for available public names in the system 
@@ -44,25 +42,25 @@ def bulk_search_public_name(body=None):
 
     :rtype: List[PublicName]
     """
-
+    user = db.session.query(PnaUser).filter(PnaUser.api_key == api_key).one_or_none()
     specimens = []
     # body contains the rows of data
     if body:
         for row in body:
             specimen_id = row['specimenId']
             taxonomy_id = row['taxonomyId']
-            species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).first()
+            species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).one_or_none()
 
-            if not species:
+            if species is None:
                 return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
 
-            specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).first()
+            specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).one_or_none()
 
-            if specimen:
+            if specimen is not None:
                 if specimen.species.taxonomy_id != species.taxonomy_id:
                     return "Species of specimen "+str(specimen_id)+" is "+ specimen.species.name + " but was expecting "+species.name, 400
             else:
-                specimen = create_new_specimen(species, specimen_id)
+                specimen = create_new_specimen(species, specimen_id, user)
 
             specimens.append(specimen)
 
