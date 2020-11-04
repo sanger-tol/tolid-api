@@ -1,8 +1,12 @@
 # from swagger_server.models.public_name import PublicName 
 # from swagger_server import util
-from flask import jsonify
+from flask import jsonify, send_from_directory
 from swagger_server.db_utils import create_new_specimen
 from swagger_server.model import db, PnaSpecies, PnaSpecimen, PnaUser
+from swagger_server.excel_utils import validate_excel
+import connexion
+import tempfile
+
 
 def add_public_name(taxonomy_id=None, specimen_id=None, api_key=None): 
     """adds a public name
@@ -33,4 +37,34 @@ def add_public_name(taxonomy_id=None, specimen_id=None, api_key=None):
         db.session.commit()
 
     return jsonify([specimen])
-  
+
+def validate_manifest(excel_file=None, species_column_heading="scientific_name"):  # noqa: E501
+    """Validate an excel manifest
+
+    Validates an excel manifest and offers option to download manifest with public names filled in  # noqa: E501
+
+    :param type: 
+    :type type: str
+    :param file_name: 
+    :type file_name: strstr
+
+    :rtype: None
+    """
+    user = db.session.query(PnaUser).filter(PnaUser.user_id == connexion.context["user"]).one_or_none()
+    uploaded_file = connexion.request.files['excelFile']
+
+    # Save to a temporary location
+    dir = tempfile.TemporaryDirectory()
+    uploaded_file.save(dir.name+'/manifest.xlsx')
+
+    # Do the validation
+    (validated, updated_filename, errors) = validate_excel(dirname=dir.name, filename='manifest.xlsx', user=user, species_column_heading=species_column_heading)
+    if validated:
+        # Stream out the validated Excel file and remove
+        return send_from_directory(dir.name, filename=updated_filename, as_attachment=True)
+    else:
+        # Return the error
+        return jsonify({"errors": errors}), 400
+
+    # Remove old file
+    dir.cleanup()

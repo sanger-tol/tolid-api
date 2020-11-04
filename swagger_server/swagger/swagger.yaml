@@ -154,6 +154,52 @@ paths:
         "409":
           description: an existing item already exists
       x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /validate-manifest:
+    post:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - curators
+      summary: Validate an excel manifest
+      description: |
+        Validates an excel manifest and offers option to download manifest with public names filled in
+      operationId: validate_manifest
+      parameters:
+        - name: api-key
+          in: header
+          description: API-Key
+          required: True
+          style: simple
+          explode: true
+          schema:
+            type: string  
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              x-body-name: excelFile
+              type: object
+              properties:
+                excelFile:
+                  type: string
+                  format: binary
+              required:
+                - excelFile
+      responses:
+        "200":
+          description: An Excel file, with the public names filled in
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: manifest has not validated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageList'
+      x-openapi-router-controller: swagger_server.controllers.curators_controller
 components:
   schemas:
     TaxSpec:
@@ -234,6 +280,25 @@ components:
         taxaClass: Polychaeta
         family: Arenicolidae
         order: Capitellida
+    ErrorMessageList:
+      required:
+        - errors
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorMessage'
+    ErrorMessage:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Something has gone wrong"
+      example:
+        message: "Something has gone wrong"
   securitySchemes:
     ApiKeyAuth:        # name for the security scheme
       type: apiKey
