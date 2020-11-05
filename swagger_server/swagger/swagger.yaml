@@ -154,6 +154,43 @@ paths:
         "409":
           description: an existing item already exists
       x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /public-name/all:
+    get:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - curators
+      summary: List all assigned public names
+      description: |
+        Returns a list of all public names in the database
+      operationId: list_public_names
+      parameters:
+      - name: api-key
+        in: header
+        description: API-Key
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: string  
+      - name: taxonomyId
+        in: query
+        description: pass an NCBI taxonomy ID to filter results by
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            text/plain:
+              schema:
+                type: string
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.curators_controller
   /validate-manifest:
     post:
       security:

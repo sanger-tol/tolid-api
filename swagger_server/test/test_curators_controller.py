@@ -4,6 +4,7 @@ from __future__ import absolute_import
 
 from swagger_server.test import BaseTestCase
 from swagger_server.excel_utils import find_columns
+from swagger_server.model import db, PnaSpecimen
 from openpyxl import load_workbook
 
 class TestCuratorsController(BaseTestCase):
@@ -215,6 +216,71 @@ class TestCuratorsController(BaseTestCase):
         (taxon_id_column, specimen_id_column, scientific_name_column, public_name_column) = find_columns(sheet, "scientific_name")
         self.assertEquals('wuAreMari2', sheet.cell(row=2, column=public_name_column).value)
         self.assertEquals('wuAreMari3', sheet.cell(row=3, column=public_name_column).value)
+
+    def test_list_public_names(self):
+        # Add a couple more specimens
+        specimen2 = PnaSpecimen(specimen_id="SAN0000101", number=2, public_name="wuAreMari2")
+        specimen2.species = self.species1
+        specimen2.user = self.user1
+        specimen3 = PnaSpecimen(specimen_id="SAN0000102", number=1, public_name="mHomSap1")
+        specimen3.species = self.species2
+        specimen3.user = self.user1
+        db.session.add(specimen2)
+        db.session.add(specimen3)
+        db.session.commit()
+
+        # No authorisation token given
+        body = []
+        response = self.client.open(
+            '/public_name_api/public-name/all',
+            method='GET',
+            )
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # Invalid authorisation token given
+        body = []
+        response = self.client.open(
+            '/public_name_api/public-name/all',
+            method='GET',
+            headers={"api-key": "12345678"},
+            )
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # No taxonomyId given
+        query_string = []
+        response = self.client.open(
+            '/public_name_api/public-name/all',
+            method='GET',
+            headers={"api-key": self.api_key},
+            query_string=query_string)
+        expect = "wuAreMari1\tArenicola marina\tSAN0000100\t1\nwuAreMari2\tArenicola marina\tSAN0000101\t2\nmHomSap1\tHomo sapiens\tSAN0000102\t1"
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals('text/plain; charset=utf-8', response.content_type)
+        self.assertEquals(expect, response.data.decode('utf-8'))
+
+        # Taxonomy ID not in database
+        query_string = [('taxonomyId', '999999999')]
+        response = self.client.open(
+            '/public_name_api/public-name/all',
+            method='GET',
+            headers={"api-key": self.api_key},
+            query_string=query_string)
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Taxonomy ID given
+        query_string = [('taxonomyId', '6344')]
+        response = self.client.open(
+            '/public_name_api/public-name/all',
+            method='GET',
+            headers={"api-key": self.api_key},
+            query_string=query_string)
+        expect = "wuAreMari1\tArenicola marina\tSAN0000100\t1\nwuAreMari2\tArenicola marina\tSAN0000101\t2"
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals('text/plain; charset=utf-8', response.content_type)
+        self.assertEquals(expect, response.data.decode('utf-8'))
 
 if __name__ == '__main__':
     import unittest

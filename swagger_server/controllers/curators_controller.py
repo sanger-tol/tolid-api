@@ -68,3 +68,32 @@ def validate_manifest(excel_file=None, species_column_heading="scientific_name")
 
     # Remove old file
     dir.cleanup()
+
+def list_public_names(taxonomy_id=None, skip=None, limit=None):  
+    """lists all public names
+
+    By passing in the appropriate taxonomy string, you can limit the search to a particular species
+
+    :param taxonomyId: pass an optional search string for looking up a public name
+    :type taxonomyId: str
+    # :param skip: number of records to skip for pagination
+    # :type skip: int
+    # :param limit: maximum number of records to return
+    # :type limit: int
+
+    :rtype: List[PublicName]
+    """
+    if taxonomy_id is None:
+        specimens = db.session.query(PnaSpecimen).order_by(PnaSpecimen.species_id).order_by(PnaSpecimen.specimen_id).order_by(PnaSpecimen.number).all()
+    else:
+        species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).one_or_none()
+
+        if species is None:
+            return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
+
+        specimens = db.session.query(PnaSpecimen).filter(PnaSpecimen.species_id == taxonomy_id).order_by(PnaSpecimen.specimen_id).order_by(PnaSpecimen.number).all()
+
+    output = ""
+    for specimen in specimens:
+        output += specimen.public_name+'\t'+specimen.species.name+'\t'+specimen.specimen_id+'\t'+str(specimen.number)+'\n'
+    return output.strip()
