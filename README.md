@@ -44,14 +44,9 @@ pip3 install -r requirements.txt
 pip3 install 'connexion[swagger-ui]'
 ```
 
-- Create a local config.json file in the "instance" folder for API-key storage. There is a version on the root folder you can copy into the "instance" folder
+- Insert users into the database (after starting the server so that the tables are built)
 ```
-{
-  "api-keys": {
-    "b06810c5-2bdc-4faf-b5a9-4d3b52ed5fab":  { "user": "Test User 1", "uid": 100},
-    "f95ebeae-5efe-45f9-a0b1-f44be9ae105e": { "user": "Test User 2", "uid": 101}
-  }
-}
+insert into user(user_id, name, api_key) values(100, 'Test User 1', 'b06810c5-2bdc-4faf-b5a9-4d3b52ed5fab');
 ```
 
 ## Usage
