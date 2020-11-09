@@ -217,6 +217,33 @@ class TestCuratorsController(BaseTestCase):
         self.assertEquals('wuAreMari2', sheet.cell(row=2, column=public_name_column).value)
         self.assertEquals('wuAreMari3', sheet.cell(row=3, column=public_name_column).value)
 
+        # Different column name for species
+        file = open('swagger_server/test/test-manifest-col.xlsx', 'rb')
+        data = {
+            'excelFile': (file, 'test_file.xlsx'),
+         }
+        query_string = {'speciesColumnHeading': 'random column name'}
+        response = self.client.open(
+            '/public_name_api/validate-manifest',
+            method='POST',
+            headers={"api-key": self.api_key},
+            query_string=query_string,
+            data=data)
+        file.close()
+        self.assert200(response, 'Not received a 200 response')
+        self.assertEquals('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', response.content_type)
+
+        # Save as Excel file
+        file = open('swagger_server/test/test-manifest-validated.xlsx', 'wb')
+        file.write(response.get_data())
+        file.close()
+        workbook = load_workbook(filename='swagger_server/test/test-manifest-validated.xlsx')
+        sheet = workbook.active
+        (taxon_id_column, specimen_id_column, scientific_name_column, public_name_column) = find_columns(sheet, "random column name")
+        self.assertEquals('wuAreMari2', sheet.cell(row=2, column=public_name_column).value)
+        self.assertEquals('wuAreMari3', sheet.cell(row=3, column=public_name_column).value)
+
+
     def test_list_public_names(self):
         # Add a couple more specimens
         specimen2 = PnaSpecimen(specimen_id="SAN0000101", number=2, public_name="wuAreMari2")

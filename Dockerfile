@@ -13,7 +13,6 @@ WORKDIR /usr/src/app
 
 COPY requirements.txt /usr/src/app/
 COPY setup.py /usr/src/app/
-COPY config.json /usr/src/app/
 
 RUN apt-get update -y
 RUN apt-get install -y python3-pip python3-setuptools
@@ -21,10 +20,6 @@ RUN pip3 install --upgrade setuptools
 RUN python3 setup.py install
 RUN pip3 --no-cache-dir install -r requirements.txt
 RUN pip3 --no-cache-dir install 'connexion[swagger-ui]' 
-
-# Copy the test config file into the local instance if it does not exist
-RUN cp -n config.json /usr/src/app/instance/config.json 
-RUN cat /usr/src/app/instance/config.json 
 
 #RUN chmod +x start.sh
 COPY . /usr/src/app

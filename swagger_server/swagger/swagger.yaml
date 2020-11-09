@@ -210,6 +210,14 @@ paths:
           explode: true
           schema:
             type: string  
+        - name: speciesColumnHeading
+          in: query
+          description: the column heading of the column containing the species name
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
       requestBody:
         content:
           multipart/form-data:
