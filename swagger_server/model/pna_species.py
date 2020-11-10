@@ -13,5 +13,13 @@ class PnaSpecies(Base):
     phylum = db.Column(db.String())
     specimens = db.relationship('PnaSpecimen', lazy=False)
 
-    def __str__(self):
-        return "PnaSpecies: "+str(self.taxonomy_id)+", "+self.name
+    def to_dict(cls):
+        return {'prefix': cls.prefix, 
+            'species': cls.name, 
+            'taxonomyId': cls.taxonomy_id, 
+            'commonName': cls.common_name, 
+            'genus': cls.genus, 
+            'family': cls.family, 
+            'order': cls.tax_order, 
+            'taxaClass': cls.tax_class, 
+            'phylum': cls.phylum}

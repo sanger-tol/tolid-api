@@ -38,6 +38,41 @@ def add_public_name(taxonomy_id=None, specimen_id=None, api_key=None):
 
     return jsonify([specimen])
 
+def add_species(body=None, api_key=None): 
+    """adds a species
+
+    Adds a new public name to the system 
+
+    :param taxonomy_id: valid NCBI Taxonomy identifier
+    :type taxonomy_id: str
+    :param specimen_id: valid GAL specimen identifier
+    :type specimen_id: str
+
+    :return: JSON with complete public name and taxa structure
+    """
+    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == body["taxonomyId"]).one_or_none()
+
+    if species is not None:
+        return "Species with taxonomyId "+str(body["taxonomyId"])+" already exists", 400
+
+    species = PnaSpecies()
+    species.prefix=body["prefix"]
+    species.name=body["species"]
+    species.taxonomy_id=body["taxonomyId"]
+    species.common_name=body["commonName"]
+    species.genus=body["genus"]
+    species.family=body["family"]
+    species.prefix=body["prefix"]
+    species.tax_order=body["order"]
+    species.tax_class=body["taxaClass"]
+    species.phylum=body["phylum"]
+
+    db.session.add(species)
+    db.session.commit()
+
+    return jsonify([species])
+
+
 def validate_manifest(excel_file=None, species_column_heading="scientific_name"):  # noqa: E501
     """Validate an excel manifest
 
@@ -96,4 +131,21 @@ def list_public_names(taxonomy_id=None, skip=None, limit=None):
     output = ""
     for specimen in specimens:
         output += specimen.public_name+'\t'+specimen.species.name+'\t'+specimen.specimen_id+'\t'+str(specimen.number)+'\n'
+    return output.strip()
+
+def list_species():  
+    """lists all species
+
+    # :param skip: number of records to skip for pagination
+    # :type skip: int
+    # :param limit: maximum number of records to return
+    # :type limit: int
+
+    :rtype: List[Species]
+    """
+    speciess = db.session.query(PnaSpecies).order_by(PnaSpecies.taxonomy_id).all()
+
+    output = ""
+    for species in speciess:
+        output += species.prefix+'\t'+species.name+'\t'+str(species.taxonomy_id)+'\t'+species.common_name+'\t'+species.genus+'\t'+species.family+'\t'+species.tax_order+'\t'+species.tax_class+'\t'+species.phylum+'\n'
     return output.strip()

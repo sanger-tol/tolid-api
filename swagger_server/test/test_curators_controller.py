@@ -146,6 +146,74 @@ class TestCuratorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
 
+    def test_add_species(self):
+        # No authorisation token given
+        query_string = []
+        response = self.client.open(
+            '/public_name_api/species',
+            method='PUT',
+            query_string=query_string)
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # Invalid authorisation token given
+        query_string = []
+        response = self.client.open(
+            '/public_name_api/species',
+            method='PUT',
+            headers={"api-key": "12345678"},
+            query_string=query_string)
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Taxonomy ID already in database
+        body = {'taxonomyId': 6344,
+                'species': 'Species',
+                'prefix': 'whatever',
+                'commonName': 'Common name', 
+                'genus': 'Genus', 
+                'family': 'Family', 
+                'order': 'Order', 
+                'taxaClass': 'Class', 
+                'phylum': 'Phylum'}
+        response = self.client.open(
+            '/public_name_api/species',
+            method='PUT',
+            headers={"api-key": self.api_key},
+            json=body)
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Taxonomy ID not in database - should create it
+        body = {'taxonomyId': 999999,
+                'species': 'Species',
+                'prefix': 'whatever',
+                'commonName': 'Common name', 
+                'genus': 'Genus', 
+                'family': 'Family', 
+                'order': 'Order', 
+                'taxaClass': 'Class', 
+                'phylum': 'Phylum'}
+        response = self.client.open(
+            '/public_name_api/species',
+            method='PUT',
+            headers={"api-key": self.api_key},
+            json=body)
+        expect = [{
+            "commonName": "Common name",
+            "family": "Family",
+            "genus": "Genus",
+            "order": "Order",
+            "phylum": "Phylum",
+            "prefix": "whatever",
+            "species": "Species",
+            "taxaClass": "Class",
+            "taxonomyId": 999999
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+
     def test_validate_manifest(self):
         # No authorisation token given
         body = []
@@ -304,6 +372,37 @@ class TestCuratorsController(BaseTestCase):
             headers={"api-key": self.api_key},
             query_string=query_string)
         expect = "wuAreMari1\tArenicola marina\tSAN0000100\t1\nwuAreMari2\tArenicola marina\tSAN0000101\t2"
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals('text/plain; charset=utf-8', response.content_type)
+        self.assertEquals(expect, response.data.decode('utf-8'))
+
+    def test_list_species(self):
+        # No authorisation token given
+        body = []
+        response = self.client.open(
+            '/public_name_api/species/all',
+            method='GET',
+            )
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # Invalid authorisation token given
+        body = []
+        response = self.client.open(
+            '/public_name_api/species/all',
+            method='GET',
+            headers={"api-key": "12345678"},
+            )
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # All correct
+        query_string = []
+        response = self.client.open(
+            '/public_name_api/species/all',
+            method='GET',
+            headers={"api-key": self.api_key},
+            query_string=query_string)
+        expect = "wuAreMari\tArenicola marina\t6344\tlugworm\tArenicola\tArenicolidae\tNone\tPolychaeta\tAnnelida\nmHomSap\tHomo sapiens\t9606\thuman\tHomo\tHominidae\tPrimates\tMammalia\tChordata"
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals('text/plain; charset=utf-8', response.content_type)

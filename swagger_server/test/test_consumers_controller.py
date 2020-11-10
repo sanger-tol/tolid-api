@@ -253,6 +253,53 @@ class TestConsumersController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals([], response.json)
 
+    def test_search_species(self):
+        # No taxonomyId given
+        query_string = []
+        response = self.client.open(
+            '/public_name_api/species',
+            method='GET',
+            query_string=query_string)
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Taxonomy ID not in database
+        query_string = [('taxonomyId', '999999999')]
+        response = self.client.open(
+            '/public_name_api/species',
+            method='GET',
+            query_string=query_string)
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # All data given
+        query_string = [('taxonomyId', '6344')]
+        response = self.client.open(
+            '/public_name_api/species',
+            method='GET',
+            query_string=query_string)
+        expect = [{
+            "commonName": "lugworm",
+            "family": "Arenicolidae",
+            "genus": "Arenicola",
+            "order": "None",
+            "phylum": "Annelida",
+            "prefix": "wuAreMari",
+            "species": "Arenicola marina",
+            "taxaClass": "Polychaeta",
+            "taxonomyId": 6344
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # Same again
+        response = self.client.open(
+            '/public_name_api/species',
+            method='GET',
+            query_string=query_string)
+        self.assertEquals(expect, response.json)
+
 if __name__ == '__main__':
     import unittest
     unittest.main()

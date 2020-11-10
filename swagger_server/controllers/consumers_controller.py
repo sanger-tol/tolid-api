@@ -69,3 +69,25 @@ def bulk_search_public_name(body=None, api_key=None):
         db.session.commit()
 
     return jsonify(specimens)
+
+def search_species(taxonomy_id=None, skip=None, limit=None):  
+    """searches species
+
+    By passing in the appropriate taxonomy string, you can search for available species in the system 
+
+    :param taxonomyId: pass an optional search string for looking up a public name
+    :type taxonomyId: str
+    # :param skip: number of records to skip for pagination
+    # :type skip: int
+    # :param limit: maximum number of records to return
+    # :type limit: int
+
+    :rtype: List[Species]
+    """
+
+    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).one_or_none()
+
+    if species is None:
+        return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
+
+    return jsonify([species])
