@@ -190,6 +190,8 @@ paths:
                 type: string
         "400":
           description: bad input parameter
+        "403":
+          description: user not authorised to use this function
       x-openapi-router-controller: swagger_server.controllers.curators_controller
   /species:
     get:
@@ -257,6 +259,8 @@ paths:
                 x-content-type: application/json
         "400":
           description: invalid input, object invalid
+        "403":
+          description: user not authorised to use this function
         "409":
           description: an existing item already exists
       x-openapi-router-controller: swagger_server.controllers.curators_controller
@@ -295,6 +299,8 @@ paths:
                 x-content-type: application/json
         "400":
           description: invalid input, object invalid
+        "403":
+          description: user not authorised to use this function
         "409":
           description: item does not exist
       x-openapi-router-controller: swagger_server.controllers.curators_controller
@@ -326,6 +332,8 @@ paths:
                 type: string
         "400":
           description: bad input parameter
+        "403":
+          description: user not authorised to use this function
       x-openapi-router-controller: swagger_server.controllers.curators_controller
   /validate-manifest:
     post:

@@ -6,11 +6,12 @@ import os
 
 from swagger_server.encoder import JSONEncoder
 
-from swagger_server.model import db, PnaSpecies, PnaSpecimen, PnaUser
+from swagger_server.model import db, PnaSpecies, PnaSpecimen, PnaUser, PnaRole
 
 class BaseTestCase(TestCase):
 
     api_key = "AnyThingBecAuseThIsIsATEST123456"
+    api_key2 = "AnyThingBecAuseThIsIsATEST567890"
 
     def setUp(self):
         db.create_all()
@@ -18,6 +19,13 @@ class BaseTestCase(TestCase):
                 name="test_user",
                 api_key=self.api_key)
         db.session.add(self.user1)
+        self.user2 = PnaUser(user_id=200,
+                name="test_user_admin",
+                api_key=self.api_key2)
+        db.session.add(self.user2)
+        self.role = PnaRole(role="admin")
+        self.role.user = self.user2
+        db.session.add(self.role)
         self.species1 = PnaSpecies(common_name="lugworm",
                 family="Arenicolidae",
                 genus="Arenicola",
@@ -47,6 +55,7 @@ class BaseTestCase(TestCase):
     def tearDown(self):
         db.session.query(PnaSpecimen).delete()
         db.session.query(PnaSpecies).delete()
+        db.session.query(PnaRole).delete()
         db.session.query(PnaUser).delete()
         db.session.commit()
 

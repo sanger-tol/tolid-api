@@ -165,6 +165,24 @@ class TestCuratorsController(BaseTestCase):
         self.assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
+        # Not admin
+        body = {'taxonomyId': 999999,
+                'species': 'Species',
+                'prefix': 'whatever',
+                'commonName': 'Common name', 
+                'genus': 'Genus', 
+                'family': 'Family', 
+                'order': 'Order', 
+                'taxaClass': 'Class', 
+                'phylum': 'Phylum'}
+        response = self.client.open(
+            '/public_name_api/species',
+            method='PUT',
+            headers={"api-key": self.api_key},
+            json=body)
+        self.assert403(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
         # Taxonomy ID already in database
         body = {'taxonomyId': 6344,
                 'species': 'Species',
@@ -178,7 +196,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/public_name_api/species',
             method='PUT',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.api_key2},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -196,7 +214,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/public_name_api/species',
             method='PUT',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.api_key2},
             json=body)
         expect = [{
             "commonName": "Common name",
@@ -242,6 +260,23 @@ class TestCuratorsController(BaseTestCase):
             query_string=query_string)
         self.assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
+        # Not admin
+        body = {'taxonomyId': 6344,
+                'species': 'Species',
+                'prefix': 'whatever',
+                'commonName': 'Common name', 
+                'genus': 'Genus', 
+                'family': 'Family', 
+                'order': 'Order', 
+                'taxaClass': 'Class', 
+                'phylum': 'Phylum'}
+        response = self.client.open(
+            '/public_name_api/species',
+            method='PATCH',
+            headers={"api-key": self.api_key},
+            json=body)
+        self.assert403(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
 
         # Taxonomy ID not in database
         body = {'taxonomyId': 999999,
@@ -256,7 +291,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/public_name_api/species',
             method='PATCH',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.api_key2},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -274,7 +309,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/public_name_api/species',
             method='PATCH',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.api_key2},
             json=body)
         expect = [{
             "commonName": "Common name",
@@ -429,12 +464,21 @@ class TestCuratorsController(BaseTestCase):
             )
         self.assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
+        # Not admin
+        body = []
+        response = self.client.open(
+            '/public_name_api/public-name/all',
+            method='GET',
+            headers={"api-key": self.api_key},
+            )
+        self.assert403(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
         # No taxonomyId given
         query_string = []
         response = self.client.open(
             '/public_name_api/public-name/all',
             method='GET',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.api_key2},
             query_string=query_string)
         expect = "wuAreMari1\tArenicola marina\tSAN0000100\t1\nwuAreMari2\tArenicola marina\tSAN0000101\t2\nmHomSap1\tHomo sapiens\tSAN0000102\t1"
         self.assert200(response,
@@ -447,7 +491,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/public_name_api/public-name/all',
             method='GET',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.api_key2},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -457,7 +501,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/public_name_api/public-name/all',
             method='GET',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.api_key2},
             query_string=query_string)
         expect = "wuAreMari1\tArenicola marina\tSAN0000100\t1\nwuAreMari2\tArenicola marina\tSAN0000101\t2"
         self.assert200(response,
@@ -483,12 +527,21 @@ class TestCuratorsController(BaseTestCase):
             )
         self.assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
+        # Not admin
+        body = []
+        response = self.client.open(
+            '/public_name_api/species/all',
+            method='GET',
+            headers={"api-key": self.api_key},
+            )
+        self.assert403(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
         # All correct
         query_string = []
         response = self.client.open(
             '/public_name_api/species/all',
             method='GET',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.api_key2},
             query_string=query_string)
         expect = "wuAreMari\tArenicola marina\t6344\tlugworm\tArenicola\tArenicolidae\tNone\tPolychaeta\tAnnelida\nmHomSap\tHomo sapiens\t9606\thuman\tHomo\tHominidae\tPrimates\tMammalia\tChordata"
         self.assert200(response,

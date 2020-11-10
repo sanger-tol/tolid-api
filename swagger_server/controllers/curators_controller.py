@@ -2,7 +2,7 @@
 # from swagger_server import util
 from flask import jsonify, send_from_directory
 from swagger_server.db_utils import create_new_specimen
-from swagger_server.model import db, PnaSpecies, PnaSpecimen, PnaUser
+from swagger_server.model import db, PnaSpecies, PnaSpecimen, PnaUser, PnaRole
 from swagger_server.excel_utils import validate_excel
 import connexion
 import tempfile
@@ -45,8 +45,11 @@ def add_species(body=None, api_key=None):
 
     :return: JSON with complete public name and taxa structure
     """
-    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == body["taxonomyId"]).one_or_none()
+    role = db.session.query(PnaRole).filter(PnaRole.role == 'admin').filter(PnaRole.user_id == connexion.context["user"]).one_or_none()
+    if role is None:
+        return "User does not have permission to use this function", 403
 
+    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == body["taxonomyId"]).one_or_none()
     if species is not None:
         return "Species with taxonomyId "+str(body["taxonomyId"])+" already exists", 400
 
@@ -66,6 +69,7 @@ def add_species(body=None, api_key=None):
     db.session.commit()
 
     return jsonify([species])
+
 def edit_species(body=None, api_key=None): 
     """modifies a species
 
@@ -73,8 +77,11 @@ def edit_species(body=None, api_key=None):
 
     :return: JSON with complete public name and taxa structure
     """
-    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == body["taxonomyId"]).one_or_none()
+    role = db.session.query(PnaRole).filter(PnaRole.role == 'admin').filter(PnaRole.user_id == connexion.context["user"]).one_or_none()
+    if role is None:
+        return "User does not have permission to use this function", 403
 
+    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == body["taxonomyId"]).one_or_none()
     if species is None:
         return "Species with taxonomyId "+str(body["taxonomyId"])+" does not exist", 400
 
@@ -140,6 +147,10 @@ def list_public_names(taxonomy_id=None, skip=None, limit=None):
 
     :rtype: List[PublicName]
     """
+    role = db.session.query(PnaRole).filter(PnaRole.role == 'admin').filter(PnaRole.user_id == connexion.context["user"]).one_or_none()
+    if role is None:
+        return "User does not have permission to use this function", 403
+
     if taxonomy_id is None:
         specimens = db.session.query(PnaSpecimen).order_by(PnaSpecimen.species_id).order_by(PnaSpecimen.specimen_id).order_by(PnaSpecimen.number).all()
     else:
@@ -165,6 +176,10 @@ def list_species():
 
     :rtype: List[Species]
     """
+    role = db.session.query(PnaRole).filter(PnaRole.role == 'admin').filter(PnaRole.user_id == connexion.context["user"]).one_or_none()
+    if role is None:
+        return "User does not have permission to use this function", 403
+
     speciess = db.session.query(PnaSpecies).order_by(PnaSpecies.taxonomy_id).all()
 
     output = ""
