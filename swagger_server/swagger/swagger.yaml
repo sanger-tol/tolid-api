@@ -260,6 +260,44 @@ paths:
         "409":
           description: an existing item already exists
       x-openapi-router-controller: swagger_server.controllers.curators_controller
+    patch:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - curators
+      summary: modifies a species
+      description: Modifies an existing species, for example by changing the scientific name
+      operationId: edit_species
+      parameters:
+      - name: api-key
+        in: header
+        description: API-Key
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: string  
+      requestBody:
+        description: Species to modify
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Species'
+      responses:
+        "200":
+          description: item modified
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Species'
+                x-content-type: application/json
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: item does not exist
+      x-openapi-router-controller: swagger_server.controllers.curators_controller
   /species/all:
     get:
       security:

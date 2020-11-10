@@ -213,6 +213,94 @@ class TestCuratorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
 
+        # Has it been added?
+        query_string = [('taxonomyId', '999999')]
+        response = self.client.open(
+            '/public_name_api/species',
+            method='GET',
+            query_string=query_string)
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+
+    def test_edit_species(self):
+        # No authorisation token given
+        query_string = []
+        response = self.client.open(
+            '/public_name_api/species',
+            method='PATCH',
+            query_string=query_string)
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # Invalid authorisation token given
+        query_string = []
+        response = self.client.open(
+            '/public_name_api/species',
+            method='PATCH',
+            headers={"api-key": "12345678"},
+            query_string=query_string)
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Taxonomy ID not in database
+        body = {'taxonomyId': 999999,
+                'species': 'Species',
+                'prefix': 'whatever',
+                'commonName': 'Common name', 
+                'genus': 'Genus', 
+                'family': 'Family', 
+                'order': 'Order', 
+                'taxaClass': 'Class', 
+                'phylum': 'Phylum'}
+        response = self.client.open(
+            '/public_name_api/species',
+            method='PATCH',
+            headers={"api-key": self.api_key},
+            json=body)
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Taxonomy ID in database - should edit it
+        body = {'taxonomyId': 6344,
+                'species': 'Species',
+                'prefix': 'whatever',
+                'commonName': 'Common name', 
+                'genus': 'Genus', 
+                'family': 'Family', 
+                'order': 'Order', 
+                'taxaClass': 'Class', 
+                'phylum': 'Phylum'}
+        response = self.client.open(
+            '/public_name_api/species',
+            method='PATCH',
+            headers={"api-key": self.api_key},
+            json=body)
+        expect = [{
+            "commonName": "Common name",
+            "family": "Family",
+            "genus": "Genus",
+            "order": "Order",
+            "phylum": "Phylum",
+            "prefix": "whatever",
+            "species": "Species",
+            "taxaClass": "Class",
+            "taxonomyId": 6344
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # Has it changed?
+        query_string = [('taxonomyId', '6344')]
+        response = self.client.open(
+            '/public_name_api/species',
+            method='GET',
+            query_string=query_string)
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
 
     def test_validate_manifest(self):
         # No authorisation token given

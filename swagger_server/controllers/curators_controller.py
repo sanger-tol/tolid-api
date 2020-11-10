@@ -41,12 +41,7 @@ def add_public_name(taxonomy_id=None, specimen_id=None, api_key=None):
 def add_species(body=None, api_key=None): 
     """adds a species
 
-    Adds a new public name to the system 
-
-    :param taxonomy_id: valid NCBI Taxonomy identifier
-    :type taxonomy_id: str
-    :param specimen_id: valid GAL specimen identifier
-    :type specimen_id: str
+    Adds a new species to the system 
 
     :return: JSON with complete public name and taxa structure
     """
@@ -68,6 +63,33 @@ def add_species(body=None, api_key=None):
     species.phylum=body["phylum"]
 
     db.session.add(species)
+    db.session.commit()
+
+    return jsonify([species])
+def edit_species(body=None, api_key=None): 
+    """modifies a species
+
+    Modifies a species in the system 
+
+    :return: JSON with complete public name and taxa structure
+    """
+    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == body["taxonomyId"]).one_or_none()
+
+    if species is None:
+        return "Species with taxonomyId "+str(body["taxonomyId"])+" does not exist", 400
+
+    species.prefix=body["prefix"]
+    species.name=body["species"]
+    # Do not change taxonomy id - it is the primary key
+    species.common_name=body["commonName"]
+    species.genus=body["genus"]
+    species.family=body["family"]
+    species.prefix=body["prefix"]
+    species.tax_order=body["order"]
+    species.tax_class=body["taxaClass"]
+    species.phylum=body["phylum"]
+
+    #db.session.add(species)
     db.session.commit()
 
     return jsonify([species])
