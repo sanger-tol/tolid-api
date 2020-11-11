@@ -23,4 +23,5 @@ class PnaSpecimen(Base):
             'order': cls.species.tax_order, 
             'taxaClass': cls.species.tax_class, 
             'phylum': cls.species.phylum,
+            'kingdom': cls.species.kingdom,
             'specimenId': cls.specimen_id}

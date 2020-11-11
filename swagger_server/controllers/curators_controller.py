@@ -64,6 +64,7 @@ def add_species(body=None, api_key=None):
     species.tax_order=body["order"]
     species.tax_class=body["taxaClass"]
     species.phylum=body["phylum"]
+    species.kingdom=body["kingdom"]
 
     db.session.add(species)
     db.session.commit()
@@ -95,6 +96,7 @@ def edit_species(body=None, api_key=None):
     species.tax_order=body["order"]
     species.tax_class=body["taxaClass"]
     species.phylum=body["phylum"]
+    species.kingdom=body["kingdom"]
 
     #db.session.add(species)
     db.session.commit()

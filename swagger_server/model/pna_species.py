@@ -11,6 +11,7 @@ class PnaSpecies(Base):
     tax_order = db.Column(db.String())
     tax_class = db.Column(db.String())
     phylum = db.Column(db.String())
+    kingdom = db.Column(db.String())
     specimens = db.relationship('PnaSpecimen', lazy=False)
 
     def to_dict(cls):
@@ -22,4 +23,5 @@ class PnaSpecies(Base):
             'family': cls.family, 
             'order': cls.tax_order, 
             'taxaClass': cls.tax_class, 
-            'phylum': cls.phylum}
+            'phylum': cls.phylum,
+            'kingdom': cls.kingdom}

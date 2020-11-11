@@ -85,6 +85,7 @@ class TestCuratorsController(BaseTestCase):
             "genus": "Arenicola",
             "order": "None",
             "phylum": "Annelida",
+            "kingdom": "Metazoa",
             "prefix": "wuAreMari",
             "publicName": "wuAreMari2",
             "species": "Arenicola marina",
@@ -110,6 +111,7 @@ class TestCuratorsController(BaseTestCase):
             "genus": "Homo",
             "order": "Primates",
             "phylum": "Chordata",
+            "kingdom": "Metazoa",
             "prefix": "mHomSap",
             "publicName": "mHomSap1",
             "species": "Homo sapiens",
@@ -135,6 +137,7 @@ class TestCuratorsController(BaseTestCase):
             "genus": "Arenicola",
             "order": "None",
             "phylum": "Annelida",
+            "kingdom": "Metazoa",
             "prefix": "wuAreMari",
             "publicName": "wuAreMari1",
             "species": "Arenicola marina",
@@ -174,7 +177,8 @@ class TestCuratorsController(BaseTestCase):
                 'family': 'Family', 
                 'order': 'Order', 
                 'taxaClass': 'Class', 
-                'phylum': 'Phylum'}
+                'phylum': 'Phylum',
+                'kingdom': 'Kingdom'}
         response = self.client.open(
             '/public_name_api/species',
             method='PUT',
@@ -192,7 +196,8 @@ class TestCuratorsController(BaseTestCase):
                 'family': 'Family', 
                 'order': 'Order', 
                 'taxaClass': 'Class', 
-                'phylum': 'Phylum'}
+                'phylum': 'Phylum',
+                'kingdom': 'Kingdom'}
         response = self.client.open(
             '/public_name_api/species',
             method='PUT',
@@ -210,7 +215,8 @@ class TestCuratorsController(BaseTestCase):
                 'family': 'Family', 
                 'order': 'Order', 
                 'taxaClass': 'Class', 
-                'phylum': 'Phylum'}
+                'phylum': 'Phylum',
+                'kingdom': 'Kingdom'}
         response = self.client.open(
             '/public_name_api/species',
             method='PUT',
@@ -222,6 +228,7 @@ class TestCuratorsController(BaseTestCase):
             "genus": "Genus",
             "order": "Order",
             "phylum": "Phylum",
+            "kingdom": "Kingdom",
             "prefix": "whatever",
             "species": "Species",
             "taxaClass": "Class",
@@ -269,7 +276,8 @@ class TestCuratorsController(BaseTestCase):
                 'family': 'Family', 
                 'order': 'Order', 
                 'taxaClass': 'Class', 
-                'phylum': 'Phylum'}
+                'phylum': 'Phylum',
+                'kingdom': 'Kingdom'}
         response = self.client.open(
             '/public_name_api/species',
             method='PATCH',
@@ -287,7 +295,8 @@ class TestCuratorsController(BaseTestCase):
                 'family': 'Family', 
                 'order': 'Order', 
                 'taxaClass': 'Class', 
-                'phylum': 'Phylum'}
+                'phylum': 'Phylum',
+                'kingdom': 'Kingdom'}
         response = self.client.open(
             '/public_name_api/species',
             method='PATCH',
@@ -305,7 +314,8 @@ class TestCuratorsController(BaseTestCase):
                 'family': 'Family', 
                 'order': 'Order', 
                 'taxaClass': 'Class', 
-                'phylum': 'Phylum'}
+                'phylum': 'Phylum',
+                'kingdom': 'Kingdom'}
         response = self.client.open(
             '/public_name_api/species',
             method='PATCH',
@@ -317,6 +327,7 @@ class TestCuratorsController(BaseTestCase):
             "genus": "Genus",
             "order": "Order",
             "phylum": "Phylum",
+            "kingdom": "Kingdom",
             "prefix": "whatever",
             "species": "Species",
             "taxaClass": "Class",
