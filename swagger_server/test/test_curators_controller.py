@@ -418,6 +418,7 @@ class TestCuratorsController(BaseTestCase):
         (taxon_id_column, specimen_id_column, scientific_name_column, public_name_column) = find_columns(sheet, "scientific_name")
         self.assertEquals('wuAreMari2', sheet.cell(row=2, column=public_name_column).value)
         self.assertEquals('wuAreMari3', sheet.cell(row=3, column=public_name_column).value)
+        self.assertEquals('wuAreMari3', sheet.cell(row=4, column=public_name_column).value)
 
         # Different column name for species
         file = open('swagger_server/test/test-manifest-col.xlsx', 'rb')

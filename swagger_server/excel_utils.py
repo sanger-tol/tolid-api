@@ -59,11 +59,15 @@ def validate_sheet(sheet, assign=False, user=None, species_column_heading=None, 
         if (assign):
             existing_public_name = sheet.cell(row=current_row, column=public_name_column).value
             if (existing_public_name is None):
-                existing_species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxon_id).one_or_none()
-                new_specimen = create_new_specimen(existing_species, specimen_id, user)
-                db.session.add(new_specimen)
-                db.session.commit()
-                sheet.cell(row=current_row, column=public_name_column, value=new_specimen.public_name)
+                existing_specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).filter(PnaSpecimen.species_id == taxon_id).one_or_none()
+                if (existing_specimen is not None):
+                    sheet.cell(row=current_row, column=public_name_column, value=existing_specimen.public_name)
+                else:
+                    existing_species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxon_id).one_or_none()
+                    new_specimen = create_new_specimen(existing_species, specimen_id, user)
+                    db.session.add(new_specimen)
+                    db.session.commit()
+                    sheet.cell(row=current_row, column=public_name_column, value=new_specimen.public_name)
         else:
             if (re.search(r"sp\.$", scientific_name)):
                 errors.append({"message": "Row "+str(current_row)+": Genus only for "+scientific_name+", not assigning public name"})
