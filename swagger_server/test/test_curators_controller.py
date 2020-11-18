@@ -377,6 +377,24 @@ class TestCuratorsController(BaseTestCase):
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
+        # Excel file with no taxon ID, specimen ID, public name column
+        file = open('swagger_server/test/test-manifest-no-columns.xlsx', 'rb')
+        data = {
+            'excelFile': (file, 'test_file.xlsx'), 
+        }
+        expected = {'errors': [{'message': 'Cannot find Taxon ID column'},
+            {'message': 'Cannot find Specimen ID column'},
+            {'message': 'Cannot find Public Name column'}]}
+        response = self.client.open(
+            '/public_name_api/validate-manifest',
+            method='POST',
+            headers={"api-key": self.api_key},
+            data=data)
+        file.close()
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expected, response.json)
+
         # Excel file with errors
         file = open('swagger_server/test/test-manifest-with-errors.xlsx', 'rb')
         data = {

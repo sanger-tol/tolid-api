@@ -17,6 +17,7 @@ def clean_cell(value):
 
 def find_columns(sheet, species_column_heading):
     row = sheet[1]
+    taxon_id_column = specimen_id_column = public_name_column = None
     for cell in row:
         column_name = cell.value
         if column_name is None:
@@ -49,6 +50,19 @@ def validate_excel(dirname=None, filename=None, user=None, species_column_headin
 def validate_sheet(sheet, assign=False, user=None, species_column_heading=None, errors=[]):
     ok = True
     (taxon_id_column, specimen_id_column, scientific_name_column, public_name_column) = find_columns(sheet, species_column_heading)
+    if taxon_id_column is None:
+        errors.append({"message": "Cannot find Taxon ID column"})
+        ok = False
+    if specimen_id_column is None:
+        errors.append({"message": "Cannot find Specimen ID column"})
+        ok = False
+    if public_name_column is None:
+        errors.append({"message": "Cannot find Public Name column"})
+        ok = False
+    # Cannot carry on if we don't have one of the necessary columns
+    if not ok:
+        return False
+
     current_row = 2 
     for row in sheet.iter_rows(min_row=current_row, max_row=sheet.max_row, values_only=True):
         taxon_id = clean_cell(row[taxon_id_column-1])
