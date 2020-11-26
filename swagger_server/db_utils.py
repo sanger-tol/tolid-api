@@ -7,7 +7,7 @@ def create_new_specimen(species, specimen_id, user):
     if not highest:
         highest = 0
     number = highest + 1
-    specimen = PnaSpecimen(specimen_id=specimen_id, number=number, public_name=species.prefix+str(number))
+    specimen = PnaSpecimen(specimen_id=specimen_id, number=number, tol_id=species.prefix+str(number))
     specimen.species = species
     specimen.user = user
     return specimen

@@ -1,5 +1,3 @@
-# from swagger_server.models.public_name import PublicName 
-# from swagger_server import util
 from flask import jsonify, send_from_directory
 from swagger_server.db_utils import create_new_specimen
 from swagger_server.model import db, PnaSpecies, PnaSpecimen, PnaUser, PnaRole
@@ -8,17 +6,17 @@ import connexion
 import tempfile
 
 
-def add_public_name(taxonomy_id=None, specimen_id=None, api_key=None): 
-    """adds a public name
+def add_tol_id(taxonomy_id=None, specimen_id=None, api_key=None): 
+    """adds a ToL ID
 
-    Adds a new public name to the system 
+    Adds a new ToL ID to the system 
 
     :param taxonomy_id: valid NCBI Taxonomy identifier
     :type taxonomy_id: str
     :param specimen_id: valid GAL specimen identifier
     :type specimen_id: str
 
-    :return: JSON with complete public name and taxa structure
+    :return: JSON with complete ToL ID and taxa structure
     """
     user = db.session.query(PnaUser).filter(PnaUser.api_key == api_key).one_or_none()
     species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).one_or_none()
@@ -43,7 +41,7 @@ def add_species(body=None, api_key=None):
 
     Adds a new species to the system 
 
-    :return: JSON with complete public name and taxa structure
+    :return: JSON with complete ToL ID and taxa structure
     """
     role = db.session.query(PnaRole).filter(PnaRole.role == 'admin').filter(PnaRole.user_id == connexion.context["user"]).one_or_none()
     if role is None:
@@ -76,7 +74,7 @@ def edit_species(body=None, api_key=None):
 
     Modifies a species in the system 
 
-    :return: JSON with complete public name and taxa structure
+    :return: JSON with complete ToL ID and taxa structure
     """
     role = db.session.query(PnaRole).filter(PnaRole.role == 'admin').filter(PnaRole.user_id == connexion.context["user"]).one_or_none()
     if role is None:
@@ -107,7 +105,7 @@ def edit_species(body=None, api_key=None):
 def validate_manifest(excel_file=None, species_column_heading="scientific_name"):  # noqa: E501
     """Validate an excel manifest
 
-    Validates an excel manifest and offers option to download manifest with public names filled in  # noqa: E501
+    Validates an excel manifest and offers option to download manifest with ToL IDs filled in  # noqa: E501
 
     :param type: 
     :type type: str
@@ -135,19 +133,19 @@ def validate_manifest(excel_file=None, species_column_heading="scientific_name")
     # Remove old file
     dir.cleanup()
 
-def list_public_names(taxonomy_id=None, skip=None, limit=None):  
-    """lists all public names
+def list_tol_ids(taxonomy_id=None, skip=None, limit=None):  
+    """lists all ToL IDs
 
     By passing in the appropriate taxonomy string, you can limit the search to a particular species
 
-    :param taxonomyId: pass an optional search string for looking up a public name
+    :param taxonomyId: pass an optional search string for looking up a ToL ID
     :type taxonomyId: str
     # :param skip: number of records to skip for pagination
     # :type skip: int
     # :param limit: maximum number of records to return
     # :type limit: int
 
-    :rtype: List[PublicName]
+    :rtype: List[Specimen]
     """
     role = db.session.query(PnaRole).filter(PnaRole.role == 'admin').filter(PnaRole.user_id == connexion.context["user"]).one_or_none()
     if role is None:
@@ -165,7 +163,7 @@ def list_public_names(taxonomy_id=None, skip=None, limit=None):
 
     output = ""
     for specimen in specimens:
-        output += specimen.public_name+'\t'+specimen.species.name+'\t'+specimen.specimen_id+'\t'+str(specimen.number)+'\n'
+        output += specimen.tol_id+'\t'+specimen.species.name+'\t'+specimen.specimen_id+'\t'+str(specimen.number)+'\n'
     return output.strip()
 
 def list_species():  

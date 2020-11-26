@@ -2,19 +2,19 @@ from swagger_server.model import db, PnaSpecies, PnaSpecimen, PnaUser
 from flask import jsonify
 from swagger_server.db_utils import create_new_specimen
 
-def search_public_name(taxonomy_id=None, specimen_id=None, skip=None, limit=None):  
-    """searches DToL public names
+def search_tol_id(taxonomy_id=None, specimen_id=None, skip=None, limit=None):  
+    """searches DToL ToL IDs
 
-    By passing in the appropriate taxonomy string, you can search for available public names in the system 
+    By passing in the appropriate taxonomy string, you can search for available ToL IDs in the system 
 
-    :param taxonomyId: pass an optional search string for looking up a public name
+    :param taxonomyId: pass an optional search string for looking up a ToL ID
     :type taxonomyId: str
     # :param skip: number of records to skip for pagination
     # :type skip: int
     # :param limit: maximum number of records to return
     # :type limit: int
 
-    :rtype: List[PublicName]
+    :rtype: List[Specimen]
     """
 
     species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).one_or_none()
@@ -32,15 +32,15 @@ def search_public_name(taxonomy_id=None, specimen_id=None, skip=None, limit=None
 
     return jsonify([specimen])
 
-def bulk_search_public_name(body=None, api_key=None):  
-    """searches DToL public names in bulk
+def bulk_search_tol_id(body=None, api_key=None):  
+    """searches DToL ToL IDs in bulk
 
-    By passing in the appropriate taxonomy string, you can search for available public names in the system 
+    By passing in the appropriate taxonomy string, you can search for available ToL IDs in the system 
 
     :param bosy: 
     :type taxonomyId: str
 
-    :rtype: List[PublicName]
+    :rtype: List[Specimen]
     """
     user = db.session.query(PnaUser).filter(PnaUser.api_key == api_key).one_or_none()
     specimens = []
@@ -75,7 +75,7 @@ def search_species(taxonomy_id=None, skip=None, limit=None):
 
     By passing in the appropriate taxonomy string, you can search for available species in the system 
 
-    :param taxonomyId: pass an optional search string for looking up a public name
+    :param taxonomyId: pass an optional taxonomy ID to filter by
     :type taxonomyId: str
     # :param skip: number of records to skip for pagination
     # :type skip: int

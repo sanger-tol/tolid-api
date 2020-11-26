@@ -1,6 +1,4 @@
-FROM alpine:3.10
 FROM python:buster
-FROM gcc:latest
 
 # Dockerize is needed to sync containers startup
 ENV DOCKERIZE_VERSION v0.6.0

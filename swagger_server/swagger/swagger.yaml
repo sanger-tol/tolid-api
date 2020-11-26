@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Tree of Life public name API
-  description: API for ToL Public name registry
+  title: Tree of Life ToL ID API
+  description: API for ToL ID registry
   contact:
     email: kh14@sanger.ac.uk
   license:
@@ -9,26 +9,26 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.5.0
 servers:
-  - url: http://0.0.0.0:8080/public_name_api
+  - url: http://0.0.0.0:8080
 tags:
 - name: curators
   description: Curator tools
 - name: users
-  description: Browsing public names
+  description: Browsing ToL IDs
 paths:
-  /public-name:
+  /tol-id:
     get:
       tags:
       - users
-      summary: Search for a single public name
+      summary: Search for a single ToL ID
       description: |
         By passing in the appropriate options, you can search for
-        available public names in the system.
-      operationId: search_public_name
+        available ToL IDs in the system.
+      operationId: search_tol_id
       parameters:
       - name: taxonomyId
         in: query
-        description: pass an NCBI taxonomy ID for looking up public name and taxonomy information
+        description: pass an NCBI taxonomy ID for looking up ToL ID and taxonomy information
         required: true
         style: form
         explode: true
@@ -36,7 +36,7 @@ paths:
           type: string
       - name: specimenId
         in: query
-        description: pass a GAL specime ID
+        description: pass a GAL specimen ID
         required: true
         style: form
         explode: true
@@ -50,7 +50,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PublicName'
+                  $ref: '#/components/schemas/Specimen'
                 x-content-type: application/json
         "400":
           description: bad input parameter
@@ -60,10 +60,10 @@ paths:
         - ApiKeyAuth: []
       tags:
       - users
-      summary: Bulk search for public names
+      summary: Bulk search for ToL IDs
       description: |
         By passing in the appropriate options, you can search for
-        available public names in the system. Public names will be
+        available ToL IDs in the system. ToL IDs will be
         created if new.
         ```
         [
@@ -71,7 +71,7 @@ paths:
           {"taxonomyId": 55617, "specimenId": "SAN0000101"}
         ]
         ```
-      operationId: bulk_search_public_name
+      operationId: bulk_search_tol_id
       parameters:
         - name: api-key
           in: header
@@ -95,7 +95,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PublicName'
+                  $ref: '#/components/schemas/Specimen'
                 x-content-type: application/json
         "400":
           description: bad input parameter
@@ -105,9 +105,9 @@ paths:
         - ApiKeyAuth: []
       tags:
       - curators
-      summary: adds a public name
-      description: Adds a new public name to the system
-      operationId: add_public_name
+      summary: adds a ToL ID
+      description: Adds a new ToL ID to the system
+      operationId: add_tol_id
       parameters:
       - name: taxonomyId
         in: query
@@ -133,12 +133,6 @@ paths:
         explode: true
         schema:
           type: string  
-      # requestBody:
-      #   description: Public name to add
-      #   content:
-      #     application/json:
-      #       schema:
-      #         $ref: '#/components/schemas/PublicName'
       responses:
         "200":
           description: item created
@@ -147,23 +141,23 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PublicName'
+                  $ref: '#/components/schemas/Specimen'
                 x-content-type: application/json
         "400":
           description: invalid input, object invalid
         "409":
           description: an existing item already exists
       x-openapi-router-controller: swagger_server.controllers.curators_controller
-  /public-name/all:
+  /tol-id/all:
     get:
       security:
         - ApiKeyAuth: []
       tags:
       - curators
-      summary: List all assigned public names
+      summary: List all assigned ToL IDs
       description: |
-        Returns a list of all public names in the database
-      operationId: list_public_names
+        Returns a list of all ToL IDs in the database
+      operationId: list_tol_ids
       parameters:
       - name: api-key
         in: header
@@ -205,7 +199,7 @@ paths:
       parameters:
       - name: taxonomyId
         in: query
-        description: pass an NCBI taxonomy ID for looking up public name and taxonomy information
+        description: pass an NCBI taxonomy ID for looking up ToL ID and taxonomy information
         required: true
         style: form
         explode: true
@@ -343,7 +337,7 @@ paths:
       - curators
       summary: Validate an excel manifest
       description: |
-        Validates an excel manifest and offers option to download manifest with public names filled in
+        Validates an excel manifest and offers option to download manifest with ToL IDs filled in
       operationId: validate_manifest
       parameters:
         - name: api-key
@@ -376,7 +370,7 @@ paths:
                 - excelFile
       responses:
         "200":
-          description: An Excel file, with the public names filled in
+          description: An Excel file, with the ToL IDs filled in
           content:
             application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
               schema:
@@ -409,7 +403,7 @@ components:
         $ref: '#/components/schemas/TaxSpec'
         required:
         - TaxSpec
-    PublicName:
+    Specimen:
       required:
         - commonName
         - family
@@ -418,7 +412,7 @@ components:
         - phylum
         - kingdom
         - prefix
-        - publicName
+        - tolId
         - species
         - taxonomyId
         - specimenId
@@ -428,7 +422,7 @@ components:
         prefix:
           type: string
           example: wuAreMari
-        publicName:
+        tolId:
           type: string
           example: wuAreMari1
         species:
@@ -463,7 +457,7 @@ components:
           example: Metazoa
       example:
         commonName: lugworm
-        publicName: wuAreMari1
+        tolId: wuAreMari1
         phylum: Annelida
         kingdom: Metazoa
         species: Arenicola marina

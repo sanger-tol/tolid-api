@@ -17,7 +17,7 @@ def clean_cell(value):
 
 def find_columns(sheet, species_column_heading):
     row = sheet[1]
-    taxon_id_column = specimen_id_column = public_name_column = None
+    taxon_id_column = specimen_id_column = tol_id_column = None
     for cell in row:
         column_name = cell.value
         if column_name is None:
@@ -29,9 +29,9 @@ def find_columns(sheet, species_column_heading):
         if (re.search(r"(?i)^"+species_column_heading+"$", column_name)):
             scientific_name_column = cell.column
         if (re.search(r"(?i)^public_name$", column_name)):
-            public_name_column = cell.column
+            tol_id_column = cell.column
 
-    return (taxon_id_column, specimen_id_column, scientific_name_column, public_name_column)
+    return (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column)
 
 def validate_excel(dirname=None, filename=None, user=None, species_column_heading=None):
     workbook = load_workbook(filename=dirname+'/'+filename)
@@ -39,7 +39,7 @@ def validate_excel(dirname=None, filename=None, user=None, species_column_headin
     errors = []
     validated = validate_sheet(sheet, assign=False, user=user, species_column_heading=species_column_heading, errors=errors)
     if validated:
-        # Can go through and assign public names
+        # Can go through and assign ToL IDs
         validate_sheet(sheet, assign=True, user=user, species_column_heading=species_column_heading)
         new_filename = re.sub(r"\.xlsx$", '-validated.xlsx', filename)
         workbook.save(dirname+'/'+new_filename)
@@ -49,15 +49,15 @@ def validate_excel(dirname=None, filename=None, user=None, species_column_headin
 
 def validate_sheet(sheet, assign=False, user=None, species_column_heading=None, errors=[]):
     ok = True
-    (taxon_id_column, specimen_id_column, scientific_name_column, public_name_column) = find_columns(sheet, species_column_heading)
+    (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = find_columns(sheet, species_column_heading)
     if taxon_id_column is None:
         errors.append({"message": "Cannot find Taxon ID column"})
         ok = False
     if specimen_id_column is None:
         errors.append({"message": "Cannot find Specimen ID column"})
         ok = False
-    if public_name_column is None:
-        errors.append({"message": "Cannot find Public Name column"})
+    if tol_id_column is None:
+        errors.append({"message": "Cannot find ToL ID column"})
         ok = False
     # Cannot carry on if we don't have one of the necessary columns
     if not ok:
@@ -71,20 +71,20 @@ def validate_sheet(sheet, assign=False, user=None, species_column_heading=None, 
         if (taxon_id is None) or (specimen_id is None) or (scientific_name is None):
             break
         if (assign):
-            existing_public_name = sheet.cell(row=current_row, column=public_name_column).value
-            if (existing_public_name is None):
+            existing_tol_id = sheet.cell(row=current_row, column=tol_id_column).value
+            if (existing_tol_id is None):
                 existing_specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).filter(PnaSpecimen.species_id == taxon_id).one_or_none()
                 if (existing_specimen is not None):
-                    sheet.cell(row=current_row, column=public_name_column, value=existing_specimen.public_name)
+                    sheet.cell(row=current_row, column=tol_id_column, value=existing_specimen.tol_id)
                 else:
                     existing_species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxon_id).one_or_none()
                     new_specimen = create_new_specimen(existing_species, specimen_id, user)
                     db.session.add(new_specimen)
                     db.session.commit()
-                    sheet.cell(row=current_row, column=public_name_column, value=new_specimen.public_name)
+                    sheet.cell(row=current_row, column=tol_id_column, value=new_specimen.tol_id)
         else:
             if (re.search(r"sp\.$", scientific_name)):
-                errors.append({"message": "Row "+str(current_row)+": Genus only for "+scientific_name+", not assigning public name"})
+                errors.append({"message": "Row "+str(current_row)+": Genus only for "+scientific_name+", not assigning ToL ID"})
                 ok = False
             else:
                 # Search for the taxomomy ID
@@ -97,12 +97,12 @@ def validate_sheet(sheet, assign=False, user=None, species_column_heading=None, 
                         errors.append({"message": "Row "+str(current_row)+": Expecting "+scientific_name+", got "+ existing_species.name})
                         ok = False
                     else:
-                        # Search for the public name
+                        # Search for the ToL ID
                         existing_specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).filter(PnaSpecimen.species_id == taxon_id).one_or_none()
                         if (existing_specimen is not None):
-                            sheet.cell(row=current_row, column=public_name_column, value=existing_specimen.public_name)
+                            sheet.cell(row=current_row, column=tol_id_column, value=existing_specimen.tol_id)
                         else:
-                            # No existing public name - deal with this later - nothing to do now
+                            # No existing ToL ID - deal with this later - nothing to do now
                             pass
         current_row+=1
     return ok

@@ -48,7 +48,7 @@ class BaseTestCase(TestCase):
                 tax_class="Mammalia",
                 taxonomy_id=9606)
         db.session.add(self.species2)
-        self.specimen1 = PnaSpecimen(specimen_id="SAN0000100", number=1, public_name="wuAreMari1")
+        self.specimen1 = PnaSpecimen(specimen_id="SAN0000100", number=1, tol_id="wuAreMari1")
         self.specimen1.species = self.species1
         self.specimen1.user = self.user1
         db.session.add(self.specimen1)

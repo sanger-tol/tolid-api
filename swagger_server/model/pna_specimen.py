@@ -6,7 +6,7 @@ class PnaSpecimen(Base):
 
     species_id = db.Column(db.Integer, db.ForeignKey('species.taxonomy_id'))
     species = db.relationship("PnaSpecies", uselist=False, foreign_keys=[species_id])
-    public_name = db.Column(db.String(), nullable=False)
+    tol_id = db.Column(db.String(), nullable=False)
     number = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey('user.user_id'))
@@ -14,7 +14,7 @@ class PnaSpecimen(Base):
 
     def to_dict(cls):
         return {'prefix': cls.species.prefix, 
-            'publicName': cls.public_name,
+            'tolId': cls.tol_id,
             'species': cls.species.name, 
             'taxonomyId': cls.species.taxonomy_id, 
             'commonName': cls.species.common_name, 
