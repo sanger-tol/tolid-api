@@ -39,7 +39,7 @@ def validate_excel(dirname=None, filename=None, user=None, species_column_headin
     errors = []
     validated = validate_sheet(sheet, assign=False, user=user, species_column_heading=species_column_heading, errors=errors)
     if validated:
-        # Can go through and assign ToL IDs
+        # Can go through and assign ToLIDs
         validate_sheet(sheet, assign=True, user=user, species_column_heading=species_column_heading)
         new_filename = re.sub(r"\.xlsx$", '-validated.xlsx', filename)
         workbook.save(dirname+'/'+new_filename)
@@ -57,7 +57,7 @@ def validate_sheet(sheet, assign=False, user=None, species_column_heading=None, 
         errors.append({"message": "Cannot find Specimen ID column"})
         ok = False
     if tol_id_column is None:
-        errors.append({"message": "Cannot find ToL ID column"})
+        errors.append({"message": "Cannot find ToLID column"})
         ok = False
     # Cannot carry on if we don't have one of the necessary columns
     if not ok:
@@ -84,7 +84,7 @@ def validate_sheet(sheet, assign=False, user=None, species_column_heading=None, 
                     sheet.cell(row=current_row, column=tol_id_column, value=new_specimen.tol_id)
         else:
             if (re.search(r"sp\.$", scientific_name)):
-                errors.append({"message": "Row "+str(current_row)+": Genus only for "+scientific_name+", not assigning ToL ID"})
+                errors.append({"message": "Row "+str(current_row)+": Genus only for "+scientific_name+", not assigning ToLID"})
                 ok = False
             else:
                 # Search for the taxomomy ID
@@ -97,12 +97,12 @@ def validate_sheet(sheet, assign=False, user=None, species_column_heading=None, 
                         errors.append({"message": "Row "+str(current_row)+": Expecting "+scientific_name+", got "+ existing_species.name})
                         ok = False
                     else:
-                        # Search for the ToL ID
+                        # Search for the ToLID
                         existing_specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).filter(PnaSpecimen.species_id == taxon_id).one_or_none()
                         if (existing_specimen is not None):
                             sheet.cell(row=current_row, column=tol_id_column, value=existing_specimen.tol_id)
                         else:
-                            # No existing ToL ID - deal with this later - nothing to do now
+                            # No existing ToLID - deal with this later - nothing to do now
                             pass
         current_row+=1
     return ok

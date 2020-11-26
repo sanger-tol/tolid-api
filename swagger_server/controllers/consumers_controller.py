@@ -3,11 +3,11 @@ from flask import jsonify
 from swagger_server.db_utils import create_new_specimen
 
 def search_tol_id(taxonomy_id=None, specimen_id=None, skip=None, limit=None):  
-    """searches DToL ToL IDs
+    """searches DToL ToLIDs
 
-    By passing in the appropriate taxonomy string, you can search for available ToL IDs in the system 
+    By passing in the appropriate taxonomy string, you can search for available ToLIDs in the system 
 
-    :param taxonomyId: pass an optional search string for looking up a ToL ID
+    :param taxonomyId: pass an optional search string for looking up a ToLID
     :type taxonomyId: str
     # :param skip: number of records to skip for pagination
     # :type skip: int
@@ -33,9 +33,9 @@ def search_tol_id(taxonomy_id=None, specimen_id=None, skip=None, limit=None):
     return jsonify([specimen])
 
 def bulk_search_tol_id(body=None, api_key=None):  
-    """searches DToL ToL IDs in bulk
+    """searches DToL ToLIDs in bulk
 
-    By passing in the appropriate taxonomy string, you can search for available ToL IDs in the system 
+    By passing in the appropriate taxonomy string, you can search for available ToLIDs in the system 
 
     :param bosy: 
     :type taxonomyId: str

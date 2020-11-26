@@ -7,16 +7,16 @@ import tempfile
 
 
 def add_tol_id(taxonomy_id=None, specimen_id=None, api_key=None): 
-    """adds a ToL ID
+    """adds a ToLID
 
-    Adds a new ToL ID to the system 
+    Adds a new ToLID to the system 
 
     :param taxonomy_id: valid NCBI Taxonomy identifier
     :type taxonomy_id: str
     :param specimen_id: valid GAL specimen identifier
     :type specimen_id: str
 
-    :return: JSON with complete ToL ID and taxa structure
+    :return: JSON with complete ToLID and taxa structure
     """
     user = db.session.query(PnaUser).filter(PnaUser.api_key == api_key).one_or_none()
     species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).one_or_none()
@@ -41,7 +41,7 @@ def add_species(body=None, api_key=None):
 
     Adds a new species to the system 
 
-    :return: JSON with complete ToL ID and taxa structure
+    :return: JSON with complete ToLID and taxa structure
     """
     role = db.session.query(PnaRole).filter(PnaRole.role == 'admin').filter(PnaRole.user_id == connexion.context["user"]).one_or_none()
     if role is None:
@@ -74,7 +74,7 @@ def edit_species(body=None, api_key=None):
 
     Modifies a species in the system 
 
-    :return: JSON with complete ToL ID and taxa structure
+    :return: JSON with complete ToLID and taxa structure
     """
     role = db.session.query(PnaRole).filter(PnaRole.role == 'admin').filter(PnaRole.user_id == connexion.context["user"]).one_or_none()
     if role is None:
@@ -105,7 +105,7 @@ def edit_species(body=None, api_key=None):
 def validate_manifest(excel_file=None, species_column_heading="scientific_name"):  # noqa: E501
     """Validate an excel manifest
 
-    Validates an excel manifest and offers option to download manifest with ToL IDs filled in  # noqa: E501
+    Validates an excel manifest and offers option to download manifest with ToLIDs filled in  # noqa: E501
 
     :param type: 
     :type type: str
@@ -134,11 +134,11 @@ def validate_manifest(excel_file=None, species_column_heading="scientific_name")
     dir.cleanup()
 
 def list_tol_ids(taxonomy_id=None, skip=None, limit=None):  
-    """lists all ToL IDs
+    """lists all ToLIDs
 
     By passing in the appropriate taxonomy string, you can limit the search to a particular species
 
-    :param taxonomyId: pass an optional search string for looking up a ToL ID
+    :param taxonomyId: pass an optional search string for looking up a ToLID
     :type taxonomyId: str
     # :param skip: number of records to skip for pagination
     # :type skip: int

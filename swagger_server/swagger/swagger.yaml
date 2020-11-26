@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Tree of Life ToL ID API
-  description: API for ToL ID registry
+  title: Tree of Life ToLID API
+  description: API for ToLID registry
   contact:
     email: kh14@sanger.ac.uk
   license:
@@ -14,21 +14,21 @@ tags:
 - name: curators
   description: Curator tools
 - name: users
-  description: Browsing ToL IDs
+  description: Browsing ToLIDs
 paths:
   /tol-id:
     get:
       tags:
       - users
-      summary: Search for a single ToL ID
+      summary: Search for a single ToLID
       description: |
         By passing in the appropriate options, you can search for
-        available ToL IDs in the system.
+        available ToLIDs in the system.
       operationId: search_tol_id
       parameters:
       - name: taxonomyId
         in: query
-        description: pass an NCBI taxonomy ID for looking up ToL ID and taxonomy information
+        description: pass an NCBI taxonomy ID for looking up ToLID and taxonomy information
         required: true
         style: form
         explode: true
@@ -60,10 +60,10 @@ paths:
         - ApiKeyAuth: []
       tags:
       - users
-      summary: Bulk search for ToL IDs
+      summary: Bulk search for ToLIDs
       description: |
         By passing in the appropriate options, you can search for
-        available ToL IDs in the system. ToL IDs will be
+        available ToLIDs in the system. ToLIDs will be
         created if new.
         ```
         [
@@ -105,8 +105,8 @@ paths:
         - ApiKeyAuth: []
       tags:
       - curators
-      summary: adds a ToL ID
-      description: Adds a new ToL ID to the system
+      summary: adds a ToLID
+      description: Adds a new ToLID to the system
       operationId: add_tol_id
       parameters:
       - name: taxonomyId
@@ -154,9 +154,9 @@ paths:
         - ApiKeyAuth: []
       tags:
       - curators
-      summary: List all assigned ToL IDs
+      summary: List all assigned ToLIDs
       description: |
-        Returns a list of all ToL IDs in the database
+        Returns a list of all ToLIDs in the database
       operationId: list_tol_ids
       parameters:
       - name: api-key
@@ -199,7 +199,7 @@ paths:
       parameters:
       - name: taxonomyId
         in: query
-        description: pass an NCBI taxonomy ID for looking up ToL ID and taxonomy information
+        description: pass an NCBI taxonomy ID for looking up ToLID and taxonomy information
         required: true
         style: form
         explode: true
@@ -337,7 +337,7 @@ paths:
       - curators
       summary: Validate an excel manifest
       description: |
-        Validates an excel manifest and offers option to download manifest with ToL IDs filled in
+        Validates an excel manifest and offers option to download manifest with ToLIDs filled in
       operationId: validate_manifest
       parameters:
         - name: api-key
@@ -370,7 +370,7 @@ paths:
                 - excelFile
       responses:
         "200":
-          description: An Excel file, with the ToL IDs filled in
+          description: An Excel file, with the ToLIDs filled in
           content:
             application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
               schema:
