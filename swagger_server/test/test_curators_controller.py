@@ -377,14 +377,14 @@ class TestCuratorsController(BaseTestCase):
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-        # Excel file with no taxon ID, specimen ID, ToL ID column
+        # Excel file with no taxon ID, specimen ID, ToLID column
         file = open('swagger_server/test/test-manifest-no-columns.xlsx', 'rb')
         data = {
             'excelFile': (file, 'test_file.xlsx'), 
         }
         expected = {'errors': [{'message': 'Cannot find Taxon ID column'},
             {'message': 'Cannot find Specimen ID column'},
-            {'message': 'Cannot find ToL ID column'}]}
+            {'message': 'Cannot find ToLID column'}]}
         response = self.client.open(
             '/validate-manifest',
             method='POST',
@@ -402,7 +402,7 @@ class TestCuratorsController(BaseTestCase):
         }
         expected = {'errors': [{'message': 'Row 2: Expecting Arenicola marina, got Homo sapiens'},
             {'message': 'Row 3: Taxon ID 9999999 cannot be found'},
-            {'message': 'Row 4: Genus only for Arenicola sp., not assigning ToL ID'}]}
+            {'message': 'Row 4: Genus only for Arenicola sp., not assigning ToLID'}]}
         response = self.client.open(
             '/validate-manifest',
             method='POST',
