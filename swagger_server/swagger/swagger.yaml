@@ -420,7 +420,17 @@ components:
           example: SAN0000100
       example:
         tolId: wuAreMari1
-        species: Arenicola marina
+        species:
+          commonName: lugworm
+          phylum: Annelida
+          kingdom: Metazoa
+          scientificName: Arenicola marina
+          genus: Arenicola
+          prefix: wuAreMari
+          taxonomyId: 6344
+          taxaClass: Polychaeta
+          family: Arenicolidae
+          order: Capitellida    
         specimenId: SAN0000100
     Species:
       required:
