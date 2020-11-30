@@ -7,7 +7,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.5.0
+  version: 2.0.0
 servers:
   - url: http://0.0.0.0:8080
 tags:
@@ -405,69 +405,23 @@ components:
         - TaxSpec
     Specimen:
       required:
-        - commonName
-        - family
-        - genus
-        - order
-        - phylum
-        - kingdom
-        - prefix
         - tolId
         - species
-        - taxonomyId
         - specimenId
-        - taxaClass
       type: object
       properties:
-        prefix:
-          type: string
-          example: wuAreMari
         tolId:
           type: string
           example: wuAreMari1
         species:
-          type: string
-          example: Arenicola marina
-        taxonomyId:
-          type: integer
-          example: 6344
+          $ref: '#/components/schemas/Species'
         specimenId:
           type: string
           example: SAN0000100
-        commonName:
-          type: string
-          example: lugworm
-        genus:
-          type: string
-          example: Arenicola
-        family:
-          type: string
-          example: Arenicolidae
-        order:
-          type: string
-          example: Capitellida
-        taxaClass:
-          type: string
-          example: Polychaeta
-        phylum:
-          type: string
-          example: Annelida
-        kingdom:
-          type: string
-          example: Metazoa
       example:
-        commonName: lugworm
         tolId: wuAreMari1
-        phylum: Annelida
-        kingdom: Metazoa
         species: Arenicola marina
-        genus: Arenicola
-        prefix: wuAreMari
-        taxonomyId: 6344
         specimenId: SAN0000100
-        taxaClass: Polychaeta
-        family: Arenicolidae
-        order: Capitellida
     Species:
       required:
         - commonName
@@ -477,7 +431,7 @@ components:
         - phylum
         - kingdom
         - prefix
-        - species
+        - scientificName
         - taxonomyId
         - taxaClass
       type: object
@@ -485,7 +439,7 @@ components:
         prefix:
           type: string
           example: wuAreMari
-        species:
+        scientificName:
           type: string
           example: Arenicola marina
         taxonomyId:
@@ -516,7 +470,7 @@ components:
         commonName: lugworm
         phylum: Annelida
         kingdom: Metazoa
-        species: Arenicola marina
+        scientificName: Arenicola marina
         genus: Arenicola
         prefix: wuAreMari
         taxonomyId: 6344

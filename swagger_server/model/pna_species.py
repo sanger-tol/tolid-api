@@ -16,7 +16,7 @@ class PnaSpecies(Base):
 
     def to_dict(cls):
         return {'prefix': cls.prefix, 
-            'species': cls.name, 
+            'scientificName': cls.name, 
             'taxonomyId': cls.taxonomy_id, 
             'commonName': cls.common_name, 
             'genus': cls.genus, 

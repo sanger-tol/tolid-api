@@ -80,18 +80,20 @@ class TestCuratorsController(BaseTestCase):
             headers={"api-key": self.api_key},
             query_string=query_string)
         expect = [{
-            "commonName": "lugworm",
-            "family": "Arenicolidae",
-            "genus": "Arenicola",
-            "order": "None",
-            "phylum": "Annelida",
-            "kingdom": "Metazoa",
-            "prefix": "wuAreMari",
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
             "tolId": "wuAreMari2",
-            "species": "Arenicola marina",
             "specimenId": "SAN0000100xxxxx",
-            "taxaClass": "Polychaeta",
-            "taxonomyId": 6344
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -106,18 +108,20 @@ class TestCuratorsController(BaseTestCase):
             headers={"api-key": self.api_key},
             query_string=query_string)
         expect = [{
-            "commonName": "human",
-            "family": "Hominidae",
-            "genus": "Homo",
-            "order": "Primates",
-            "phylum": "Chordata",
-            "kingdom": "Metazoa",
-            "prefix": "mHomSap",
+            "species": {
+                "commonName": "human",
+                "family": "Hominidae",
+                "genus": "Homo",
+                "order": "Primates",
+                "phylum": "Chordata",
+                "kingdom": "Metazoa",
+                "prefix": "mHomSap",
+                "scientificName": "Homo sapiens",
+                "taxaClass": "Mammalia",
+                "taxonomyId": 9606
+            },
             "tolId": "mHomSap1",
-            "species": "Homo sapiens",
             "specimenId": "SAN0000999xxxxx",
-            "taxaClass": "Mammalia",
-            "taxonomyId": 9606
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -132,18 +136,20 @@ class TestCuratorsController(BaseTestCase):
             headers={"api-key": self.api_key},
             query_string=query_string)
         expect = [{
-            "commonName": "lugworm",
-            "family": "Arenicolidae",
-            "genus": "Arenicola",
-            "order": "None",
-            "phylum": "Annelida",
-            "kingdom": "Metazoa",
-            "prefix": "wuAreMari",
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
             "tolId": "wuAreMari1",
-            "species": "Arenicola marina",
             "specimenId": "SAN0000100",
-            "taxaClass": "Polychaeta",
-            "taxonomyId": 6344
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -170,7 +176,7 @@ class TestCuratorsController(BaseTestCase):
 
         # Not admin
         body = {'taxonomyId': 999999,
-                'species': 'Species',
+                'scientificName': 'Species',
                 'prefix': 'whatever',
                 'commonName': 'Common name', 
                 'genus': 'Genus', 
@@ -189,7 +195,7 @@ class TestCuratorsController(BaseTestCase):
 
         # Taxonomy ID already in database
         body = {'taxonomyId': 6344,
-                'species': 'Species',
+                'scientificName': 'Species',
                 'prefix': 'whatever',
                 'commonName': 'Common name', 
                 'genus': 'Genus', 
@@ -208,7 +214,7 @@ class TestCuratorsController(BaseTestCase):
 
         # Taxonomy ID not in database - should create it
         body = {'taxonomyId': 999999,
-                'species': 'Species',
+                'scientificName': 'Species',
                 'prefix': 'whatever',
                 'commonName': 'Common name', 
                 'genus': 'Genus', 
@@ -230,7 +236,7 @@ class TestCuratorsController(BaseTestCase):
             "phylum": "Phylum",
             "kingdom": "Kingdom",
             "prefix": "whatever",
-            "species": "Species",
+            "scientificName": "Species",
             "taxaClass": "Class",
             "taxonomyId": 999999
         }]
@@ -269,7 +275,7 @@ class TestCuratorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         # Not admin
         body = {'taxonomyId': 6344,
-                'species': 'Species',
+                'scientificName': 'Species',
                 'prefix': 'whatever',
                 'commonName': 'Common name', 
                 'genus': 'Genus', 
@@ -288,7 +294,7 @@ class TestCuratorsController(BaseTestCase):
 
         # Taxonomy ID not in database
         body = {'taxonomyId': 999999,
-                'species': 'Species',
+                'scientificName': 'Species',
                 'prefix': 'whatever',
                 'commonName': 'Common name', 
                 'genus': 'Genus', 
@@ -307,7 +313,7 @@ class TestCuratorsController(BaseTestCase):
 
         # Taxonomy ID in database - should edit it
         body = {'taxonomyId': 6344,
-                'species': 'Species',
+                'scientificName': 'Species',
                 'prefix': 'whatever',
                 'commonName': 'Common name', 
                 'genus': 'Genus', 
@@ -329,7 +335,7 @@ class TestCuratorsController(BaseTestCase):
             "phylum": "Phylum",
             "kingdom": "Kingdom",
             "prefix": "whatever",
-            "species": "Species",
+            "scientificName": "Species",
             "taxaClass": "Class",
             "taxonomyId": 6344
         }]
@@ -467,10 +473,10 @@ class TestCuratorsController(BaseTestCase):
 
     def test_list_tol_ids(self):
         # Add a couple more specimens
-        specimen2 = PnaSpecimen(specimen_id="SAN0000101", number=2, tol_id="wuAreMari2")
+        specimen2 = PnaSpecimen(specimen_id="SAN0000101", number=2, public_name="wuAreMari2")
         specimen2.species = self.species1
         specimen2.user = self.user1
-        specimen3 = PnaSpecimen(specimen_id="SAN0000102", number=1, tol_id="mHomSap1")
+        specimen3 = PnaSpecimen(specimen_id="SAN0000102", number=1, public_name="mHomSap1")
         specimen3.species = self.species2
         specimen3.user = self.user1
         db.session.add(specimen2)

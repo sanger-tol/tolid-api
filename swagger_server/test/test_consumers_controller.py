@@ -64,18 +64,20 @@ class TestConsumersController(BaseTestCase):
             method='GET',
             query_string=query_string)
         expect = [{
-            "commonName": "lugworm",
-            "family": "Arenicolidae",
-            "genus": "Arenicola",
-            "order": "None",
-            "phylum": "Annelida",
-            "kingdom": "Metazoa",
-            "prefix": "wuAreMari",
+            "species":{
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
             "tolId": "wuAreMari1",
-            "species": "Arenicola marina",
             "specimenId": "SAN0000100",
-            "taxaClass": "Polychaeta",
-            "taxonomyId": 6344
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -148,18 +150,20 @@ class TestConsumersController(BaseTestCase):
             headers={"api-key": self.api_key},
             json=body)
         expect = [{
-            "commonName": "lugworm",
-            "family": "Arenicolidae",
-            "genus": "Arenicola",
-            "order": "None",
-            "phylum": "Annelida",
-            "kingdom": "Metazoa",
-            "prefix": "wuAreMari",
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
             "tolId": "wuAreMari2",
-            "species": "Arenicola marina",
             "specimenId": "SAN0000100xxxxx",
-            "taxaClass": "Polychaeta",
-            "taxonomyId": 6344
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -174,18 +178,20 @@ class TestConsumersController(BaseTestCase):
             headers={"api-key": self.api_key},
             json=body)
         expect = [{
-            "commonName": "lugworm",
-            "family": "Arenicolidae",
-            "genus": "Arenicola",
-            "order": "None",
-            "phylum": "Annelida",
-            "kingdom": "Metazoa",
-            "prefix": "wuAreMari",
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
             "tolId": "wuAreMari1",
-            "species": "Arenicola marina",
             "specimenId": "SAN0000100",
-            "taxaClass": "Polychaeta",
-            "taxonomyId": 6344
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -202,32 +208,36 @@ class TestConsumersController(BaseTestCase):
             headers={"api-key": self.api_key},
             json=body)
         expect = [{
-            "commonName": "lugworm",
-            "family": "Arenicolidae",
-            "genus": "Arenicola",
-            "order": "None",
-            "phylum": "Annelida",
-            "kingdom": "Metazoa",
-            "prefix": "wuAreMari",
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
             "tolId": "wuAreMari1",
-            "species": "Arenicola marina",
             "specimenId": "SAN0000100",
-            "taxaClass": "Polychaeta",
-            "taxonomyId": 6344
         },
         {
-            'commonName': 'lugworm',
-            'family': 'Arenicolidae',
-            'genus': 'Arenicola',
-            'order': 'None',
-            'phylum': 'Annelida',
-            'kingdom': 'Metazoa',
-            'prefix': 'wuAreMari',
+            'species': {
+                'commonName': 'lugworm',
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
+            },
             'tolId': 'wuAreMari3',
-            'species': 'Arenicola marina',
             'specimenId': 'SAN0000100wwwww',
-            'taxaClass': 'Polychaeta',
-            'taxonomyId': 6344
         }]
 
         self.assert200(response,
@@ -291,7 +301,7 @@ class TestConsumersController(BaseTestCase):
             "phylum": "Annelida",
             "kingdom": "Metazoa",
             "prefix": "wuAreMari",
-            "species": "Arenicola marina",
+            "scientificName": "Arenicola marina",
             "taxaClass": "Polychaeta",
             "taxonomyId": 6344
         }]

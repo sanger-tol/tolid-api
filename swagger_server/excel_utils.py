@@ -75,13 +75,13 @@ def validate_sheet(sheet, assign=False, user=None, species_column_heading=None, 
             if (existing_tol_id is None):
                 existing_specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).filter(PnaSpecimen.species_id == taxon_id).one_or_none()
                 if (existing_specimen is not None):
-                    sheet.cell(row=current_row, column=tol_id_column, value=existing_specimen.tol_id)
+                    sheet.cell(row=current_row, column=tol_id_column, value=existing_specimen.public_name)
                 else:
                     existing_species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxon_id).one_or_none()
                     new_specimen = create_new_specimen(existing_species, specimen_id, user)
                     db.session.add(new_specimen)
                     db.session.commit()
-                    sheet.cell(row=current_row, column=tol_id_column, value=new_specimen.tol_id)
+                    sheet.cell(row=current_row, column=tol_id_column, value=new_specimen.public_name)
         else:
             if (re.search(r"sp\.$", scientific_name)):
                 errors.append({"message": "Row "+str(current_row)+": Genus only for "+scientific_name+", not assigning ToLID"})
@@ -100,7 +100,7 @@ def validate_sheet(sheet, assign=False, user=None, species_column_heading=None, 
                         # Search for the ToLID
                         existing_specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).filter(PnaSpecimen.species_id == taxon_id).one_or_none()
                         if (existing_specimen is not None):
-                            sheet.cell(row=current_row, column=tol_id_column, value=existing_specimen.tol_id)
+                            sheet.cell(row=current_row, column=tol_id_column, value=existing_specimen.public_name)
                         else:
                             # No existing ToLID - deal with this later - nothing to do now
                             pass

@@ -53,7 +53,7 @@ def add_species(body=None, api_key=None):
 
     species = PnaSpecies()
     species.prefix=body["prefix"]
-    species.name=body["species"]
+    species.name=body["scientificName"]
     species.taxonomy_id=body["taxonomyId"]
     species.common_name=body["commonName"]
     species.genus=body["genus"]
@@ -85,7 +85,7 @@ def edit_species(body=None, api_key=None):
         return "Species with taxonomyId "+str(body["taxonomyId"])+" does not exist", 400
 
     species.prefix=body["prefix"]
-    species.name=body["species"]
+    species.name=body["scientificName"]
     # Do not change taxonomy id - it is the primary key
     species.common_name=body["commonName"]
     species.genus=body["genus"]
@@ -163,7 +163,7 @@ def list_tol_ids(taxonomy_id=None, skip=None, limit=None):
 
     output = ""
     for specimen in specimens:
-        output += specimen.tol_id+'\t'+specimen.species.name+'\t'+specimen.specimen_id+'\t'+str(specimen.number)+'\n'
+        output += specimen.public_name+'\t'+specimen.species.name+'\t'+specimen.specimen_id+'\t'+str(specimen.number)+'\n'
     return output.strip()
 
 def list_species():  
