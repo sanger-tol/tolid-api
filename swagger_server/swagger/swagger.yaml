@@ -3,7 +3,7 @@ info:
   title: Tree of Life ToLID API
   description: API for ToLID registry
   contact:
-    email: kh14@sanger.ac.uk
+    email: tol-id-help@sanger.ac.uk
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
