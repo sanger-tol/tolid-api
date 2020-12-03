@@ -9,7 +9,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 2.0.0
 servers:
-  - url: http://0.0.0.0:8080
+  - url: http://0.0.0.0:8080/api/v2
 tags:
 - name: curators
   description: Curator tools

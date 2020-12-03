@@ -10,7 +10,7 @@ class TestConsumersController(BaseTestCase):
         # No taxonomyId given
         query_string = []
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='GET',
             query_string=query_string)
         self.assert400(response,
@@ -19,7 +19,7 @@ class TestConsumersController(BaseTestCase):
         # No specimenId given
         query_string = [('taxonomyId', '6344')]
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='GET',
             query_string=query_string)
         self.assert400(response,
@@ -29,7 +29,7 @@ class TestConsumersController(BaseTestCase):
         query_string = [('taxonomyId', '999999999'),
                         ('specimenId', 'SAN0000100')]
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='GET',
             query_string=query_string)
         self.assert400(response,
@@ -39,7 +39,7 @@ class TestConsumersController(BaseTestCase):
         query_string = [('taxonomyId', '9606'),
                         ('specimenId', 'SAN0000100')]
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='GET',
             query_string=query_string)
         self.assert400(response,
@@ -49,7 +49,7 @@ class TestConsumersController(BaseTestCase):
         query_string = [('taxonomyId', '6344'),
                         ('specimenId', 'SAN0000100zzzzz')]
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='GET',
             query_string=query_string)
         self.assert200(response,
@@ -60,7 +60,7 @@ class TestConsumersController(BaseTestCase):
         query_string = [('taxonomyId', '6344'),
                         ('specimenId', 'SAN0000100')]
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='GET',
             query_string=query_string)
         expect = [{
@@ -85,7 +85,7 @@ class TestConsumersController(BaseTestCase):
 
         # Same again
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='GET',
             query_string=query_string)
         self.assertEquals(expect, response.json)
@@ -94,7 +94,7 @@ class TestConsumersController(BaseTestCase):
         # No authorisation token given
         body = []
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='POST',
             json=body)
         self.assert401(response,
@@ -102,7 +102,7 @@ class TestConsumersController(BaseTestCase):
         # Invalid authorisation token given
         body = []
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='POST',
             headers={"api-key": "12345678"},
             json=body)
@@ -112,7 +112,7 @@ class TestConsumersController(BaseTestCase):
         # No taxonomyId given
         body = [{}]
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
@@ -122,7 +122,7 @@ class TestConsumersController(BaseTestCase):
         # No specimenId given
         body = [{'taxonomyId': 6344}]
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
@@ -133,7 +133,7 @@ class TestConsumersController(BaseTestCase):
         body = [{'taxonomyId': 999999999,
                          'specimenId': 'SAN0000100'}]
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
@@ -145,7 +145,7 @@ class TestConsumersController(BaseTestCase):
         body = [{'taxonomyId': 6344,
                 'specimenId': 'SAN0000100xxxxx'}]
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
@@ -173,7 +173,7 @@ class TestConsumersController(BaseTestCase):
         body = [{'taxonomyId': 6344,
                 'specimenId': 'SAN0000100'}]
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
@@ -203,7 +203,7 @@ class TestConsumersController(BaseTestCase):
                 {'taxonomyId': 6344,
                 'specimenId': 'SAN0000100wwwww'}]
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
@@ -250,7 +250,7 @@ class TestConsumersController(BaseTestCase):
                 {'taxonomyId': 9606,
                 'specimenId': 'SAN0000100'}]
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
@@ -261,7 +261,7 @@ class TestConsumersController(BaseTestCase):
         query_string = [('taxonomyId', '6344'),
                         ('specimenId', 'SAN0000100bbbbb')]
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/tol-id',
             method='GET',
             query_string=query_string)
         self.assert200(response,
@@ -272,7 +272,7 @@ class TestConsumersController(BaseTestCase):
         # No taxonomyId given
         query_string = []
         response = self.client.open(
-            '/tol-id',
+            '/api/v2/species',
             method='GET',
             query_string=query_string)
         self.assert400(response,
@@ -281,7 +281,7 @@ class TestConsumersController(BaseTestCase):
         # Taxonomy ID not in database
         query_string = [('taxonomyId', '999999999')]
         response = self.client.open(
-            '/species',
+            '/api/v2/species',
             method='GET',
             query_string=query_string)
         self.assert400(response,
@@ -290,7 +290,7 @@ class TestConsumersController(BaseTestCase):
         # All data given
         query_string = [('taxonomyId', '6344')]
         response = self.client.open(
-            '/species',
+            '/api/v2/species',
             method='GET',
             query_string=query_string)
         expect = [{
@@ -311,7 +311,7 @@ class TestConsumersController(BaseTestCase):
 
         # Same again
         response = self.client.open(
-            '/species',
+            '/api/v2/species',
             method='GET',
             query_string=query_string)
         self.assertEquals(expect, response.json)
