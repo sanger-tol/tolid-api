@@ -3,6 +3,7 @@
 import connexion
 import os
 
+from flask import render_template
 from swagger_server import encoder
 from swagger_server.model import db
 
@@ -14,8 +15,12 @@ def main():
     app.app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URI']
     app.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app.app)
-    app.run(port=8080)
+    # Simple website
+    @app.route('/')
+    def index():
+        return render_template('index.html')
 
+    app.run(port=8080)
 
 if __name__ == '__main__':
     main()
