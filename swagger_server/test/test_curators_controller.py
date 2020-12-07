@@ -10,11 +10,11 @@ from openpyxl import load_workbook
 class TestCuratorsController(BaseTestCase):
     """CuratorsController integration test stubs"""
 
-    def test_add_tol_id(self):
+    def test_add_specimen(self):
         # No authorisation token given
         query_string = []
         response = self.client.open(
-            '/api/v2/tol-id',
+            '/api/v2/specimens',
             method='PUT',
             query_string=query_string)
         self.assert401(response,
@@ -22,7 +22,7 @@ class TestCuratorsController(BaseTestCase):
         # Invalid authorisation token given
         query_string = []
         response = self.client.open(
-            '/api/v2/tol-id',
+            '/api/v2/specimens',
             method='PUT',
             headers={"api-key": "12345678"},
             query_string=query_string)
@@ -32,7 +32,7 @@ class TestCuratorsController(BaseTestCase):
         # No taxonomyId given
         query_string = []
         response = self.client.open(
-            '/api/v2/tol-id',
+            '/api/v2/specimens',
             method='PUT',
             headers={"api-key": self.api_key},
             query_string=query_string)
@@ -42,7 +42,7 @@ class TestCuratorsController(BaseTestCase):
         # No specimenId given
         query_string = [('taxonomyId', 6344)]
         response = self.client.open(
-            '/api/v2/tol-id',
+            '/api/v2/specimens',
             method='PUT',
             headers={"api-key": self.api_key},
             query_string=query_string)
@@ -53,7 +53,7 @@ class TestCuratorsController(BaseTestCase):
         query_string = [('taxonomyId', 999999999),
                          ('specimenId', 'SAN0000100')]
         response = self.client.open(
-            '/api/v2/tol-id',
+            '/api/v2/specimens',
             method='PUT',
             headers={"api-key": self.api_key},
             query_string=query_string)
@@ -64,7 +64,7 @@ class TestCuratorsController(BaseTestCase):
         query_string = [('taxonomyId', '9606'),
                         ('specimenId', 'SAN0000100')]
         response = self.client.open(
-            '/api/v2/tol-id',
+            '/api/v2/specimens',
             method='PUT',
             headers={"api-key": self.api_key},
             query_string=query_string)
@@ -75,7 +75,7 @@ class TestCuratorsController(BaseTestCase):
         query_string = [('taxonomyId', 6344),
                 ('specimenId', 'SAN0000100xxxxx')]
         response = self.client.open(
-            '/api/v2/tol-id',
+            '/api/v2/specimens',
             method='PUT',
             headers={"api-key": self.api_key},
             query_string=query_string)
@@ -103,7 +103,7 @@ class TestCuratorsController(BaseTestCase):
         query_string = [('taxonomyId', 9606),
                 ('specimenId', 'SAN0000999xxxxx')]
         response = self.client.open(
-            '/api/v2/tol-id',
+            '/api/v2/specimens',
             method='PUT',
             headers={"api-key": self.api_key},
             query_string=query_string)
@@ -131,7 +131,7 @@ class TestCuratorsController(BaseTestCase):
         query_string = [('taxonomyId', 6344),
                 ('specimenId', 'SAN0000100')]
         response = self.client.open(
-            '/api/v2/tol-id',
+            '/api/v2/specimens',
             method='PUT',
             headers={"api-key": self.api_key},
             query_string=query_string)
@@ -245,11 +245,9 @@ class TestCuratorsController(BaseTestCase):
         self.assertEquals(expect, response.json)
 
         # Has it been added?
-        query_string = [('taxonomyId', '999999')]
         response = self.client.open(
-            '/api/v2/species',
-            method='GET',
-            query_string=query_string)
+            '/api/v2/species/999999',
+            method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
@@ -259,7 +257,7 @@ class TestCuratorsController(BaseTestCase):
         # No authorisation token given
         query_string = []
         response = self.client.open(
-            '/api/v2/species',
+            '/api/v2/species/6344',
             method='PATCH',
             query_string=query_string)
         self.assert401(response,
@@ -267,7 +265,7 @@ class TestCuratorsController(BaseTestCase):
         # Invalid authorisation token given
         query_string = []
         response = self.client.open(
-            '/api/v2/species',
+            '/api/v2/species/6344',
             method='PATCH',
             headers={"api-key": "12345678"},
             query_string=query_string)
@@ -285,7 +283,7 @@ class TestCuratorsController(BaseTestCase):
                 'phylum': 'Phylum',
                 'kingdom': 'Kingdom'}
         response = self.client.open(
-            '/api/v2/species',
+            '/api/v2/species/6344',
             method='PATCH',
             headers={"api-key": self.api_key},
             json=body)
@@ -304,7 +302,7 @@ class TestCuratorsController(BaseTestCase):
                 'phylum': 'Phylum',
                 'kingdom': 'Kingdom'}
         response = self.client.open(
-            '/api/v2/species',
+            '/api/v2/species/999999',
             method='PATCH',
             headers={"api-key": self.api_key2},
             json=body)
@@ -312,7 +310,7 @@ class TestCuratorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Taxonomy ID in database - should edit it
-        body = {'taxonomyId': 6344,
+        body = {'taxonomyId': 63446344,
                 'scientificName': 'Species',
                 'prefix': 'whatever',
                 'commonName': 'Common name', 
@@ -323,7 +321,7 @@ class TestCuratorsController(BaseTestCase):
                 'phylum': 'Phylum',
                 'kingdom': 'Kingdom'}
         response = self.client.open(
-            '/api/v2/species',
+            '/api/v2/species/6344',
             method='PATCH',
             headers={"api-key": self.api_key2},
             json=body)
@@ -344,11 +342,9 @@ class TestCuratorsController(BaseTestCase):
         self.assertEquals(expect, response.json)
 
         # Has it changed?
-        query_string = [('taxonomyId', '6344')]
         response = self.client.open(
-            '/api/v2/species',
-            method='GET',
-            query_string=query_string)
+            '/api/v2/species/6344',
+            method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
@@ -471,7 +467,7 @@ class TestCuratorsController(BaseTestCase):
         self.assertEquals('wuAreMari3', sheet.cell(row=3, column=tol_id_column).value)
 
 
-    def test_list_tol_ids(self):
+    def test_list_specimens(self):
         # Add a couple more specimens
         specimen2 = PnaSpecimen(specimen_id="SAN0000101", number=2, public_name="wuAreMari2")
         specimen2.species = self.species1
@@ -486,7 +482,7 @@ class TestCuratorsController(BaseTestCase):
         # No authorisation token given
         body = []
         response = self.client.open(
-            '/api/v2/tol-id/all',
+            '/api/v2/specimens',
             method='GET',
             )
         self.assert401(response,
@@ -494,7 +490,7 @@ class TestCuratorsController(BaseTestCase):
         # Invalid authorisation token given
         body = []
         response = self.client.open(
-            '/api/v2/tol-id/all',
+            '/api/v2/specimens',
             method='GET',
             headers={"api-key": "12345678"},
             )
@@ -503,7 +499,7 @@ class TestCuratorsController(BaseTestCase):
         # Not admin
         body = []
         response = self.client.open(
-            '/api/v2/tol-id/all',
+            '/api/v2/specimens',
             method='GET',
             headers={"api-key": self.api_key},
             )
@@ -512,7 +508,7 @@ class TestCuratorsController(BaseTestCase):
         # No taxonomyId given
         query_string = []
         response = self.client.open(
-            '/api/v2/tol-id/all',
+            '/api/v2/specimens',
             method='GET',
             headers={"api-key": self.api_key2},
             query_string=query_string)
@@ -525,7 +521,7 @@ class TestCuratorsController(BaseTestCase):
         # Taxonomy ID not in database
         query_string = [('taxonomyId', '999999999')]
         response = self.client.open(
-            '/api/v2/tol-id/all',
+            '/api/v2/specimens',
             method='GET',
             headers={"api-key": self.api_key2},
             query_string=query_string)
@@ -535,7 +531,7 @@ class TestCuratorsController(BaseTestCase):
         # Taxonomy ID given
         query_string = [('taxonomyId', '6344')]
         response = self.client.open(
-            '/api/v2/tol-id/all',
+            '/api/v2/specimens',
             method='GET',
             headers={"api-key": self.api_key2},
             query_string=query_string)
@@ -549,7 +545,7 @@ class TestCuratorsController(BaseTestCase):
         # No authorisation token given
         body = []
         response = self.client.open(
-            '/api/v2/species/all',
+            '/api/v2/species',
             method='GET',
             )
         self.assert401(response,
@@ -557,7 +553,7 @@ class TestCuratorsController(BaseTestCase):
         # Invalid authorisation token given
         body = []
         response = self.client.open(
-            '/api/v2/species/all',
+            '/api/v2/species',
             method='GET',
             headers={"api-key": "12345678"},
             )
@@ -566,7 +562,7 @@ class TestCuratorsController(BaseTestCase):
         # Not admin
         body = []
         response = self.client.open(
-            '/api/v2/species/all',
+            '/api/v2/species',
             method='GET',
             headers={"api-key": self.api_key},
             )
@@ -575,7 +571,7 @@ class TestCuratorsController(BaseTestCase):
         # All correct
         query_string = []
         response = self.client.open(
-            '/api/v2/species/all',
+            '/api/v2/species',
             method='GET',
             headers={"api-key": self.api_key2},
             query_string=query_string)

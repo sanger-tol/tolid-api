@@ -16,27 +16,18 @@ tags:
 - name: users
   description: Browsing ToLIDs
 paths:
-  /tol-id:
+  /specimens/tol-id/{tolId}:
     get:
       tags:
       - users
-      summary: Search for a single ToLID
+      summary: Search for a single specimen by ToLID
       description: |
-        By passing in the appropriate options, you can search for
-        available ToLIDs in the system.
+        Return species and ToLID data for a specimen
       operationId: search_tol_id
       parameters:
-      - name: taxonomyId
-        in: query
-        description: pass an NCBI taxonomy ID for looking up ToLID and taxonomy information
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: specimenId
-        in: query
-        description: pass a GAL specimen ID
+      - name: tolId
+        in: path
+        description: a Tree of Life ToLID
         required: true
         style: form
         explode: true
@@ -55,12 +46,43 @@ paths:
         "400":
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.consumers_controller
+  /specimens/{specimenId}:
+    get:
+      tags:
+      - users
+      summary: Search for a single specimen
+      description: |
+        Return species and ToLID data for a specimen
+      operationId: search_specimen
+      parameters:
+      - name: specimenId
+        in: path
+        description: a GAL specimen ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Specimen'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.consumers_controller
+  /specimens:
     post:
       security:
         - ApiKeyAuth: []
       tags:
       - users
-      summary: Bulk search for ToLIDs
+      summary: Bulk search for specimens and their ToLIDs
       description: |
         By passing in the appropriate options, you can search for
         available ToLIDs in the system. ToLIDs will be
@@ -71,7 +93,7 @@ paths:
           {"taxonomyId": 55617, "specimenId": "SAN0000101"}
         ]
         ```
-      operationId: bulk_search_tol_id
+      operationId: bulk_search_specimens
       parameters:
         - name: api-key
           in: header
@@ -105,9 +127,9 @@ paths:
         - ApiKeyAuth: []
       tags:
       - curators
-      summary: adds a ToLID
+      summary: adds a specimen and assigns a ToLID
       description: Adds a new ToLID to the system
-      operationId: add_tol_id
+      operationId: add_specimen
       parameters:
       - name: taxonomyId
         in: query
@@ -148,16 +170,15 @@ paths:
         "409":
           description: an existing item already exists
       x-openapi-router-controller: swagger_server.controllers.curators_controller
-  /tol-id/all:
     get:
       security:
         - ApiKeyAuth: []
       tags:
       - curators
-      summary: List all assigned ToLIDs
+      summary: List all specimens and their assigned ToLIDs
       description: |
-        Returns a list of all ToLIDs in the database
-      operationId: list_tol_ids
+        Returns a list of all specimens/ToLIDs in the database
+      operationId: list_specimens
       parameters:
       - name: api-key
         in: header
@@ -187,7 +208,7 @@ paths:
         "403":
           description: user not authorised to use this function
       x-openapi-router-controller: swagger_server.controllers.curators_controller
-  /species:
+  /species/{taxonomyId}:
     get:
       tags:
       - users
@@ -198,7 +219,7 @@ paths:
       operationId: search_species
       parameters:
       - name: taxonomyId
-        in: query
+        in: path
         description: pass an NCBI taxonomy ID for looking up ToLID and taxonomy information
         required: true
         style: form
@@ -218,6 +239,55 @@ paths:
         "400":
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.consumers_controller
+    patch:
+        security:
+          - ApiKeyAuth: []
+        tags:
+        - curators
+        summary: modifies a species
+        description: Modifies an existing species, for example by changing the scientific name. It is not possible to change the taxonomy ID using this method. If the prefix is changed, existing allocated ToLIDs for specimens will not change, but any new ones will use the new prefix.
+        operationId: edit_species
+        parameters:
+        - name: taxonomyId
+          in: path
+          description: pass an NCBI taxonomy ID for looking up ToLID and taxonomy information
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: api-key
+          in: header
+          description: API-Key
+          required: True
+          style: simple
+          explode: true
+          schema:
+            type: string  
+        requestBody:
+          description: Species to modify
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Species'
+        responses:
+          "200":
+            description: item modified
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Species'
+                  x-content-type: application/json
+          "400":
+            description: invalid input, object invalid
+          "403":
+            description: user not authorised to use this function
+          "409":
+            description: item does not exist
+        x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /species:
     put:
       security:
         - ApiKeyAuth: []
@@ -258,47 +328,6 @@ paths:
         "409":
           description: an existing item already exists
       x-openapi-router-controller: swagger_server.controllers.curators_controller
-    patch:
-      security:
-        - ApiKeyAuth: []
-      tags:
-      - curators
-      summary: modifies a species
-      description: Modifies an existing species, for example by changing the scientific name
-      operationId: edit_species
-      parameters:
-      - name: api-key
-        in: header
-        description: API-Key
-        required: True
-        style: simple
-        explode: true
-        schema:
-          type: string  
-      requestBody:
-        description: Species to modify
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Species'
-      responses:
-        "200":
-          description: item modified
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Species'
-                x-content-type: application/json
-        "400":
-          description: invalid input, object invalid
-        "403":
-          description: user not authorised to use this function
-        "409":
-          description: item does not exist
-      x-openapi-router-controller: swagger_server.controllers.curators_controller
-  /species/all:
     get:
       security:
         - ApiKeyAuth: []

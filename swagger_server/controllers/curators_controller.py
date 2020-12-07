@@ -6,8 +6,8 @@ import connexion
 import tempfile
 
 
-def add_tol_id(taxonomy_id=None, specimen_id=None, api_key=None): 
-    """adds a ToLID
+def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None): 
+    """adds a specimen and assigns a ToLID
 
     Adds a new ToLID to the system 
 
@@ -69,7 +69,7 @@ def add_species(body=None, api_key=None):
 
     return jsonify([species])
 
-def edit_species(body=None, api_key=None): 
+def edit_species(taxonomy_id=None, body=None, api_key=None): 
     """modifies a species
 
     Modifies a species in the system 
@@ -80,13 +80,14 @@ def edit_species(body=None, api_key=None):
     if role is None:
         return "User does not have permission to use this function", 403
 
-    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == body["taxonomyId"]).one_or_none()
+    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).one_or_none()
     if species is None:
-        return "Species with taxonomyId "+str(body["taxonomyId"])+" does not exist", 400
+        return "Species with taxonomyId "+str(taxonomy_id)+" does not exist", 400
 
     species.prefix=body["prefix"]
     species.name=body["scientificName"]
-    # Do not change taxonomy id - it is the primary key
+    # Don't allow the taxonomy ID to be changed
+    # species.taxonomy_id=body["taxonomyId"]
     species.common_name=body["commonName"]
     species.genus=body["genus"]
     species.family=body["family"]
@@ -133,7 +134,7 @@ def validate_manifest(excel_file=None, species_column_heading="scientific_name")
     # Remove old file
     dir.cleanup()
 
-def list_tol_ids(taxonomy_id=None, skip=None, limit=None):  
+def list_specimens(taxonomy_id=None, skip=None, limit=None):  
     """lists all ToLIDs
 
     By passing in the appropriate taxonomy string, you can limit the search to a particular species
