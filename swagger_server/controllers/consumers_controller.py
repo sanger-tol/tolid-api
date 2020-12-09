@@ -16,12 +16,19 @@ def search_specimen(specimen_id=None, skip=None, limit=None):
 
     :rtype: List[Specimen]
     """
-    specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).one_or_none()
+    specimens = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).all()
 
-    if specimen is None:
+    if not specimens:
         return jsonify([])
 
-    return jsonify([specimen])
+    # This can be simplified once the model can be changed
+    tolIds = []
+    for specimen in specimens:
+        tolId = {'tolId': specimen.public_name,
+                'species': specimen.species}
+        tolIds.append(tolId)
+    return jsonify([{'specimenId': specimen_id,
+                    'tolIds': tolIds}])
 
 def search_tol_id(tol_id=None, skip=None, limit=None):  
     """searches DToL ToLIDs

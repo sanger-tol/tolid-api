@@ -16,13 +16,13 @@ tags:
 - name: users
   description: Browsing ToLIDs
 paths:
-  /specimens/tol-id/{tolId}:
+  /tol-ids/{tolId}:
     get:
       tags:
       - users
-      summary: Search for a single specimen by ToLID
+      summary: Returns a single ToLID
       description: |
-        Return species and ToLID data for a specimen
+        Return species and specimen for a ToLID
       operationId: search_tol_id
       parameters:
       - name: tolId
@@ -41,7 +41,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Specimen'
+                  $ref: '#/components/schemas/ToLIDLong'
                 x-content-type: application/json
         "400":
           description: bad input parameter
@@ -50,7 +50,7 @@ paths:
     get:
       tags:
       - users
-      summary: Search for a single specimen
+      summary: Return a single specimen
       description: |
         Return species and ToLID data for a specimen
       operationId: search_specimen
@@ -71,18 +71,18 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Specimen'
+                  $ref: '#/components/schemas/SpecimenLong'
                 x-content-type: application/json
         "400":
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.consumers_controller
-  /specimens:
+  /tol-ids:
     post:
       security:
         - ApiKeyAuth: []
       tags:
       - users
-      summary: Bulk search for specimens and their ToLIDs
+      summary: Bulk search for ToLIDs by specimen/taxon
       description: |
         By passing in the appropriate options, you can search for
         available ToLIDs in the system. ToLIDs will be
@@ -117,7 +117,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Specimen'
+                  $ref: '#/components/schemas/ToLIDLong'
                 x-content-type: application/json
         "400":
           description: bad input parameter
@@ -127,7 +127,7 @@ paths:
         - ApiKeyAuth: []
       tags:
       - curators
-      summary: adds a specimen and assigns a ToLID
+      summary: adds a specimen/taxon and assigns a ToLID
       description: Adds a new ToLID to the system
       operationId: add_specimen
       parameters:
@@ -163,7 +163,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Specimen'
+                  $ref: '#/components/schemas/ToLIDLong'
                 x-content-type: application/json
         "400":
           description: invalid input, object invalid
@@ -175,9 +175,9 @@ paths:
         - ApiKeyAuth: []
       tags:
       - curators
-      summary: List all specimens and their assigned ToLIDs
+      summary: List all ToLIDs
       description: |
-        Returns a list of all specimens/ToLIDs in the database
+        Returns a list of all ToLIDs in the database
       operationId: list_specimens
       parameters:
       - name: api-key
@@ -432,7 +432,7 @@ components:
         $ref: '#/components/schemas/TaxSpec'
         required:
         - TaxSpec
-    Specimen:
+    ToLIDLong:
       required:
         - tolId
         - species
@@ -445,8 +445,7 @@ components:
         species:
           $ref: '#/components/schemas/Species'
         specimenId:
-          type: string
-          example: SAN0000100
+          $ref: '#/components/schemas/SpecimenShort'
       example:
         tolId: wuAreMari1
         species:
@@ -460,7 +459,32 @@ components:
           taxaClass: Polychaeta
           family: Arenicolidae
           order: Capitellida    
-        specimenId: SAN0000100
+        specimen:
+          specimenId: SAN0000100
+    ToLIDShort:
+      required:
+        - tolId
+        - species
+      type: object
+      properties:
+        tolId:
+          type: string
+          example: wuAreMari1
+        species:
+          $ref: '#/components/schemas/Species'
+      example:
+        tolId: wuAreMari1
+        species:
+          commonName: lugworm
+          phylum: Annelida
+          kingdom: Metazoa
+          scientificName: Arenicola marina
+          genus: Arenicola
+          prefix: wuAreMari
+          taxonomyId: 6344
+          taxaClass: Polychaeta
+          family: Arenicolidae
+          order: Capitellida    
     Species:
       required:
         - commonName
@@ -516,6 +540,29 @@ components:
         taxaClass: Polychaeta
         family: Arenicolidae
         order: Capitellida    
+    SpecimenShort:
+      required:
+        - specimenId
+      type: object
+      properties:
+        specimenId:
+          type: string
+          example: SAN00001234
+      example:
+        specimenId: SAN00001234
+    SpecimenLong:
+      required:
+        - specimenId
+        - tolIds
+      type: object
+      properties:
+        specimenId:
+          type: string
+          example: SAN00001234
+        tolIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToLIDShort'
     ErrorMessageList:
       required:
         - errors

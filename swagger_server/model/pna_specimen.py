@@ -15,4 +15,5 @@ class PnaSpecimen(Base):
     def to_dict(cls):
         return {'tolId': cls.public_name,
             'species': cls.species,
-            'specimenId': cls.specimen_id}
+            'specimen': {'specimenId': cls.specimen_id} # This will change when we change model
+            } 

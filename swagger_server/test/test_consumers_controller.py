@@ -21,20 +21,24 @@ class TestConsumersController(BaseTestCase):
             '/api/v2/specimens/SAN0000100',
             method='GET')
         expect = [{
-            "species":{
-                "commonName": "lugworm",
-                "family": "Arenicolidae",
-                "genus": "Arenicola",
-                "order": "None",
-                "phylum": "Annelida",
-                "kingdom": "Metazoa",
-                "prefix": "wuAreMari",
-                "scientificName": "Arenicola marina",
-                "taxaClass": "Polychaeta",
-                "taxonomyId": 6344
-            },
-            "tolId": "wuAreMari1",
             "specimenId": "SAN0000100",
+            "tolIds": [
+                {
+                    "tolId": "wuAreMari1",
+                    "species":{
+                        "commonName": "lugworm",
+                        "family": "Arenicolidae",
+                        "genus": "Arenicola",
+                        "order": "None",
+                        "phylum": "Annelida",
+                        "kingdom": "Metazoa",
+                        "prefix": "wuAreMari",
+                        "scientificName": "Arenicola marina",
+                        "taxaClass": "Polychaeta",
+                        "taxonomyId": 6344
+                    }
+                }
+            ]
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -50,7 +54,7 @@ class TestConsumersController(BaseTestCase):
 
         # ToLID not in database
         response = self.client.open(
-            '/api/v2/specimens/tol-id/wuAreMari99999',
+            '/api/v2/tol-ids/wuAreMari99999',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -58,7 +62,7 @@ class TestConsumersController(BaseTestCase):
 
         # All data given
         response = self.client.open(
-            '/api/v2/specimens/tol-id/wuAreMari1',
+            '/api/v2/tol-ids/wuAreMari1',
             method='GET')
         expect = [{
             "species":{
@@ -74,7 +78,7 @@ class TestConsumersController(BaseTestCase):
                 "taxonomyId": 6344
             },
             "tolId": "wuAreMari1",
-            "specimenId": "SAN0000100",
+            "specimen": {"specimenId": "SAN0000100"}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -82,15 +86,15 @@ class TestConsumersController(BaseTestCase):
 
         # Same again
         response = self.client.open(
-            '/api/v2/specimens/tol-id/wuAreMari1',
+            '/api/v2/tol-ids/wuAreMari1',
             method='GET')
         self.assertEquals(expect, response.json)
 
-    def test_bulk_search_specimens(self):
+    def test_bulk_search_tol_ids(self):
         # No authorisation token given
         body = []
         response = self.client.open(
-            '/api/v2/specimens',
+            '/api/v2/tol-ids',
             method='POST',
             json=body)
         self.assert401(response,
@@ -98,7 +102,7 @@ class TestConsumersController(BaseTestCase):
         # Invalid authorisation token given
         body = []
         response = self.client.open(
-            '/api/v2/specimens',
+            '/api/v2/tol-ids',
             method='POST',
             headers={"api-key": "12345678"},
             json=body)
@@ -108,7 +112,7 @@ class TestConsumersController(BaseTestCase):
         # No taxonomyId given
         body = [{}]
         response = self.client.open(
-            '/api/v2/specimens',
+            '/api/v2/tol-ids',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
@@ -118,7 +122,7 @@ class TestConsumersController(BaseTestCase):
         # No specimenId given
         body = [{'taxonomyId': 6344}]
         response = self.client.open(
-            '/api/v2/specimens',
+            '/api/v2/tol-ids',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
@@ -129,7 +133,7 @@ class TestConsumersController(BaseTestCase):
         body = [{'taxonomyId': 999999999,
                          'specimenId': 'SAN0000100'}]
         response = self.client.open(
-            '/api/v2/specimens',
+            '/api/v2/tol-ids',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
@@ -141,7 +145,7 @@ class TestConsumersController(BaseTestCase):
         body = [{'taxonomyId': 6344,
                 'specimenId': 'SAN0000100xxxxx'}]
         response = self.client.open(
-            '/api/v2/specimens',
+            '/api/v2/tol-ids',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
@@ -159,7 +163,7 @@ class TestConsumersController(BaseTestCase):
                 "taxonomyId": 6344
             },
             "tolId": "wuAreMari2",
-            "specimenId": "SAN0000100xxxxx",
+            "specimen": {"specimenId": "SAN0000100xxxxx"},
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -169,7 +173,7 @@ class TestConsumersController(BaseTestCase):
         body = [{'taxonomyId': 6344,
                 'specimenId': 'SAN0000100'}]
         response = self.client.open(
-            '/api/v2/specimens',
+            '/api/v2/tol-ids',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
@@ -187,7 +191,7 @@ class TestConsumersController(BaseTestCase):
                 "taxonomyId": 6344
             },
             "tolId": "wuAreMari1",
-            "specimenId": "SAN0000100",
+            "specimen": {"specimenId": "SAN0000100"},
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -199,7 +203,7 @@ class TestConsumersController(BaseTestCase):
                 {'taxonomyId': 6344,
                 'specimenId': 'SAN0000100wwwww'}]
         response = self.client.open(
-            '/api/v2/specimens',
+            '/api/v2/tol-ids',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
@@ -217,7 +221,7 @@ class TestConsumersController(BaseTestCase):
                 "taxonomyId": 6344
             },
             "tolId": "wuAreMari1",
-            "specimenId": "SAN0000100",
+            "specimen": {"specimenId": "SAN0000100"},
         },
         {
             'species': {
@@ -233,7 +237,7 @@ class TestConsumersController(BaseTestCase):
                 'taxonomyId': 6344
             },
             'tolId': 'wuAreMari3',
-            'specimenId': 'SAN0000100wwwww',
+            'specimen': {'specimenId': 'SAN0000100wwwww'},
         }]
 
         self.assert200(response,
@@ -246,7 +250,7 @@ class TestConsumersController(BaseTestCase):
                 {'taxonomyId': 9606,
                 'specimenId': 'SAN0000100'}]
         response = self.client.open(
-            '/api/v2/specimens',
+            '/api/v2/tol-ids',
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
