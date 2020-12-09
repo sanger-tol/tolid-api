@@ -51,6 +51,27 @@ def search_tol_id(tol_id=None, skip=None, limit=None):
 
     return jsonify([specimen])
 
+def search_tol_id_by_taxon_specimen(taxonomy_id=None, specimen_id=None, skip=None, limit=None):  
+    """searches DToL ToLIDs
+
+    By passing in the appropriate taxonomy string, you can search for available ToLIDs in the system 
+
+    :param taxonomyId: pass an optional search string for looking up a ToLID
+    :type taxonomyId: str
+    # :param skip: number of records to skip for pagination
+    # :type skip: int
+    # :param limit: maximum number of records to return
+    # :type limit: int
+
+    :rtype: List[Specimen]
+    """
+    specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.species_id == taxonomy_id).filter(PnaSpecimen.specimen_id == specimen_id).one_or_none()
+
+    if specimen is None:
+        return jsonify([])
+
+    return jsonify([specimen])
+
 def bulk_search_specimens(body=None, api_key=None):  
     """searches DToL ToLIDs in bulk
 

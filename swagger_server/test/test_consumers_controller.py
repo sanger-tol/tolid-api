@@ -90,6 +90,51 @@ class TestConsumersController(BaseTestCase):
             method='GET')
         self.assertEquals(expect, response.json)
 
+    def test_search_tol_id_by_taxon_specimen(self):
+
+        # ToLID not in database
+        query_string = {'taxonomyId': 6344, 'specimenId': 'SAN99999999'}
+        response = self.client.open(
+            '/api/v2/tol-ids/search',
+            method='GET',
+            query_string=query_string)
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals([], response.json)
+
+        # All data given
+        query_string = {'taxonomyId': 6344, 'specimenId': 'SAN0000100'}
+        response = self.client.open(
+            '/api/v2/tol-ids/wuAreMari1',
+            method='GET',
+            query_string=query_string)
+        expect = [{
+            "species":{
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "tolId": "wuAreMari1",
+            "specimen": {"specimenId": "SAN0000100"}
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # Same again
+        response = self.client.open(
+            '/api/v2/tol-ids/wuAreMari1',
+            method='GET',
+            query_string=query_string)
+        self.assertEquals(expect, response.json)
+
     def test_bulk_search_tol_ids(self):
         # No authorisation token given
         body = []

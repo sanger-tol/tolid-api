@@ -20,7 +20,7 @@ paths:
     get:
       tags:
       - users
-      summary: Returns a single ToLID
+      summary: Return a single ToLID
       description: |
         Return species and specimen for a ToLID
       operationId: search_tol_id
@@ -28,6 +28,44 @@ paths:
       - name: tolId
         in: path
         description: a Tree of Life ToLID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToLIDLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.consumers_controller
+  /tol-ids/search:
+    get:
+      tags:
+      - users
+      summary: Search for a ToLID by taxonomyId and specimenId
+      description: |
+        Return species and specimen for a ToLID
+      operationId: search_tol_id_by_taxon_specimen
+      parameters:
+      - name: taxonomyId
+        in: query
+        description: an NCBI Taxonomy ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: specimenId
+        in: query
+        description: a specimen ID
         required: true
         style: form
         explode: true
@@ -212,7 +250,7 @@ paths:
     get:
       tags:
       - users
-      summary: Search for a single species
+      summary: Return a single species
       description: |
         By passing in the appropriate options, you can search for
         available species in the system.
@@ -244,7 +282,7 @@ paths:
           - ApiKeyAuth: []
         tags:
         - curators
-        summary: modifies a species
+        summary: Modify a species
         description: Modifies an existing species, for example by changing the scientific name. It is not possible to change the taxonomy ID using this method. If the prefix is changed, existing allocated ToLIDs for specimens will not change, but any new ones will use the new prefix.
         operationId: edit_species
         parameters:
@@ -293,7 +331,7 @@ paths:
         - ApiKeyAuth: []
       tags:
       - curators
-      summary: adds a species
+      summary: Add a species
       description: Adds a new species to the system
       operationId: add_species
       parameters:
