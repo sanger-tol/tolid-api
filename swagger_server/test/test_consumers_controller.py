@@ -390,19 +390,20 @@ class TestConsumersController(BaseTestCase):
                 'taxaClass': 'Polychaeta',
                 'taxonomyId': 6344
             },
-            'tolId': 'wuAreMari3',
+            'tolId': 'wuAreMari4',
             'specimen': {'specimenId': 'SAN0000100wwwww'},
         }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
 
-        # Search for existing and new, plus duplicated queries
+        # Search for existing and 2 new
         body = [{'taxonomyId': 6344,
                 'specimenId': 'SAN0000100'},
                 {'taxonomyId': 6344,
-                'specimenId': 'SAN0000100wwwww'},
+                'specimenId': 'SAN0000100ppppp'},
                 {'taxonomyId': 6344,
-                'specimenId': 'SAN0000100'},
-                {'taxonomyId': 6344,
-                'specimenId': 'SAN0000100wwwww'}]
+                'specimenId': 'SAN0000100qqqqq'}]
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
@@ -437,8 +438,74 @@ class TestConsumersController(BaseTestCase):
                 'taxaClass': 'Polychaeta',
                 'taxonomyId': 6344
             },
-            'tolId': 'wuAreMari4',   # We created wuAreMari3 earlier on in this method
-            'specimen': {'specimenId': 'SAN0000100wwwww'},
+            'tolId': 'wuAreMari5',
+            'specimen': {'specimenId': 'SAN0000100ppppp'},
+        },
+        {
+            'species': {
+                'commonName': 'lugworm',
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
+            },
+            'tolId': 'wuAreMari6',
+            'specimen': {'specimenId': 'SAN0000100qqqqq'},
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # Search for existing and new, plus duplicated queries
+        body = [{'taxonomyId': 6344,
+                'specimenId': 'SAN0000100'},
+                {'taxonomyId': 6344,
+                'specimenId': 'SAN0000100rrrrr'},
+                {'taxonomyId': 6344,
+                'specimenId': 'SAN0000100'},
+                {'taxonomyId': 6344,
+                'specimenId': 'SAN0000100rrrrr'}]
+        response = self.client.open(
+            '/api/v2/tol-ids',
+            method='POST',
+            headers={"api-key": self.api_key},
+            json=body)
+        expect = [{
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "tolId": "wuAreMari1",
+            "specimen": {"specimenId": "SAN0000100"},
+        },
+        {
+            'species': {
+                'commonName': 'lugworm',
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
+            },
+            'tolId': 'wuAreMari7',   # We created wuAreMari3,4,5,6 earlier on in this method
+            'specimen': {'specimenId': 'SAN0000100rrrrr'},
         },
         {
             "species": {
@@ -469,8 +536,8 @@ class TestConsumersController(BaseTestCase):
                 'taxaClass': 'Polychaeta',
                 'taxonomyId': 6344
             },
-            'tolId': 'wuAreMari4',
-            'specimen': {'specimenId': 'SAN0000100wwwww'},
+            'tolId': 'wuAreMari7',
+            'specimen': {'specimenId': 'SAN0000100rrrrr'},
         }]
 
         self.assert200(response,

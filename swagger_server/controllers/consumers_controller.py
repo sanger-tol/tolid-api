@@ -100,8 +100,6 @@ def bulk_search_specimens(body=None, api_key=None):
                 specimen = create_new_specimen(species, specimen_id, user)
 
             specimens.append(specimen)
-
-        for specimen in specimens:
             db.session.add(specimen)
         db.session.commit()
 
