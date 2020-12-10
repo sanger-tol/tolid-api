@@ -14,6 +14,7 @@ class BaseTestCase(TestCase):
     api_key2 = "AnyThingBecAuseThIsIsATEST567890"
 
     def setUp(self):
+        self.maxDiff = None
         db.create_all()
         self.user1 = PnaUser(user_id=100,
                 name="test_user",

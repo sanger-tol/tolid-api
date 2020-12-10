@@ -195,9 +195,9 @@ class TestConsumersController(BaseTestCase):
         body = [{'taxonomyId': 6344,
                 'specimenId': 'SAN0000100'},
                 {'taxonomyId': 6344,
-                'specimenId': 'SAN0000100wwwww'},
+                'specimenId': 'SAN0000100sssss'},
                 {'taxonomyId': 6344,
-                'specimenId': 'SAN0000100xxxxx'}]
+                'specimenId': 'SAN0000100ttttt'}]
         response = self.client.open(
             '/public_name_api/public-name',
             method='POST',
@@ -227,7 +227,7 @@ class TestConsumersController(BaseTestCase):
             'prefix': 'wuAreMari',
             'publicName': 'wuAreMari3',
             'species': 'Arenicola marina',
-            'specimenId': 'SAN0000100wwwww',
+            'specimenId': 'SAN0000100sssss',
             'taxaClass': 'Polychaeta',
             'taxonomyId': 6344
         },
@@ -241,7 +241,7 @@ class TestConsumersController(BaseTestCase):
             'prefix': 'wuAreMari',
             'publicName': 'wuAreMari4',
             'species': 'Arenicola marina',
-            'specimenId': 'SAN0000100xxxxx',
+            'specimenId': 'SAN0000100ttttt',
             'taxaClass': 'Polychaeta',
             'taxonomyId': 6344
         }]

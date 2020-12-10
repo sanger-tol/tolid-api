@@ -58,6 +58,7 @@ def bulk_search_public_name(body=None, api_key=None):
 
             if specimen is not None:
                 if specimen.species.taxonomy_id != species.taxonomy_id:
+                    db.session.rollback()
                     return "Species of specimen "+str(specimen_id)+" is "+ specimen.species.name + " but was expecting "+species.name, 400
             else:
                 specimen = create_new_specimen(species, specimen_id, user)
