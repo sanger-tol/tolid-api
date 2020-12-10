@@ -1,6 +1,7 @@
 from swagger_server.model import db, PnaSpecies, PnaSpecimen, PnaUser
 from flask import jsonify
 from swagger_server.db_utils import create_new_specimen
+import connexion
 
 def search_public_name(taxonomy_id=None, specimen_id=None, skip=None, limit=None):  
     """searches DToL public names
@@ -42,7 +43,7 @@ def bulk_search_public_name(body=None, api_key=None):
 
     :rtype: List[PublicName]
     """
-    user = db.session.query(PnaUser).filter(PnaUser.api_key == api_key).one_or_none()
+    user = db.session.query(PnaUser).filter(PnaUser.user_id == connexion.context["user"]).one_or_none()
     specimens = []
     # body contains the rows of data
     if body:
