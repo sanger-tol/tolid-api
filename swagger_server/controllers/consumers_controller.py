@@ -92,6 +92,7 @@ def bulk_search_specimens(body=None, api_key=None):
             species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).one_or_none()
 
             if species is None:
+                db.session.rollback()
                 return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
 
             specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.species_id == taxonomy_id).filter(PnaSpecimen.specimen_id == specimen_id).one_or_none()

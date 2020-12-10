@@ -547,7 +547,7 @@ class TestConsumersController(BaseTestCase):
         # Error on later query
         body = [{'taxonomyId': 6344,
                 'specimenId': 'SAN0000100bbbbb'},
-                {#'taxonomyId': 9606,
+                {'taxonomyId': 9999999,
                 'specimenId': 'SAN0000100'}]
         response = self.client.open(
             '/api/v2/tol-ids',
