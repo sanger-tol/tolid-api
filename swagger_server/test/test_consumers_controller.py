@@ -82,13 +82,14 @@ class TestConsumersController(BaseTestCase):
                         "order": "Phyllodocida",
                         "phylum": "Annelida",
                         "prefix": "wpPerVanc",
-                        "species": "Perinereis vancaurica",
+                        "scientificName": "Perinereis vancaurica",
                         "taxaClass": "Polychaeta",
                         "taxonomyId": 6355
                     }
                 }
             ]
         }]
+        self.assertEquals(expect, response.json)
 
     def test_search_tol_id(self):
 

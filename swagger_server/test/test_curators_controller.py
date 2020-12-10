@@ -60,16 +60,33 @@ class TestCuratorsController(BaseTestCase):
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-        # Taxonomy ID not correct for specimen
-        query_string = [('taxonomyId', '9606'),
+        # Second taxonomy ID for specimen
+        query_string = [('taxonomyId', '6355'),
                         ('specimenId', 'SAN0000100')]
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
             headers={"api-key": self.api_key},
             query_string=query_string)
-        self.assert400(response,
+        expect = [{
+            "species": {
+                "commonName": "None",
+                "family": "Nereididae",
+                "genus": "Perinereis",
+                "kingdom": "Metazoa",
+                "order": "Phyllodocida",
+                "phylum": "Annelida",
+                "prefix": "wpPerVanc",
+                "scientificName": "Perinereis vancaurica",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6355
+            },
+            "tolId": "wpPerVanc2",
+            "specimen": {"specimenId": "SAN0000100"},
+        }]
+        self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
 
         # Specimen ID not in database - should create it
         query_string = [('taxonomyId', 6344),
