@@ -14,6 +14,7 @@ class BaseTestCase(TestCase):
     api_key2 = "AnyThingBecAuseThIsIsATEST567890"
 
     def setUp(self):
+        self.maxDiff = None
         db.create_all()
         self.user1 = PnaUser(user_id=100,
                 name="test_user",
@@ -48,10 +49,30 @@ class BaseTestCase(TestCase):
                 tax_class="Mammalia",
                 taxonomy_id=9606)
         db.session.add(self.species2)
+        self.species3 = PnaSpecies(common_name="None",
+                family="Nereididae",
+                genus="Perinereis",
+                kingdom="Metazoa",
+                tax_order="Phyllodocida",
+                phylum="Annelida",
+                prefix="wpPerVanc",
+                name="Perinereis vancaurica",
+                tax_class="Polychaeta",
+                taxonomy_id=6355)
+        db.session.add(self.species3)
         self.specimen1 = PnaSpecimen(specimen_id="SAN0000100", number=1, public_name="wuAreMari1")
         self.specimen1.species = self.species1
         self.specimen1.user = self.user1
         db.session.add(self.specimen1)
+        # Another species for the same specimen
+        self.specimen2 = PnaSpecimen(specimen_id="SAN0000101", number=2, public_name="wuAreMari2")
+        self.specimen2.species = self.species1
+        self.specimen2.user = self.user1
+        db.session.add(self.specimen2)
+        self.specimen3 = PnaSpecimen(specimen_id="SAN0000101", number=1, public_name="wpPerVanc1")
+        self.specimen3.species = self.species3
+        self.specimen3.user = self.user1
+        db.session.add(self.specimen3)
         db.session.commit()
 
     def tearDown(self):

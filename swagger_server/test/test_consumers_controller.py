@@ -16,7 +16,7 @@ class TestConsumersController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals([], response.json)
 
-        # All data given
+        # Single answer
         response = self.client.open(
             '/api/v2/specimens/SAN0000100',
             method='GET')
@@ -49,6 +49,46 @@ class TestConsumersController(BaseTestCase):
             '/api/v2/specimens/SAN0000100',
             method='GET')
         self.assertEquals(expect, response.json)
+
+        # Two answers
+        response = self.client.open(
+            '/api/v2/specimens/SAN0000101',
+            method='GET')
+        expect = [{
+            "specimenId": "SAN0000101",
+            "tolIds": [
+                {
+                    "tolId": "wuAreMari2",
+                    "species":{
+                        "commonName": "lugworm",
+                        "family": "Arenicolidae",
+                        "genus": "Arenicola",
+                        "order": "None",
+                        "phylum": "Annelida",
+                        "kingdom": "Metazoa",
+                        "prefix": "wuAreMari",
+                        "scientificName": "Arenicola marina",
+                        "taxaClass": "Polychaeta",
+                        "taxonomyId": 6344
+                    }
+                },
+                {
+                    "tolId": "wpPerVanc1",
+                    "species":{
+                        "commonName": "None",
+                        "family": "Nereididae",
+                        "genus": "Perinereis",
+                        "kingdom": "Metazoa",
+                        "order": "Phyllodocida",
+                        "phylum": "Annelida",
+                        "prefix": "wpPerVanc",
+                        "species": "Perinereis vancaurica",
+                        "taxaClass": "Polychaeta",
+                        "taxonomyId": 6355
+                    }
+                }
+            ]
+        }]
 
     def test_search_tol_id(self):
 
@@ -90,6 +130,31 @@ class TestConsumersController(BaseTestCase):
             method='GET')
         self.assertEquals(expect, response.json)
 
+        # All data given - another taxon for same specimen
+        response = self.client.open(
+            '/api/v2/tol-ids/wuAreMari2',
+            method='GET')
+        expect = [{
+            "species":{
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "tolId": "wuAreMari2",
+            "specimen": {"specimenId": "SAN0000101"}
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+
     def test_search_tol_id_by_taxon_specimen(self):
 
         # ToLID not in database
@@ -105,7 +170,7 @@ class TestConsumersController(BaseTestCase):
         # All data given
         query_string = {'taxonomyId': 6344, 'specimenId': 'SAN0000100'}
         response = self.client.open(
-            '/api/v2/tol-ids/wuAreMari1',
+            '/api/v2/tol-ids/search',
             method='GET',
             query_string=query_string)
         expect = [{
@@ -130,9 +195,35 @@ class TestConsumersController(BaseTestCase):
 
         # Same again
         response = self.client.open(
-            '/api/v2/tol-ids/wuAreMari1',
+            '/api/v2/tol-ids/search',
             method='GET',
             query_string=query_string)
+        self.assertEquals(expect, response.json)
+
+        # All data given - another taxon for same specimen
+        query_string = {'taxonomyId': 6344, 'specimenId': 'SAN0000101'}
+        response = self.client.open(
+            '/api/v2/tol-ids/search',
+            method='GET',
+            query_string=query_string)
+        expect = [{
+            "species":{
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "tolId": "wuAreMari2",
+            "specimen": {"specimenId": "SAN0000101"}
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
 
     def test_bulk_search_tol_ids(self):
@@ -182,12 +273,13 @@ class TestConsumersController(BaseTestCase):
             method='POST',
             headers={"api-key": self.api_key},
             json=body)
-        #TODO
-        #self.assert400(response,
-        #               'Response body is : ' + response.data.decode('utf-8'))
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
 
-        # Specimen ID not in database - should create it
+        # Specimen ID not in database, multiple taxons for same specimen - should create them
         body = [{'taxonomyId': 6344,
+                'specimenId': 'SAN0000100xxxxx'},
+                {'taxonomyId': 6355,
                 'specimenId': 'SAN0000100xxxxx'}]
         response = self.client.open(
             '/api/v2/tol-ids',
@@ -207,7 +299,23 @@ class TestConsumersController(BaseTestCase):
                 "taxaClass": "Polychaeta",
                 "taxonomyId": 6344
             },
-            "tolId": "wuAreMari2",
+            "tolId": "wuAreMari3",
+            "specimen": {"specimenId": "SAN0000100xxxxx"},
+        },
+        {
+            "species": {
+                "commonName": "None",
+                "family": "Nereididae",
+                "genus": "Perinereis",
+                "kingdom": "Metazoa",
+                "order": "Phyllodocida",
+                "phylum": "Annelida",
+                "prefix": "wpPerVanc",
+                "scientificName": "Perinereis vancaurica",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6355
+            },
+            "tolId": "wpPerVanc2",
             "specimen": {"specimenId": "SAN0000100xxxxx"},
         }]
         self.assert200(response,
@@ -328,7 +436,7 @@ class TestConsumersController(BaseTestCase):
                 'taxaClass': 'Polychaeta',
                 'taxonomyId': 6344
             },
-            'tolId': 'wuAreMari3',
+            'tolId': 'wuAreMari4',   # We created wuAreMari3 earlier on in this method
             'specimen': {'specimenId': 'SAN0000100wwwww'},
         },
         {
@@ -360,7 +468,7 @@ class TestConsumersController(BaseTestCase):
                 'taxaClass': 'Polychaeta',
                 'taxonomyId': 6344
             },
-            'tolId': 'wuAreMari3',
+            'tolId': 'wuAreMari4',
             'specimen': {'specimenId': 'SAN0000100wwwww'},
         }]
 
@@ -371,7 +479,7 @@ class TestConsumersController(BaseTestCase):
         # Error on later query
         body = [{'taxonomyId': 6344,
                 'specimenId': 'SAN0000100bbbbb'},
-                {'taxonomyId': 9606,
+                {#'taxonomyId': 9606,
                 'specimenId': 'SAN0000100'}]
         response = self.client.open(
             '/api/v2/tol-ids',

@@ -15,7 +15,7 @@ class TestDbUtils(BaseTestCase):
         self.assertEqual(new_specimen.specimen_id, "TEST12345678")
         self.assertEqual(new_specimen.species, self.species1)
         self.assertEqual(new_specimen.user, self.user1)
-        self.assertEqual(new_specimen.number, 2)
+        self.assertEqual(new_specimen.number, 3)
 
 
 if __name__ == '__main__':

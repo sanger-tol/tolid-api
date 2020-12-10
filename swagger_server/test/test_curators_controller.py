@@ -92,7 +92,7 @@ class TestCuratorsController(BaseTestCase):
                 "taxaClass": "Polychaeta",
                 "taxonomyId": 6344
             },
-            "tolId": "wuAreMari2",
+            "tolId": "wuAreMari3",
             "specimen": {"specimenId": "SAN0000100xxxxx"},
         }]
         self.assert200(response,
@@ -436,9 +436,9 @@ class TestCuratorsController(BaseTestCase):
         workbook = load_workbook(filename='swagger_server/test/test-manifest-validated.xlsx')
         sheet = workbook.active
         (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = find_columns(sheet, "scientific_name")
-        self.assertEquals('wuAreMari2', sheet.cell(row=2, column=tol_id_column).value)
-        self.assertEquals('wuAreMari3', sheet.cell(row=3, column=tol_id_column).value)
-        self.assertEquals('wuAreMari3', sheet.cell(row=4, column=tol_id_column).value)
+        self.assertEquals('wuAreMari3', sheet.cell(row=2, column=tol_id_column).value)
+        self.assertEquals('wuAreMari4', sheet.cell(row=3, column=tol_id_column).value)
+        self.assertEquals('wuAreMari4', sheet.cell(row=4, column=tol_id_column).value)
 
         # Different column name for species
         file = open('swagger_server/test/test-manifest-col.xlsx', 'rb')
@@ -463,16 +463,16 @@ class TestCuratorsController(BaseTestCase):
         workbook = load_workbook(filename='swagger_server/test/test-manifest-validated.xlsx')
         sheet = workbook.active
         (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = find_columns(sheet, "random column name")
-        self.assertEquals('wuAreMari2', sheet.cell(row=2, column=tol_id_column).value)
-        self.assertEquals('wuAreMari3', sheet.cell(row=3, column=tol_id_column).value)
+        self.assertEquals('wuAreMari3', sheet.cell(row=2, column=tol_id_column).value)
+        self.assertEquals('wuAreMari4', sheet.cell(row=3, column=tol_id_column).value)
 
 
     def test_list_specimens(self):
         # Add a couple more specimens
-        specimen2 = PnaSpecimen(specimen_id="SAN0000101", number=2, public_name="wuAreMari2")
+        specimen2 = PnaSpecimen(specimen_id="SAN0000102", number=3, public_name="wuAreMari3")
         specimen2.species = self.species1
         specimen2.user = self.user1
-        specimen3 = PnaSpecimen(specimen_id="SAN0000102", number=1, public_name="mHomSap1")
+        specimen3 = PnaSpecimen(specimen_id="SAN0000103", number=1, public_name="mHomSap1")
         specimen3.species = self.species2
         specimen3.user = self.user1
         db.session.add(specimen2)
@@ -512,7 +512,7 @@ class TestCuratorsController(BaseTestCase):
             method='GET',
             headers={"api-key": self.api_key2},
             query_string=query_string)
-        expect = "wuAreMari1\tArenicola marina\tSAN0000100\t1\nwuAreMari2\tArenicola marina\tSAN0000101\t2\nmHomSap1\tHomo sapiens\tSAN0000102\t1"
+        expect = "wuAreMari1\tArenicola marina\tSAN0000100\t1\nwuAreMari2\tArenicola marina\tSAN0000101\t2\nwuAreMari3\tArenicola marina\tSAN0000102\t3\nwpPerVanc1\tPerinereis vancaurica\tSAN0000101\t1\nmHomSap1\tHomo sapiens\tSAN0000103\t1"
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals('text/plain; charset=utf-8', response.content_type)
@@ -535,7 +535,7 @@ class TestCuratorsController(BaseTestCase):
             method='GET',
             headers={"api-key": self.api_key2},
             query_string=query_string)
-        expect = "wuAreMari1\tArenicola marina\tSAN0000100\t1\nwuAreMari2\tArenicola marina\tSAN0000101\t2"
+        expect = "wuAreMari1\tArenicola marina\tSAN0000100\t1\nwuAreMari2\tArenicola marina\tSAN0000101\t2\nwuAreMari3\tArenicola marina\tSAN0000102\t3"
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals('text/plain; charset=utf-8', response.content_type)
@@ -575,7 +575,7 @@ class TestCuratorsController(BaseTestCase):
             method='GET',
             headers={"api-key": self.api_key2},
             query_string=query_string)
-        expect = "wuAreMari\tArenicola marina\t6344\tlugworm\tArenicola\tArenicolidae\tNone\tPolychaeta\tAnnelida\nmHomSap\tHomo sapiens\t9606\thuman\tHomo\tHominidae\tPrimates\tMammalia\tChordata"
+        expect = "wuAreMari\tArenicola marina\t6344\tlugworm\tArenicola\tArenicolidae\tNone\tPolychaeta\tAnnelida\nwpPerVanc\tPerinereis vancaurica\t6355\tNone\tPerinereis\tNereididae\tPhyllodocida\tPolychaeta\tAnnelida\nmHomSap\tHomo sapiens\t9606\thuman\tHomo\tHominidae\tPrimates\tMammalia\tChordata"
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals('text/plain; charset=utf-8', response.content_type)

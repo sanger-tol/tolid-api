@@ -94,12 +94,9 @@ def bulk_search_specimens(body=None, api_key=None):
             if species is None:
                 return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
 
-            specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).one_or_none()
+            specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.species_id == taxonomy_id).filter(PnaSpecimen.specimen_id == specimen_id).one_or_none()
 
-            if specimen is not None:
-                if specimen.species.taxonomy_id != species.taxonomy_id:
-                    return "Species of specimen "+str(specimen_id)+" is "+ specimen.species.name + " but was expecting "+species.name, 400
-            else:
+            if specimen is None:
                 specimen = create_new_specimen(species, specimen_id, user)
 
             specimens.append(specimen)
