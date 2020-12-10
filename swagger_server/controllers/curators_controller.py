@@ -18,7 +18,7 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
 
     :return: JSON with complete ToLID and taxa structure
     """
-    user = db.session.query(PnaUser).filter(PnaUser.api_key == api_key).one_or_none()
+    user = db.session.query(PnaUser).filter(PnaUser.user_id == connexion.context["user"]).one_or_none()
     species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).one_or_none()
 
     if species is None:
