@@ -191,11 +191,13 @@ class TestConsumersController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
 
-        # Search for existing and new
+        # Search for existing and  2 new
         body = [{'taxonomyId': 6344,
                 'specimenId': 'SAN0000100'},
                 {'taxonomyId': 6344,
-                'specimenId': 'SAN0000100wwwww'}]
+                'specimenId': 'SAN0000100wwwww'},
+                {'taxonomyId': 6344,
+                'specimenId': 'SAN0000100xxxxx'}]
         response = self.client.open(
             '/public_name_api/public-name',
             method='POST',
@@ -226,6 +228,20 @@ class TestConsumersController(BaseTestCase):
             'publicName': 'wuAreMari3',
             'species': 'Arenicola marina',
             'specimenId': 'SAN0000100wwwww',
+            'taxaClass': 'Polychaeta',
+            'taxonomyId': 6344
+        },
+        {
+            'commonName': 'lugworm',
+            'family': 'Arenicolidae',
+            'genus': 'Arenicola',
+            'order': 'None',
+            'phylum': 'Annelida',
+            'kingdom': 'Metazoa',
+            'prefix': 'wuAreMari',
+            'publicName': 'wuAreMari4',
+            'species': 'Arenicola marina',
+            'specimenId': 'SAN0000100xxxxx',
             'taxaClass': 'Polychaeta',
             'taxonomyId': 6344
         }]
