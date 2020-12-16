@@ -531,6 +531,38 @@ paths:
         "409":
           description: an existing item already exists
       x-openapi-router-controller: swagger_server.controllers.consumers_controller
+  /requests/mine:
+    get:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - users
+      summary: See the ToLID requests for the user
+      description: |
+        List the user's ToLID requests
+      operationId: requests_for_user
+      parameters:
+      - name: api-key
+        in: header
+        description: API-Key
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: string  
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToLIDLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.consumers_controller
 components:
   schemas:
     TaxSpec:

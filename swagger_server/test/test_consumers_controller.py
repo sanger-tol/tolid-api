@@ -3,7 +3,7 @@
 from __future__ import absolute_import
 
 from swagger_server.test import BaseTestCase
-from swagger_server.model import db
+from swagger_server.model import db, TolidRequest
 
 class TestConsumersController(BaseTestCase):
 
@@ -850,6 +850,100 @@ class TestConsumersController(BaseTestCase):
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
+    def test_search_requests_for_user(self):
+        self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=6344)
+        self.request1.user = self.user1
+        db.session.add(self.request1)
+        self.request2 = TolidRequest(specimen_id="SAN0000101", species_id=6344)
+        self.request2.user = self.user2
+        db.session.add(self.request2)
+        self.request3 = TolidRequest(specimen_id="SAN0000101", species_id=6355)
+        self.request3.user = self.user1
+        db.session.add(self.request3)
+        db.session.commit()
+
+        # No authorisation token given
+        body = []
+        response = self.client.open(
+            '/api/v2/requests/mine',
+            method='GET',
+            json=body)
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # Invalid authorisation token given
+        body = []
+        response = self.client.open(
+            '/api/v2/requests/mine',
+            method='GET',
+            headers={"api-key": "12345678"},
+            json=body)
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Search for user1's ToLID requests
+        response = self.client.open(
+            '/api/v2/requests/mine',
+            method='GET',
+            headers={"api-key": self.api_key}
+            )
+        expect = [{
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "specimen": {"specimenId": "SAN0000100"},
+        },
+        {
+            "species": {
+                "commonName": "None",
+                "family": "Nereididae",
+                "genus": "Perinereis",
+                "kingdom": "Metazoa",
+                "order": "Phyllodocida",
+                "phylum": "Annelida",
+                "prefix": "wpPerVanc",
+                "scientificName": "Perinereis vancaurica",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6355
+            },
+            'specimen': {'specimenId': 'SAN0000101'},
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # Search for user2's ToLID requests
+        response = self.client.open(
+            '/api/v2/requests/mine',
+            method='GET',
+            headers={"api-key": self.api_key2}
+            )
+        expect = [{
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "specimen": {"specimenId": "SAN0000101"},
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
 
 
 if __name__ == '__main__':

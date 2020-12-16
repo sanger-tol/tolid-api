@@ -170,3 +170,14 @@ def add_request(taxonomy_id=None, specimen_id=None, api_key=None):
             return "Another user has requested a ToLID for this specimenId/taxonomyId", 400
 
     return jsonify([request])
+
+def requests_for_user(api_key=None):  
+    """searches DToL ToLID requests for the current user
+
+    By passing in the appropriate taxonomy string, you can search for ToLID requests in the system 
+
+    :rtype: List[Specimen]
+    """
+    user = db.session.query(TolidUser).filter(TolidUser.user_id == connexion.context["user"]).one_or_none()
+    requests = db.session.query(TolidRequest).filter(TolidRequest.created_by == connexion.context["user"]).order_by(TolidRequest.created_at.desc()).all()
+    return jsonify(requests)
