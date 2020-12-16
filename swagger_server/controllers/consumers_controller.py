@@ -1,4 +1,4 @@
-from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidUser
+from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidUser, TolidRequest
 from flask import jsonify
 from swagger_server.db_utils import create_new_specimen
 import connexion
@@ -139,3 +139,34 @@ def search_species(taxonomy_id=None, skip=None, limit=None):
         return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
 
     return jsonify([species])
+
+def add_request(taxonomy_id=None, specimen_id=None, api_key=None): 
+    """adds a request for a ToLID
+
+    Adds a new ToLID request to the system 
+
+    :param taxonomy_id: valid NCBI Taxonomy identifier
+    :type taxonomy_id: str
+    :param specimen_id: valid GAL specimen identifier
+    :type specimen_id: str
+
+    :return: JSON with complete ToLID and taxa structure
+    """
+    user = db.session.query(TolidUser).filter(TolidUser.user_id == connexion.context["user"]).one_or_none()
+
+    # Does it exist already?
+    specimen = db.session.query(TolidSpecimen).filter(TolidSpecimen.species_id == taxonomy_id).filter(TolidSpecimen.specimen_id == specimen_id).one_or_none()
+    if specimen is not None:
+        return "A ToLID already exists", 400
+
+    request = db.session.query(TolidRequest).filter(TolidRequest.specimen_id == specimen_id).filter(TolidRequest.species_id == taxonomy_id).one_or_none()
+    if request is None:
+        request = TolidRequest(specimen_id=specimen_id, species_id=taxonomy_id)
+        request.user = user
+        db.session.add(request)
+        db.session.commit()
+    else:
+        if request.user != user:
+            return "Another user has requested a ToLID for this specimenId/taxonomyId", 400
+
+    return jsonify([request])

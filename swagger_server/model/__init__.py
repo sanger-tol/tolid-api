@@ -4,3 +4,4 @@ from .tolid_specimen import TolidSpecimen
 from .tolid_species import TolidSpecies
 from .tolid_user import TolidUser
 from .tolid_role import TolidRole
+from .tolid_request import TolidRequest

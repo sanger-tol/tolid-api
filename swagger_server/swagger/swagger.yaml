@@ -482,6 +482,55 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageList'
       x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /requests:
+    put:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - users
+      summary: adds a request for a ToLID
+      description: Adds a request for a new ToLID to the system
+      operationId: add_request
+      parameters:
+      - name: taxonomyId
+        in: query
+        description: NCBI taxonomy ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: specimenId
+        in: query
+        description: specimen ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: api-key
+        in: header
+        description: API-Key
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: string  
+      responses:
+        "200":
+          description: item created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RequestLong'
+                x-content-type: application/json
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      x-openapi-router-controller: swagger_server.controllers.consumers_controller
 components:
   schemas:
     TaxSpec:
@@ -633,6 +682,31 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ToLIDShort'
+    RequestLong:
+      required:
+        - species
+        - specimenId
+      type: object
+      properties:
+        species:
+          $ref: '#/components/schemas/Species'
+        specimenId:
+          $ref: '#/components/schemas/SpecimenShort'
+      example:
+        tolId: wuAreMari1
+        species:
+          commonName: lugworm
+          phylum: Annelida
+          kingdom: Metazoa
+          scientificName: Arenicola marina
+          genus: Arenicola
+          prefix: wuAreMari
+          taxonomyId: 6344
+          taxaClass: Polychaeta
+          family: Arenicolidae
+          order: Capitellida    
+        specimen:
+          specimenId: SAN0000100
     ErrorMessageList:
       required:
         - errors

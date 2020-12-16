@@ -6,7 +6,7 @@ import os
 
 from swagger_server.encoder import JSONEncoder
 
-from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidUser, TolidRole
+from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidUser, TolidRole, TolidRequest
 
 class BaseTestCase(TestCase):
 
@@ -76,6 +76,7 @@ class BaseTestCase(TestCase):
         db.session.commit()
 
     def tearDown(self):
+        db.session.query(TolidRequest).delete()
         db.session.query(TolidSpecimen).delete()
         db.session.query(TolidSpecies).delete()
         db.session.query(TolidRole).delete()
