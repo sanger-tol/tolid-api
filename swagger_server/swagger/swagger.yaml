@@ -7,7 +7,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 2.0.0
+  version: 2.0.1
 servers:
   - url: http://0.0.0.0:8080/api/v2
 tags:
@@ -33,6 +33,38 @@ paths:
         explode: true
         schema:
           type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToLIDLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.consumers_controller
+  /tol-ids/mine:
+    get:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - users
+      summary: Return a list of ToLIDs for the user
+      description: |
+        List the user's ToLIDs
+      operationId: tol_ids_for_user
+      parameters:
+      - name: api-key
+        in: header
+        description: API-Key
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: string  
       responses:
         "200":
           description: search results matching criteria

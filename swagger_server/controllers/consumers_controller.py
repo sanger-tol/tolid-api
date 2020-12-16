@@ -73,6 +73,17 @@ def search_tol_id_by_taxon_specimen(taxonomy_id=None, specimen_id=None, skip=Non
 
     return jsonify([specimen])
 
+def tol_ids_for_user(api_key=None):  
+    """searches DToL ToLIDs for the current user
+
+    By passing in the appropriate taxonomy string, you can search for available ToLIDs in the system 
+
+    :rtype: List[Specimen]
+    """
+    user = db.session.query(TolidUser).filter(TolidUser.user_id == connexion.context["user"]).one_or_none()
+    specimens = db.session.query(TolidSpecimen).filter(TolidSpecimen.created_by == connexion.context["user"]).order_by(TolidSpecimen.created_at.desc()).all()
+    return jsonify(specimens)
+
 def bulk_search_specimens(body=None, api_key=None):  
     """searches DToL ToLIDs in bulk
 

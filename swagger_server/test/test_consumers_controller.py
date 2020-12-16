@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 
 from swagger_server.test import BaseTestCase
+from swagger_server.model import db
 
 class TestConsumersController(BaseTestCase):
 
@@ -564,6 +565,96 @@ class TestConsumersController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals([], response.json)
+
+    def test_search_tol_ids_for_user(self):
+        self.specimen2.user = self.user2
+        db.session.commit()
+
+        # No authorisation token given
+        body = []
+        response = self.client.open(
+            '/api/v2/tol-ids/mine',
+            method='GET',
+            json=body)
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # Invalid authorisation token given
+        body = []
+        response = self.client.open(
+            '/api/v2/tol-ids/mine',
+            method='GET',
+            headers={"api-key": "12345678"},
+            json=body)
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Search for user1's ToLIDs
+        response = self.client.open(
+            '/api/v2/tol-ids/mine',
+            method='GET',
+            headers={"api-key": self.api_key}
+            )
+        expect = [{
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "tolId": "wuAreMari1",
+            "specimen": {"specimenId": "SAN0000100"},
+        },
+        {
+            "species": {
+                "commonName": "None",
+                "family": "Nereididae",
+                "genus": "Perinereis",
+                "kingdom": "Metazoa",
+                "order": "Phyllodocida",
+                "phylum": "Annelida",
+                "prefix": "wpPerVanc",
+                "scientificName": "Perinereis vancaurica",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6355
+            },
+            'tolId': 'wpPerVanc1',
+            'specimen': {'specimenId': 'SAN0000101'},
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # Search for user2's ToLIDs
+        response = self.client.open(
+            '/api/v2/tol-ids/mine',
+            method='GET',
+            headers={"api-key": self.api_key2}
+            )
+        expect = [{
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "tolId": "wuAreMari2",
+            "specimen": {"specimenId": "SAN0000101"},
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
 
     def test_search_species(self):
         # Taxonomy ID not in database
