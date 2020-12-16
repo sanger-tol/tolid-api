@@ -3,7 +3,7 @@ import re
 import requests
 import sys
 import os
-from swagger_server.model import db, PnaUser, PnaSpecies, PnaSpecimen
+from swagger_server.model import db, TolidUser, TolidSpecies, TolidSpecimen
 from swagger_server.db_utils import create_new_specimen
 
 def clean_cell(value):
@@ -66,18 +66,18 @@ def validate_sheet(sheet, assign=False, user=None, species_column_heading=None, 
     current_row = 2 
     for row in sheet.iter_rows(min_row=current_row, max_row=sheet.max_row, values_only=True):
         taxon_id = clean_cell(row[taxon_id_column-1])
-        specimen_id = clean_cell(row[specimen_id_column-1])
+        specimen_id = clean_cell(row[specimen_id_column-1]) 
         scientific_name = clean_cell(row[scientific_name_column-1])
         if (taxon_id is None) or (specimen_id is None) or (scientific_name is None):
             break
         if (assign):
             existing_tol_id = sheet.cell(row=current_row, column=tol_id_column).value
             if (existing_tol_id is None):
-                existing_specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).filter(PnaSpecimen.species_id == taxon_id).one_or_none()
+                existing_specimen = db.session.query(TolidSpecimen).filter(TolidSpecimen.specimen_id == specimen_id).filter(TolidSpecimen.species_id == taxon_id).one_or_none()
                 if (existing_specimen is not None):
                     sheet.cell(row=current_row, column=tol_id_column, value=existing_specimen.public_name)
                 else:
-                    existing_species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxon_id).one_or_none()
+                    existing_species = db.session.query(TolidSpecies).filter(TolidSpecies.taxonomy_id == taxon_id).one_or_none()
                     new_specimen = create_new_specimen(existing_species, specimen_id, user)
                     db.session.add(new_specimen)
                     db.session.commit()
@@ -88,7 +88,7 @@ def validate_sheet(sheet, assign=False, user=None, species_column_heading=None, 
                 ok = False
             else:
                 # Search for the taxomomy ID
-                existing_species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxon_id).one_or_none()
+                existing_species = db.session.query(TolidSpecies).filter(TolidSpecies.taxonomy_id == taxon_id).one_or_none()
                 if existing_species is None:
                     errors.append({"message": "Row "+str(current_row)+": Taxon ID " + taxon_id + " cannot be found"})
                     ok = False
@@ -98,7 +98,7 @@ def validate_sheet(sheet, assign=False, user=None, species_column_heading=None, 
                         ok = False
                     else:
                         # Search for the ToLID
-                        existing_specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).filter(PnaSpecimen.species_id == taxon_id).one_or_none()
+                        existing_specimen = db.session.query(TolidSpecimen).filter(TolidSpecimen.specimen_id == specimen_id).filter(TolidSpecimen.species_id == taxon_id).one_or_none()
                         if (existing_specimen is not None):
                             sheet.cell(row=current_row, column=tol_id_column, value=existing_specimen.public_name)
                         else:

@@ -4,7 +4,7 @@ from __future__ import absolute_import
 
 from swagger_server.test import BaseTestCase
 from swagger_server.excel_utils import find_columns
-from swagger_server.model import db, PnaSpecimen
+from swagger_server.model import db, TolidSpecimen
 from openpyxl import load_workbook
 
 class TestCuratorsController(BaseTestCase):
@@ -486,10 +486,10 @@ class TestCuratorsController(BaseTestCase):
 
     def test_list_specimens(self):
         # Add a couple more specimens
-        specimen2 = PnaSpecimen(specimen_id="SAN0000102", number=3, public_name="wuAreMari3")
+        specimen2 = TolidSpecimen(specimen_id="SAN0000102", number=3, public_name="wuAreMari3")
         specimen2.species = self.species1
         specimen2.user = self.user1
-        specimen3 = PnaSpecimen(specimen_id="SAN0000103", number=1, public_name="mHomSap1")
+        specimen3 = TolidSpecimen(specimen_id="SAN0000103", number=1, public_name="mHomSap1")
         specimen3.species = self.species2
         specimen3.user = self.user1
         db.session.add(specimen2)

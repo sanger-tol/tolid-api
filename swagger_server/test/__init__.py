@@ -6,7 +6,7 @@ import os
 
 from swagger_server.encoder import JSONEncoder
 
-from swagger_server.model import db, PnaSpecies, PnaSpecimen, PnaUser, PnaRole
+from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidUser, TolidRole
 
 class BaseTestCase(TestCase):
 
@@ -16,18 +16,18 @@ class BaseTestCase(TestCase):
     def setUp(self):
         self.maxDiff = None
         db.create_all()
-        self.user1 = PnaUser(user_id=100,
+        self.user1 = TolidUser(user_id=100,
                 name="test_user",
                 api_key=self.api_key)
         db.session.add(self.user1)
-        self.user2 = PnaUser(user_id=200,
+        self.user2 = TolidUser(user_id=200,
                 name="test_user_admin",
                 api_key=self.api_key2)
         db.session.add(self.user2)
-        self.role = PnaRole(role="admin")
+        self.role = TolidRole(role="admin")
         self.role.user = self.user2
         db.session.add(self.role)
-        self.species1 = PnaSpecies(common_name="lugworm",
+        self.species1 = TolidSpecies(common_name="lugworm",
                 family="Arenicolidae",
                 genus="Arenicola",
                 tax_order="None",
@@ -38,7 +38,7 @@ class BaseTestCase(TestCase):
                 tax_class="Polychaeta",
                 taxonomy_id=6344)
         db.session.add(self.species1)
-        self.species2 = PnaSpecies(common_name="human",
+        self.species2 = TolidSpecies(common_name="human",
                 family="Hominidae",
                 genus="Homo",
                 tax_order="Primates",
@@ -49,7 +49,7 @@ class BaseTestCase(TestCase):
                 tax_class="Mammalia",
                 taxonomy_id=9606)
         db.session.add(self.species2)
-        self.species3 = PnaSpecies(common_name="None",
+        self.species3 = TolidSpecies(common_name="None",
                 family="Nereididae",
                 genus="Perinereis",
                 kingdom="Metazoa",
@@ -60,26 +60,26 @@ class BaseTestCase(TestCase):
                 tax_class="Polychaeta",
                 taxonomy_id=6355)
         db.session.add(self.species3)
-        self.specimen1 = PnaSpecimen(specimen_id="SAN0000100", number=1, public_name="wuAreMari1")
+        self.specimen1 = TolidSpecimen(specimen_id="SAN0000100", number=1, public_name="wuAreMari1")
         self.specimen1.species = self.species1
         self.specimen1.user = self.user1
         db.session.add(self.specimen1)
         # Another species for the same specimen
-        self.specimen2 = PnaSpecimen(specimen_id="SAN0000101", number=2, public_name="wuAreMari2")
+        self.specimen2 = TolidSpecimen(specimen_id="SAN0000101", number=2, public_name="wuAreMari2")
         self.specimen2.species = self.species1
         self.specimen2.user = self.user1
         db.session.add(self.specimen2)
-        self.specimen3 = PnaSpecimen(specimen_id="SAN0000101", number=1, public_name="wpPerVanc1")
+        self.specimen3 = TolidSpecimen(specimen_id="SAN0000101", number=1, public_name="wpPerVanc1")
         self.specimen3.species = self.species3
         self.specimen3.user = self.user1
         db.session.add(self.specimen3)
         db.session.commit()
 
     def tearDown(self):
-        db.session.query(PnaSpecimen).delete()
-        db.session.query(PnaSpecies).delete()
-        db.session.query(PnaRole).delete()
-        db.session.query(PnaUser).delete()
+        db.session.query(TolidSpecimen).delete()
+        db.session.query(TolidSpecies).delete()
+        db.session.query(TolidRole).delete()
+        db.session.query(TolidUser).delete()
         db.session.commit()
 
     def create_app(self):

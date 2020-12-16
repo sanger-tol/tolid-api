@@ -1,6 +1,6 @@
 from flask import jsonify, send_from_directory
 from swagger_server.db_utils import create_new_specimen
-from swagger_server.model import db, PnaSpecies, PnaSpecimen, PnaUser, PnaRole
+from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidUser, TolidRole
 from swagger_server.excel_utils import validate_excel
 import connexion
 import tempfile
@@ -18,13 +18,13 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
 
     :return: JSON with complete ToLID and taxa structure
     """
-    user = db.session.query(PnaUser).filter(PnaUser.user_id == connexion.context["user"]).one_or_none()
-    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).one_or_none()
+    user = db.session.query(TolidUser).filter(TolidUser.user_id == connexion.context["user"]).one_or_none()
+    species = db.session.query(TolidSpecies).filter(TolidSpecies.taxonomy_id == taxonomy_id).one_or_none()
 
     if species is None:
         return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
 
-    specimen = db.session.query(PnaSpecimen).filter(PnaSpecimen.specimen_id == specimen_id).filter(PnaSpecimen.species_id == taxonomy_id).one_or_none()
+    specimen = db.session.query(TolidSpecimen).filter(TolidSpecimen.specimen_id == specimen_id).filter(TolidSpecimen.species_id == taxonomy_id).one_or_none()
 
     if specimen is None:
         specimen = create_new_specimen(species, specimen_id, user)
@@ -40,15 +40,15 @@ def add_species(body=None, api_key=None):
 
     :return: JSON with complete ToLID and taxa structure
     """
-    role = db.session.query(PnaRole).filter(PnaRole.role == 'admin').filter(PnaRole.user_id == connexion.context["user"]).one_or_none()
+    role = db.session.query(TolidRole).filter(TolidRole.role == 'admin').filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
     if role is None:
         return "User does not have permission to use this function", 403
 
-    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == body["taxonomyId"]).one_or_none()
+    species = db.session.query(TolidSpecies).filter(TolidSpecies.taxonomy_id == body["taxonomyId"]).one_or_none()
     if species is not None:
         return "Species with taxonomyId "+str(body["taxonomyId"])+" already exists", 400
 
-    species = PnaSpecies()
+    species = TolidSpecies()
     species.prefix=body["prefix"]
     species.name=body["scientificName"]
     species.taxonomy_id=body["taxonomyId"]
@@ -73,11 +73,11 @@ def edit_species(taxonomy_id=None, body=None, api_key=None):
 
     :return: JSON with complete ToLID and taxa structure
     """
-    role = db.session.query(PnaRole).filter(PnaRole.role == 'admin').filter(PnaRole.user_id == connexion.context["user"]).one_or_none()
+    role = db.session.query(TolidRole).filter(TolidRole.role == 'admin').filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
     if role is None:
         return "User does not have permission to use this function", 403
 
-    species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).one_or_none()
+    species = db.session.query(TolidSpecies).filter(TolidSpecies.taxonomy_id == taxonomy_id).one_or_none()
     if species is None:
         return "Species with taxonomyId "+str(taxonomy_id)+" does not exist", 400
 
@@ -112,7 +112,7 @@ def validate_manifest(excel_file=None, species_column_heading="scientific_name")
 
     :rtype: None
     """
-    user = db.session.query(PnaUser).filter(PnaUser.user_id == connexion.context["user"]).one_or_none()
+    user = db.session.query(TolidUser).filter(TolidUser.user_id == connexion.context["user"]).one_or_none()
     uploaded_file = connexion.request.files['excelFile']
 
     # Save to a temporary location
@@ -145,19 +145,19 @@ def list_specimens(taxonomy_id=None, skip=None, limit=None):
 
     :rtype: List[Specimen]
     """
-    role = db.session.query(PnaRole).filter(PnaRole.role == 'admin').filter(PnaRole.user_id == connexion.context["user"]).one_or_none()
+    role = db.session.query(TolidRole).filter(TolidRole.role == 'admin').filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
     if role is None:
         return "User does not have permission to use this function", 403
 
     if taxonomy_id is None:
-        specimens = db.session.query(PnaSpecimen).order_by(PnaSpecimen.species_id).order_by(PnaSpecimen.specimen_id).order_by(PnaSpecimen.number).all()
+        specimens = db.session.query(TolidSpecimen).order_by(TolidSpecimen.species_id).order_by(TolidSpecimen.specimen_id).order_by(TolidSpecimen.number).all()
     else:
-        species = db.session.query(PnaSpecies).filter(PnaSpecies.taxonomy_id == taxonomy_id).one_or_none()
+        species = db.session.query(TolidSpecies).filter(TolidSpecies.taxonomy_id == taxonomy_id).one_or_none()
 
         if species is None:
             return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
 
-        specimens = db.session.query(PnaSpecimen).filter(PnaSpecimen.species_id == taxonomy_id).order_by(PnaSpecimen.specimen_id).order_by(PnaSpecimen.number).all()
+        specimens = db.session.query(TolidSpecimen).filter(TolidSpecimen.species_id == taxonomy_id).order_by(TolidSpecimen.specimen_id).order_by(TolidSpecimen.number).all()
 
     output = ""
     for specimen in specimens:
@@ -174,11 +174,11 @@ def list_species():
 
     :rtype: List[Species]
     """
-    role = db.session.query(PnaRole).filter(PnaRole.role == 'admin').filter(PnaRole.user_id == connexion.context["user"]).one_or_none()
+    role = db.session.query(TolidRole).filter(TolidRole.role == 'admin').filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
     if role is None:
         return "User does not have permission to use this function", 403
 
-    speciess = db.session.query(PnaSpecies).order_by(PnaSpecies.taxonomy_id).all()
+    speciess = db.session.query(TolidSpecies).order_by(TolidSpecies.taxonomy_id).all()
 
     output = ""
     for species in speciess:
