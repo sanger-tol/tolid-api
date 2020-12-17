@@ -945,6 +945,233 @@ class TestConsumersController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
 
+    def test_bulk_add_requests(self):
+        # No authorisation token given
+        body = []
+        response = self.client.open(
+            '/api/v2/requests',
+            method='POST',
+            json=body)
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # Invalid authorisation token given
+        body = []
+        response = self.client.open(
+            '/api/v2/requests',
+            method='POST',
+            headers={"api-key": "12345678"},
+            json=body)
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # No taxonomyId given
+        body = [{}]
+        response = self.client.open(
+            '/api/v2/requests',
+            method='POST',
+            headers={"api-key": self.api_key},
+            json=body)
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # No specimenId given
+        body = [{'taxonomyId': 6344}]
+        response = self.client.open(
+            '/api/v2/requests',
+            method='POST',
+            headers={"api-key": self.api_key},
+            json=body)
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Taxonomy ID not in database
+        body = [{'taxonomyId': 999999999,
+                         'specimenId': 'SAN0000100'}]
+        response = self.client.open(
+            '/api/v2/requests',
+            method='POST',
+            headers={"api-key": self.api_key},
+            json=body)
+        expect = [{
+            "species": {
+                "taxonomyId": 999999999
+            },
+            "specimen": {"specimenId": "SAN0000100"}
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # Specimen ID not in database, multiple taxons for same specimen - should create them
+        body = [{'taxonomyId': 6344,
+                'specimenId': 'SAN0000100xxxxx'},
+                {'taxonomyId': 6355,
+                'specimenId': 'SAN0000100xxxxx'}]
+        response = self.client.open(
+            '/api/v2/requests',
+            method='POST',
+            headers={"api-key": self.api_key},
+            json=body)
+        expect = [{
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "specimen": {"specimenId": "SAN0000100xxxxx"},
+        },
+        {
+            "species": {
+                "commonName": "None",
+                "family": "Nereididae",
+                "genus": "Perinereis",
+                "kingdom": "Metazoa",
+                "order": "Phyllodocida",
+                "phylum": "Annelida",
+                "prefix": "wpPerVanc",
+                "scientificName": "Perinereis vancaurica",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6355
+            },
+            "specimen": {"specimenId": "SAN0000100xxxxx"},
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # Existing ToLID
+        body = [{'taxonomyId': 6344,
+                'specimenId': 'SAN0000100'}]
+        response = self.client.open(
+            '/api/v2/requests',
+            method='POST',
+            headers={"api-key": self.api_key},
+            json=body)
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Existing and new
+        body = [{'taxonomyId': 6344,
+                'specimenId': 'SAN0000100'},
+                {'taxonomyId': 6344,
+                'specimenId': 'SAN0000100wwwww'}]
+        response = self.client.open(
+            '/api/v2/requests',
+            method='POST',
+            headers={"api-key": self.api_key},
+            json=body)
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Search for 2 new, plus duplicated queries
+        body = [{'taxonomyId': 6344,
+                'specimenId': 'SAN0000100ggggg'},
+                {'taxonomyId': 6344,
+                'specimenId': 'SAN0000100rrrrr'},
+                {'taxonomyId': 6344,
+                'specimenId': 'SAN0000100ggggg'},
+                {'taxonomyId': 6344,
+                'specimenId': 'SAN0000100rrrrr'}]
+        response = self.client.open(
+            '/api/v2/requests',
+            method='POST',
+            headers={"api-key": self.api_key},
+            json=body)
+        expect = [{
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "specimen": {"specimenId": "SAN0000100ggggg"},
+        },
+        {
+            'species': {
+                'commonName': 'lugworm',
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
+            },
+            'specimen': {'specimenId': 'SAN0000100rrrrr'},
+        },
+        {
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "specimen": {"specimenId": "SAN0000100ggggg"},
+        },
+        {
+            'species': {
+                'commonName': 'lugworm',
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
+            },
+            'specimen': {'specimenId': 'SAN0000100rrrrr'},
+        }]
+
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # Error on later query
+        body = [{'taxonomyId': 6344,
+                'specimenId': 'SAN0000100bbbbb'},
+                {'taxonomyId': 6344,
+                'specimenId': 'SAN0000100'}]
+        response = self.client.open(
+            '/api/v2/requests',
+            method='POST',
+            headers={"api-key": self.api_key},
+            json=body)
+
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        return
+        # And the new one should not have been inserted
+        response = self.client.open(
+            '/api/v2/requests/SAN0000100bbbbb',
+            method='GET')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals([], response.json)
+
 
 if __name__ == '__main__':
     import unittest

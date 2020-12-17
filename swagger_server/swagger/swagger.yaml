@@ -531,6 +531,42 @@ paths:
         "409":
           description: an existing item already exists
       x-openapi-router-controller: swagger_server.controllers.consumers_controller
+    post:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - users
+      summary: Submit requests for ToLIDs in bulk
+      description: Submit multiple requests in one go
+      operationId: bulk_add_requests
+      parameters:
+        - name: api-key
+          in: header
+          description: API-Key
+          required: True
+          style: simple
+          explode: true
+          schema:
+            type: string  
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaxonSpecimen'
+      responses:
+        "200":
+          description: array of requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RequestLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.consumers_controller  
   /requests/mine:
     get:
       security:

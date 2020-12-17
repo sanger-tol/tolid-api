@@ -181,3 +181,29 @@ def requests_for_user(api_key=None):
     user = db.session.query(TolidUser).filter(TolidUser.user_id == connexion.context["user"]).one_or_none()
     requests = db.session.query(TolidRequest).filter(TolidRequest.created_by == connexion.context["user"]).order_by(TolidRequest.created_at.desc()).all()
     return jsonify(requests)
+
+def bulk_add_requests(body=None, api_key=None):  
+    user = db.session.query(TolidUser).filter(TolidUser.user_id == connexion.context["user"]).one_or_none()
+    requests = []
+    # body contains the rows of data
+    if body:
+        for row in body:
+            specimen_id = row['specimenId']
+            taxonomy_id = row['taxonomyId']
+            specimen = db.session.query(TolidSpecimen).filter(TolidSpecimen.species_id == taxonomy_id).filter(TolidSpecimen.specimen_id == specimen_id).one_or_none()
+            if specimen is not None:
+                return "A ToLID already exists for specimenId "+specimen_id+" and taxonomyId "+str(taxonomy_id), 400
+
+            request = db.session.query(TolidRequest).filter(TolidRequest.specimen_id == specimen_id).filter(TolidRequest.species_id == taxonomy_id).one_or_none()
+            if request is None:
+                request = TolidRequest(specimen_id=specimen_id, species_id=taxonomy_id)
+                request.user = user
+            else:
+                if request.user != user:
+                    return "Another user has requested a ToLID for specimenId "+specimen_id+" and taxonomyId "+str(taxonomyId), 400
+
+            requests.append(request)
+            db.session.add(request)
+        db.session.commit()
+
+    return jsonify(requests)
