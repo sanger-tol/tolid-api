@@ -716,7 +716,159 @@ class TestCuratorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
 
+    def test_accept_request(self):
+        self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=999999, status="Pending")
+        self.request1.user = self.user1
+        db.session.add(self.request1)
+        self.request2 = TolidRequest(specimen_id="SAN0000101", species_id=6344, status="Pending")
+        self.request2.user = self.user4
+        db.session.add(self.request2)
+        db.session.commit()
 
+        # No authorisation token given
+        response = self.client.open(
+            '/api/v2/requests/1/accept',
+            method='GET')
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # Invalid authorisation token given
+        response = self.client.open(
+            '/api/v2/requests/1/accept',
+            method='GET',
+            headers={"api-key": "12345678"})
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Not admin
+        response = self.client.open(
+            '/api/v2/requests/1/accept',
+            method='GET',
+            headers={"api-key": self.user1.api_key})
+        self.assert403(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Invalid species
+        response = self.client.open(
+            '/api/v2/requests/1/accept',
+            method='GET',
+            headers={"api-key": self.user2.api_key}
+            )
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # Correct
+        response = self.client.open(
+            '/api/v2/requests/2/accept',
+            method='GET',
+            headers={"api-key": self.user2.api_key}
+            )
+        expect = [
+        {
+            "tolId": "wuAreMari3",
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            'specimen': {'specimenId': 'SAN0000101'},
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+    def test_reject_request(self):
+        self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=999999, status="Pending")
+        self.request1.user = self.user1
+        db.session.add(self.request1)
+        self.request2 = TolidRequest(specimen_id="SAN0000101", species_id=6344, status="Pending")
+        self.request2.user = self.user4
+        db.session.add(self.request2)
+        db.session.commit()
+
+        # No authorisation token given
+        response = self.client.open(
+            '/api/v2/requests/1/reject',
+            method='GET')
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # Invalid authorisation token given
+        response = self.client.open(
+            '/api/v2/requests/1/reject',
+            method='GET',
+            headers={"api-key": "12345678"})
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Not admin
+        response = self.client.open(
+            '/api/v2/requests/1/reject',
+            method='GET',
+            headers={"api-key": self.user1.api_key})
+        self.assert403(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Invalid species
+        response = self.client.open(
+            '/api/v2/requests/1/reject',
+            method='GET',
+            headers={"api-key": self.user2.api_key}
+            )
+        expect = [
+        {
+            "id": 1,
+            "status": "Rejected",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
+            "species": {
+                "taxonomyId": 999999
+            },
+            'specimen': {'specimenId': 'SAN0000100'},
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # Valid species
+        response = self.client.open(
+            '/api/v2/requests/2/reject',
+            method='GET',
+            headers={"api-key": self.user2.api_key}
+            )
+        expect = [
+        {
+            "id": 2,
+            "status": "Rejected",
+            "createdBy": {
+                "name": "test_user_requester2",
+                "email": "test_user_requester2@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            'specimen': {'specimenId': 'SAN0000101'},
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
 
 if __name__ == '__main__':
     import unittest

@@ -1,6 +1,6 @@
 from flask import jsonify, send_from_directory
 from sqlalchemy import or_
-from swagger_server.db_utils import create_new_specimen
+from swagger_server.db_utils import create_new_specimen, accept_request, reject_request
 from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidUser, TolidRole, TolidRequest
 from swagger_server.excel_utils import validate_excel
 import connexion
@@ -200,3 +200,32 @@ def requests_pending(api_key=None):
         return "User does not have permission to use this function", 403
     requests = db.session.query(TolidRequest).filter(TolidRequest.status == "Pending").order_by(TolidRequest.created_at.desc()).all()
     return jsonify(requests)
+
+def accept_tol_id_request(request_id=None):  
+    role = db.session.query(TolidRole).filter(TolidRole.role == 'admin').filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
+    if role is None:
+        return "User does not have permission to use this function", 403
+
+    request = db.session.query(TolidRequest).filter(TolidRequest.request_id == request_id).one_or_none()
+    if request is None:
+        return jsonify([])
+
+    species = db.session.query(TolidSpecies).filter(TolidSpecies.taxonomy_id == request.species_id).one_or_none()
+
+    if species is None:
+        return "Species with taxonomyId "+str(request.species_id)+" cannot be found", 400
+
+    specimen = accept_request(request)
+    return jsonify([specimen])
+
+def reject_tol_id_request(request_id=None):  
+    role = db.session.query(TolidRole).filter(TolidRole.role == 'admin').filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
+    if role is None:
+        return "User does not have permission to use this function", 403
+
+    request = db.session.query(TolidRequest).filter(TolidRequest.request_id == request_id).one_or_none()
+    if request is None:
+        return jsonify([])
+
+    reject_request(request)
+    return jsonify([request])

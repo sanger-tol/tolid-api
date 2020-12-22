@@ -634,7 +634,7 @@ paths:
   /requests/{requestId}:
     get:
       tags:
-      - consumers
+      - users
       summary: See a specific ToLID request
       description: |
         The ToLID requests
@@ -661,6 +661,70 @@ paths:
         "400":
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.consumers_controller
+  /requests/{requestId}/accept:
+    get:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - curators
+      summary: Accept a specific ToLID request
+      description: |
+        The ToLID request
+      operationId: accept_tol_id_request
+      parameters:
+      - name: requestId
+        in: path
+        description: The ToLID request ID
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToLIDLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.curators_controller    
+  /requests/{requestId}/reject:
+    get:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - curators
+      summary: Reject a specific ToLID request
+      description: |
+        The ToLID request
+      operationId: reject_tol_id_request
+      parameters:
+      - name: requestId
+        in: path
+        description: The ToLID request ID
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RequestLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.curators_controller    
 components:
   schemas:
     TaxSpec:
