@@ -1,4 +1,4 @@
-from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidUser, TolidRequest
+from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidUser, TolidRole, TolidRequest
 from flask import jsonify
 from swagger_server.db_utils import create_new_specimen
 import connexion
@@ -94,6 +94,10 @@ def bulk_search_specimens(body=None, api_key=None):
 
     :rtype: List[Specimen]
     """
+    role = db.session.query(TolidRole).filter(TolidRole.role == 'creator').filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
+    if role is None:
+        return "User does not have permission to use this function", 403
+
     user = db.session.query(TolidUser).filter(TolidUser.user_id == connexion.context["user"]).one_or_none()
     specimens = []
     # body contains the rows of data

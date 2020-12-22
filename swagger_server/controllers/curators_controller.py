@@ -24,6 +24,10 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
     if species is None:
         return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
 
+    role = db.session.query(TolidRole).filter(TolidRole.role == 'creator').filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
+    if role is None:
+        return "User does not have permission to use this function", 403
+
     specimen = db.session.query(TolidSpecimen).filter(TolidSpecimen.specimen_id == specimen_id).filter(TolidSpecimen.species_id == taxonomy_id).one_or_none()
 
     if specimen is None:
@@ -112,6 +116,10 @@ def validate_manifest(excel_file=None, species_column_heading="scientific_name")
 
     :rtype: None
     """
+    role = db.session.query(TolidRole).filter(TolidRole.role == 'creator').filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
+    if role is None:
+        return "User does not have permission to use this function", 403
+
     user = db.session.query(TolidUser).filter(TolidUser.user_id == connexion.context["user"]).one_or_none()
     uploaded_file = connexion.request.files['excelFile']
 
