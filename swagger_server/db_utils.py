@@ -11,4 +11,18 @@ def create_new_specimen(species, specimen_id, user):
     specimen.species = species
     specimen.user = user
     return specimen
-    
+
+def accept_request(request):
+    species = db.session.query(TolidSpecies).filter(TolidSpecies.taxonomy_id == request.species_id).one_or_none()
+    if species is None:
+        raise Exception("Species not in database")
+    specimen = create_new_specimen(species, request.specimen_id, request.user)
+    db.session.add(specimen)
+    db.session.delete(request)
+    db.session.commit()
+    return specimen
+
+def reject_request(request):
+    request.status = "Rejected"
+    db.session.commit()
+    return request
