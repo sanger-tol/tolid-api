@@ -161,7 +161,7 @@ def add_request(taxonomy_id=None, specimen_id=None, api_key=None):
 
     request = db.session.query(TolidRequest).filter(TolidRequest.specimen_id == specimen_id).filter(TolidRequest.species_id == taxonomy_id).one_or_none()
     if request is None:
-        request = TolidRequest(specimen_id=specimen_id, species_id=taxonomy_id)
+        request = TolidRequest(specimen_id=specimen_id, species_id=taxonomy_id, status="Pending")
         request.user = user
         db.session.add(request)
         db.session.commit()
@@ -196,7 +196,7 @@ def bulk_add_requests(body=None, api_key=None):
 
             request = db.session.query(TolidRequest).filter(TolidRequest.specimen_id == specimen_id).filter(TolidRequest.species_id == taxonomy_id).one_or_none()
             if request is None:
-                request = TolidRequest(specimen_id=specimen_id, species_id=taxonomy_id)
+                request = TolidRequest(specimen_id=specimen_id, species_id=taxonomy_id, status="Pending")
                 request.user = user
             else:
                 if request.user != user:

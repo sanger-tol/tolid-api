@@ -752,16 +752,25 @@ components:
             $ref: '#/components/schemas/ToLIDShort'
     RequestLong:
       required:
+        - id
+        - status
         - species
         - specimenId
       type: object
       properties:
+        id:
+          type: integer
+          example: 1234
+        status:
+          type: string
+          example: Pending
         species:
           $ref: '#/components/schemas/Species'
         specimenId:
           $ref: '#/components/schemas/SpecimenShort'
       example:
-        tolId: wuAreMari1
+        id: 1234
+        status: Pending
         species:
           commonName: lugworm
           phylum: Annelida

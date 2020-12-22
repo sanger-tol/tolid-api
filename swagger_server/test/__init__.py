@@ -74,6 +74,7 @@ class BaseTestCase(TestCase):
         self.specimen3.user = self.user1
         db.session.add(self.specimen3)
         db.session.commit()
+        db.engine.execute("ALTER SEQUENCE request_request_id_seq RESTART WITH 1;")
 
     def tearDown(self):
         db.session.query(TolidRequest).delete()

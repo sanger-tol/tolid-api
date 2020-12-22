@@ -738,6 +738,8 @@ class TestConsumersController(BaseTestCase):
             headers={"api-key": self.api_key},
             query_string=query_string)
         expect = [{
+            "id": 1,
+            "status": "Pending",
             "species": {
                 "taxonomyId": 999999999
             },
@@ -756,6 +758,8 @@ class TestConsumersController(BaseTestCase):
             headers={"api-key": self.api_key},
             query_string=query_string)
         expect = [{
+            "id": 2,
+            "status": "Pending",
             "species": {
                 "commonName": "None",
                 "family": "Nereididae",
@@ -783,6 +787,8 @@ class TestConsumersController(BaseTestCase):
             headers={"api-key": self.api_key},
             query_string=query_string)
         expect = [{
+            "id": 3,
+            "status": "Pending",
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -810,6 +816,8 @@ class TestConsumersController(BaseTestCase):
             headers={"api-key": self.api_key},
             query_string=query_string)
         expect = [{
+            "id": 3,
+            "status": "Pending",
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -851,13 +859,13 @@ class TestConsumersController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
 
     def test_search_requests_for_user(self):
-        self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=6344)
+        self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=6344, status="Pending")
         self.request1.user = self.user1
         db.session.add(self.request1)
-        self.request2 = TolidRequest(specimen_id="SAN0000101", species_id=6344)
+        self.request2 = TolidRequest(specimen_id="SAN0000101", species_id=6344, status="Pending")
         self.request2.user = self.user2
         db.session.add(self.request2)
-        self.request3 = TolidRequest(specimen_id="SAN0000101", species_id=6355)
+        self.request3 = TolidRequest(specimen_id="SAN0000101", species_id=6355, status="Pending")
         self.request3.user = self.user1
         db.session.add(self.request3)
         db.session.commit()
@@ -887,6 +895,8 @@ class TestConsumersController(BaseTestCase):
             headers={"api-key": self.api_key}
             )
         expect = [{
+            "id": 1,
+            "status": "Pending",
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -902,6 +912,8 @@ class TestConsumersController(BaseTestCase):
             "specimen": {"specimenId": "SAN0000100"},
         },
         {
+            "id": 3,
+            "status": "Pending",
             "species": {
                 "commonName": "None",
                 "family": "Nereididae",
@@ -927,6 +939,8 @@ class TestConsumersController(BaseTestCase):
             headers={"api-key": self.api_key2}
             )
         expect = [{
+            "id": 2,
+            "status": "Pending",
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -993,6 +1007,8 @@ class TestConsumersController(BaseTestCase):
             headers={"api-key": self.api_key},
             json=body)
         expect = [{
+            "id": 1,
+            "status": "Pending",
             "species": {
                 "taxonomyId": 999999999
             },
@@ -1013,6 +1029,8 @@ class TestConsumersController(BaseTestCase):
             headers={"api-key": self.api_key},
             json=body)
         expect = [{
+            "id": 2,
+            "status": "Pending",
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -1028,6 +1046,8 @@ class TestConsumersController(BaseTestCase):
             "specimen": {"specimenId": "SAN0000100xxxxx"},
         },
         {
+            "id": 3,
+            "status": "Pending",
             "species": {
                 "commonName": "None",
                 "family": "Nereididae",
@@ -1085,6 +1105,8 @@ class TestConsumersController(BaseTestCase):
             headers={"api-key": self.api_key},
             json=body)
         expect = [{
+            "id": 4,
+            "status": "Pending",
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -1100,6 +1122,8 @@ class TestConsumersController(BaseTestCase):
             "specimen": {"specimenId": "SAN0000100ggggg"},
         },
         {
+            "id": 5,
+            "status": "Pending",
             'species': {
                 'commonName': 'lugworm',
                 'family': 'Arenicolidae',
@@ -1115,6 +1139,8 @@ class TestConsumersController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100rrrrr'},
         },
         {
+            "id": 4,
+            "status": "Pending",
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -1130,6 +1156,8 @@ class TestConsumersController(BaseTestCase):
             "specimen": {"specimenId": "SAN0000100ggggg"},
         },
         {
+            "id": 5,
+            "status": "Pending",
             'species': {
                 'commonName': 'lugworm',
                 'family': 'Arenicolidae',
@@ -1166,7 +1194,7 @@ class TestConsumersController(BaseTestCase):
         return
         # And the new one should not have been inserted
         response = self.client.open(
-            '/api/v2/requests/SAN0000100bbbbb',
+            '/api/v2/requests/6',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
