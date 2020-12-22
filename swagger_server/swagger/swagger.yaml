@@ -631,6 +631,36 @@ paths:
         "400":
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /requests/{requestId}:
+    get:
+      tags:
+      - consumers
+      summary: See a specific ToLID request
+      description: |
+        The ToLID requests
+      operationId: search_request
+      parameters:
+      - name: requestId
+        in: path
+        description: The ToLID request ID
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RequestLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.consumers_controller
 components:
   schemas:
     TaxSpec:

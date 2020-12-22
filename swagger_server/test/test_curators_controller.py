@@ -34,7 +34,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -44,7 +44,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -55,9 +55,20 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             query_string=query_string)
         self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # User not a creator
+        query_string = [('taxonomyId', '6355'),
+                        ('specimenId', 'SAN0000100')]
+        response = self.client.open(
+            '/api/v2/tol-ids',
+            method='PUT',
+            headers={"api-key": self.user1.api_key},
+            query_string=query_string)
+        self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Second taxonomy ID for specimen
@@ -66,7 +77,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             query_string=query_string)
         expect = [{
             "species": {
@@ -94,7 +105,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             query_string=query_string)
         expect = [{
             "species": {
@@ -122,7 +133,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             query_string=query_string)
         expect = [{
             "species": {
@@ -150,7 +161,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             query_string=query_string)
         expect = [{
             "species": {
@@ -407,7 +418,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             data=data)
         file.close()
         self.assert400(response,
@@ -425,12 +436,25 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             data=data)
         file.close()
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expected, response.json)
+
+        # User not a creator
+        file = open('swagger_server/test/test-manifest.xlsx', 'rb')
+        data = {
+            'excelFile': (file, 'test_file.xlsx'), 
+        }
+        response = self.client.open(
+            '/api/v2/validate-manifest',
+            method='POST',
+            headers={"api-key": self.user1.api_key},
+            data=data)
+        file.close()
+        self.assert403(response, 'Not received a 403 response')
 
         # Excel file correct
         file = open('swagger_server/test/test-manifest.xlsx', 'rb')
@@ -440,7 +464,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             data=data)
         file.close()
         self.assert200(response, 'Not received a 200 response')
@@ -466,7 +490,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             query_string=query_string,
             data=data)
         file.close()

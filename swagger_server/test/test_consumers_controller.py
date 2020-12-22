@@ -252,7 +252,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -262,7 +262,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -273,9 +273,20 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             json=body)
         self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # User doesn't have creator role
+        body = [{'taxonomyId': 6344,
+                'specimenId': 'SAN0000100'}]
+        response = self.client.open(
+            '/api/v2/tol-ids',
+            method='POST',
+            headers={"api-key": self.user1.api_key},
+            json=body)
+        self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Specimen ID not in database, multiple taxons for same specimen - should create them
@@ -286,7 +297,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             json=body)
         expect = [{
             "species": {
@@ -330,7 +341,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             json=body)
         expect = [{
             "species": {
@@ -360,7 +371,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             json=body)
         expect = [{
             "species": {
@@ -408,7 +419,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             json=body)
         expect = [{
             "species": {
@@ -474,7 +485,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             json=body)
         expect = [{
             "species": {
@@ -553,7 +564,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user3.api_key},
             json=body)
 
         self.assert400(response,
@@ -1261,7 +1272,6 @@ class TestConsumersController(BaseTestCase):
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-        return
         # And the new one should not have been inserted
         response = self.client.open(
             '/api/v2/requests/6',
@@ -1269,6 +1279,94 @@ class TestConsumersController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals([], response.json)
+
+
+    def test_search_request(self):
+
+        self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=6344, status="Pending")
+        self.request1.user = self.user1
+        db.session.add(self.request1)
+        self.request2 = TolidRequest(specimen_id="SAN0000101", species_id=6344, status="Pending")
+        self.request2.user = self.user4
+        db.session.add(self.request2)
+        self.request3 = TolidRequest(specimen_id="SAN0000101", species_id=6355, status="Pending")
+        self.request3.user = self.user1
+        db.session.add(self.request3)
+        db.session.commit()
+
+        # ID not in database
+        response = self.client.open(
+            '/api/v2/requests/4',
+            method='GET')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals([], response.json)
+
+        # All data given
+        response = self.client.open(
+            '/api/v2/requests/1',
+            method='GET')
+        expect = [{
+            "id": 1,
+            "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
+            "species":{
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "specimen": {"specimenId": "SAN0000100"}
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # Same again
+        response = self.client.open(
+            '/api/v2/requests/1',
+            method='GET')
+        self.assertEquals(expect, response.json)
+
+        # All data given - another taxon for same specimen
+        response = self.client.open(
+            '/api/v2/requests/2',
+            method='GET')
+        expect = [{
+            "id": 2,
+            "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester2",
+                "email": "test_user_requester2@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
+            "species":{
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "specimen": {"specimenId": "SAN0000101"}
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
 
 
 if __name__ == '__main__':

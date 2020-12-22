@@ -1,6 +1,7 @@
 from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidUser, TolidRole, TolidRequest
 from flask import jsonify
 from swagger_server.db_utils import create_new_specimen
+from sqlalchemy import or_
 import connexion
 
 def search_specimen(specimen_id=None, skip=None, limit=None):  
@@ -94,7 +95,7 @@ def bulk_search_specimens(body=None, api_key=None):
 
     :rtype: List[Specimen]
     """
-    role = db.session.query(TolidRole).filter(TolidRole.role == 'creator').filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
+    role = db.session.query(TolidRole).filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')).filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
     if role is None:
         return "User does not have permission to use this function", 403
 
@@ -196,6 +197,7 @@ def bulk_add_requests(body=None, api_key=None):
             taxonomy_id = row['taxonomyId']
             specimen = db.session.query(TolidSpecimen).filter(TolidSpecimen.species_id == taxonomy_id).filter(TolidSpecimen.specimen_id == specimen_id).one_or_none()
             if specimen is not None:
+                db.session.rollback()
                 return "A ToLID already exists for specimenId "+specimen_id+" and taxonomyId "+str(taxonomy_id), 400
 
             request = db.session.query(TolidRequest).filter(TolidRequest.specimen_id == specimen_id).filter(TolidRequest.species_id == taxonomy_id).one_or_none()
@@ -204,6 +206,7 @@ def bulk_add_requests(body=None, api_key=None):
                 request.user = user
             else:
                 if request.user != user:
+                    db.session.rollback()
                     return "Another user has requested a ToLID for specimenId "+specimen_id+" and taxonomyId "+str(taxonomyId), 400
 
             requests.append(request)
@@ -211,3 +214,11 @@ def bulk_add_requests(body=None, api_key=None):
         db.session.commit()
 
     return jsonify(requests)
+
+def search_request(request_id=None, skip=None, limit=None):  
+    request = db.session.query(TolidRequest).filter(TolidRequest.request_id == request_id).one_or_none()
+
+    if request is None:
+        return jsonify([])
+
+    return jsonify([request])

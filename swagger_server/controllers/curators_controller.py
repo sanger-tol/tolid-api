@@ -1,4 +1,5 @@
 from flask import jsonify, send_from_directory
+from sqlalchemy import or_
 from swagger_server.db_utils import create_new_specimen
 from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidUser, TolidRole, TolidRequest
 from swagger_server.excel_utils import validate_excel
@@ -24,7 +25,7 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
     if species is None:
         return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
 
-    role = db.session.query(TolidRole).filter(TolidRole.role == 'creator').filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
+    role = db.session.query(TolidRole).filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')).filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
     if role is None:
         return "User does not have permission to use this function", 403
 
