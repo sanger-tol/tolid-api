@@ -1,6 +1,6 @@
 from flask import jsonify, send_from_directory
 from swagger_server.db_utils import create_new_specimen
-from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidUser, TolidRole
+from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidUser, TolidRole, TolidRequest
 from swagger_server.excel_utils import validate_excel
 import connexion
 import tempfile
@@ -184,3 +184,10 @@ def list_species():
     for species in speciess:
         output += species.prefix+'\t'+species.name+'\t'+str(species.taxonomy_id)+'\t'+species.common_name+'\t'+species.genus+'\t'+species.family+'\t'+species.tax_order+'\t'+species.tax_class+'\t'+species.phylum+'\n'
     return output.strip()
+
+def requests_pending(api_key=None):  
+    role = db.session.query(TolidRole).filter(TolidRole.role == 'admin').filter(TolidRole.user_id == connexion.context["user"]).one_or_none()
+    if role is None:
+        return "User does not have permission to use this function", 403
+    requests = db.session.query(TolidRequest).filter(TolidRequest.status == "Pending").order_by(TolidRequest.created_at.desc()).all()
+    return jsonify(requests)

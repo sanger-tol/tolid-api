@@ -12,20 +12,42 @@ class BaseTestCase(TestCase):
 
     api_key = "AnyThingBecAuseThIsIsATEST123456"
     api_key2 = "AnyThingBecAuseThIsIsATEST567890"
+    api_key3 = "AnyThingBecAuseThIsIsATEST24680"
 
     def setUp(self):
         self.maxDiff = None
         db.create_all()
         self.user1 = TolidUser(user_id=100,
-                name="test_user",
-                api_key=self.api_key)
+                name="test_user_requester",
+                email="test_user_requester@sanger.ac.uk",
+                organisation="Sanger Institute",
+                api_key="AnyThingBecAuseThIsIsATEST123456")
         db.session.add(self.user1)
         self.user2 = TolidUser(user_id=200,
                 name="test_user_admin",
-                api_key=self.api_key2)
+                email="test_user_admin@sanger.ac.uk",
+                organisation="Sanger Institute",
+                api_key="AnyThingBecAuseThIsIsATEST567890")
         db.session.add(self.user2)
+        self.user3 = TolidUser(user_id=300,
+                name="test_user_creator",
+                email="test_user_creator@sanger.ac.uk",
+                organisation="Sanger Institute",
+                api_key="AnyThingBecAuseThIsIsATEST24680")
+        self.user4 = TolidUser(user_id=400,
+                name="test_user_requester2",
+                email="test_user_requester2@sanger.ac.uk",
+                organisation="Sanger Institute",
+                api_key="AnyThingBecAuseThIsIsATEST13579")
+        db.session.add(self.user1)
+        db.session.add(self.user2)
+        db.session.add(self.user3)
+        db.session.add(self.user4)
         self.role = TolidRole(role="admin")
         self.role.user = self.user2
+        db.session.add(self.role)
+        self.role = TolidRole(role="creator")
+        self.role.user = self.user3
         db.session.add(self.role)
         self.species1 = TolidSpecies(common_name="lugworm",
                 family="Arenicolidae",

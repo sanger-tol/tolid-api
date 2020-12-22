@@ -19,6 +19,7 @@ class TolidRequest(Base):
             return {
                 'id': cls.request_id,
                 'status': cls.status,
+                'createdBy': cls.user,
                 'species': {'taxonomyId': cls.species_id},
                 'specimen': {'specimenId': cls.specimen_id}
                 } 
@@ -26,6 +27,7 @@ class TolidRequest(Base):
             return {
                 'id': cls.request_id,
                 'status': cls.status,
+                'createdBy': cls.user,
                 'species': species,
                 'specimen': {'specimenId': cls.specimen_id}
                 } 

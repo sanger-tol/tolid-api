@@ -252,7 +252,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -262,7 +262,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -273,7 +273,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -286,7 +286,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         expect = [{
             "species": {
@@ -330,7 +330,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         expect = [{
             "species": {
@@ -360,7 +360,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         expect = [{
             "species": {
@@ -408,7 +408,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         expect = [{
             "species": {
@@ -474,7 +474,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         expect = [{
             "species": {
@@ -553,7 +553,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
 
         self.assert400(response,
@@ -592,7 +592,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids/mine',
             method='GET',
-            headers={"api-key": self.api_key}
+            headers={"api-key": self.user1.api_key}
             )
         expect = [{
             "species": {
@@ -634,7 +634,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids/mine',
             method='GET',
-            headers={"api-key": self.api_key2}
+            headers={"api-key": self.user2.api_key}
             )
         expect = [{
             "species": {
@@ -714,7 +714,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='PUT',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -724,7 +724,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='PUT',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -735,11 +735,16 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='PUT',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             query_string=query_string)
         expect = [{
             "id": 1,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             "species": {
                 "taxonomyId": 999999999
             },
@@ -755,11 +760,16 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='PUT',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             query_string=query_string)
         expect = [{
             "id": 2,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             "species": {
                 "commonName": "None",
                 "family": "Nereididae",
@@ -784,11 +794,16 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='PUT',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             query_string=query_string)
         expect = [{
             "id": 3,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -813,11 +828,16 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='PUT',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             query_string=query_string)
         expect = [{
             "id": 3,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -842,7 +862,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='PUT',
-            headers={"api-key": self.api_key2},
+            headers={"api-key": self.user4.api_key},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -853,7 +873,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='PUT',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -863,7 +883,7 @@ class TestConsumersController(BaseTestCase):
         self.request1.user = self.user1
         db.session.add(self.request1)
         self.request2 = TolidRequest(specimen_id="SAN0000101", species_id=6344, status="Pending")
-        self.request2.user = self.user2
+        self.request2.user = self.user4
         db.session.add(self.request2)
         self.request3 = TolidRequest(specimen_id="SAN0000101", species_id=6355, status="Pending")
         self.request3.user = self.user1
@@ -892,11 +912,16 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests/mine',
             method='GET',
-            headers={"api-key": self.api_key}
+            headers={"api-key": self.user1.api_key}
             )
         expect = [{
             "id": 1,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -914,6 +939,11 @@ class TestConsumersController(BaseTestCase):
         {
             "id": 3,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             "species": {
                 "commonName": "None",
                 "family": "Nereididae",
@@ -932,15 +962,20 @@ class TestConsumersController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
 
-        # Search for user2's ToLID requests
+        # Search for user4's ToLID requests
         response = self.client.open(
             '/api/v2/requests/mine',
             method='GET',
-            headers={"api-key": self.api_key2}
+            headers={"api-key": self.user4.api_key}
             )
         expect = [{
             "id": 2,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester2",
+                "email": "test_user_requester2@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -983,7 +1018,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -993,7 +1028,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -1004,11 +1039,16 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         expect = [{
             "id": 1,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             "species": {
                 "taxonomyId": 999999999
             },
@@ -1026,11 +1066,16 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         expect = [{
             "id": 2,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -1048,6 +1093,11 @@ class TestConsumersController(BaseTestCase):
         {
             "id": 3,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             "species": {
                 "commonName": "None",
                 "family": "Nereididae",
@@ -1072,7 +1122,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -1085,7 +1135,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -1102,11 +1152,16 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
         expect = [{
             "id": 4,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -1124,6 +1179,11 @@ class TestConsumersController(BaseTestCase):
         {
             "id": 5,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             'species': {
                 'commonName': 'lugworm',
                 'family': 'Arenicolidae',
@@ -1141,6 +1201,11 @@ class TestConsumersController(BaseTestCase):
         {
             "id": 4,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -1158,6 +1223,11 @@ class TestConsumersController(BaseTestCase):
         {
             "id": 5,
             "status": "Pending",
+            "createdBy": {
+                "name": "test_user_requester",
+                "email": "test_user_requester@sanger.ac.uk",
+                "organisation": "Sanger Institute"
+            },
             'species': {
                 'commonName': 'lugworm',
                 'family': 'Arenicolidae',
@@ -1185,7 +1255,7 @@ class TestConsumersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={"api-key": self.api_key},
+            headers={"api-key": self.user1.api_key},
             json=body)
 
         self.assert400(response,

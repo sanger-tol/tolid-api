@@ -599,6 +599,38 @@ paths:
         "400":
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.consumers_controller
+  /requests/pending:
+    get:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - curators
+      summary: See the ToLID requests for the user
+      description: |
+        List all pending ToLID requests
+      operationId: requests_pending
+      parameters:
+      - name: api-key
+        in: header
+        description: API-Key
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: string  
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RequestLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.curators_controller
 components:
   schemas:
     TaxSpec:
@@ -754,6 +786,7 @@ components:
       required:
         - id
         - status
+        - createdBy
         - species
         - specimenId
       type: object
@@ -764,6 +797,8 @@ components:
         status:
           type: string
           example: Pending
+        createdBy:
+          $ref: '#/components/schemas/User'
         species:
           $ref: '#/components/schemas/Species'
         specimenId:
@@ -771,6 +806,10 @@ components:
       example:
         id: 1234
         status: Pending
+        createdBy:
+          name: A User
+          email: user@example.com
+          organisation: Research Inc
         species:
           commonName: lugworm
           phylum: Annelida
@@ -784,6 +823,26 @@ components:
           order: Capitellida    
         specimen:
           specimenId: SAN0000100
+    User:
+      required:
+        - name
+        - email
+        - organisation
+      type: object
+      properties:
+        name:
+          type: string
+          example: "A User"
+        email:
+          type: string
+          example: "user@example.com"
+        organisation:
+          type: string
+          example: "Research Inc"
+      example:
+        name: "A User"
+        email: "user@example.com"
+        organisation: "Research Inc"
     ErrorMessageList:
       required:
         - errors
