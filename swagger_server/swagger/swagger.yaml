@@ -7,14 +7,16 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 2.0.1
+  version: 2.1.0
 servers:
   - url: http://0.0.0.0:8080/api/v2
 tags:
+- name: users
+  description: Browsing ToLIDs and requesting new ToLIDs
+- name: creators
+  description: Creating ToLIDs
 - name: curators
   description: Curator tools
-- name: users
-  description: Browsing ToLIDs
 paths:
   /tol-ids/{tolId}:
     get:
@@ -45,7 +47,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.consumers_controller
+      x-openapi-router-controller: swagger_server.controllers.users_controller
   /tol-ids/mine:
     get:
       security:
@@ -77,7 +79,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.consumers_controller
+      x-openapi-router-controller: swagger_server.controllers.users_controller
   /tol-ids/search:
     get:
       tags:
@@ -115,7 +117,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.consumers_controller
+      x-openapi-router-controller: swagger_server.controllers.users_controller
   /specimens/{specimenId}:
     get:
       tags:
@@ -145,14 +147,14 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.consumers_controller
+      x-openapi-router-controller: swagger_server.controllers.users_controller
   /tol-ids:
     post:
       security:
         - ApiKeyAuth: []
       tags:
-      - users
-      summary: Bulk search for ToLIDs by specimen/taxon
+      - creators
+      summary: Bulk search/create ToLIDs by specimen/taxon
       description: |
         By passing in the appropriate options, you can search for
         available ToLIDs in the system. ToLIDs will be
@@ -191,12 +193,12 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.consumers_controller
+      x-openapi-router-controller: swagger_server.controllers.creators_controller
     put:
       security:
         - ApiKeyAuth: []
       tags:
-      - curators
+      - creators
       summary: adds a specimen/taxon and assigns a ToLID
       description: Adds a new ToLID to the system
       operationId: add_specimen
@@ -239,7 +241,7 @@ paths:
           description: invalid input, object invalid
         "409":
           description: an existing item already exists
-      x-openapi-router-controller: swagger_server.controllers.curators_controller
+      x-openapi-router-controller: swagger_server.controllers.creators_controller
     get:
       security:
         - ApiKeyAuth: []
@@ -308,8 +310,8 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.consumers_controller
-    patch:
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+    put:
         security:
           - ApiKeyAuth: []
         tags:
@@ -358,7 +360,7 @@ paths:
             description: item does not exist
         x-openapi-router-controller: swagger_server.controllers.curators_controller
   /species:
-    put:
+    post:
       security:
         - ApiKeyAuth: []
       tags:
@@ -433,7 +435,7 @@ paths:
       security:
         - ApiKeyAuth: []
       tags:
-      - curators
+      - creators
       summary: Validate an excel manifest
       description: |
         Validates an excel manifest and offers option to download manifest with ToLIDs filled in
@@ -481,56 +483,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageList'
-      x-openapi-router-controller: swagger_server.controllers.curators_controller
+      x-openapi-router-controller: swagger_server.controllers.creators_controller
   /requests:
-    put:
-      security:
-        - ApiKeyAuth: []
-      tags:
-      - users
-      summary: adds a request for a ToLID
-      description: Adds a request for a new ToLID to the system
-      operationId: add_request
-      parameters:
-      - name: taxonomyId
-        in: query
-        description: NCBI taxonomy ID
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: specimenId
-        in: query
-        description: specimen ID
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: api-key
-        in: header
-        description: API-Key
-        required: True
-        style: simple
-        explode: true
-        schema:
-          type: string  
-      responses:
-        "200":
-          description: item created
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RequestLong'
-                x-content-type: application/json
-        "400":
-          description: invalid input, object invalid
-        "409":
-          description: an existing item already exists
-      x-openapi-router-controller: swagger_server.controllers.consumers_controller
     post:
       security:
         - ApiKeyAuth: []
@@ -566,7 +520,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.consumers_controller  
+      x-openapi-router-controller: swagger_server.controllers.users_controller  
   /requests/mine:
     get:
       security:
@@ -598,14 +552,14 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.consumers_controller
+      x-openapi-router-controller: swagger_server.controllers.users_controller
   /requests/pending:
     get:
       security:
         - ApiKeyAuth: []
       tags:
       - curators
-      summary: See the ToLID requests for the user
+      summary: See the ToLID requests for all users
       description: |
         List all pending ToLID requests
       operationId: requests_pending
@@ -660,9 +614,9 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.consumers_controller
+      x-openapi-router-controller: swagger_server.controllers.users_controller
   /requests/{requestId}/accept:
-    get:
+    patch:
       security:
         - ApiKeyAuth: []
       tags:
@@ -694,7 +648,7 @@ paths:
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.curators_controller    
   /requests/{requestId}/reject:
-    get:
+    patch:
       security:
         - ApiKeyAuth: []
       tags:
