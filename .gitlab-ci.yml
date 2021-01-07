@@ -1,0 +1,20 @@
+docker-test:
+  tags:
+    - autoscale
+  image: docker:18-git
+  stage: test
+  services:
+    - docker:18-dind
+  variables:
+    POSTGRES_DB: tolid
+    POSTGRES_USER: runner
+    POSTGRES_PASSWORD: runner
+    POSTGRES_HOST_AUTH_METHOD: trust
+    DB_URI: postgresql://runner:runner@db/tolid
+    APP_URL: http://localhost:8080
+  script:
+    - docker network create -d bridge my-network
+    - docker run --network my-network --name db --env POSTGRES_USER --env POSTGRES_PASSWORD --env POSTGRES_DB --env POSTGRES_HOST_AUTH_METHOD -dp 5432:5432 postgres:12
+    - docker build -t andrew-tolid .
+    - docker run --network my-network -dp 8080:8080 --env DB_URI --env APP_URL --name andrew-tolid andrew-tolid
+    - docker exec andrew-tolid bash -c "pip3 install tox; tox"
