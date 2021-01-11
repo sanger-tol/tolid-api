@@ -2,16 +2,12 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 class Base(db.Model):
     __abstract__ = True
 
     def to_dict(cls):
         return {"override": "this"}
-
-
-#    def __init__(self, data):
-#        for key, item in data.items():
-#            setattr(self, key, item)
 
     def add(self):
         db.session.add(self)
@@ -39,4 +35,3 @@ class Base(db.Model):
     def bulk_update(data):
         db.session.add_all(data)
         db.session.commit()
-

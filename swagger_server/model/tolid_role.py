@@ -1,5 +1,6 @@
 from .base import Base, db
 
+
 class TolidRole(Base):
     __tablename__ = "role"
     role_id = db.Column(db.Integer, primary_key=True)

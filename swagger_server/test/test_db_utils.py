@@ -1,11 +1,10 @@
-# coding: utf-8
-# ToDo not implemented yet!
 from __future__ import absolute_import
 
 from swagger_server.test import BaseTestCase
 
 from swagger_server.db_utils import create_new_specimen, accept_request, reject_request
 from swagger_server.model import db, TolidRequest
+
 
 class TestDbUtils(BaseTestCase):
     """CuratorsController integration test stubs"""
@@ -19,10 +18,11 @@ class TestDbUtils(BaseTestCase):
         self.assertEqual(new_specimen.number, 3)
 
     def test_accept_request(self):
-        self.request1 = TolidRequest(specimen_id="SAN0000100xxxxx", species_id=999999, status="Pending")
+        self.request1 = TolidRequest(specimen_id="SAN0000100xxxxx",
+                                     species_id=999999, status="Pending")
         self.request1.user = self.user1
         db.session.add(self.request1)
-       
+
         try:
             accept_request(self.request1)
             self.assertTrue(False)
@@ -38,10 +38,11 @@ class TestDbUtils(BaseTestCase):
         self.assertIsNone(request)
 
     def test_reject_request(self):
-        self.request1 = TolidRequest(specimen_id="SAN0000100xxxxx", species_id=6344, status="Pending")
+        self.request1 = TolidRequest(specimen_id="SAN0000100xxxxx",
+                                     species_id=6344, status="Pending")
         self.request1.user = self.user1
         db.session.add(self.request1)
-       
+
         request = reject_request(self.request1)
         self.assertEqual(request.status, 'Rejected')
 

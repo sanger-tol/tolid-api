@@ -1,6 +1,4 @@
 from connexion.apps.flask_app import FlaskJSONEncoder
-import six
-
 from swagger_server.model import Base
 
 

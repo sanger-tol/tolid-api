@@ -1,14 +1,12 @@
-# coding: utf-8
-# ToDo not implemented yet!
 from __future__ import absolute_import
 
 from swagger_server.test import BaseTestCase
 from swagger_server.model import db, TolidRequest
 
+
 class TestUsersController(BaseTestCase):
 
     def test_search_specimen(self):
-
         # Specimen ID not in database
         response = self.client.open(
             '/api/v2/specimens/SAN0000100zzzzz',
@@ -26,7 +24,7 @@ class TestUsersController(BaseTestCase):
             "tolIds": [
                 {
                     "tolId": "wuAreMari1",
-                    "species":{
+                    "species": {
                         "commonName": "lugworm",
                         "family": "Arenicolidae",
                         "genus": "Arenicola",
@@ -60,7 +58,7 @@ class TestUsersController(BaseTestCase):
             "tolIds": [
                 {
                     "tolId": "wuAreMari2",
-                    "species":{
+                    "species": {
                         "commonName": "lugworm",
                         "family": "Arenicolidae",
                         "genus": "Arenicola",
@@ -75,7 +73,7 @@ class TestUsersController(BaseTestCase):
                 },
                 {
                     "tolId": "wpPerVanc1",
-                    "species":{
+                    "species": {
                         "commonName": "None",
                         "family": "Nereididae",
                         "genus": "Perinereis",
@@ -107,7 +105,7 @@ class TestUsersController(BaseTestCase):
             '/api/v2/tol-ids/wuAreMari1',
             method='GET')
         expect = [{
-            "species":{
+            "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
@@ -137,7 +135,7 @@ class TestUsersController(BaseTestCase):
             '/api/v2/tol-ids/wuAreMari2',
             method='GET')
         expect = [{
-            "species":{
+            "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
@@ -156,9 +154,7 @@ class TestUsersController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
 
-
     def test_search_tol_id_by_taxon_specimen(self):
-
         # ToLID not in database
         query_string = {'taxonomyId': 6344, 'specimenId': 'SAN99999999'}
         response = self.client.open(
@@ -176,7 +172,7 @@ class TestUsersController(BaseTestCase):
             method='GET',
             query_string=query_string)
         expect = [{
-            "species":{
+            "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
@@ -209,7 +205,7 @@ class TestUsersController(BaseTestCase):
             method='GET',
             query_string=query_string)
         expect = [{
-            "species":{
+            "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
@@ -271,8 +267,7 @@ class TestUsersController(BaseTestCase):
             },
             "tolId": "wuAreMari1",
             "specimen": {"specimenId": "SAN0000100"},
-        },
-        {
+        }, {
             "species": {
                 "commonName": "None",
                 "family": "Nereididae",
@@ -409,8 +404,7 @@ class TestUsersController(BaseTestCase):
                 "taxonomyId": 6344
             },
             "specimen": {"specimenId": "SAN0000100"},
-        },
-        {
+        }, {
             "id": 3,
             "status": "Pending",
             "createdBy": {
@@ -509,7 +503,7 @@ class TestUsersController(BaseTestCase):
 
         # Taxonomy ID not in database
         body = [{'taxonomyId': 999999999,
-                         'specimenId': 'SAN0000100'}]
+                 'specimenId': 'SAN0000100'}]
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
@@ -563,8 +557,7 @@ class TestUsersController(BaseTestCase):
                 "taxonomyId": 6344
             },
             "specimen": {"specimenId": "SAN0000100xxxxx"},
-        },
-        {
+        }, {
             "id": 3,
             "status": "Pending",
             "createdBy": {
@@ -649,8 +642,7 @@ class TestUsersController(BaseTestCase):
                 "taxonomyId": 6344
             },
             "specimen": {"specimenId": "SAN0000100ggggg"},
-        },
-        {
+        }, {
             "id": 5,
             "status": "Pending",
             "createdBy": {
@@ -671,8 +663,7 @@ class TestUsersController(BaseTestCase):
                 'taxonomyId': 6344
             },
             'specimen': {'specimenId': 'SAN0000100rrrrr'},
-        },
-        {
+        }, {
             "id": 4,
             "status": "Pending",
             "createdBy": {
@@ -693,8 +684,7 @@ class TestUsersController(BaseTestCase):
                 "taxonomyId": 6344
             },
             "specimen": {"specimenId": "SAN0000100ggggg"},
-        },
-        {
+        }, {
             "id": 5,
             "status": "Pending",
             "createdBy": {
@@ -743,9 +733,7 @@ class TestUsersController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals([], response.json)
 
-
     def test_search_request(self):
-
         self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=6344, status="Pending")
         self.request1.user = self.user1
         db.session.add(self.request1)
@@ -777,7 +765,7 @@ class TestUsersController(BaseTestCase):
                 "email": "test_user_requester@sanger.ac.uk",
                 "organisation": "Sanger Institute"
             },
-            "species":{
+            "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
@@ -813,7 +801,7 @@ class TestUsersController(BaseTestCase):
                 "email": "test_user_requester2@sanger.ac.uk",
                 "organisation": "Sanger Institute"
             },
-            "species":{
+            "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
                 "genus": "Arenicola",

@@ -1,5 +1,6 @@
 from .base import Base, db
 
+
 class TolidSpecimen(Base):
     __tablename__ = "specimen"
     specimen_id = db.Column(db.String())
@@ -14,6 +15,5 @@ class TolidSpecimen(Base):
 
     def to_dict(cls):
         return {'tolId': cls.public_name,
-            'species': cls.species,
-            'specimen': {'specimenId': cls.specimen_id} # This will change when we change model
-            } 
+                'species': cls.species,
+                'specimen': {'specimenId': cls.specimen_id}}

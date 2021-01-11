@@ -1,11 +1,9 @@
-# coding: utf-8
-# ToDo not implemented yet!
 from __future__ import absolute_import
 
 from swagger_server.test import BaseTestCase
 from swagger_server.excel_utils import find_columns
-from swagger_server.model import db, TolidSpecimen, TolidRequest
-from openpyxl import load_workbook
+from openpyxl import load_workbook 
+
 
 class TestCreatorsController(BaseTestCase):
 
@@ -50,7 +48,7 @@ class TestCreatorsController(BaseTestCase):
 
         # Taxonomy ID not in database
         query_string = [('taxonomyId', 999999999),
-                         ('specimenId', 'SAN0000100')]
+                        ('specimenId', 'SAN0000100')]
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
@@ -100,7 +98,7 @@ class TestCreatorsController(BaseTestCase):
 
         # Specimen ID not in database - should create it
         query_string = [('taxonomyId', 6344),
-                ('specimenId', 'SAN0000100xxxxx')]
+                        ('specimenId', 'SAN0000100xxxxx')]
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
@@ -128,7 +126,7 @@ class TestCreatorsController(BaseTestCase):
 
         # Specimen ID not in database and first for species - should create it
         query_string = [('taxonomyId', 9606),
-                ('specimenId', 'SAN0000999xxxxx')]
+                        ('specimenId', 'SAN0000999xxxxx')]
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
@@ -156,7 +154,7 @@ class TestCreatorsController(BaseTestCase):
 
         # Existing - should return existing
         query_string = [('taxonomyId', 6344),
-                ('specimenId', 'SAN0000100')]
+                        ('specimenId', 'SAN0000100')]
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
@@ -223,7 +221,7 @@ class TestCreatorsController(BaseTestCase):
 
         # Taxonomy ID not in database
         body = [{'taxonomyId': 999999999,
-                         'specimenId': 'SAN0000100'}]
+                 'specimenId': 'SAN0000100'}]
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
@@ -268,8 +266,7 @@ class TestCreatorsController(BaseTestCase):
             },
             "tolId": "wuAreMari3",
             "specimen": {"specimenId": "SAN0000100xxxxx"},
-        },
-        {
+        }, {
             "species": {
                 "commonName": "None",
                 "family": "Nereididae",
@@ -342,8 +339,7 @@ class TestCreatorsController(BaseTestCase):
             },
             "tolId": "wuAreMari1",
             "specimen": {"specimenId": "SAN0000100"},
-        },
-        {
+        }, {
             'species': {
                 'commonName': 'lugworm',
                 'family': 'Arenicolidae',
@@ -390,8 +386,7 @@ class TestCreatorsController(BaseTestCase):
             },
             "tolId": "wuAreMari1",
             "specimen": {"specimenId": "SAN0000100"},
-        },
-        {
+        }, {
             'species': {
                 'commonName': 'lugworm',
                 'family': 'Arenicolidae',
@@ -406,8 +401,7 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari5',
             'specimen': {'specimenId': 'SAN0000100ppppp'},
-        },
-        {
+        }, {
             'species': {
                 'commonName': 'lugworm',
                 'family': 'Arenicolidae',
@@ -456,8 +450,7 @@ class TestCreatorsController(BaseTestCase):
             },
             "tolId": "wuAreMari1",
             "specimen": {"specimenId": "SAN0000100"},
-        },
-        {
+        }, {
             'species': {
                 'commonName': 'lugworm',
                 'family': 'Arenicolidae',
@@ -472,8 +465,7 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari7',   # We created wuAreMari3,4,5,6 earlier on in this method
             'specimen': {'specimenId': 'SAN0000100rrrrr'},
-        },
-        {
+        }, {
             "species": {
                 "commonName": "lugworm",
                 "family": "Arenicolidae",
@@ -488,8 +480,7 @@ class TestCreatorsController(BaseTestCase):
             },
             "tolId": "wuAreMari1",
             "specimen": {"specimenId": "SAN0000100"},
-        },
-        {
+        }, {
             'species': {
                 'commonName': 'lugworm',
                 'family': 'Arenicolidae',
@@ -563,11 +554,11 @@ class TestCreatorsController(BaseTestCase):
         # Excel file with no taxon ID, specimen ID, ToLID column
         file = open('swagger_server/test/test-manifest-no-columns.xlsx', 'rb')
         data = {
-            'excelFile': (file, 'test_file.xlsx'), 
+            'excelFile': (file, 'test_file.xlsx'),
         }
         expected = {'errors': [{'message': 'Cannot find Taxon ID column'},
-            {'message': 'Cannot find Specimen ID column'},
-            {'message': 'Cannot find ToLID column'}]}
+                               {'message': 'Cannot find Specimen ID column'},
+                               {'message': 'Cannot find ToLID column'}]}
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
@@ -581,11 +572,12 @@ class TestCreatorsController(BaseTestCase):
         # Excel file with errors
         file = open('swagger_server/test/test-manifest-with-errors.xlsx', 'rb')
         data = {
-            'excelFile': (file, 'test_file.xlsx'), 
+            'excelFile': (file, 'test_file.xlsx'),
         }
-        expected = {'errors': [{'message': 'Row 2: Expecting Arenicola marina, got Homo sapiens'},
-            {'message': 'Row 3: Taxon ID 9999999 cannot be found'},
-            {'message': 'Row 4: Genus only for Arenicola sp., not assigning ToLID'}]}
+        expected = {'errors':
+                    [{'message': 'Row 2: Expecting Arenicola marina, got Homo sapiens'},
+                     {'message': 'Row 3: Taxon ID 9999999 cannot be found'},
+                     {'message': 'Row 4: Genus only for Arenicola sp., not assigning ToLID'}]}
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
@@ -599,7 +591,7 @@ class TestCreatorsController(BaseTestCase):
         # User not a creator
         file = open('swagger_server/test/test-manifest.xlsx', 'rb')
         data = {
-            'excelFile': (file, 'test_file.xlsx'), 
+            'excelFile': (file, 'test_file.xlsx'),
         }
         response = self.client.open(
             '/api/v2/validate-manifest',
@@ -612,7 +604,7 @@ class TestCreatorsController(BaseTestCase):
         # Excel file correct
         file = open('swagger_server/test/test-manifest.xlsx', 'rb')
         data = {
-            'excelFile': (file, 'test_file.xlsx'), 
+            'excelFile': (file, 'test_file.xlsx'),
         }
         response = self.client.open(
             '/api/v2/validate-manifest',
@@ -621,7 +613,8 @@ class TestCreatorsController(BaseTestCase):
             data=data)
         file.close()
         self.assert200(response, 'Not received a 200 response')
-        self.assertEquals('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', response.content_type)
+        self.assertEquals('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                          response.content_type)
 
         # Save as Excel file
         file = open('swagger_server/test/test-manifest-validated.xlsx', 'wb')
@@ -629,7 +622,8 @@ class TestCreatorsController(BaseTestCase):
         file.close()
         workbook = load_workbook(filename='swagger_server/test/test-manifest-validated.xlsx')
         sheet = workbook.active
-        (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = find_columns(sheet, "scientific_name")
+        (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = \
+            find_columns(sheet, "scientific_name")
         self.assertEquals('wuAreMari3', sheet.cell(row=2, column=tol_id_column).value)
         self.assertEquals('wuAreMari4', sheet.cell(row=3, column=tol_id_column).value)
         self.assertEquals('wuAreMari4', sheet.cell(row=4, column=tol_id_column).value)
@@ -648,7 +642,8 @@ class TestCreatorsController(BaseTestCase):
             data=data)
         file.close()
         self.assert200(response, 'Not received a 200 response')
-        self.assertEquals('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', response.content_type)
+        self.assertEquals('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                          response.content_type)
 
         # Save as Excel file
         file = open('swagger_server/test/test-manifest-validated.xlsx', 'wb')
@@ -656,9 +651,11 @@ class TestCreatorsController(BaseTestCase):
         file.close()
         workbook = load_workbook(filename='swagger_server/test/test-manifest-validated.xlsx')
         sheet = workbook.active
-        (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = find_columns(sheet, "random column name")
+        (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = \
+            find_columns(sheet, "random column name")
         self.assertEquals('wuAreMari3', sheet.cell(row=2, column=tol_id_column).value)
         self.assertEquals('wuAreMari4', sheet.cell(row=3, column=tol_id_column).value)
+
 
 if __name__ == '__main__':
     import unittest

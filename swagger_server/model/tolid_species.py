@@ -1,5 +1,6 @@
 from .base import Base, db
 
+
 class TolidSpecies(Base):
     __tablename__ = "species"
     taxonomy_id = db.Column(db.Integer, primary_key=True)
@@ -15,13 +16,13 @@ class TolidSpecies(Base):
     specimens = db.relationship('TolidSpecimen', lazy=False)
 
     def to_dict(cls):
-        return {'prefix': cls.prefix, 
-            'scientificName': cls.name, 
-            'taxonomyId': cls.taxonomy_id, 
-            'commonName': cls.common_name, 
-            'genus': cls.genus, 
-            'family': cls.family, 
-            'order': cls.tax_order, 
-            'taxaClass': cls.tax_class, 
-            'phylum': cls.phylum,
-            'kingdom': cls.kingdom}
+        return {'prefix': cls.prefix,
+                'scientificName': cls.name,
+                'taxonomyId': cls.taxonomy_id,
+                'commonName': cls.common_name,
+                'genus': cls.genus,
+                'family': cls.family,
+                'order': cls.tax_order,
+                'taxaClass': cls.tax_class,
+                'phylum': cls.phylum,
+                'kingdom': cls.kingdom}
