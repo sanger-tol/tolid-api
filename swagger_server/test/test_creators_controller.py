@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 from swagger_server.test import BaseTestCase
 from swagger_server.excel_utils import find_columns
-from openpyxl import load_workbook 
+from openpyxl import load_workbook
 
 
 class TestCreatorsController(BaseTestCase):
