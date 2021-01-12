@@ -1,12 +1,13 @@
 stages:
   - lint
-  - login
   - build
   - test
 
 variables:
-  CONTAINER_TEST_IMAGE: tol/tolid-api/tolid-api:$CI_COMMIT_REF_SLUG
-  CONTAINER_RELEASE_IMAGE: tol/tolid-api/tolid-api:latest
+  DOCKER_IMAGE: gitlab-registry.internal.sanger.ac.uk/sanger-pathogens/sapp2/build-tools:1.0.1
+  DIND_IMAGE: gitlab-registry.internal.sanger.ac.uk/sanger-pathogens/sapp2/dind:1.0.0
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
 
 lint:
   tags:
@@ -17,43 +18,45 @@ lint:
     - pip install flake8
     - flake8 swagger_server/
 
-login:
-  tags:
-    - autoscale
-  image: docker:19.03.12-git
-  stage: login
-  services:
-    - docker:19.03.12-dind
-  script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-
 build:
   tags:
     - autoscale
-  image: docker:18-git
+  image: $DOCKER_IMAGE
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
   stage: build
   services:
-    - docker:18-dind
+    - name: $DIND_IMAGE
+      alias: docker
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
+    - docker pull $CONTAINER_TEST_IMAGE || true
     - docker build -t $CONTAINER_TEST_IMAGE .
+    - docker push $CONTAINER_TEST_IMAGE
 
 test:
   tags:
     - autoscale
-  image: docker:18-git
+  image: $DOCKER_IMAGE
   stage: test
   services:
-    - docker:18-dind
+    - name: $DIND_IMAGE
+      alias: docker
   variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
     POSTGRES_DB: tolid
     POSTGRES_USER: runner
     POSTGRES_PASSWORD: runner
     POSTGRES_HOST_AUTH_METHOD: trust
     DB_URI: postgresql://runner:runner@db/tolid
-    APP_URL: http://localhost:8080
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker network create -d bridge my-network
     - docker run --network my-network --name db --env POSTGRES_USER --env POSTGRES_PASSWORD --env POSTGRES_DB --env POSTGRES_HOST_AUTH_METHOD -dp 5432:5432 postgres:12
-    - docker build -t andrew-tolid .
-    - docker run --network my-network -dp 8080:8080 --env DB_URI --env APP_URL --name andrew-tolid andrew-tolid
-    - docker exec andrew-tolid bash -c "pip3 install tox; tox"
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker run --network my-network -dp 8080:8080 --env DB_URI --env APP_URL --name tolid-api $CONTAINER_TEST_IMAGE
+    - docker exec tolid-api bash -c "pip3 install tox; tox"
