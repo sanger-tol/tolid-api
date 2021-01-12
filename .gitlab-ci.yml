@@ -3,6 +3,9 @@ stages:
   - build
   - test
 
+tags:
+  - autoscale
+
 variables:
   DOCKER_IMAGE: gitlab-registry.internal.sanger.ac.uk/sanger-pathogens/sapp2/build-tools:1.0.1
   DIND_IMAGE: gitlab-registry.internal.sanger.ac.uk/sanger-pathogens/sapp2/dind:1.0.0
@@ -10,8 +13,6 @@ variables:
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
 
 lint:
-  tags:
-    - autoscale
   image: python:3.7
   stage: lint
   script:
@@ -19,8 +20,6 @@ lint:
     - flake8 swagger_server/
 
 build:
-  tags:
-    - autoscale
   image: $DOCKER_IMAGE
   variables:
     DOCKER_HOST: "tcp://docker:2375"
@@ -37,8 +36,6 @@ build:
     - docker push $CONTAINER_TEST_IMAGE
 
 test:
-  tags:
-    - autoscale
   image: $DOCKER_IMAGE
   stage: test
   services:
@@ -58,5 +55,28 @@ test:
     - docker network create -d bridge my-network
     - docker run --network my-network --name db --env POSTGRES_USER --env POSTGRES_PASSWORD --env POSTGRES_DB --env POSTGRES_HOST_AUTH_METHOD -dp 5432:5432 postgres:12
     - docker pull $CONTAINER_TEST_IMAGE
-    - docker run --network my-network -dp 8080:8080 --env DB_URI --env APP_URL --name tolid-api $CONTAINER_TEST_IMAGE
+    - docker run --network my-network -dp 8080:8080 --env DB_URI --name tolid-api $CONTAINER_TEST_IMAGE
     - docker exec tolid-api bash -c "pip3 install tox; tox"
+
+deploy-staging:
+  image: $DOCKER_IMAGE
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+  stage: deploy
+  environment:
+    name: staging
+    url: http://172.27.21.233
+  variables:
+    DOCKER_HOST: "ssh://ubuntu@172.27.21.233"
+  script:
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
+    - docker rm -f tolid-api || true
+    - docker run -dp 80:8080 --restart always --env-file $ENV_FILE --name tolid-api $CONTAINER_RELEASE_IMAGE
