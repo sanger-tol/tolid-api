@@ -88,3 +88,17 @@ deploy-staging:
   variables:
     DOCKER_HOST: "ssh://ubuntu@172.27.21.233"
     IMAGE: $CI_REGISTRY_IMAGE:staging
+  except:
+    - master
+
+deploy-prod:
+  <<: *deploy-template
+  environment:
+    name: production
+    url: http://172.27.28.201
+  variables:
+    DOCKER_HOST: "ssh://ubuntu@172.27.28.201"
+    IMAGE: $CI_REGISTRY_IMAGE:production
+  when: manual
+  only:
+    - master
