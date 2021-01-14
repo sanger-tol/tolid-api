@@ -8,7 +8,6 @@ variables:
   DOCKER_IMAGE: gitlab-registry.internal.sanger.ac.uk/sanger-pathogens/sapp2/build-tools:1.0.1
   DIND_IMAGE: gitlab-registry.internal.sanger.ac.uk/sanger-pathogens/sapp2/dind:1.0.0
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
 
 lint:
   tags:
@@ -62,19 +61,13 @@ test:
     - docker run --network my-network -dp 8080:8080 --env DB_URI --name tolid-api $CONTAINER_TEST_IMAGE
     - docker exec tolid-api bash -c "pip3 install tox; tox"
 
-deploy-staging:
+.deploy-template: &deploy-template
   tags:
     - autoscale
   image: $DOCKER_IMAGE
   variables:
-    DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ''
   stage: deploy
-  environment:
-    name: staging
-    url: http://172.27.21.233
-  variables:
-    DOCKER_HOST: "ssh://ubuntu@172.27.21.233"
   script:
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
@@ -82,7 +75,16 @@ deploy-staging:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $CONTAINER_TEST_IMAGE
-    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
-    - docker push $CONTAINER_RELEASE_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $IMAGE
+    - docker push $IMAGE
     - docker rm -f tolid-api || true
-    - docker run -dp 80:8080 --restart always --env-file $ENV_FILE --name tolid-api $CONTAINER_RELEASE_IMAGE
+    - docker run -dp 80:8080 --restart always --env-file $ENV_FILE --name tolid-api $IMAGE
+
+deploy-staging:
+  <<: *deploy-template
+  environment:
+    name: staging
+    url: http://172.27.21.233
+  variables:
+    DOCKER_HOST: "ssh://ubuntu@172.27.21.233"
+    IMAGE: $CI_REGISTRY_IMAGE:staging
