@@ -95,7 +95,7 @@ deploy-prod:
   <<: *deploy-template
   environment:
     name: production
-    url: http://172.27.28.201
+    url: https://id.tol.sanger.ac.uk
   variables:
     DOCKER_HOST: "ssh://ubuntu@172.27.28.201"
     IMAGE: $CI_REGISTRY_IMAGE:production
