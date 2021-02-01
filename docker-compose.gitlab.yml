@@ -11,11 +11,11 @@ services:
       - ${ENV_FILE}
     ports: 
       - 5000:8080
-  sts-staff-portal:
+  tolid-ui:
     image: $CI_REGISTRY_IMAGE/tolid-ui:$CI_COMMIT_SHA
     restart: always
     networks:
-      - sts
+      - tolid
     deploy:
       replicas: 1
     env_file:

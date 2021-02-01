@@ -71,7 +71,7 @@ test:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker swarm init
-    - docker stack deploy --with-registry-auth -c docker-compose.gitlab.yml tolid
+    - docker stack deploy --with-registry-auth -c docker-compose.gitlab.yml -c docker-compose.gitlab-test.yml tolid
     - docker exec tolid-api bash -c "pip3 install tox; tox"
 
 .push-template: &push-template

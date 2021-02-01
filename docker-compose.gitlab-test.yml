@@ -1,0 +1,13 @@
+# Additional deployment details for test (includes temporary database)
+version: '3'
+services: 
+  tolid-db:
+    image: postgres:11
+    env_file:
+      - ${ENV_FILE}
+    ports:
+      - 5432:5432
+    networks:
+      - tolid
+    deploy:
+      replicas: 1
