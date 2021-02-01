@@ -16,7 +16,7 @@ lint:
   stage: lint
   script:
     - pip install flake8
-    - flake8 swagger_server/
+    - flake8 tolid-api/swagger_server/
 
 .build-template: &build-template
   tags:
