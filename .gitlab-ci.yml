@@ -2,12 +2,12 @@ stages:
   - lint
   - build
   - test
+  - push
   - deploy
 
 variables:
   DOCKER_IMAGE: gitlab-registry.internal.sanger.ac.uk/sanger-pathogens/sapp2/build-tools:1.0.1
   DIND_IMAGE: gitlab-registry.internal.sanger.ac.uk/sanger-pathogens/sapp2/dind:1.0.0
-  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
 lint:
   tags:
@@ -18,12 +18,11 @@ lint:
     - pip install flake8
     - flake8 swagger_server/
 
-build:
+.build-template: &build-template
   tags:
     - autoscale
   image: $DOCKER_IMAGE
   variables:
-    DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ''
   stage: build
   services:
@@ -32,9 +31,25 @@ build:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker pull $CONTAINER_TEST_IMAGE || true
-    - docker build -t $CONTAINER_TEST_IMAGE .
-    - docker push $CONTAINER_TEST_IMAGE
+    - docker pull $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_REF_SLUG || true
+    - docker build --pull --cache-from $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_REF_SLUG -t $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_SHA -f $DOCKERFILE $PART
+    - docker push $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_SHA
+
+build-api:
+  <<: *build-template
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    PART: "tolid-api"
+    DOCKERFILE: "tolid-api/Dockerfile"
+
+build-ui:
+  <<: *build-template
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    PART: "tolid-ui"
+    DOCKERFILE: 'tolid-ui/Dockerfile'
 
 test:
   tags:
@@ -55,11 +70,43 @@ test:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker network create -d bridge my-network
-    - docker run --network my-network --name db --env POSTGRES_USER --env POSTGRES_PASSWORD --env POSTGRES_DB --env POSTGRES_HOST_AUTH_METHOD -dp 5432:5432 postgres:12
-    - docker pull $CONTAINER_TEST_IMAGE
-    - docker run --network my-network -dp 8080:8080 --env DB_URI --name tolid-api $CONTAINER_TEST_IMAGE
+    - docker swarm init
+    - docker stack deploy --with-registry-auth -c docker-compose.gitlab.yml tolid
     - docker exec tolid-api bash -c "pip3 install tox; tox"
+
+.push-template: &push-template
+  tags:
+    - autoscale
+  image: $DOCKER_IMAGE
+  stage: push
+  services:
+    - name: $DIND_IMAGE
+      alias: docker
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_TLS_CERTDIR: ''
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_SHA
+    - docker tag $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_REF_SLUG
+    - docker push $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_REF_SLUG
+
+push-api:
+  <<: *push-template
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    PART: tolid-api
+
+push-ui:
+  <<: *push-template
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    PART: tolid-ui
 
 .deploy-template: &deploy-template
   tags:
@@ -74,31 +121,27 @@ test:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker pull $CONTAINER_TEST_IMAGE
-    - docker tag $CONTAINER_TEST_IMAGE $IMAGE
-    - docker push $IMAGE
-    - docker rm -f tolid-api || true
-    - docker run -dp 80:8080 --restart always --env-file $ENV_FILE --name tolid-api $IMAGE
+    - docker stack rm tolid
+    - sleep 20
+    - docker stack deploy --with-registry-auth -c docker-compose.gitlab.yml tolid
 
 deploy-staging:
   <<: *deploy-template
   environment:
     name: staging
-    url: http://172.27.21.233
+    url: http://172.27.21.233/
   variables:
     DOCKER_HOST: "ssh://ubuntu@172.27.21.233"
-    IMAGE: $CI_REGISTRY_IMAGE:staging
-  except:
-    - master
+  only:
+    - openstack
 
-deploy-prod:
+deploy-production:
   <<: *deploy-template
   environment:
     name: production
-    url: https://id.tol.sanger.ac.uk
+    url: https://id.tol.sanger.ac.uk/
   variables:
     DOCKER_HOST: "ssh://ubuntu@172.27.28.201"
-    IMAGE: $CI_REGISTRY_IMAGE:production
-  when: manual
   only:
     - master
+  when: manual

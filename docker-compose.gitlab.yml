@@ -1,0 +1,28 @@
+version: '3'
+services: 
+  tolid-api:
+    image: $CI_REGISTRY_IMAGE/tolid-api:$CI_COMMIT_SHA
+    restart: always
+    networks:
+      - tolid
+    deploy:
+      replicas: 1
+    env_file:
+      - ${ENV_FILE}
+    ports: 
+      - 5000:8080
+  sts-staff-portal:
+    image: $CI_REGISTRY_IMAGE/tolid-ui:$CI_COMMIT_SHA
+    restart: always
+    networks:
+      - sts
+    deploy:
+      replicas: 1
+    env_file:
+      - ${ENV_FILE}
+#    entrypoint: /bin/sh -c "envsubst "\\$$STS_API_LOCATION" < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && cat /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+    ports: 
+      - 80:80
+networks:
+    tolid:
+      driver: overlay

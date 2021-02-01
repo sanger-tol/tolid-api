@@ -4,20 +4,29 @@ services:
   db:
     image: postgres:11
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     ports:
       - 5432:5432
 
   api:
-    build: .
+    build: tolid-api/.
     image: api
     #command: python3 -m swagger_server
     environment:
-      DB_URI: ${DB_URI}
+      - DB_URI
     ports:
       - 8080:8080
+
+  ui:
+    build: tolid-ui/.
+    image: ui
+    #command: python3 -m swagger_server
+    environment:
+      - TOLID_API_LOCATION
+    ports:
+      - 3001:80
 
   api-tests:
     image: api
@@ -25,8 +34,8 @@ services:
         -wait tcp://db:5432 -wait tcp://api:8080 -timeout 10s
         bash -c "pip3 install tox; tox"
     environment:
-      APP_URL: http://api:8080
       DB_URI: ${DB_URI}
     depends_on:
       - db
       - api
+      - ui

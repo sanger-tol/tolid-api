@@ -7,6 +7,5 @@ __pycache__
 swagger_server.egg-info/
 __init__.pyc
 launch.json
-final_merged.txt
 .env.uat
 .env.prod
