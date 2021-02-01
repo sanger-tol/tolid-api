@@ -72,9 +72,7 @@ test:
   script:
     - docker swarm init
     - docker stack deploy --with-registry-auth -c docker-compose.gitlab.yml -c docker-compose.gitlab-test.yml tolid
-    - docker stack ps tolid
-    - docker stack ps -q -f name="tolid_tolid-api" tolid
-    - docker exec $(docker stack ps -q -f name="tolid_tolid-api" tolid) bash -c "pip3 install tox; tox"
+    - docker exec tolid_tolid-api.1.$(docker stack ps -q -f name="tolid_tolid-api" tolid) bash -c "pip3 install tox; tox"
 
 .push-template: &push-template
   tags:
