@@ -94,7 +94,7 @@ def bulk_search_specimens(body=None, api_key=None):
 
 def validate_manifest(excel_file=None, species_column_heading="scientific_name"):  # noqa: E501
     role = db.session.query(TolidRole) \
-        .filter(TolidRole.role == 'creator') \
+        .filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')) \
         .filter(TolidRole.user_id == connexion.context["user"]) \
         .one_or_none()
     if role is None:
