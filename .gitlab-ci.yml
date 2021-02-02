@@ -134,7 +134,7 @@ deploy-staging:
   variables:
     DOCKER_HOST: "ssh://ubuntu@172.27.21.233"
   only:
-    - openstack
+    - staging
 
 deploy-production:
   <<: *deploy-template
