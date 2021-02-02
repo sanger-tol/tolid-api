@@ -1,0 +1,921 @@
+openapi: 3.0.0
+info:
+  title: Tree of Life ToLID API
+  description: API for ToLID registry
+  contact:
+    email: tolid-help@sanger.ac.uk
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 2.1.0
+servers:
+  - url: http://0.0.0.0:8080/api/v2
+tags:
+- name: users
+  description: Browsing ToLIDs and requesting new ToLIDs
+- name: creators
+  description: Creating ToLIDs
+- name: curators
+  description: Curator tools
+paths:
+  /tol-ids/{tolId}:
+    get:
+      tags:
+      - users
+      summary: Return a single ToLID
+      description: |
+        Return species and specimen for a ToLID
+      operationId: search_tol_id
+      parameters:
+      - name: tolId
+        in: path
+        description: a Tree of Life ToLID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToLIDLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+  /tol-ids/mine:
+    get:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - users
+      summary: Return a list of ToLIDs for the user
+      description: |
+        List the user's ToLIDs
+      operationId: tol_ids_for_user
+      parameters:
+      - name: api-key
+        in: header
+        description: API-Key
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: string  
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToLIDLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+  /tol-ids/search:
+    get:
+      tags:
+      - users
+      summary: Search for a ToLID by taxonomyId and specimenId
+      description: |
+        Return species and specimen for a ToLID
+      operationId: search_tol_id_by_taxon_specimen
+      parameters:
+      - name: taxonomyId
+        in: query
+        description: an NCBI Taxonomy ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: specimenId
+        in: query
+        description: a specimen ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToLIDLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+  /specimens/{specimenId}:
+    get:
+      tags:
+      - users
+      summary: Return a single specimen
+      description: |
+        Return species and ToLID data for a specimen
+      operationId: search_specimen
+      parameters:
+      - name: specimenId
+        in: path
+        description: a GAL specimen ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpecimenLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+  /tol-ids:
+    post:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - creators
+      summary: Bulk search/create ToLIDs by specimen/taxon
+      description: |
+        By passing in the appropriate options, you can search for
+        available ToLIDs in the system. ToLIDs will be
+        created if new.
+        ```
+        [
+          {"taxonomyId": 6344, "specimenId": "SAN0000100"},
+          {"taxonomyId": 55617, "specimenId": "SAN0000101"}
+        ]
+        ```
+      operationId: bulk_search_specimens
+      parameters:
+        - name: api-key
+          in: header
+          description: API-Key
+          required: True
+          style: simple
+          explode: true
+          schema:
+            type: string  
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaxonSpecimen'
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToLIDLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.creators_controller
+    put:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - creators
+      summary: adds a specimen/taxon and assigns a ToLID
+      description: Adds a new ToLID to the system
+      operationId: add_specimen
+      parameters:
+      - name: taxonomyId
+        in: query
+        description: NCBI taxonomy ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: specimenId
+        in: query
+        description: specimen ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: api-key
+        in: header
+        description: API-Key
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: string  
+      responses:
+        "200":
+          description: item created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToLIDLong'
+                x-content-type: application/json
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      x-openapi-router-controller: swagger_server.controllers.creators_controller
+    get:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - curators
+      summary: List all ToLIDs
+      description: |
+        Returns a list of all ToLIDs in the database
+      operationId: list_specimens
+      parameters:
+      - name: api-key
+        in: header
+        description: API-Key
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: string  
+      - name: taxonomyId
+        in: query
+        description: pass an NCBI taxonomy ID to filter results by
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            text/plain:
+              schema:
+                type: string
+        "400":
+          description: bad input parameter
+        "403":
+          description: user not authorised to use this function
+      x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /species/{taxonomyId}:
+    get:
+      tags:
+      - users
+      summary: Return a single species
+      description: |
+        By passing in the appropriate options, you can search for
+        available species in the system.
+      operationId: search_species
+      parameters:
+      - name: taxonomyId
+        in: path
+        description: pass an NCBI taxonomy ID for looking up ToLID and taxonomy information
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Species'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+    put:
+        security:
+          - ApiKeyAuth: []
+        tags:
+        - curators
+        summary: Modify a species
+        description: Modifies an existing species, for example by changing the scientific name. It is not possible to change the taxonomy ID using this method. If the prefix is changed, existing allocated ToLIDs for specimens will not change, but any new ones will use the new prefix.
+        operationId: edit_species
+        parameters:
+        - name: taxonomyId
+          in: path
+          description: pass an NCBI taxonomy ID for looking up ToLID and taxonomy information
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: api-key
+          in: header
+          description: API-Key
+          required: True
+          style: simple
+          explode: true
+          schema:
+            type: string  
+        requestBody:
+          description: Species to modify
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Species'
+        responses:
+          "200":
+            description: item modified
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Species'
+                  x-content-type: application/json
+          "400":
+            description: invalid input, object invalid
+          "403":
+            description: user not authorised to use this function
+          "409":
+            description: item does not exist
+        x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /species:
+    post:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - curators
+      summary: Add a species
+      description: Adds a new species to the system
+      operationId: add_species
+      parameters:
+      - name: api-key
+        in: header
+        description: API-Key
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: string  
+      requestBody:
+        description: Species to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Species'
+      responses:
+        "200":
+          description: item created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Species'
+                x-content-type: application/json
+        "400":
+          description: invalid input, object invalid
+        "403":
+          description: user not authorised to use this function
+        "409":
+          description: an existing item already exists
+      x-openapi-router-controller: swagger_server.controllers.curators_controller
+    get:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - curators
+      summary: List all species and their assigned prefixes
+      description: |
+        Returns a list of all species in the database
+      operationId: list_species
+      parameters:
+      - name: api-key
+        in: header
+        description: API-Key
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: string  
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            text/plain:
+              schema:
+                type: string
+        "400":
+          description: bad input parameter
+        "403":
+          description: user not authorised to use this function
+      x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /validate-manifest:
+    post:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - creators
+      summary: Validate an excel manifest
+      description: |
+        Validates an excel manifest and offers option to download manifest with ToLIDs filled in
+      operationId: validate_manifest
+      parameters:
+        - name: api-key
+          in: header
+          description: API-Key
+          required: True
+          style: simple
+          explode: true
+          schema:
+            type: string  
+        - name: speciesColumnHeading
+          in: query
+          description: the column heading of the column containing the species name
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              x-body-name: excelFile
+              type: object
+              properties:
+                excelFile:
+                  type: string
+                  format: binary
+              required:
+                - excelFile
+      responses:
+        "200":
+          description: An Excel file, with the ToLIDs filled in
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: manifest has not validated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageList'
+      x-openapi-router-controller: swagger_server.controllers.creators_controller
+  /requests:
+    post:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - users
+      summary: Submit requests for ToLIDs in bulk
+      description: Submit multiple requests in one go
+      operationId: bulk_add_requests
+      parameters:
+        - name: api-key
+          in: header
+          description: API-Key
+          required: True
+          style: simple
+          explode: true
+          schema:
+            type: string  
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaxonSpecimen'
+      responses:
+        "200":
+          description: array of requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RequestLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.users_controller  
+  /requests/mine:
+    get:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - users
+      summary: See the ToLID requests for the user
+      description: |
+        List the user's ToLID requests
+      operationId: requests_for_user
+      parameters:
+      - name: api-key
+        in: header
+        description: API-Key
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: string  
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToLIDLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+  /requests/pending:
+    get:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - curators
+      summary: See the ToLID requests for all users
+      description: |
+        List all pending ToLID requests
+      operationId: requests_pending
+      parameters:
+      - name: api-key
+        in: header
+        description: API-Key
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: string  
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RequestLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /requests/{requestId}:
+    get:
+      tags:
+      - users
+      summary: See a specific ToLID request
+      description: |
+        The ToLID requests
+      operationId: search_request
+      parameters:
+      - name: requestId
+        in: path
+        description: The ToLID request ID
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RequestLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+  /requests/{requestId}/accept:
+    patch:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - curators
+      summary: Accept a specific ToLID request
+      description: |
+        The ToLID request
+      operationId: accept_tol_id_request
+      parameters:
+      - name: requestId
+        in: path
+        description: The ToLID request ID
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToLIDLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.curators_controller    
+  /requests/{requestId}/reject:
+    patch:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - curators
+      summary: Reject a specific ToLID request
+      description: |
+        The ToLID request
+      operationId: reject_tol_id_request
+      parameters:
+      - name: requestId
+        in: path
+        description: The ToLID request ID
+        required: True
+        style: simple
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RequestLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.curators_controller    
+components:
+  schemas:
+    TaxSpec:
+      type: object
+      required:
+        - taxonomyId
+        - specimenId
+      properties:
+        taxonomyId:
+          type: integer
+          example: 6344
+        specimenId:
+          type: string
+          example: "SAN0000100"
+    TaxonSpecimen:
+      type: array
+      items:
+        $ref: '#/components/schemas/TaxSpec'
+        required:
+        - TaxSpec
+    ToLIDLong:
+      required:
+        - tolId
+        - species
+        - specimenId
+      type: object
+      properties:
+        tolId:
+          type: string
+          example: wuAreMari1
+        species:
+          $ref: '#/components/schemas/Species'
+        specimenId:
+          $ref: '#/components/schemas/SpecimenShort'
+      example:
+        tolId: wuAreMari1
+        species:
+          commonName: lugworm
+          phylum: Annelida
+          kingdom: Metazoa
+          scientificName: Arenicola marina
+          genus: Arenicola
+          prefix: wuAreMari
+          taxonomyId: 6344
+          taxaClass: Polychaeta
+          family: Arenicolidae
+          order: Capitellida    
+        specimen:
+          specimenId: SAN0000100
+    ToLIDShort:
+      required:
+        - tolId
+        - species
+      type: object
+      properties:
+        tolId:
+          type: string
+          example: wuAreMari1
+        species:
+          $ref: '#/components/schemas/Species'
+      example:
+        tolId: wuAreMari1
+        species:
+          commonName: lugworm
+          phylum: Annelida
+          kingdom: Metazoa
+          scientificName: Arenicola marina
+          genus: Arenicola
+          prefix: wuAreMari
+          taxonomyId: 6344
+          taxaClass: Polychaeta
+          family: Arenicolidae
+          order: Capitellida    
+    Species:
+      required:
+        - commonName
+        - family
+        - genus
+        - order
+        - phylum
+        - kingdom
+        - prefix
+        - scientificName
+        - taxonomyId
+        - taxaClass
+      type: object
+      properties:
+        prefix:
+          type: string
+          example: wuAreMari
+        scientificName:
+          type: string
+          example: Arenicola marina
+        taxonomyId:
+          type: integer
+          example: 6344
+        commonName:
+          type: string
+          example: lugworm
+        genus:
+          type: string
+          example: Arenicola
+        family:
+          type: string
+          example: Arenicolidae
+        order:
+          type: string
+          example: Capitellida
+        taxaClass:
+          type: string
+          example: Polychaeta
+        phylum:
+          type: string
+          example: Annelida
+        kingdom:
+          type: string
+          example: Metazoa
+      example:
+        commonName: lugworm
+        phylum: Annelida
+        kingdom: Metazoa
+        scientificName: Arenicola marina
+        genus: Arenicola
+        prefix: wuAreMari
+        taxonomyId: 6344
+        taxaClass: Polychaeta
+        family: Arenicolidae
+        order: Capitellida    
+    SpecimenShort:
+      required:
+        - specimenId
+      type: object
+      properties:
+        specimenId:
+          type: string
+          example: SAN00001234
+      example:
+        specimenId: SAN00001234
+    SpecimenLong:
+      required:
+        - specimenId
+        - tolIds
+      type: object
+      properties:
+        specimenId:
+          type: string
+          example: SAN00001234
+        tolIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToLIDShort'
+    RequestLong:
+      required:
+        - id
+        - status
+        - createdBy
+        - species
+        - specimenId
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1234
+        status:
+          type: string
+          example: Pending
+        createdBy:
+          $ref: '#/components/schemas/User'
+        species:
+          $ref: '#/components/schemas/Species'
+        specimenId:
+          $ref: '#/components/schemas/SpecimenShort'
+      example:
+        id: 1234
+        status: Pending
+        createdBy:
+          name: A User
+          email: user@example.com
+          organisation: Research Inc
+        species:
+          commonName: lugworm
+          phylum: Annelida
+          kingdom: Metazoa
+          scientificName: Arenicola marina
+          genus: Arenicola
+          prefix: wuAreMari
+          taxonomyId: 6344
+          taxaClass: Polychaeta
+          family: Arenicolidae
+          order: Capitellida    
+        specimen:
+          specimenId: SAN0000100
+    User:
+      required:
+        - name
+        - email
+        - organisation
+      type: object
+      properties:
+        name:
+          type: string
+          example: "A User"
+        email:
+          type: string
+          example: "user@example.com"
+        organisation:
+          type: string
+          example: "Research Inc"
+      example:
+        name: "A User"
+        email: "user@example.com"
+        organisation: "Research Inc"
+    ErrorMessageList:
+      required:
+        - errors
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorMessage'
+    ErrorMessage:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Something has gone wrong"
+      example:
+        message: "Something has gone wrong"
+  securitySchemes:
+    ApiKeyAuth:        # name for the security scheme
+      type: apiKey
+      in: header       # can be "header", "query" or "cookie"
+      name: api-key    # name of the header, query parameter or cookie
+      x-apikeyInfoFunc: swagger_server.controllers.authorization_controller.apikey_auth
+# security:
+#   - ApiKeyAuth: []     # 2) Apply the API key globally to all operations
+  
