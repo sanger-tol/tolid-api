@@ -142,7 +142,7 @@ deploy-production:
     name: production
     url: https://id.tol.sanger.ac.uk/
   variables:
-    DOCKER_HOST: "ssh://ubuntu@172.27.28.201"
+    DOCKER_HOST: "ssh://ubuntu@172.27.18.201"
   only:
     - master
   when: manual
