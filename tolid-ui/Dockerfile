@@ -1,3 +1,16 @@
+# stage 1 as builder
+FROM node:12-alpine as builder
+
+RUN apk add yarn
+RUN mkdir /workspace
+
+WORKDIR /workspace
+
+COPY app/ .
+RUN yarn install
+RUN yarn build
+
+# Stage 2
 FROM nginx:alpine
 
 COPY nginx/* /etc/nginx/
@@ -5,7 +18,8 @@ COPY nginx/* /etc/nginx/
 ## Remove default nginx index page
 RUN rm -rf /var/www/tolid-ui/*
 
-COPY app/ /var/www/tolid-ui/
+# Copy from the stage 1
+COPY --from=builder /workspace/build/ /var/www/tolid-ui/
 
 EXPOSE 80
 
