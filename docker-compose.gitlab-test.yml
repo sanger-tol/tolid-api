@@ -1,4 +1,4 @@
-# Additional deployment details for test (includes temporary database)
+# Additional deployment details for testing in CI/CD (includes temporary database)
 version: '3'
 services: 
   tolid-db:

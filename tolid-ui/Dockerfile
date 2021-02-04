@@ -1,3 +1,4 @@
+# This is used for a production build
 # stage 1 as builder
 FROM node:12-alpine as builder
 
