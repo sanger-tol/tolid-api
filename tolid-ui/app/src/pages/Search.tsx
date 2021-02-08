@@ -1,4 +1,5 @@
 import React from "react";
+import SearchResults from "../components/SearchResults"
 
 function Search() {
   return (
@@ -18,7 +19,7 @@ function Search() {
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-12 order-lg-1">
-                Coming soon
+                <SearchResults/>
             </div>
           </div>
         </div>
