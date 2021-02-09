@@ -76,6 +76,8 @@ test:
     - docker ps
     - docker stack ps tolid
     - docker ps -q -f name="tolid_tolid-api"
+    - docker service logs tolid_tolid-api
+    - env
     - docker exec $(docker ps -q -f name="tolid_tolid-api") bash -c "pip3 install tox; tox"
 
 .push-template: &push-template
