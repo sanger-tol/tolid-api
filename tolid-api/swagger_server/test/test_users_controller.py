@@ -347,13 +347,13 @@ class TestUsersController(BaseTestCase):
             "tolIds": [
                 {
                     "specimen": {
-                    "specimenId": "SAN0000100"
+                        "specimenId": "SAN0000100"
                     },
                     "tolId": "wuAreMari1"
                 },
                 {
                     "specimen": {
-                    "specimenId": "SAN0000101"
+                        "specimenId": "SAN0000101"
                     },
                     "tolId": "wuAreMari2"
                 }

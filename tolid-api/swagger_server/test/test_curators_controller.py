@@ -93,7 +93,7 @@ class TestCuratorsController(BaseTestCase):
             "taxaClass": "Class",
             "taxonomyId": 999999,
             "tolIds": []
-       }]
+        }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
@@ -211,13 +211,13 @@ class TestCuratorsController(BaseTestCase):
             "tolIds": [
                 {
                     "specimen": {
-                    "specimenId": "SAN0000100"
+                        "specimenId": "SAN0000100"
                     },
                     "tolId": "wuAreMari1"
                 },
                 {
                     "specimen": {
-                    "specimenId": "SAN0000101"
+                        "specimenId": "SAN0000101"
                     },
                     "tolId": "wuAreMari2"
                 }

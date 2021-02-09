@@ -35,4 +35,4 @@ class TolidSpecies(Base):
                      'specimen': {'specimenId': specimen.specimen_id}}
             tolIds.append(tolId)
         additional = {'tolIds': tolIds}
-        return {**short, **additional} # Merge the two together
+        return {**short, **additional}  # Merge the two together
