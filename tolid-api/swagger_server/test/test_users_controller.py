@@ -343,7 +343,21 @@ class TestUsersController(BaseTestCase):
             "prefix": "wuAreMari",
             "scientificName": "Arenicola marina",
             "taxaClass": "Polychaeta",
-            "taxonomyId": 6344
+            "taxonomyId": 6344,
+            "tolIds": [
+                {
+                    "specimen": {
+                    "specimenId": "SAN0000100"
+                    },
+                    "tolId": "wuAreMari1"
+                },
+                {
+                    "specimen": {
+                    "specimenId": "SAN0000101"
+                    },
+                    "tolId": "wuAreMari2"
+                }
+            ]
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))

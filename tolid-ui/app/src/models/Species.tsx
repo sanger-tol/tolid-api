@@ -1,3 +1,5 @@
+import { ToLID } from './ToLID';
+
 export interface Species {
   commonName: string;
   family: string;
@@ -9,5 +11,6 @@ export interface Species {
   scientificName: string;
   taxaClass: string;
   taxonomyId: number;
+  tolIds: ToLID[];
 }
 

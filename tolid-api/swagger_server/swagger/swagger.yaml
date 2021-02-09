@@ -7,7 +7,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 2.1.0
+  version: 2.1.1
 servers:
   - url: http://0.0.0.0:8080/api/v2
 tags:
@@ -306,7 +306,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Species'
+                  $ref: '#/components/schemas/SpeciesLong'
                 x-content-type: application/json
         "404":
           description: species not found
@@ -341,7 +341,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Species'
+                $ref: '#/components/schemas/SpeciesShort'
         responses:
           "200":
             description: item modified
@@ -350,14 +350,14 @@ paths:
                 schema:
                   type: array
                   items:
-                    $ref: '#/components/schemas/Species'
+                    $ref: '#/components/schemas/SpeciesLong'
                   x-content-type: application/json
           "400":
             description: invalid input, object invalid
           "403":
             description: user not authorised to use this function
-          "409":
-            description: item does not exist
+          "404":
+            description: species does not exist
         x-openapi-router-controller: swagger_server.controllers.curators_controller
   /species:
     post:
@@ -382,7 +382,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Species'
+              $ref: '#/components/schemas/SpeciesShort'
       responses:
         "200":
           description: item created
@@ -391,14 +391,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Species'
+                  $ref: '#/components/schemas/SpeciesLong'
                 x-content-type: application/json
         "400":
-          description: invalid input, object invalid
+          description: invalid input, object invalid, or item already exists
         "403":
           description: user not authorised to use this function
-        "409":
-          description: an existing item already exists
       x-openapi-router-controller: swagger_server.controllers.curators_controller
     get:
       security:
@@ -710,7 +708,7 @@ components:
           type: string
           example: wuAreMari1
         species:
-          $ref: '#/components/schemas/Species'
+          $ref: '#/components/schemas/SpeciesShort'
         specimenId:
           $ref: '#/components/schemas/SpecimenShort'
       example:
@@ -738,7 +736,7 @@ components:
           type: string
           example: wuAreMari1
         species:
-          $ref: '#/components/schemas/Species'
+          $ref: '#/components/schemas/SpeciesShort'
       example:
         tolId: wuAreMari1
         species:
@@ -752,7 +750,7 @@ components:
           taxaClass: Polychaeta
           family: Arenicolidae
           order: Capitellida    
-    Species:
+    SpeciesShort:
       required:
         - commonName
         - family
@@ -807,6 +805,76 @@ components:
         taxaClass: Polychaeta
         family: Arenicolidae
         order: Capitellida    
+    SpeciesLong:
+      required:
+        - commonName
+        - family
+        - genus
+        - order
+        - phylum
+        - kingdom
+        - prefix
+        - scientificName
+        - taxonomyId
+        - taxaClass
+        - tolIds
+      type: object
+      properties:
+        prefix:
+          type: string
+          example: wuAreMari
+        scientificName:
+          type: string
+          example: Arenicola marina
+        taxonomyId:
+          type: integer
+          example: 6344
+        commonName:
+          type: string
+          example: lugworm
+        genus:
+          type: string
+          example: Arenicola
+        family:
+          type: string
+          example: Arenicolidae
+        order:
+          type: string
+          example: Capitellida
+        taxaClass:
+          type: string
+          example: Polychaeta
+        phylum:
+          type: string
+          example: Annelida
+        kingdom:
+          type: string
+          example: Metazoa
+        tolIds:
+          type: array
+          items:
+            type: object
+            properties:
+              tolId:
+                type: string
+                example: wuAreMari1
+              specimen:
+                $ref: '#/components/schemas/SpecimenShort'
+      example:
+        commonName: lugworm
+        phylum: Annelida
+        kingdom: Metazoa
+        scientificName: Arenicola marina
+        genus: Arenicola
+        prefix: wuAreMari
+        taxonomyId: 6344
+        taxaClass: Polychaeta
+        family: Arenicolidae
+        order: Capitellida
+        tolIds:
+          - tolId: wuAreMari1
+            specimen:
+              specimenId: SAN00001234 
     SpecimenShort:
       required:
         - specimenId
@@ -848,7 +916,7 @@ components:
         createdBy:
           $ref: '#/components/schemas/User'
         species:
-          $ref: '#/components/schemas/Species'
+          $ref: '#/components/schemas/SpeciesShort'
         specimenId:
           $ref: '#/components/schemas/SpecimenShort'
       example:

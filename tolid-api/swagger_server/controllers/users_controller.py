@@ -67,7 +67,7 @@ def search_species(taxonomy_id=None, skip=None, limit=None):
         return "Species with taxonomyId " + str(taxonomy_id) \
             + " cannot be found", 404
 
-    return jsonify([species])
+    return jsonify([species.to_long_dict()])
 
 
 def requests_for_user(api_key=None):

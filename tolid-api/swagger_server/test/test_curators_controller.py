@@ -91,8 +91,9 @@ class TestCuratorsController(BaseTestCase):
             "prefix": "whatever",
             "scientificName": "Species",
             "taxaClass": "Class",
-            "taxonomyId": 999999
-        }]
+            "taxonomyId": 999999,
+            "tolIds": []
+       }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
@@ -158,7 +159,26 @@ class TestCuratorsController(BaseTestCase):
             method='PUT',
             headers={"api-key": self.user2.api_key},
             json=body)
-        self.assert400(response,
+        self.assert404(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Taxonomy ID not in database
+        body = {'taxonomyId': 999999,
+                'scientificName': 'Species',
+                'prefix': 'whatever',
+                'commonName': 'Common name',
+                'genus': 'Genus',
+                'family': 'Family',
+                'order': 'Order',
+                'taxaClass': 'Class',
+                'phylum': 'Phylum',
+                'kingdom': 'Kingdom'}
+        response = self.client.open(
+            '/api/v2/species/abcd',
+            method='PUT',
+            headers={"api-key": self.user2.api_key},
+            json=body)
+        self.assert404(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Taxonomy ID in database - should edit it
@@ -187,7 +207,21 @@ class TestCuratorsController(BaseTestCase):
             "prefix": "whatever",
             "scientificName": "Species",
             "taxaClass": "Class",
-            "taxonomyId": 6344
+            "taxonomyId": 6344,
+            "tolIds": [
+                {
+                    "specimen": {
+                    "specimenId": "SAN0000100"
+                    },
+                    "tolId": "wuAreMari1"
+                },
+                {
+                    "specimen": {
+                    "specimenId": "SAN0000101"
+                    },
+                    "tolId": "wuAreMari2"
+                }
+            ]
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))

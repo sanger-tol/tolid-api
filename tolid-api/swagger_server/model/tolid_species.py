@@ -26,3 +26,13 @@ class TolidSpecies(Base):
                 'taxaClass': cls.tax_class,
                 'phylum': cls.phylum,
                 'kingdom': cls.kingdom}
+
+    def to_long_dict(cls):
+        short = cls.to_dict()
+        tolIds = []
+        for specimen in cls.specimens:
+            tolId = {'tolId': specimen.public_name,
+                     'specimen': {'specimenId': specimen.specimen_id}}
+            tolIds.append(tolId)
+        additional = {'tolIds': tolIds}
+        return {**short, **additional} # Merge the two together

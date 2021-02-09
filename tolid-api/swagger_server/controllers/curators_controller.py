@@ -34,7 +34,7 @@ def add_species(body=None, api_key=None):
     db.session.add(species)
     db.session.commit()
 
-    return jsonify([species])
+    return jsonify([species.to_long_dict()])
 
 
 def edit_species(taxonomy_id=None, body=None, api_key=None):
@@ -45,11 +45,15 @@ def edit_species(taxonomy_id=None, body=None, api_key=None):
     if role is None:
         return "User does not have permission to use this function", 403
 
+    if not taxonomy_id.isnumeric():
+        return "Species with taxonomyId " + str(taxonomy_id) \
+            + " cannot be found", 404
+
     species = db.session.query(TolidSpecies) \
         .filter(TolidSpecies.taxonomy_id == taxonomy_id) \
         .one_or_none()
     if species is None:
-        return "Species with taxonomyId " + str(taxonomy_id) + " does not exist", 400
+        return "Species with taxonomyId " + str(taxonomy_id) + " does not exist", 404
 
     species.prefix = body["prefix"]
     species.name = body["scientificName"]
@@ -66,7 +70,7 @@ def edit_species(taxonomy_id=None, body=None, api_key=None):
 
     db.session.commit()
 
-    return jsonify([species])
+    return jsonify([species.to_long_dict()])
 
 
 def list_specimens(taxonomy_id=None, skip=None, limit=None):

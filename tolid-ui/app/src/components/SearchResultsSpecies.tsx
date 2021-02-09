@@ -1,5 +1,6 @@
 import React from 'react';
 import { Species } from '../models/Species'
+import { ToLID } from '../models/ToLID'
 import { StyledSearchResultsSpecies } from './SearchResultsSpeciesStyled';
 
 interface SearchResultsSpeciesProps {
@@ -19,6 +20,11 @@ const SearchResultsSpecies: React.FunctionComponent<SearchResultsSpeciesProps> =
         <div className="col-9">
         {species.taxonomyId}<br/>
         {species.scientificName}<br/>
+        <ul>
+            {species.tolIds.map((item: ToLID) => (
+            <li key={item.tolId}>{item.tolId}: {item.specimen.specimenId}</li>
+            ))}
+          </ul>
         </div>
       </div>
     </StyledSearchResultsSpecies>
