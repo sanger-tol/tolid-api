@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
   
-  export const StyledSearchResultsToLID = styled.div`
+  export const StyledSearchResultsSpecies = styled.div`
     font-size: large;
   `;
   
