@@ -308,8 +308,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/Species'
                 x-content-type: application/json
-        "400":
-          description: bad input parameter
+        "404":
+          description: species not found
       x-openapi-router-controller: swagger_server.controllers.users_controller
     put:
         security:

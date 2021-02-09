@@ -318,7 +318,15 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/999999999',
             method='GET')
-        self.assert400(response,
+        self.assert404(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Taxonomy ID not in database and not an integer
+        response = self.client.open(
+            '/api/v2/species/abcd',
+            method='GET')
+        expect = []
+        self.assert404(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # All data given

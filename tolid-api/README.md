@@ -113,21 +113,3 @@ SCIENTIFIC_NAME: Arenicola marina
 COMMON_NAME: lugworm			
 ```
 This is the URL from NCBI for id [6344](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=6344)
-
-## Running with Docker
-
-To run the server on a Docker container, please execute the following from the root directory:
-
-```bash
-# running the app (devlopment) - N.B. database will need initialising
-docker-compose --env-file .env.dev up --build --abort-on-container-exit api db
-# setting up test environment and running tests
-docker-compose --env-file .env.dev up --build --abort-on-container-exit api-tests
-
-# UAT
-docker-compose --env-file .env.uat up --build --abort-on-container-exit api
-
-# Prod
-docker-compose --env-file .env.prod up --build --abort-on-container-exit api
-
-```

@@ -55,13 +55,17 @@ def tol_ids_for_user(api_key=None):
 
 
 def search_species(taxonomy_id=None, skip=None, limit=None):
+    if not taxonomy_id.isnumeric():
+        return "Species with taxonomyId " + str(taxonomy_id) \
+            + " cannot be found", 404
+
     species = db.session.query(TolidSpecies) \
         .filter(TolidSpecies.taxonomy_id == taxonomy_id) \
         .one_or_none()
 
     if species is None:
         return "Species with taxonomyId " + str(taxonomy_id) \
-            + " cannot be found", 400
+            + " cannot be found", 404
 
     return jsonify([species])
 
