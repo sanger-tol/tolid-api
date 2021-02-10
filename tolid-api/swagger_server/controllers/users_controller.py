@@ -1,6 +1,7 @@
 from swagger_server.model import db, TolidSpecies, \
     TolidSpecimen, TolidUser, TolidRequest
 from flask import jsonify
+from sqlalchemy import or_
 import connexion
 
 
@@ -68,6 +69,25 @@ def search_species(taxonomy_id=None, skip=None, limit=None):
             + " cannot be found", 404
 
     return jsonify([species.to_long_dict()])
+
+
+def search_species_by_taxon_prefix_name(taxonomy_id=None, prefix=None,
+                                        scientific_name=None, skip=None, limit=None):
+    if (taxonomy_id != "") and taxonomy_id.isnumeric():
+        speciess = db.session.query(TolidSpecies) \
+            .filter(or_(TolidSpecies.taxonomy_id == taxonomy_id,
+                        TolidSpecies.prefix == prefix,
+                        TolidSpecies.name == scientific_name)) \
+            .order_by(TolidSpecies.taxonomy_id) \
+            .all()
+    else:
+        speciess = db.session.query(TolidSpecies) \
+            .filter(or_(TolidSpecies.prefix == prefix,
+                        TolidSpecies.name == scientific_name)) \
+            .order_by(TolidSpecies.taxonomy_id) \
+            .all()
+
+    return jsonify([species.to_long_dict() for species in speciess])
 
 
 def requests_for_user(api_key=None):

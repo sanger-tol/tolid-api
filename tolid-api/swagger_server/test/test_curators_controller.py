@@ -249,14 +249,14 @@ class TestCuratorsController(BaseTestCase):
 
         # No authorisation token given
         response = self.client.open(
-            '/api/v2/tol-ids',
+            '/api/v2/tol-ids/all',
             method='GET',
             )
         self.assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Invalid authorisation token given
         response = self.client.open(
-            '/api/v2/tol-ids',
+            '/api/v2/tol-ids/all',
             method='GET',
             headers={"api-key": "12345678"},
             )
@@ -264,7 +264,7 @@ class TestCuratorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         # Not admin
         response = self.client.open(
-            '/api/v2/tol-ids',
+            '/api/v2/tol-ids/all',
             method='GET',
             headers={"api-key": self.user1.api_key},
             )
@@ -273,7 +273,7 @@ class TestCuratorsController(BaseTestCase):
         # No taxonomyId given
         query_string = []
         response = self.client.open(
-            '/api/v2/tol-ids',
+            '/api/v2/tol-ids/all',
             method='GET',
             headers={"api-key": self.user2.api_key},
             query_string=query_string)
@@ -288,7 +288,7 @@ class TestCuratorsController(BaseTestCase):
         # Taxonomy ID not in database
         query_string = [('taxonomyId', '999999999')]
         response = self.client.open(
-            '/api/v2/tol-ids',
+            '/api/v2/tol-ids/all',
             method='GET',
             headers={"api-key": self.user2.api_key},
             query_string=query_string)
@@ -298,7 +298,7 @@ class TestCuratorsController(BaseTestCase):
         # Taxonomy ID given
         query_string = [('taxonomyId', '6344')]
         response = self.client.open(
-            '/api/v2/tol-ids',
+            '/api/v2/tol-ids/all',
             method='GET',
             headers={"api-key": self.user2.api_key},
             query_string=query_string)
@@ -312,14 +312,14 @@ class TestCuratorsController(BaseTestCase):
     def test_list_species(self):
         # No authorisation token given
         response = self.client.open(
-            '/api/v2/species',
+            '/api/v2/species/all',
             method='GET',
             )
         self.assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Invalid authorisation token given
         response = self.client.open(
-            '/api/v2/species',
+            '/api/v2/species/all',
             method='GET',
             headers={"api-key": "12345678"},
             )
@@ -327,7 +327,7 @@ class TestCuratorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         # Not admin
         response = self.client.open(
-            '/api/v2/species',
+            '/api/v2/species/all',
             method='GET',
             headers={"api-key": self.user1.api_key},
             )
@@ -336,7 +336,7 @@ class TestCuratorsController(BaseTestCase):
         # All correct
         query_string = []
         response = self.client.open(
-            '/api/v2/species',
+            '/api/v2/species/all',
             method='GET',
             headers={"api-key": self.user2.api_key},
             query_string=query_string)

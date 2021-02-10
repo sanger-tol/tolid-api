@@ -158,7 +158,7 @@ class TestUsersController(BaseTestCase):
         # ToLID not in database
         query_string = {'taxonomyId': 6344, 'specimenId': 'SAN99999999'}
         response = self.client.open(
-            '/api/v2/tol-ids/search',
+            '/api/v2/tol-ids',
             method='GET',
             query_string=query_string)
         self.assert200(response,
@@ -168,7 +168,7 @@ class TestUsersController(BaseTestCase):
         # All data given
         query_string = {'taxonomyId': 6344, 'specimenId': 'SAN0000100'}
         response = self.client.open(
-            '/api/v2/tol-ids/search',
+            '/api/v2/tol-ids',
             method='GET',
             query_string=query_string)
         expect = [{
@@ -193,7 +193,7 @@ class TestUsersController(BaseTestCase):
 
         # Same again
         response = self.client.open(
-            '/api/v2/tol-ids/search',
+            '/api/v2/tol-ids',
             method='GET',
             query_string=query_string)
         self.assertEquals(expect, response.json)
@@ -201,7 +201,7 @@ class TestUsersController(BaseTestCase):
         # All data given - another taxon for same specimen
         query_string = {'taxonomyId': 6344, 'specimenId': 'SAN0000101'}
         response = self.client.open(
-            '/api/v2/tol-ids/search',
+            '/api/v2/tol-ids',
             method='GET',
             query_string=query_string)
         expect = [{
@@ -325,7 +325,6 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/abcd',
             method='GET')
-        expect = []
         self.assert404(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -367,6 +366,98 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/6344',
             method='GET')
+        self.assertEquals(expect, response.json)
+
+    def test_search_species_by_taxon_prefix_name(self):
+        # Taxonomy ID not in database
+        query_string = {'taxonomyId': 999999999}
+        response = self.client.open(
+            '/api/v2/species',
+            method='GET',
+            query_string=query_string)
+        expect = []
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # Taxonomy ID not in database and not an integer
+        query_string = {'taxonomyId': 'abcd'}
+        response = self.client.open(
+            '/api/v2/species',
+            method='GET',
+            query_string=query_string)
+        expect = []
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEquals(expect, response.json)
+
+        # All data given
+        query_string = {'taxonomyId': 6344,
+                        'prefix': 'mHomSap',
+                        'scientificName': 'Perinereis vancaurica'}
+        response = self.client.open(
+            '/api/v2/species',
+            method='GET',
+            query_string=query_string)
+        expect = [{
+            "commonName": "lugworm",
+            "family": "Arenicolidae",
+            "genus": "Arenicola",
+            "order": "None",
+            "phylum": "Annelida",
+            "kingdom": "Metazoa",
+            "prefix": "wuAreMari",
+            "scientificName": "Arenicola marina",
+            "taxaClass": "Polychaeta",
+            "taxonomyId": 6344,
+            "tolIds": [
+                {
+                    "specimen": {
+                        "specimenId": "SAN0000100"
+                    },
+                    "tolId": "wuAreMari1"
+                },
+                {
+                    "specimen": {
+                        "specimenId": "SAN0000101"
+                    },
+                    "tolId": "wuAreMari2"
+                }
+            ]
+        }, {
+            "commonName": "None",
+            "family": "Nereididae",
+            "genus": "Perinereis",
+            "kingdom": "Metazoa",
+            "order": "Phyllodocida",
+            "phylum": "Annelida",
+            "prefix": "wpPerVanc",
+            "scientificName": "Perinereis vancaurica",
+            "taxaClass": "Polychaeta",
+            "taxonomyId": 6355,
+            "tolIds": [
+                {
+                    "specimen": {
+                        "specimenId": "SAN0000101"
+                    },
+                    "tolId": "wpPerVanc1"
+                }
+            ]
+        }, {
+            "commonName": "human",
+            "family": "Hominidae",
+            "genus": "Homo",
+            "kingdom": "Metazoa",
+            "order": "Primates",
+            "phylum": "Chordata",
+            "prefix": "mHomSap",
+            "scientificName": "Homo sapiens",
+            "taxaClass": "Mammalia",
+            "taxonomyId": 9606,
+            "tolIds": []
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
 
     def test_search_requests_for_user(self):

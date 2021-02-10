@@ -80,12 +80,42 @@ paths:
         "400":
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.users_controller
-  /tol-ids/search:
+  /specimens/{specimenId}:
+    get:
+      tags:
+      - users
+      summary: Return a single specimen
+      description: |
+        Return species and ToLID data for a specimen
+      operationId: search_specimen
+      parameters:
+      - name: specimenId
+        in: path
+        description: a GAL specimen ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpecimenLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+  /tol-ids:
     get:
       tags:
       - users
       summary: Search for a ToLID by taxonomyId and specimenId
-      description: |
+      description:
         Return species and specimen for a ToLID
       operationId: search_tol_id_by_taxon_specimen
       parameters:
@@ -118,37 +148,6 @@ paths:
         "400":
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.users_controller
-  /specimens/{specimenId}:
-    get:
-      tags:
-      - users
-      summary: Return a single specimen
-      description: |
-        Return species and ToLID data for a specimen
-      operationId: search_specimen
-      parameters:
-      - name: specimenId
-        in: path
-        description: a GAL specimen ID
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: search results matching criteria
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SpecimenLong'
-                x-content-type: application/json
-        "400":
-          description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.users_controller
-  /tol-ids:
     post:
       security:
         - ApiKeyAuth: []
@@ -242,6 +241,7 @@ paths:
         "409":
           description: an existing item already exists
       x-openapi-router-controller: swagger_server.controllers.creators_controller
+  /tol-ids/all:
     get:
       security:
         - ApiKeyAuth: []
@@ -360,6 +360,50 @@ paths:
             description: species does not exist
         x-openapi-router-controller: swagger_server.controllers.curators_controller
   /species:
+    get:
+      tags:
+      - users
+      summary: Return species matching search terms
+      description: |
+        By passing in the appropriate options, you can search for
+        available species in the system.
+      operationId: search_species_by_taxon_prefix_name
+      parameters:
+      - name: taxonomyId
+        in: query
+        description: pass an NCBI taxonomy ID for looking up ToLID and taxonomy information
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: prefix
+        in: query
+        description: a ToLID prefix
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: scientificName
+        in: query
+        description: a scientific name
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpeciesLong'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.users_controller
     post:
       security:
         - ApiKeyAuth: []
@@ -398,6 +442,7 @@ paths:
         "403":
           description: user not authorised to use this function
       x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /species/all:
     get:
       security:
         - ApiKeyAuth: []

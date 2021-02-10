@@ -14,13 +14,15 @@ const SearchResultsSpecimen: React.FunctionComponent<SearchResultsSpecimenProps>
   return (
     <StyledSearchResultsSpecimen>
       <div className="row">
-        <div className="col-3">
-            {specimen.specimenId}
+        <div className="col-4">
+          <span className="type">Specimen</span><br/>
+          <span className="identifier">{specimen.specimenId}</span>
         </div>
-        <div className="col-9">
+        <div className="col-8">
+          <span className="label">ToLIDs:</span>
           <ul>
             {specimen.tolIds.map((item: ToLID) => (
-                <li key={item.tolId}>{item.tolId}: {item.species.taxonomyId}</li>
+                <li key={item.tolId}>{item.tolId}: {item.species.scientificName} ({item.species.taxonomyId}) <a href={"https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" +item.species.taxonomyId} className="btn btn-primary btn-sm">NCBI</a></li>
             ))}
           </ul>
         </div>

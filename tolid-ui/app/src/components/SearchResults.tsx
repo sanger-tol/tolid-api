@@ -5,6 +5,7 @@ import { Specimen } from '../models/Specimen'
 import SearchResultsToLID from './SearchResultsToLID'
 import SearchResultsSpecies from './SearchResultsSpecies'
 import SearchResultsSpecimen from './SearchResultsSpecimen'
+import './SearchResults.scss'
 
 export interface Props {
     list?: string[]
@@ -29,7 +30,7 @@ function getToLIDs(searchTerm: string): Promise<ToLID[]> {
         })
 }
 function getSpeciess(searchTerm: string): Promise<Species[]> {
-    return fetch('/api/v2/species/'+searchTerm)
+    return fetch('/api/v2/species?taxonomyId='+searchTerm+'&scientificName='+searchTerm+'&prefix='+searchTerm)
         // the JSON body is taken from the response
         .then(res => {
             if (res.ok) { 
@@ -100,16 +101,16 @@ class SearchResults extends React.Component<Props, State> {
                 Search
                 </button>
             </form>
-            <ul>
-            {this.state.tolids.map((item: ToLID) => (
-            <li key={item.tolId}><SearchResultsToLID tolid={item}/></li>
-            ))}
-            {this.state.speciess.map((item: Species) => (
-            <li key={item.taxonomyId}><SearchResultsSpecies species={item}/></li>
-            ))}
-            {this.state.specimens.map((item: Specimen) => (
-            <li key={item.specimenId}><SearchResultsSpecimen specimen={item}/></li>
-            ))}
+            <ul className="searchResults">
+                {this.state.tolids.map((item: ToLID) => (
+                <li key={item.tolId} className="searchResult"><SearchResultsToLID tolid={item}/></li>
+                ))}
+                {this.state.speciess.map((item: Species) => (
+                <li key={item.taxonomyId} className="searchResult"><SearchResultsSpecies species={item}/></li>
+                ))}
+                {this.state.specimens.map((item: Specimen) => (
+                <li key={item.specimenId} className="searchResult"><SearchResultsSpecimen specimen={item}/></li>
+                ))}
             </ul>
         </div>
       );

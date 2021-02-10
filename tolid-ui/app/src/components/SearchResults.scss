@@ -1,0 +1,22 @@
+#searchForm {
+  margin-top: 10px;
+}
+.identifier {
+  font-size: 2.5em;
+  color: green;
+}
+.label {
+  font-style: italic;
+}
+ul {
+  list-style: none;
+}
+.searchResults {
+  margin-top: 15px;
+  li.searchResult {
+    margin-bottom: 25px;
+  }
+  li.searchResult:nth-child(even) {
+      background-color: #dcdcdc;
+  }
+}
