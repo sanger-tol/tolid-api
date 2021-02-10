@@ -112,6 +112,11 @@ class SearchResults extends React.Component<Props, State> {
                 <li key={item.specimenId} className="searchResult"><SearchResultsSpecimen specimen={item}/></li>
                 ))}
             </ul>
+            {this.state.tolids.length == 0 && this.state.speciess.length == 0 && this.state.specimens.length == 0 &&
+            <p>
+                No results found
+            </p>
+            }
         </div>
       );
     }
