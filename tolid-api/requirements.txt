@@ -1,8 +1,8 @@
-Cython
-connexion >= 2.7.0
-python_dateutil >= 2.7.3
-setuptools >= 50.3.0
-Werkzeug >= 1.0.1
+Cython == 0.29.21
+connexion == 2.7.0
+python_dateutil == 2.8.1
+setuptools == 53.0.0
+Werkzeug == 1.0.1
 Flask-SQLAlchemy == 2.4.4
-psycopg2-binary
-openpyxl
+psycopg2-binary == 2.8.6
+openpyxl == 3.0.6
