@@ -84,7 +84,7 @@ test-api:
     - docker swarm init
     - docker stack deploy --with-registry-auth -c docker-compose.gitlab.yml -c docker-compose.gitlab-test.yml tolid
     - sleep 60
-    - docker service logs tolid
+    - docker service logs tolid_tolid-api
     - docker exec $(docker ps -q -f name="tolid_tolid-api") bash -c "pip3 install tox; tox"
 
 test-ui:
@@ -98,11 +98,10 @@ test-ui:
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ''
-    CI: "true"
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker run $CI_REGISTRY_IMAGE/tolid-ui-test:$CI_COMMIT_SHA yarn test
+    - docker run -e CI=true $CI_REGISTRY_IMAGE/tolid-ui-test:$CI_COMMIT_SHA yarn test
 
 .push-template: &push-template
   tags:
