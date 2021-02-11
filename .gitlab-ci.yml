@@ -31,9 +31,9 @@ lint:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker pull $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_REF_SLUG || true
-    - docker build --pull --cache-from $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_REF_SLUG -t $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_SHA -f $DOCKERFILE $PART
-    - docker push $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_SHA
+    - docker pull $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_REF_SLUG || true
+    - docker build --pull --cache-from $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_REF_SLUG -t $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_SHA -f $DOCKERFILE $PART
+    - docker push $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_SHA
 
 build-api:
   <<: *build-template
@@ -42,6 +42,7 @@ build-api:
     DOCKER_TLS_CERTDIR: ''
     PART: "tolid-api"
     DOCKERFILE: "tolid-api/Dockerfile"
+    NAME: "tolid-api"
 
 build-ui:
   <<: *build-template
@@ -50,8 +51,18 @@ build-ui:
     DOCKER_TLS_CERTDIR: ''
     PART: "tolid-ui"
     DOCKERFILE: 'tolid-ui/Dockerfile'
+    NAME: "tolid-ui"
 
-test:
+build-ui-test:
+  <<: *build-template
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    PART: "tolid-ui"
+    DOCKERFILE: 'tolid-ui/Dockerfile.dev'
+    NAME: "tolid-ui-test"
+
+test-api:
   tags:
     - autoscale
   image: $DOCKER_IMAGE
@@ -76,6 +87,23 @@ test:
     - docker service logs tolid
     - docker exec $(docker ps -q -f name="tolid_tolid-api") bash -c "pip3 install tox; tox"
 
+test-ui:
+  tags:
+    - autoscale
+  image: $DOCKER_IMAGE
+  stage: test
+  services:
+    - name: $DIND_IMAGE
+      alias: docker
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    CI: "true"
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker run $CI_REGISTRY_IMAGE/tolid-ui-test:$CI_COMMIT_SHA yarn test
+
 .push-template: &push-template
   tags:
     - autoscale
@@ -90,9 +118,9 @@ test:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker pull $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_SHA
-    - docker tag $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_REF_SLUG
-    - docker push $CI_REGISTRY_IMAGE/$PART:$CI_COMMIT_REF_SLUG
+    - docker pull $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_SHA
+    - docker tag $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_REF_SLUG
+    - docker push $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_REF_SLUG
 
 push-api:
   <<: *push-template
@@ -100,7 +128,7 @@ push-api:
     GIT_STRATEGY: none
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ''
-    PART: tolid-api
+    NAME: tolid-api
 
 push-ui:
   <<: *push-template
@@ -108,7 +136,15 @@ push-ui:
     GIT_STRATEGY: none
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ''
-    PART: tolid-ui
+    NAME: tolid-ui
+
+push-ui-test:
+  <<: *push-template
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    NAME: tolid-ui-test
 
 .deploy-template: &deploy-template
   tags:

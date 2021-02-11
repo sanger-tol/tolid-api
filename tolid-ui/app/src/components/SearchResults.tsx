@@ -77,7 +77,7 @@ class SearchResults extends React.Component<Props, State> {
           getSpeciess(searchTerm.value)
             .then(speciess => this.setState({ speciess: speciess }));
           getSpecimens(searchTerm.value)
-            .then(specimens => this.setState({ specimens: specimens }));
+            .then(specimens => this.setState({ specimens: specimens }))
           // Finally, we need to reset the form
           searchTerm.classList.remove("is-invalid");
           form.reset();
@@ -97,7 +97,7 @@ class SearchResults extends React.Component<Props, State> {
                         Search on ToLID prefix (e.g. mHomSap), taxonomy ID (e.g. 9606), species name (e.g. Homo sapiens) or ToLID (e.g. mHomSap1)
                     </small>
                 </div>
-                <button className="btn btn-primary" onClick={this.doSearch}>
+                <button className="btn btn-primary" id="searchButton" onClick={this.doSearch}>
                 Search
                 </button>
             </form>
@@ -112,7 +112,7 @@ class SearchResults extends React.Component<Props, State> {
                 <li key={item.specimenId} className="searchResult"><SearchResultsSpecimen specimen={item}/></li>
                 ))}
             </ul>
-            {this.state.tolids.length == 0 && this.state.speciess.length == 0 && this.state.specimens.length == 0 &&
+            {this.state.tolids.length === 0 && this.state.speciess.length === 0 && this.state.specimens.length === 0 &&
             <p>
                 No results found
             </p>

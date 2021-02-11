@@ -28,7 +28,7 @@ const SearchResultsSpecies: React.FunctionComponent<SearchResultsSpeciesProps> =
                 ))
               }
             </ul>}
-            {species.tolIds.length == 0 && <span> None assigned</span>}
+            {species.tolIds.length === 0 && <span> None assigned</span>}
         </div>
       </div>
     </StyledSearchResultsSpecies>

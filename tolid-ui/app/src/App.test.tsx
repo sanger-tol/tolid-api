@@ -4,6 +4,5 @@ import App from './App';
 
 test('renders home page link', () => {
   render(<App />);
-  const linkElement = screen.getByText(/ToLID/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.queryAllByText("Search")).not.toHaveLength(0);
 });

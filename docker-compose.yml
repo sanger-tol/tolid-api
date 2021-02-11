@@ -2,7 +2,7 @@
 version: '3.1'
 
 services:
-  db:
+  tolid-db:
     image: postgres:11
     environment:
       - POSTGRES_USER
@@ -11,24 +11,23 @@ services:
     ports:
       - 5432:5432
 
-  api:
+  tolid-api:
     build: tolid-api/.
-    image: api
+    image: tolid-api
     #command: python3 -m swagger_server
     environment:
       - DB_URI
     ports:
       - 8080:8080
 
-  ui:
+  tolid-ui:
     build:
       context: tolid-ui/.
       dockerfile: Dockerfile.dev
-    image: ui
+    image: tolid-ui
     #command: python3 -m swagger_server
     stdin_open: true
     environment:
-      - TOLID_API_LOCATION
       - NODE_ENV=development
     ports:
       - 3000:3000
@@ -36,14 +35,23 @@ services:
       - './tolid-ui/app:/usr/src/app'
       - '/usr/src/app/node_modules'
     
-  api-tests:
-    image: api
+  tolid-api-test:
+    image: tolid-api
     command: dockerize
         -wait tcp://db:5432 -wait tcp://api:8080 -timeout 10s
         bash -c "pip3 install tox; tox"
     environment:
       DB_URI: ${DB_URI}
     depends_on:
-      - db
-      - api
-      - ui
+      - tolid-db
+      - tolid-api
+
+  tolid-ui-test:
+    image: tolid-ui
+    command: yarn test
+    stdin_open: true
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - './tolid-ui/app:/usr/src/app'
+      - '/usr/src/app/node_modules'

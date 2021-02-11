@@ -2,7 +2,7 @@
   "name": "tolid-ui",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://api:8080",
+  "proxy": "http://tolid-api:8080",
   "dependencies": {
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
