@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ToLID } from '../models/ToLID'
-import { Species } from '../models/Species'
-import { Specimen } from '../models/Specimen'
+import { ToLID } from '../../models/ToLID'
+import { Species } from '../../models/Species'
+import { Specimen } from '../../models/Specimen'
 import SearchResultsToLID from './SearchResultsToLID'
 import SearchResultsSpecies from './SearchResultsSpecies'
 import SearchResultsSpecimen from './SearchResultsSpecimen'

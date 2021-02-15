@@ -1,6 +1,6 @@
 import React from 'react';
-import { Specimen } from '../models/Specimen'
-import { ToLID } from '../models/ToLID'
+import { Specimen } from '../../models/Specimen'
+import { ToLID } from '../../models/ToLID'
 import { StyledSearchResultsSpecimen } from './SearchResultsSpecimenStyled';
 
 interface SearchResultsSpecimenProps {

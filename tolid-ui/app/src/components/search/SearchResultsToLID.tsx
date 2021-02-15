@@ -1,5 +1,5 @@
 import React from 'react';
-import { ToLID } from '../models/ToLID'
+import { ToLID } from '../../models/ToLID'
 import { StyledSearchResultsToLID } from './SearchResultsToLIDStyled';
 
 interface SearchResultsToLIDProps {
