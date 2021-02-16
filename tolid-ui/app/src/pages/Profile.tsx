@@ -1,12 +1,14 @@
 import React from "react";
+import UserToLIDsList from "../components/profile/UserToLIDsList"
+import UserRequestsList from "../components/profile/UserRequestsList"
 
-function Contact() {
+function Profile() {
   return (
     <div className="contact">
       <header className="masthead text-center text-white">
         <div className="masthead-content">
           <div className="container">
-            <h1 className="masthead-heading mb-0">Contact</h1>
+            <h1 className="masthead-heading mb-0">Profile</h1>
           </div>
         </div>
         <div className="bg-circle-1 bg-circle"></div>
@@ -19,8 +21,10 @@ function Contact() {
           <div className="row align-items-center">
             <div className="col-lg-12">
               <div className="p-5">
-                <p>Please email us with any queries about ToLIDs or to request access to being able to create ToLIDs.
-                  Our email address is <a href="mailto:tolid-help@sanger.ac.uk">tolid-help@sanger.ac.uk</a>.</p>
+                <h2>My ToLIDs</h2>
+                <UserToLIDsList />
+                <h2>My Requests</h2>
+                <UserRequestsList />
               </div>
             </div>
           </div>
@@ -30,4 +34,4 @@ function Contact() {
   );
 }
 
-export default Contact;
+export default Profile;
