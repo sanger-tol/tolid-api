@@ -13,7 +13,7 @@ class TolidSpecies(Base):
     tax_class = db.Column(db.String())
     phylum = db.Column(db.String())
     kingdom = db.Column(db.String())
-    specimens = db.relationship('TolidSpecimen', lazy=False)
+    specimens = db.relationship('TolidSpecimen', lazy=False, order_by='TolidSpecimen.number')
 
     def to_dict(cls):
         return {'prefix': cls.prefix,

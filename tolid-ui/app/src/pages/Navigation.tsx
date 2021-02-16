@@ -16,23 +16,22 @@ function Navigation(props: NavigationProps) {
           </button>
           <div className="collapse navbar-collapse" id="navbarResponsive">
             <ul className="navbar-nav ml-auto">
-              <li
-                className={`nav-item  ${
-                  props.location.pathname === "/" ? "active" : ""
-                }`}
-              >
-                <Link className="nav-link" to="/">
-                  Home
-                  <span className="sr-only">(current)</span>
-                </Link>
-            </li>
-              <li
+            <li
                 className={`nav-item  ${
                   props.location.pathname === "/search" ? "active" : ""
                 }`}
               >
                 <Link className="nav-link" to="/search">
                   Search
+                </Link>
+              </li>
+              <li
+                className={`nav-item  ${
+                  props.location.pathname === "/request" ? "active" : ""
+                }`}
+              >
+                <Link className="nav-link" to="/request">
+                  Create
                 </Link>
               </li>
               <li
