@@ -718,10 +718,31 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RequestLong'
-                x-content-type: application/json
+                  x-content-type: application/json
         "400":
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.curators_controller    
+  /auth/login:
+    get:
+      tags:
+      - auth
+      summary: Get the Elixir login URL
+      description: |
+        Get the URL for logging in to Elixir
+      operationId: login
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    loginUrl:
+                      type: string
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.auth_controller
 components:
   schemas:
     TaxSpec:
@@ -1028,7 +1049,7 @@ components:
       type: apiKey
       in: header       # can be "header", "query" or "cookie"
       name: api-key    # name of the header, query parameter or cookie
-      x-apikeyInfoFunc: swagger_server.controllers.authorization_controller.apikey_auth
+      x-apikeyInfoFunc: swagger_server.controllers.auth_controller.apikey_auth
 # security:
 #   - ApiKeyAuth: []     # 2) Apply the API key globally to all operations
   

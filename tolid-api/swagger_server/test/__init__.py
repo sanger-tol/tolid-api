@@ -7,7 +7,7 @@ import os
 from swagger_server.encoder import JSONEncoder
 
 from swagger_server.model import db, TolidSpecies, TolidSpecimen, \
-    TolidUser, TolidRole, TolidRequest
+    TolidUser, TolidRole, TolidRequest, TolidState
 
 
 class BaseTestCase(TestCase):
@@ -109,6 +109,7 @@ class BaseTestCase(TestCase):
         db.session.query(TolidSpecies).delete()
         db.session.query(TolidRole).delete()
         db.session.query(TolidUser).delete()
+        db.session.query(TolidState).delete()
         db.session.commit()
 
     def create_app(self):

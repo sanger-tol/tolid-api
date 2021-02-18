@@ -1,12 +1,14 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
+import { useAuth } from '../contexts/auth.context';
 
 interface NavigationProps {
   location: {pathname: string};
 }
 
 function Navigation(props: NavigationProps) {
-  return (
+  const { token } = useAuth();
+    return (
     <div className="navigation">
       <nav className="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
         <div className="container">
@@ -25,33 +27,50 @@ function Navigation(props: NavigationProps) {
                   Search
                 </Link>
               </li>
-              <li
-                className={`nav-item  ${
-                  props.location.pathname === "/request" ? "active" : ""
-                }`}
-              >
-                <Link className="nav-link" to="/request">
-                  Create
-                </Link>
-              </li>
-              <li
-                className={`nav-item  ${
-                  props.location.pathname === "/admin" ? "active" : ""
-                }`}
-              >
-                <Link className="nav-link" to="/admin">
-                  Admin
-                </Link>
-              </li>
-              <li
-                className={`nav-item  ${
-                  props.location.pathname === "/profile" ? "active" : ""
-                }`}
-              >
-                <Link className="nav-link" to="/profile">
-                  Profile
-                </Link>
-              </li>
+              {token &&
+                <li
+                  className={`nav-item  ${
+                    props.location.pathname === "/request" ? "active" : ""
+                  }`}
+                >
+                  <Link className="nav-link" to="/request">
+                    Create
+                  </Link>
+                </li>
+              } 
+              {token &&
+                <li
+                  className={`nav-item  ${
+                    props.location.pathname === "/admin" ? "active" : ""
+                  }`}
+                >
+                  <Link className="nav-link" to="/admin">
+                    Admin
+                  </Link>
+                </li>
+              }
+              {token &&
+                <li
+                  className={`nav-item  ${
+                    props.location.pathname === "/profile" ? "active" : ""
+                  }`}
+                >
+                  <Link className="nav-link" to="/profile">
+                    Profile
+                  </Link>
+                </li>
+              }
+              {!token &&
+                <li
+                  className={`nav-item  ${
+                    props.location.pathname === "/login" ? "active" : ""
+                  }`}
+                >
+                  <Link className="nav-link" to="/login">
+                    Login
+                  </Link>
+                </li>
+              }
             </ul>
           </div>
         </div>

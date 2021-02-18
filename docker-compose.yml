@@ -17,6 +17,9 @@ services:
     #command: python3 -m swagger_server
     environment:
       - DB_URI
+      - ELIXIR_CLIENT_ID
+      - ELIXIR_CLIENT_SECRET
+      - ELIXIR_REDIRECT_URI
     ports:
       - 8080:8080
 
@@ -30,7 +33,7 @@ services:
     environment:
       - NODE_ENV=development
     ports:
-      - 3000:3000
+      - 3001:3000
     volumes:
       - './tolid-ui/app:/usr/src/app'
       - '/usr/src/app/node_modules'
@@ -41,7 +44,10 @@ services:
         -wait tcp://tolid-db:5432 -wait tcp://tolid-api:8080 -timeout 10s
         bash -c "pip3 install tox; tox"
     environment:
-      DB_URI: ${DB_URI}
+      - DB_URI
+      - ELIXIR_CLIENT_ID
+      - ELIXIR_CLIENT_SECRET
+      - ELIXIR_REDIRECT_URI
     depends_on:
       - tolid-db
       - tolid-api
