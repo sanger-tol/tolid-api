@@ -947,14 +947,14 @@ components:
             $ref: '#/components/schemas/ToLIDShort'
     RequestLong:
       required:
-        - id
+        - requestId
         - status
         - createdBy
         - species
         - specimenId
       type: object
       properties:
-        id:
+        requestId:
           type: integer
           example: 1234
         status:
@@ -967,7 +967,7 @@ components:
         specimenId:
           $ref: '#/components/schemas/SpecimenShort'
       example:
-        id: 1234
+        requestId: 1234
         status: Pending
         createdBy:
           name: A User

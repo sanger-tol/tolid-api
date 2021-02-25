@@ -232,7 +232,7 @@ class TestCreatorsController(BaseTestCase):
         expect = [{'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
                                  'name': 'test_user_creator',
                                  'organisation': 'Sanger Institute'},
-                   'id': 1,
+                   'requestId': 1,
                    'species': {'taxonomyId': 999999999},
                    'specimen': {'specimenId': 'SAN0000100'},
                    'status': 'Pending'}]
@@ -541,7 +541,7 @@ class TestCreatorsController(BaseTestCase):
             'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
                           'name': 'test_user_creator',
                           'organisation': 'Sanger Institute'},
-            'id': 2,
+            'requestId': 2,
             'species': {'taxonomyId': 9999999},
             'specimen': {'specimenId': 'SAN0000100'},
             'status': 'Pending'}]
@@ -578,7 +578,7 @@ class TestCreatorsController(BaseTestCase):
         expect = [{'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
                                  'name': 'test_user_creator',
                                  'organisation': 'Sanger Institute'},
-                   'id': 2,
+                   'requestId': 2,
                    'species': {'taxonomyId': 9999999},
                    'specimen': {'specimenId': 'SAN0000100'},
                    'status': 'Pending'}]

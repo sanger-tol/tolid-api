@@ -20,7 +20,7 @@ class TolidRequest(Base):
             .one_or_none()
         if species is None:
             return {
-                'id': cls.request_id,
+                'requestId': cls.request_id,
                 'status': cls.status,
                 'createdBy': cls.user,
                 'species': {'taxonomyId': cls.species_id},
@@ -28,7 +28,7 @@ class TolidRequest(Base):
                 }
         else:
             return {
-                'id': cls.request_id,
+                'requestId': cls.request_id,
                 'status': cls.status,
                 'createdBy': cls.user,
                 'species': species,

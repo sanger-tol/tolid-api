@@ -396,7 +396,7 @@ class TestCuratorsController(BaseTestCase):
             headers={"api-key": self.user2.api_key}
             )
         expect = [{
-            "id": 1,
+            "requestId": 1,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester",
@@ -417,7 +417,7 @@ class TestCuratorsController(BaseTestCase):
             },
             "specimen": {"specimenId": "SAN0000100"},
         }, {
-            "id": 2,
+            "requestId": 2,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester2",
@@ -545,7 +545,7 @@ class TestCuratorsController(BaseTestCase):
             headers={"api-key": self.user2.api_key}
             )
         expect = [{
-            "id": 1,
+            "requestId": 1,
             "status": "Rejected",
             "createdBy": {
                 "name": "test_user_requester",
@@ -568,7 +568,7 @@ class TestCuratorsController(BaseTestCase):
             headers={"api-key": self.user2.api_key}
             )
         expect = [{
-            "id": 2,
+            "requestId": 2,
             "status": "Rejected",
             "createdBy": {
                 "name": "test_user_requester2",
