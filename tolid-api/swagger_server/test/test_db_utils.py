@@ -2,7 +2,8 @@ from __future__ import absolute_import
 
 from swagger_server.test import BaseTestCase
 
-from swagger_server.db_utils import create_new_specimen, accept_request, reject_request
+from swagger_server.db_utils import create_new_specimen, accept_request, \
+    reject_request, create_request
 from swagger_server.model import db, TolidRequest
 
 
@@ -45,6 +46,13 @@ class TestDbUtils(BaseTestCase):
 
         request = reject_request(self.request1)
         self.assertEqual(request.status, 'Rejected')
+
+    def test_create_request(self):
+        new_request = create_request(self.species1.taxonomy_id, "TEST44444", self.user1)
+        self.assertEqual(new_request.specimen_id, "TEST44444")
+        self.assertEqual(new_request.species_id, self.species1.taxonomy_id)
+        self.assertEqual(new_request.user, self.user1)
+        self.assertEqual(new_request.status, "Pre-pending")
 
 
 if __name__ == '__main__':

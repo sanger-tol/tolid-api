@@ -17,6 +17,13 @@ services:
     #command: python3 -m swagger_server
     environment:
       - DB_URI
+      - MAIL_SENDER
+      - MAIL_SENDER_NAME
+      - MAIL_USERNAME_SMTP
+      - MAIL_PASSWORD_SMTP
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_RECEIVER_REQUESTS_PENDING
     ports:
       - 8080:8080
 
@@ -41,7 +48,14 @@ services:
         -wait tcp://tolid-db:5432 -wait tcp://tolid-api:8080 -timeout 10s
         bash -c "pip3 install tox; tox"
     environment:
-      DB_URI: ${DB_URI}
+      - DB_URI
+      - MAIL_SENDER
+      - MAIL_SENDER_NAME
+      - MAIL_USERNAME_SMTP
+      - MAIL_PASSWORD_SMTP
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_RECEIVER_REQUESTS_PENDING
     depends_on:
       - tolid-db
       - tolid-api

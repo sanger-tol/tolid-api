@@ -1,5 +1,7 @@
 from swagger_server.model import db, TolidSpecies, \
     TolidSpecimen, TolidUser, TolidRequest
+from swagger_server.db_utils import create_request, \
+    notify_requests_pending
 from flask import jsonify
 from sqlalchemy import or_
 import connexion
@@ -116,24 +118,16 @@ def bulk_add_requests(body=None, api_key=None):
                 db.session.rollback()
                 return "A ToLID already exists for specimenId " + specimen_id \
                     + " and taxonomyId " + str(taxonomy_id), 400
-
-            request = db.session.query(TolidRequest) \
-                .filter(TolidRequest.specimen_id == specimen_id) \
-                .filter(TolidRequest.species_id == taxonomy_id) \
-                .one_or_none()
-            if request is None:
-                request = TolidRequest(specimen_id=specimen_id,
-                                       species_id=taxonomy_id,
-                                       status="Pending")
-                request.user = user
-            else:
-                if request.user != user:
-                    db.session.rollback()
-                    return "Another user has requested a ToLID for specimenId " \
-                        + specimen_id + " and taxonomyId " + str(taxonomy_id), 400
+            try:
+                request = create_request(taxonomy_id, specimen_id, user)
+            except Exception as e:
+                # Another user created a request
+                db.session.rollback()
+                return str(e), 400
 
             requests.append(request)
             db.session.add(request)
+        notify_requests_pending()
         db.session.commit()
 
     return jsonify(requests)

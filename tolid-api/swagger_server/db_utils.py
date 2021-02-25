@@ -1,5 +1,7 @@
 from sqlalchemy import func
-from swagger_server.model import db, TolidSpecies, TolidSpecimen
+from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidRequest
+from swagger_server.email_utils import MailUtils
+import os
 
 
 def create_new_specimen(species, specimen_id, user):
@@ -15,6 +17,23 @@ def create_new_specimen(species, specimen_id, user):
     specimen.species = species
     specimen.user = user
     return specimen
+
+
+def create_request(taxonomy_id, specimen_id, user):
+    request = db.session.query(TolidRequest) \
+        .filter(TolidRequest.specimen_id == specimen_id) \
+        .filter(TolidRequest.species_id == taxonomy_id) \
+        .one_or_none()
+    if request is None:
+        request = TolidRequest(specimen_id=specimen_id,
+                               species_id=taxonomy_id,
+                               status="Pre-pending")
+        request.user = user
+    else:
+        if request.user != user:
+            raise Exception("Another user has requested a ToLID for specimenId "
+                            + specimen_id + " and taxonomyId " + str(taxonomy_id))
+    return request
 
 
 def accept_request(request):
@@ -34,3 +53,20 @@ def reject_request(request):
     request.status = "Rejected"
     db.session.commit()
     return request
+
+
+def notify_requests_pending():
+    requests = db.session.query(TolidRequest) \
+        .filter(TolidRequest.status == "Pre-pending") \
+        .all()
+    if len(requests) > 0:
+        # Send email notification
+        try:
+            requests_pending_mail_template, subject = MailUtils.get_requests_pending_template()
+            MailUtils.send(requests_pending_mail_template, subject,
+                           os['MAIL_RECEIVER_REQUESTS_PENDING'])
+        except Exception:
+            pass
+        # Set status to Pending
+        for request in requests:
+            request.status = "Pending"

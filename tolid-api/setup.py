@@ -1,6 +1,5 @@
 # coding: utf-8
 
-import sys
 from setuptools import setup, find_packages
 
 NAME = "swagger_server"
@@ -18,7 +17,7 @@ setup(
     name=NAME,
     version=VERSION,
     description="Tree of Life public name API",
-    author_email="kh14@sanger.ac.uk",
+    author_email="tolid-help@sanger.ac.uk",
     url="",
     keywords=["Swagger", "Tree of Life public name API"],
     install_requires=REQUIRES,
