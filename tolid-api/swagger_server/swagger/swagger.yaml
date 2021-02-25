@@ -188,7 +188,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ToLIDLong'
+                  anyOf:
+                  - $ref: '#/components/schemas/ToLIDLong'
+                  - $ref: '#/components/schemas/RequestLong'
                 x-content-type: application/json
         "400":
           description: bad input parameter

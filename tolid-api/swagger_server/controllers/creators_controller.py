@@ -1,8 +1,9 @@
 from flask import jsonify, send_from_directory
 from sqlalchemy import or_
-from swagger_server.db_utils import create_new_specimen
+from swagger_server.db_utils import create_new_specimen, \
+    create_request, notify_requests_pending
 from swagger_server.model import db, TolidSpecies, TolidSpecimen, \
-    TolidUser, TolidRole
+    TolidUser, TolidRole, TolidRequest
 from swagger_server.excel_utils import validate_excel
 import connexion
 import tempfile
@@ -62,7 +63,7 @@ def bulk_search_specimens(body=None, api_key=None):
     user = db.session.query(TolidUser) \
         .filter(TolidUser.user_id == connexion.context["user"]) \
         .one_or_none()
-    specimens = []
+    results = []
     # body contains the rows of data
     if body:
         for row in body:
@@ -73,23 +74,32 @@ def bulk_search_specimens(body=None, api_key=None):
                 .one_or_none()
 
             if species is None:
-                db.session.rollback()
-                return "Species with taxonomyId " + str(taxonomy_id) \
-                    + " cannot be found", 400
+                # The species is not in the database - create a request for it if needed
+                request = db.session.query(TolidRequest) \
+                    .filter(TolidRequest.species_id == taxonomy_id) \
+                    .filter(TolidRequest.specimen_id == specimen_id) \
+                    .one_or_none()
+                if request is None:
+                    # We won't get an exception from the following because we've checked first
+                    request = create_request(taxonomy_id, specimen_id, user)
+                    db.session.add(request)
+                results.append(request)
+            else:
+                # Species is in the database - create specimen for it if needed
+                specimen = db.session.query(TolidSpecimen) \
+                    .filter(TolidSpecimen.species_id == taxonomy_id) \
+                    .filter(TolidSpecimen.specimen_id == specimen_id) \
+                    .one_or_none()
 
-            specimen = db.session.query(TolidSpecimen) \
-                .filter(TolidSpecimen.species_id == taxonomy_id) \
-                .filter(TolidSpecimen.specimen_id == specimen_id) \
-                .one_or_none()
+                if specimen is None:
+                    specimen = create_new_specimen(species, specimen_id, user)
+                    db.session.add(specimen)
 
-            if specimen is None:
-                specimen = create_new_specimen(species, specimen_id, user)
-
-            specimens.append(specimen)
-            db.session.add(specimen)
+                results.append(specimen)
+        notify_requests_pending()
         db.session.commit()
 
-    return jsonify(specimens)
+    return jsonify(results)
 
 
 def validate_manifest(excel_file=None, species_column_heading="scientific_name"):  # noqa: E501
