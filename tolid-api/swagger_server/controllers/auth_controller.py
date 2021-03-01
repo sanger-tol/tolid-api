@@ -4,6 +4,8 @@ import uuid
 import urllib.parse
 from datetime import datetime, timedelta
 import os
+import requests
+from requests.auth import HTTPBasicAuth
 
 from connexion.exceptions import OAuthProblem
 
@@ -42,3 +44,42 @@ def login():
 
     return jsonify({'loginUrl': "https://login.elixir-czech.org/oidc/authorize?"
                    + urllib.parse.urlencode(params)})
+
+def get_token_from_callback(body=None):
+    # Check that we know about this state
+    state_from_db = db.session.query(TolidState) \
+        .filter(TolidState.state == body['state']) \
+        .one_or_none()
+    if state_from_db is None:
+        return jsonify({'detail': 'Unknown state'}), 404
+    client_auth = HTTPBasicAuth(os.getenv('ELIXIR_CLIENT_ID'), os.getenv('ELIXIR_CLIENT_SECRET'))
+    post_data = {"grant_type": "authorization_code",
+                 "code": body['code'],
+                 "redirect_uri": os.getenv('ELIXIR_REDIRECT_URI')}
+    response = requests.post('https://login.elixir-czech.org/oidc/token',
+                             auth=client_auth,
+                             data=post_data)
+    return jsonify(response.json())
+
+def create_user_profile(body=None):
+    # Get the user infromation from Elixir for this token
+    response = requests.get('https://login.elixir-czech.org/oidc/userinfo',
+                            headers={"Authorization": "Bearer " + body["token"]})
+    user_info_from_elixir = response.json()
+    if user_info_from_elixir.get('error') is None:
+        user = db.session.query(TolidUser) \
+        .filter(TolidUser.email == user_info_from_elixir['email']) \
+        .one_or_none()
+        if not user:
+            # A new user for the system - create entry
+            user = TolidUser()
+            user.email = user_info_from_elixir['email']
+            user.name = user_info_from_elixir['name']
+            user.organisation = user_info_from_elixir['organisation']
+            db.session.add(user)
+        # Save the token so that we can authenticate against it in future
+        user.token = body["token"]
+        db.session.commit()
+        return jsonify(user)
+    else:
+        return jsonify({'detail': 'Error getting data from Elixir'}), 404

@@ -401,7 +401,8 @@ class TestCuratorsController(BaseTestCase):
             "createdBy": {
                 "name": "test_user_requester",
                 "email": "test_user_requester@sanger.ac.uk",
-                "organisation": "Sanger Institute"
+                "organisation": "Sanger Institute",
+                "roles": []
             },
             "species": {
                 "commonName": "lugworm",
@@ -422,7 +423,8 @@ class TestCuratorsController(BaseTestCase):
             "createdBy": {
                 "name": "test_user_requester2",
                 "email": "test_user_requester2@sanger.ac.uk",
-                "organisation": "Sanger Institute"
+                "organisation": "Sanger Institute",
+                "roles": []
             },
             "species": {
                 "commonName": "lugworm",
@@ -550,7 +552,8 @@ class TestCuratorsController(BaseTestCase):
             "createdBy": {
                 "name": "test_user_requester",
                 "email": "test_user_requester@sanger.ac.uk",
-                "organisation": "Sanger Institute"
+                "organisation": "Sanger Institute",
+                "roles": []
             },
             "species": {
                 "taxonomyId": 999999
@@ -573,7 +576,8 @@ class TestCuratorsController(BaseTestCase):
             "createdBy": {
                 "name": "test_user_requester2",
                 "email": "test_user_requester2@sanger.ac.uk",
-                "organisation": "Sanger Institute"
+                "organisation": "Sanger Institute",
+                "roles": []
             },
             "species": {
                 "commonName": "lugworm",

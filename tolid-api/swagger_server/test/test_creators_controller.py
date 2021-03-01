@@ -231,7 +231,8 @@ class TestCreatorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         expect = [{'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
                                  'name': 'test_user_creator',
-                                 'organisation': 'Sanger Institute'},
+                                 'organisation': 'Sanger Institute',
+                                 'roles': [{"role": "creator"}]},
                    'requestId': 1,
                    'species': {'taxonomyId': 999999999},
                    'specimen': {'specimenId': 'SAN0000100'},
@@ -540,7 +541,8 @@ class TestCreatorsController(BaseTestCase):
         }, {
             'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
                           'name': 'test_user_creator',
-                          'organisation': 'Sanger Institute'},
+                          'organisation': 'Sanger Institute',
+                          'roles': [{"role": "creator"}]},
             'requestId': 2,
             'species': {'taxonomyId': 9999999},
             'specimen': {'specimenId': 'SAN0000100'},
@@ -577,7 +579,8 @@ class TestCreatorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         expect = [{'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
                                  'name': 'test_user_creator',
-                                 'organisation': 'Sanger Institute'},
+                                 'organisation': 'Sanger Institute',
+                                 'roles': [{"role": "creator"}]},
                    'requestId': 2,
                    'species': {'taxonomyId': 9999999},
                    'specimen': {'specimenId': 'SAN0000100'},

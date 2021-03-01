@@ -734,7 +734,7 @@ paths:
       operationId: login
       responses:
         "200":
-          description: search results matching criteria
+          description: details of Elixir login URL
           content:
             application/json:
               schema:
@@ -742,6 +742,65 @@ paths:
                   properties:
                     loginUrl:
                       type: string
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.auth_controller
+  /auth/token:
+    post:
+      tags:
+      - auth
+      summary: Get an Elixir authorisation token
+      description: |
+        Get the URL for logging in to Elixir
+      operationId: get_token_from_callback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                state:
+                  type: string
+      responses:
+        "200":
+          description: authorisation token from Elixir
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    token:
+                      type: string
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.auth_controller
+  /auth/profile:
+    post:
+      tags:
+      - auth
+      summary: Get a user profile
+      description: |
+        Get the URL for logging in to Elixir
+      operationId: create_user_profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      responses:
+        "200":
+          description: user
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/User'
         "400":
           description: bad input parameter
       x-openapi-router-controller: swagger_server.controllers.auth_controller
@@ -1012,6 +1071,7 @@ components:
         - name
         - email
         - organisation
+        - roles
       type: object
       properties:
         name:
@@ -1023,10 +1083,25 @@ components:
         organisation:
           type: string
           example: "Research Inc"
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
       example:
         name: "A User"
         email: "user@example.com"
         organisation: "Research Inc"
+        roles:
+    Role:
+      required:
+        - role
+      type: object
+      properties:
+        role:
+          type: string
+          example: "creator"
+      example:
+        role: "creator"
     ErrorMessageList:
       required:
         - errors

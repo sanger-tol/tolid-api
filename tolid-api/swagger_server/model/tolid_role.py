@@ -7,3 +7,6 @@ class TolidRole(Base):
     role = db.Column(db.String(), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     user = db.relationship("TolidUser", uselist=False, foreign_keys=[user_id])
+
+    def to_dict(cls):
+        return {'role': cls.role}
