@@ -219,7 +219,7 @@ class TestCreatorsController(BaseTestCase):
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-        # Taxonomy ID not in database
+        # Taxonomy ID not in database - should get a request back
         body = [{'taxonomyId': 999999999,
                  'specimenId': 'SAN0000100'}]
         response = self.client.open(
@@ -227,8 +227,16 @@ class TestCreatorsController(BaseTestCase):
             method='POST',
             headers={"api-key": self.user3.api_key},
             json=body)
-        self.assert400(response,
+        self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
+        expect = [{'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
+                                 'name': 'test_user_creator',
+                                 'organisation': 'Sanger Institute'},
+                   'requestId': 1,
+                   'species': {'taxonomyId': 999999999},
+                   'specimen': {'specimenId': 'SAN0000100'},
+                   'status': 'Pending'}]
+        self.assertEquals(expect, response.json)
 
         # User doesn't have creator role
         body = [{'taxonomyId': 6344,
@@ -501,7 +509,7 @@ class TestCreatorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEquals(expect, response.json)
 
-        # Error on later query
+        # Later query returns a request
         body = [{'taxonomyId': 6344,
                 'specimenId': 'SAN0000100bbbbb'},
                 {'taxonomyId': 9999999,
@@ -512,15 +520,69 @@ class TestCreatorsController(BaseTestCase):
             headers={"api-key": self.user3.api_key},
             json=body)
 
-        self.assert400(response,
+        self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        # And the new one should not have been inserted
+        expect = [{
+            "species": {
+                "commonName": "lugworm",
+                "family": "Arenicolidae",
+                "genus": "Arenicola",
+                "order": "None",
+                "phylum": "Annelida",
+                "kingdom": "Metazoa",
+                "prefix": "wuAreMari",
+                "scientificName": "Arenicola marina",
+                "taxaClass": "Polychaeta",
+                "taxonomyId": 6344
+            },
+            "tolId": "wuAreMari8",
+            "specimen": {"specimenId": "SAN0000100bbbbb"},
+        }, {
+            'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
+                          'name': 'test_user_creator',
+                          'organisation': 'Sanger Institute'},
+            'requestId': 2,
+            'species': {'taxonomyId': 9999999},
+            'specimen': {'specimenId': 'SAN0000100'},
+            'status': 'Pending'}]
+        self.assertEquals(expect, response.json)
+
+        # And the new one should have been inserted
         response = self.client.open(
             '/api/v2/specimens/SAN0000100bbbbb',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals([], response.json)
+        expect = [{
+            "specimenId": "SAN0000100bbbbb",
+            "tolIds": [
+                {"species": {"commonName": "lugworm",
+                             "family": "Arenicolidae",
+                             "genus": "Arenicola",
+                             "order": "None",
+                             "phylum": "Annelida",
+                             "kingdom": "Metazoa",
+                             "prefix": "wuAreMari",
+                             "scientificName": "Arenicola marina",
+                             "taxaClass": "Polychaeta",
+                             "taxonomyId": 6344},
+                 "tolId": "wuAreMari8"}]
+        }]
+        self.assertEquals(expect, response.json)
+
+        response = self.client.open(
+            '/api/v2/requests/2',
+            method='GET')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        expect = [{'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
+                                 'name': 'test_user_creator',
+                                 'organisation': 'Sanger Institute'},
+                   'requestId': 2,
+                   'species': {'taxonomyId': 9999999},
+                   'specimen': {'specimenId': 'SAN0000100'},
+                   'status': 'Pending'}]
+        self.assertEquals(expect, response.json)
 
     def test_validate_manifest(self):
         # No authorisation token given

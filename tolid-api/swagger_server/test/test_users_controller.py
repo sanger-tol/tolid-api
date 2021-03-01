@@ -497,7 +497,7 @@ class TestUsersController(BaseTestCase):
             headers={"api-key": self.user1.api_key}
             )
         expect = [{
-            "id": 1,
+            "requestId": 1,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester",
@@ -518,7 +518,7 @@ class TestUsersController(BaseTestCase):
             },
             "specimen": {"specimenId": "SAN0000100"},
         }, {
-            "id": 3,
+            "requestId": 3,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester",
@@ -550,7 +550,7 @@ class TestUsersController(BaseTestCase):
             headers={"api-key": self.user4.api_key}
             )
         expect = [{
-            "id": 2,
+            "requestId": 2,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester2",
@@ -623,7 +623,7 @@ class TestUsersController(BaseTestCase):
             headers={"api-key": self.user1.api_key},
             json=body)
         expect = [{
-            "id": 1,
+            "requestId": 1,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester",
@@ -650,7 +650,7 @@ class TestUsersController(BaseTestCase):
             headers={"api-key": self.user1.api_key},
             json=body)
         expect = [{
-            "id": 2,
+            "requestId": 2,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester",
@@ -671,7 +671,7 @@ class TestUsersController(BaseTestCase):
             },
             "specimen": {"specimenId": "SAN0000100xxxxx"},
         }, {
-            "id": 3,
+            "requestId": 3,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester",
@@ -735,7 +735,7 @@ class TestUsersController(BaseTestCase):
             headers={"api-key": self.user1.api_key},
             json=body)
         expect = [{
-            "id": 4,
+            "requestId": 4,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester",
@@ -756,7 +756,7 @@ class TestUsersController(BaseTestCase):
             },
             "specimen": {"specimenId": "SAN0000100ggggg"},
         }, {
-            "id": 5,
+            "requestId": 5,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester",
@@ -777,7 +777,7 @@ class TestUsersController(BaseTestCase):
             },
             'specimen': {'specimenId': 'SAN0000100rrrrr'},
         }, {
-            "id": 4,
+            "requestId": 4,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester",
@@ -798,7 +798,7 @@ class TestUsersController(BaseTestCase):
             },
             "specimen": {"specimenId": "SAN0000100ggggg"},
         }, {
-            "id": 5,
+            "requestId": 5,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester",
@@ -871,7 +871,7 @@ class TestUsersController(BaseTestCase):
             '/api/v2/requests/1',
             method='GET')
         expect = [{
-            "id": 1,
+            "requestId": 1,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester",
@@ -907,7 +907,7 @@ class TestUsersController(BaseTestCase):
             '/api/v2/requests/2',
             method='GET')
         expect = [{
-            "id": 2,
+            "requestId": 2,
             "status": "Pending",
             "createdBy": {
                 "name": "test_user_requester2",

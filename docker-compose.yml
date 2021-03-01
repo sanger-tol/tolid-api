@@ -20,6 +20,13 @@ services:
       - ELIXIR_CLIENT_ID
       - ELIXIR_CLIENT_SECRET
       - ELIXIR_REDIRECT_URI
+      - MAIL_SENDER
+      - MAIL_SENDER_NAME
+      - MAIL_USERNAME_SMTP
+      - MAIL_PASSWORD_SMTP
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_RECEIVER_REQUESTS_PENDING
     ports:
       - 8080:8080
 
@@ -48,6 +55,13 @@ services:
       - ELIXIR_CLIENT_ID
       - ELIXIR_CLIENT_SECRET
       - ELIXIR_REDIRECT_URI
+      - MAIL_SENDER
+      - MAIL_SENDER_NAME
+      - MAIL_USERNAME_SMTP
+      - MAIL_PASSWORD_SMTP
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_RECEIVER_REQUESTS_PENDING
     depends_on:
       - tolid-db
       - tolid-api

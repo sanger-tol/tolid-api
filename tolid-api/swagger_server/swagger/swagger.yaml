@@ -31,7 +31,7 @@ paths:
         in: path
         description: a Tree of Life ToLID
         required: true
-        style: form
+        style: simple
         explode: true
         schema:
           type: string
@@ -93,7 +93,7 @@ paths:
         in: path
         description: a GAL specimen ID
         required: true
-        style: form
+        style: simple
         explode: true
         schema:
           type: string
@@ -188,7 +188,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ToLIDLong'
+                  anyOf:
+                  - $ref: '#/components/schemas/ToLIDLong'
+                  - $ref: '#/components/schemas/RequestLong'
                 x-content-type: application/json
         "400":
           description: bad input parameter
@@ -294,7 +296,7 @@ paths:
         in: path
         description: pass an NCBI taxonomy ID for looking up ToLID and taxonomy information
         required: true
-        style: form
+        style: simple
         explode: true
         schema:
           type: string
@@ -324,7 +326,7 @@ paths:
           in: path
           description: pass an NCBI taxonomy ID for looking up ToLID and taxonomy information
           required: true
-          style: form
+          style: simple
           explode: true
           schema:
             type: string
@@ -966,14 +968,14 @@ components:
             $ref: '#/components/schemas/ToLIDShort'
     RequestLong:
       required:
-        - id
+        - requestId
         - status
         - createdBy
         - species
         - specimenId
       type: object
       properties:
-        id:
+        requestId:
           type: integer
           example: 1234
         status:
@@ -986,7 +988,7 @@ components:
         specimenId:
           $ref: '#/components/schemas/SpecimenShort'
       example:
-        id: 1234
+        requestId: 1234
         status: Pending
         createdBy:
           name: A User
