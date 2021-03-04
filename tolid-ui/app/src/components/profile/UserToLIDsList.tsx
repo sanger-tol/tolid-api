@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ToLID } from '../../models/ToLID'
 import { ErrorMessage } from '../../models/ErrorMessage'
+import { httpClient } from '../../services/http/httpClient';
 
 import './UserToLIDsList.scss'
 
@@ -25,29 +26,20 @@ class UserToLIDsList extends React.Component<Props, State> {
   }
 
   updateToLIDsList() {
-    fetch('/api/v2/tol-ids/mine', {method: 'GET',
-                            headers: {
-                              'Content-Type': 'application/json',
-                              'api-key': '1234'
-                            }})
-        // the JSON body is taken from the response
-        .then(res => {
-          return res.json();
+    httpClient().get('/tol-ids/mine')
+      .then((data: any) => {
+        console.log(data)
+        this.setState({
+          tolIds: data.data,
+          error: null
         })
-        .then(res => {
-          if ("detail" in res) {
-            this.setState({
-              tolIds: [],
-              error: res
-            })
-          } else {
-            this.setState({
-              tolIds: res,
-              error: null
-            })
-          }
       })
-  }
+      .catch((err: any) => {
+        console.log(err)
+      })
+    
+}
+
 
   public render() {
       return (
@@ -74,6 +66,9 @@ class UserToLIDsList extends React.Component<Props, State> {
                   ))}
               </tbody>
             </table>
+          }
+          {this.state.tolIds.length == 0 &&
+            <p>No ToLIDs created by you</p>
           }
         </div>
       );

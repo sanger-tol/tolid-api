@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Request } from '../../models/Request'
 import { ErrorMessage } from '../../models/ErrorMessage'
+import { httpClient } from '../../services/http/httpClient';
 
 import './UserRequestsList.scss'
 
@@ -25,28 +26,18 @@ class UserRequestsList extends React.Component<Props, State> {
   }
 
   updateRequestsList() {
-    fetch('/api/v2/requests/mine', {method: 'GET',
-                            headers: {
-                              'Content-Type': 'application/json',
-                              'api-key': '1234'
-                            }})
-        // the JSON body is taken from the response
-        .then(res => {
-          return res.json();
+      httpClient().get('/requests/mine')
+        .then((data: any) => {
+          console.log(data)
+          this.setState({
+            requests: data.data,
+            error: null
+          })
         })
-        .then(res => {
-          if ("detail" in res) {
-            this.setState({
-              requests: [],
-              error: res
-            })
-          } else {
-            this.setState({
-              requests: res,
-              error: null
-            })
-          }
-      })
+        .catch((err: any) => {
+          console.log(err)
+        })
+      
   }
 
 
@@ -76,6 +67,9 @@ class UserRequestsList extends React.Component<Props, State> {
                   ))}
               </tbody>
             </table>
+          }
+          {this.state.requests.length == 0 &&
+            <p>No current ToLID requests by you</p>
           }
         </div>
       );

@@ -1,13 +1,27 @@
 import React from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, useHistory } from "react-router-dom";
 import { useAuth } from '../contexts/auth.context';
+import { authLogout } from '../services/auth/authService';
+import {
+  setTokenToLocalStorage,
+} from '../services/localStorage/localStorageService';
 
 interface NavigationProps {
   location: {pathname: string};
 }
 
 function Navigation(props: NavigationProps) {
-  const { token } = useAuth();
+  const { token, setToken } = useAuth();
+  const history = useHistory();
+
+  const logout = function() {
+    authLogout().finally(() => {
+      setTokenToLocalStorage('');
+      setToken('');
+      history.replace("/");
+    })
+  }
+
     return (
     <div className="navigation">
       <nav className="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
@@ -71,6 +85,14 @@ function Navigation(props: NavigationProps) {
                   </Link>
                 </li>
               }
+              {token &&
+                <li
+                  className="nav-item" 
+                >
+                    <a onClick={logout} className="nav-link" href="">Logout</a>
+                </li>
+              }
+
             </ul>
           </div>
         </div>
