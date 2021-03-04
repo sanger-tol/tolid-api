@@ -5,20 +5,41 @@ import urllib.parse
 from datetime import datetime, timedelta
 import os
 import requests
+import json
 from requests.auth import HTTPBasicAuth
-
+from jwt import (
+    JWT,
+    jwk_from_dict,
+)
+from jwt.exceptions import (
+    JWTDecodeError,
+)
 from connexion.exceptions import OAuthProblem
 
 
 def apikey_auth(token, required_scopes):
-    # info = TOKEN_DB.get(token, None)
+    # Direct from api-key (i.e. not Elixir)
     user = db.session.query(TolidUser) \
         .filter(TolidUser.api_key == token) \
         .one_or_none()
 
     if user is None:
-        raise OAuthProblem('Invalid api-key token')
-
+        user = db.session.query(TolidUser) \
+            .filter(TolidUser.token == token) \
+            .one_or_none()
+        if user is None:
+            raise OAuthProblem('Invalid api-key and Elixir token')
+        # Is the Elixir token valid and in date
+        instance = JWT()
+        # This is the Elixir public key as found at https://login.elixir-czech.org/oidc/jwk
+        signing_key = jwk_from_dict(json.loads(os.getenv("ELIXIR_JWK")))
+        try:
+            payload = instance.decode(token, signing_key,
+                                      do_verify=True, do_time_check=True,
+                                      algorithms=['RS256'])
+        except JWTDecodeError as e:
+            raise OAuthProblem('Invalid Elixir token: '+e.args[0])
+        print(payload)
     return {"user": user.name, "uid": user.user_id}
 
 
@@ -45,6 +66,7 @@ def login():
     return jsonify({'loginUrl': "https://login.elixir-czech.org/oidc/authorize?"
                    + urllib.parse.urlencode(params)})
 
+
 def get_token_from_callback(body=None):
     # Check that we know about this state
     state_from_db = db.session.query(TolidState) \
@@ -61,6 +83,7 @@ def get_token_from_callback(body=None):
                              data=post_data)
     return jsonify(response.json())
 
+
 def create_user_profile(body=None):
     # Get the user infromation from Elixir for this token
     response = requests.get('https://login.elixir-czech.org/oidc/userinfo',
@@ -68,14 +91,13 @@ def create_user_profile(body=None):
     user_info_from_elixir = response.json()
     if user_info_from_elixir.get('error') is None:
         user = db.session.query(TolidUser) \
-        .filter(TolidUser.email == user_info_from_elixir['email']) \
-        .one_or_none()
+            .filter(TolidUser.email == user_info_from_elixir['email']) \
+            .one_or_none()
         if not user:
             # A new user for the system - create entry
             user = TolidUser()
             user.email = user_info_from_elixir['email']
             user.name = user_info_from_elixir['name']
-            user.organisation = user_info_from_elixir['organisation']
             db.session.add(user)
         # Save the token so that we can authenticate against it in future
         user.token = body["token"]

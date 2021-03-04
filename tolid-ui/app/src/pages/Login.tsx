@@ -1,24 +1,25 @@
 import React, { useCallback, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import { useAuth } from '../contexts/auth.context';
 import { getUrlElixirLogin } from '../services/auth/authService';
 import { getTokenFromLocalStorage } from '../services/localStorage/localStorageService';
 import elixirLogin from '../logo.svg';
 
 function Login() {
-  const { setToken } = useAuth();
+  const { token, setToken } = useAuth();
   useEffect(()=> {
     if(!getTokenFromLocalStorage()){
       setToken('');
     }
-  });
+    // eslint-disable-next-line
+  }, []);
 
   const login = useCallback(() => {
     getUrlElixirLogin().then((data: any) => {
-      console.log(data);
       window.location.href = data.data.loginUrl;
     });
   }, []);
-  return (
+  return !token ? (
     <div className="login">
       <header className="masthead text-center text-white">
         <div className="masthead-content">
@@ -42,6 +43,8 @@ function Login() {
         </div>
       </section>
     </div>
+  ) : (
+    <Redirect to="/" />
   );
 }
 

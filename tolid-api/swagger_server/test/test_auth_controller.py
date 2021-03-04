@@ -2,12 +2,94 @@ from __future__ import absolute_import
 
 from swagger_server.test import BaseTestCase
 from swagger_server.model import db, TolidState
+from swagger_server.controllers.auth_controller import apikey_auth
+
 import urllib.parse
 import os
 import responses
+import json
+from connexion.exceptions import OAuthProblem
+from datetime import datetime, timedelta, timezone
+
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+from jwt import (
+    JWT
+)
+from jwt.jwk import RSAJWK
+from jwt.utils import get_int_from_datetime
 
 
 class TestAuthController(BaseTestCase):
+
+    def test_api_key_auth(self):
+        # Nothing
+        try:
+            apikey_auth("MadeUpKey", None)
+            self.assertEqual(True, False)
+        except OAuthProblem:
+            pass
+
+        # Auth using API key
+        ret = apikey_auth(self.user3.api_key, None)
+        expect = {"user": self.user3.name, "uid": self.user3.user_id}
+        self.assertEqual(expect, ret)
+
+        # Mock Elixir key
+        private_key = rsa.generate_private_key(
+            public_exponent=65537,
+            key_size=2048,
+            backend=default_backend()
+        )
+        key = RSAJWK(private_key)
+        os.environ["ELIXIR_JWK"] = json.dumps(key.to_dict())
+        instance = JWT()
+
+        # Expired Elixir token
+        message = {
+            'iss': 'https://example.com/',
+            'sub': '123456',
+            'iat': get_int_from_datetime(datetime.now(timezone.utc) - timedelta(hours=2)),
+            'exp': get_int_from_datetime(datetime.now(timezone.utc) - timedelta(hours=1)),
+        }
+        jwt = instance.encode(message, key, alg='RS256')
+        self.user3.token = jwt
+        db.session.commit()
+        try:
+            apikey_auth(self.user3.token, None)
+            self.assertEqual(True, False)
+        except OAuthProblem:
+            pass
+
+        # Faked Elixir token
+        private_key2 = rsa.generate_private_key(
+            public_exponent=65537,
+            key_size=2048,
+            backend=default_backend()
+        )
+        key2 = RSAJWK(private_key2)
+        message = {
+            'iss': 'https://example.com/',
+            'sub': '123456',
+            'iat': get_int_from_datetime(datetime.now(timezone.utc)),
+            'exp': get_int_from_datetime(datetime.now(timezone.utc) + timedelta(hours=1)),
+        }
+        jwt = instance.encode(message, key2, alg='RS256')
+        self.user3.token = jwt
+        db.session.commit()
+        try:
+            apikey_auth(self.user3.token, None)
+            self.assertEqual(True, False)
+        except OAuthProblem:
+            pass
+
+        # Correct Elixir Token
+        jwt = instance.encode(message, key, alg='RS256')
+        self.user3.token = jwt
+        db.session.commit()
+        ret = apikey_auth(self.user3.token, None)
+        expect = {"user": self.user3.name, "uid": self.user3.user_id}
+        self.assertEqual(expect, ret)
 
     def test_login(self):
         response = self.client.open(
@@ -26,7 +108,6 @@ class TestAuthController(BaseTestCase):
         expect = {"loginUrl": "https://login.elixir-czech.org/oidc/authorize?"
                   + urllib.parse.urlencode(params)}
         self.assertEquals(expect, response.json)
-
 
     # The real version of this does a call to the Elixir service. We mock that call here
     @responses.activate
@@ -74,7 +155,7 @@ class TestAuthController(BaseTestCase):
 
         expect = {'email': 'elixir-user@sanger.ac.uk',
                   'name': 'Elixir User',
-                  'organisation': 'Sanger Institute',
+                  'organisation': '',
                   'roles': []}
         self.assertEquals(expect, response.json)
 
@@ -82,8 +163,7 @@ class TestAuthController(BaseTestCase):
     @responses.activate
     def test_profile_existing_user(self):
         mock_response_from_elixir = {'email': 'test_user_creator@sanger.ac.uk',
-                                     'name': 'test_user_creator',
-                                     'organisation': 'Sanger Institute'}
+                                     'name': 'test_user_creator'}
         responses.add(responses.GET, 'https://login.elixir-czech.org/oidc/userinfo',
                       json=mock_response_from_elixir, status=200)
 
