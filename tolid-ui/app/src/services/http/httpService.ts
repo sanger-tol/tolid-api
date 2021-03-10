@@ -49,6 +49,13 @@ function wrapClientWithContext(
         ...options,
       });
     },
+    patch(endPoint: string, data: unknown, options: AxiosRequestConfig = {}) {
+      data = normalizeBody(data);
+      return client.patch(endPoint, data, {
+        ...defaultOption,
+        ...options,
+      });
+    },
     delete(endPoint: string, options: AxiosRequestConfig = {}) {
       return client.delete(endPoint, {
         ...defaultOption,

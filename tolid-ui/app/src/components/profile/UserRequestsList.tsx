@@ -57,8 +57,8 @@ class UserRequestsList extends React.Component<Props, State> {
               </thead>
               <tbody>
                 {this.state.requests.map((item: Request) => (
-                  <tr key={item.id} className="request">
-                    <td>{item.id}</td>
+                  <tr key={item.requestId} className="request">
+                    <td>{item.requestId}</td>
                     <td>{item.species.taxonomyId}</td>
                     <td>{item.species.scientificName}</td>
                     <td>{item.specimen.specimenId}</td>
@@ -68,7 +68,7 @@ class UserRequestsList extends React.Component<Props, State> {
               </tbody>
             </table>
           }
-          {this.state.requests.length == 0 &&
+          {this.state.requests.length === 0 &&
             <p>No current ToLID requests by you</p>
           }
         </div>

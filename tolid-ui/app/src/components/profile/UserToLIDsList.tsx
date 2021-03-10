@@ -67,7 +67,7 @@ class UserToLIDsList extends React.Component<Props, State> {
               </tbody>
             </table>
           }
-          {this.state.tolIds.length == 0 &&
+          {this.state.tolIds.length === 0 &&
             <p>No ToLIDs created by you</p>
           }
         </div>

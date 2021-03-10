@@ -29,15 +29,15 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
         .one_or_none()
 
     if species is None:
-        return "Species with taxonomyId " + str(taxonomy_id) \
-            + " cannot be found", 400
+        return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id) \
+            + " cannot be found"}), 400
 
     role = db.session.query(TolidRole) \
         .filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')) \
         .filter(TolidRole.user_id == connexion.context["user"]) \
         .one_or_none()
     if role is None:
-        return "User does not have permission to use this function", 403
+        return jsonify({'detail': "User does not have permission to use this function"}), 403
 
     specimen = db.session.query(TolidSpecimen) \
         .filter(TolidSpecimen.specimen_id == specimen_id) \
@@ -58,7 +58,7 @@ def bulk_search_specimens(body=None, api_key=None):
         .filter(TolidRole.user_id == connexion.context["user"]) \
         .one_or_none()
     if role is None:
-        return "User does not have permission to use this function", 403
+        return jsonify({'detail': "User does not have permission to use this function"}), 403
 
     user = db.session.query(TolidUser) \
         .filter(TolidUser.user_id == connexion.context["user"]) \
@@ -108,7 +108,7 @@ def validate_manifest(excel_file=None, species_column_heading="scientific_name")
         .filter(TolidRole.user_id == connexion.context["user"]) \
         .one_or_none()
     if role is None:
-        return "User does not have permission to use this function", 403
+        return jsonify({'detail': "User does not have permission to use this function"}), 403
 
     user = db.session.query(TolidUser) \
         .filter(TolidUser.user_id == connexion.context["user"]) \

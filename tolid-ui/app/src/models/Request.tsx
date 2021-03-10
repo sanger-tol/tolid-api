@@ -3,7 +3,7 @@ import { Specimen } from './Specimen';
 import { User } from './User';
 
 export interface Request {
-  id: number;
+  requestId: number;
   status: string;
   createdBy: User;
   species: Species;

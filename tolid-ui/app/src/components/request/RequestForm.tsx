@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Request } from '../../models/Request'
 import { ErrorMessage } from '../../models/ErrorMessage'
+import { httpClient } from '../../services/http/httpClient';
 
 import './RequestForm.scss'
 
@@ -12,22 +13,14 @@ export interface State {
 
 function makeRequest(taxonomyId: number, specimenId: string): Promise<Request|ErrorMessage> {
 
-    return fetch('/api/v2/requests', {method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json',
-                              'api-key': '1234'
-                            },
-                            body: JSON.stringify([{taxonomyId: taxonomyId, specimenId: specimenId}])})
-        // the JSON body is taken from the response
-        .then(res => {
-          return res.json();
-        })
-        .then(res => {
-          if ("detail" in res) {
-            return res as ErrorMessage;
-          }
-          return res[0] as Request;
-        })
+  var postData = [{taxonomyId: taxonomyId, specimenId: specimenId}];
+  return httpClient().post('/requests', postData)
+    .then((data: any) => {
+      return data.data[0] as Request       
+    })
+    .catch((err: any) => {
+      return err as ErrorMessage
+    })
 }
 
 class RequestForm extends React.Component<Props, State> {
@@ -67,7 +60,7 @@ class RequestForm extends React.Component<Props, State> {
                 {this.state.ret.title}: {this.state.ret.detail}
             </p>
             }
-            {(this.state.ret !== null) && ("id" in this.state.ret) &&
+            {(this.state.ret !== null) && ("requestId" in this.state.ret) &&
             <p className="alert alert-success">
                 The ToLID has been requested. You'll be notified by email when allocated.
             </p>

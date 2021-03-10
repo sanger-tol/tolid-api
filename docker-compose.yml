@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD
       - POSTGRES_DB
     ports:
-      - 5432:5432
+      - 5433:5432
 
   tolid-api:
     build: tolid-api/.
@@ -41,7 +41,7 @@ services:
     environment:
       - NODE_ENV=development
     ports:
-      - 3001:3000
+      - 3002:3000
     volumes:
       - './tolid-ui/app:/usr/src/app'
       - '/usr/src/app/node_modules'

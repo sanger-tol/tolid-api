@@ -3,16 +3,16 @@ import { useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/auth.context';
 import {getProfile, getToken} from '../services/auth/authService';
 import { useQuery } from '../hooks/useQuery';
-import { setTokenToLocalStorage } from '../services/localStorage/localStorageService';
+import { setTokenToLocalStorage, setUserToLocalStorage, tokenHasExpired } from '../services/localStorage/localStorageService';
 
 export function Callback() {
   const history = useHistory();
-  const { setToken, token } = useAuth();
+  const { setToken, token, setUser } = useAuth();
   const [state] = useState(useQuery().get('state') || undefined);
   const [tokenCode] = useState(useQuery().get('code') || undefined);
 
   useEffect(() => {
-    if (!token) {
+    if (!token || tokenHasExpired(token)) {
       const stateToken = {
         state,
         code: tokenCode,
@@ -20,9 +20,14 @@ export function Callback() {
       getToken(stateToken)
         .then((res: any) => {
           const data = res.data;
-          getProfile(data.access_token).finally(() => {
-            setTokenToLocalStorage(data.access_token);
-            setToken(data.access_token);
+          setTokenToLocalStorage(data.access_token);
+          setToken(data.access_token);
+          getProfile(data.access_token)
+          .then((data2: any) => {
+            setUserToLocalStorage(data2.data);
+            setUser(data2.data);
+          })
+          .finally(() => {
             let targetUrl = localStorage.getItem('returnUrl') || '';
             if (!targetUrl || targetUrl === 'index') {
               targetUrl = '/';

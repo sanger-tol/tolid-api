@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Request } from '../../models/Request'
 import { ErrorMessage } from '../../models/ErrorMessage'
+import { httpClient } from '../../services/http/httpClient';
 
 import './RequestsList.scss'
 
@@ -27,79 +28,58 @@ class RequestsList extends React.Component<Props, State> {
   }
 
   updateRequestsList() {
-    fetch('/api/v2/requests/pending', {method: 'GET',
-                            headers: {
-                              'Content-Type': 'application/json',
-                              'api-key': '1234'
-                            }})
-        // the JSON body is taken from the response
-        .then(res => {
-          return res.json();
-        })
-        .then(res => {
-          if ("detail" in res) {
+    httpClient().get('/requests/pending')
+        .then(data => {
             this.setState({
-              requests: [],
-              error: res
-            })
-          } else {
-            this.setState({
-              requests: res,
+              requests: data.data,
               error: null
             })
-          }
-      })
+          })
+        .catch((err: any) => {
+            this.setState({
+              requests: [],
+              error: err
+            })
+        })
   }
 
   acceptRequest = (event: any) => {
     const requestId = event.target.dataset["request-id"];
-    fetch('/api/v2/requests/'+requestId+'/accept', {method: 'PATCH',
-                            headers: {
-                              'Content-Type': 'application/json',
-                              'api-key': '1234'
-                            }})
+    httpClient().patch('requests/'+requestId+'/accept', {})
         // the JSON body is taken from the response
-        .then(res => {
-          return res.json();
-        })
-        .then(res => {
-          if ("detail" in res) {
-            this.setState({
-              error: res
-            })
-          } else {
+        .then(data => {
             this.setState({
               error: null,
-              message: "ToLID "+res[0].tolId+" has been assigned"
+              message: "ToLID "+data.data[0].tolId+" has been assigned"
             })
-            this.updateRequestsList();
-          }
-      })    
+          })
+        .catch((err: any) => {
+            this.setState({
+              error: err
+            })
+          })
+        .finally(() => {
+          this.updateRequestsList();
+        })    
   }
 
   rejectRequest = (event: any) => {
     const requestId = event.target.dataset["request-id"];
-    fetch('/api/v2/requests/'+requestId+'/reject', {method: 'PATCH',
-                            headers: {
-                              'Content-Type': 'application/json',
-                              'api-key': '1234'
-                            }})
-        // the JSON body is taken from the response
-        .then(res => {
-          return res.json();
-        })
-        .then(res => {
-          if ("detail" in res) {
+    httpClient().patch('requests/'+requestId+'/reject', {})
+          .then(data => {
             this.setState({
-              error: res
+              error: null,
+              message: "Request "+data.data[0].requestId+" has been rejected"
             })
-          } else {
+          })
+        .catch((err: any) => {
             this.setState({
-              error: null
+              error: err
             })
-            this.updateRequestsList();
-          }
-      })    
+          })
+        .finally(() => {
+          this.updateRequestsList();
+        })   
   }
 
 
@@ -124,17 +104,17 @@ class RequestsList extends React.Component<Props, State> {
               </thead>
               <tbody>
                 {this.state.requests.map((item: Request) => (
-                  <tr key={item.id} className="request">
-                    <td>{item.id}</td>
+                  <tr key={item.requestId} className="request">
+                    <td>{item.requestId}</td>
                     <td>{item.species.taxonomyId}</td>
                     <td>{item.species.scientificName}</td>
                     <td>{item.specimen.specimenId}</td>
                     <td>{item.createdBy.name}</td>
                     <td>
                       {item.species.scientificName &&
-                        <button className="btn btn-sm btn-success" onClick={this.acceptRequest} data-request-id={item.id}>Accept</button>
+                        <button className="btn btn-sm btn-success" onClick={this.acceptRequest} data-request-id={item.requestId}>Accept</button>
                       }
-                      <button className="btn btn-sm btn-danger" onClick={this.rejectRequest} data-request-id={item.id}>Reject</button>
+                      <button className="btn btn-sm btn-danger" onClick={this.rejectRequest} data-request-id={item.requestId}>Reject</button>
                     </td>
                   </tr>
                   ))}

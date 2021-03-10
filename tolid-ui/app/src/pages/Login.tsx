@@ -2,8 +2,8 @@ import React, { useCallback, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useAuth } from '../contexts/auth.context';
 import { getUrlElixirLogin } from '../services/auth/authService';
-import { getTokenFromLocalStorage } from '../services/localStorage/localStorageService';
-import elixirLogin from '../logo.svg';
+import { getTokenFromLocalStorage, tokenHasExpired } from '../services/localStorage/localStorageService';
+import {ReactComponent as ElixirLoginButton} from '../assets/btn-login.svg';
 
 function Login() {
   const { token, setToken } = useAuth();
@@ -19,7 +19,7 @@ function Login() {
       window.location.href = data.data.loginUrl;
     });
   }, []);
-  return !token ? (
+  return (!token || tokenHasExpired(token)) ? (
     <div className="login">
       <header className="masthead text-center text-white">
         <div className="masthead-content">
@@ -35,9 +35,8 @@ function Login() {
       <section>
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-lg-12 order-lg-1">
-              <img src={elixirLogin} alt="Login" />
-              <button className="btn btn-primary" onClick={login}>Log in</button><br/>
+            <div className="col-lg-12 order-lg-1 text-center">
+              <ElixirLoginButton onClick={login}/>
             </div>
           </div>
         </div>

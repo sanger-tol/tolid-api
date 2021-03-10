@@ -4,6 +4,8 @@ import { useAuth } from '../contexts/auth.context';
 import { authLogout } from '../services/auth/authService';
 import {
   setTokenToLocalStorage,
+  setUserToLocalStorage,
+  tokenHasExpired
 } from '../services/localStorage/localStorageService';
 
 interface NavigationProps {
@@ -11,13 +13,16 @@ interface NavigationProps {
 }
 
 function Navigation(props: NavigationProps) {
-  const { token, setToken } = useAuth();
+  const { token, setToken, user, setUser } = useAuth();
   const history = useHistory();
+
 
   const logout = function() {
     authLogout().finally(() => {
       setTokenToLocalStorage('');
+      setUserToLocalStorage(null);
       setToken('');
+      setUser(null);
       history.replace("/");
     })
   }
@@ -41,7 +46,7 @@ function Navigation(props: NavigationProps) {
                   Search
                 </Link>
               </li>
-              {token &&
+              {token && !tokenHasExpired(token) &&
                 <li
                   className={`nav-item  ${
                     props.location.pathname === "/request" ? "active" : ""
@@ -52,7 +57,7 @@ function Navigation(props: NavigationProps) {
                   </Link>
                 </li>
               } 
-              {token &&
+              {token && !tokenHasExpired(token) && user && user.roles.some(role => role.role === "admin") &&
                 <li
                   className={`nav-item  ${
                     props.location.pathname === "/admin" ? "active" : ""
@@ -63,7 +68,7 @@ function Navigation(props: NavigationProps) {
                   </Link>
                 </li>
               }
-              {token &&
+              {token && !tokenHasExpired(token) &&
                 <li
                   className={`nav-item  ${
                     props.location.pathname === "/profile" ? "active" : ""
@@ -74,7 +79,7 @@ function Navigation(props: NavigationProps) {
                   </Link>
                 </li>
               }
-              {!token &&
+              {(!token || tokenHasExpired(token)) &&
                 <li
                   className={`nav-item  ${
                     props.location.pathname === "/login" ? "active" : ""
@@ -85,11 +90,11 @@ function Navigation(props: NavigationProps) {
                   </Link>
                 </li>
               }
-              {token &&
+              {token && !tokenHasExpired(token) &&
                 <li
                   className="nav-item" 
                 >
-                    <a onClick={logout} className="nav-link" href="">Logout</a>
+                    <a onClick={logout} className="nav-link" href="/">Logout</a>
                 </li>
               }
 

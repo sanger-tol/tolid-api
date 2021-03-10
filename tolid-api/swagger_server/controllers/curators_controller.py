@@ -10,13 +10,14 @@ def add_species(body=None, api_key=None):
         .filter(TolidRole.user_id == connexion.context["user"]) \
         .one_or_none()
     if role is None:
-        return "User does not have permission to use this function", 403
+        return jsonify({'detail': "User does not have permission to use this function"}), 403
 
     species = db.session.query(TolidSpecies) \
         .filter(TolidSpecies.taxonomy_id == body["taxonomyId"]) \
         .one_or_none()
     if species is not None:
-        return "Species with taxonomyId " + str(body["taxonomyId"]) + " already exists", 400
+        return jsonify({'detail': "Species with taxonomyId " + str(body["taxonomyId"]) \
+            + " already exists"}), 400
 
     species = TolidSpecies()
     species.prefix = body["prefix"]
@@ -43,17 +44,17 @@ def edit_species(taxonomy_id=None, body=None, api_key=None):
         .filter(TolidRole.user_id == connexion.context["user"]) \
         .one_or_none()
     if role is None:
-        return "User does not have permission to use this function", 403
+        return jsonify({'detail': "User does not have permission to use this function"}), 403
 
     if not taxonomy_id.isnumeric():
-        return "Species with taxonomyId " + str(taxonomy_id) \
-            + " cannot be found", 404
+        return "taxonomyId should be numeric", 404
 
     species = db.session.query(TolidSpecies) \
         .filter(TolidSpecies.taxonomy_id == taxonomy_id) \
         .one_or_none()
     if species is None:
-        return "Species with taxonomyId " + str(taxonomy_id) + " does not exist", 404
+        return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id) \
+            + " cannot be found"}), 404
 
     species.prefix = body["prefix"]
     species.name = body["scientificName"]
@@ -79,7 +80,7 @@ def list_specimens(taxonomy_id=None, skip=None, limit=None):
         .filter(TolidRole.user_id == connexion.context["user"]) \
         .one_or_none()
     if role is None:
-        return "User does not have permission to use this function", 403
+        return jsonify({'detail': "User does not have permission to use this function"}), 403
 
     if taxonomy_id is None:
         specimens = db.session.query(TolidSpecimen) \
@@ -93,7 +94,8 @@ def list_specimens(taxonomy_id=None, skip=None, limit=None):
             .one_or_none()
 
         if species is None:
-            return "Species with taxonomyId "+str(taxonomy_id)+" cannot be found", 400
+            return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id) \
+                + " cannot be found"}), 400
 
         specimens = db.session.query(TolidSpecimen) \
             .filter(TolidSpecimen.species_id == taxonomy_id) \
@@ -114,7 +116,7 @@ def list_species():
         .filter(TolidRole.user_id == connexion.context["user"]) \
         .one_or_none()
     if role is None:
-        return "User does not have permission to use this function", 403
+        return jsonify({'detail': "User does not have permission to use this function"}), 403
 
     speciess = db.session.query(TolidSpecies).order_by(TolidSpecies.taxonomy_id).all()
 
@@ -132,7 +134,7 @@ def requests_pending(api_key=None):
         .filter(TolidRole.user_id == connexion.context["user"]) \
         .one_or_none()
     if role is None:
-        return "User does not have permission to use this function", 403
+        return jsonify({'detail': "User does not have permission to use this function"}), 403
     requests = db.session.query(TolidRequest) \
         .filter(TolidRequest.status == "Pending") \
         .order_by(TolidRequest.created_at.desc()) \
@@ -146,7 +148,7 @@ def accept_tol_id_request(request_id=None):
         .filter(TolidRole.user_id == connexion.context["user"]) \
         .one_or_none()
     if role is None:
-        return "User does not have permission to use this function", 403
+        return jsonify({'detail': "User does not have permission to use this function"}), 403
 
     request = db.session.query(TolidRequest) \
         .filter(TolidRequest.request_id == request_id) \
@@ -159,7 +161,8 @@ def accept_tol_id_request(request_id=None):
         .one_or_none()
 
     if species is None:
-        return "Species with taxonomyId " + str(request.species_id) + " cannot be found", 400
+        return jsonify({'detail': "Species with taxonomyId " + str(request.species_id) \
+            + " cannot be found"}), 400
 
     specimen = accept_request(request)
     return jsonify([specimen])
@@ -171,7 +174,7 @@ def reject_tol_id_request(request_id=None):
         .filter(TolidRole.user_id == connexion.context["user"]) \
         .one_or_none()
     if role is None:
-        return "User does not have permission to use this function", 403
+        return jsonify({'detail': "User does not have permission to use this function"}), 403
 
     request = db.session.query(TolidRequest) \
         .filter(TolidRequest.request_id == request_id) \
