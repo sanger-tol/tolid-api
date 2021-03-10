@@ -57,7 +57,7 @@ function Navigation(props: NavigationProps) {
                   </Link>
                 </li>
               } 
-              {token && !tokenHasExpired(token) && user && user.roles.some(role => role.role === "admin") &&
+              {token && !tokenHasExpired(token) && user && user.roles && user.roles.some(role => role.role === "admin") &&
                 <li
                   className={`nav-item  ${
                     props.location.pathname === "/admin" ? "active" : ""

@@ -16,14 +16,14 @@ export function setUserToLocalStorage(user: User|null) {
 }
 
 export function getUserFromLocalStorage() {
-  var user = localStorage.getItem('user') || '{}';
-  return JSON.parse(user);
+  var userString = localStorage.getItem('user') || '{"roles": []}';
+  return JSON.parse(userString);
 }
 
 export function tokenHasExpired(token: string) {
   try {
     var token_decoded = JSON.parse(atob(token.split('.')[1]));
-    if ((token_decoded.exp - 3540) * 1000 < Date.now()) {
+    if (token_decoded.exp  * 1000 < Date.now()) {
       return true;
     }
   } catch (e) {
