@@ -16,8 +16,8 @@ def add_species(body=None, api_key=None):
         .filter(TolidSpecies.taxonomy_id == body["taxonomyId"]) \
         .one_or_none()
     if species is not None:
-        return jsonify({'detail': "Species with taxonomyId " + str(body["taxonomyId"]) \
-            + " already exists"}), 400
+        return jsonify({'detail': "Species with taxonomyId " + str(body["taxonomyId"])
+                       + " already exists"}), 400
 
     species = TolidSpecies()
     species.prefix = body["prefix"]
@@ -53,8 +53,8 @@ def edit_species(taxonomy_id=None, body=None, api_key=None):
         .filter(TolidSpecies.taxonomy_id == taxonomy_id) \
         .one_or_none()
     if species is None:
-        return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id) \
-            + " cannot be found"}), 404
+        return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id)
+                       + " cannot be found"}), 404
 
     species.prefix = body["prefix"]
     species.name = body["scientificName"]
@@ -94,8 +94,8 @@ def list_specimens(taxonomy_id=None, skip=None, limit=None):
             .one_or_none()
 
         if species is None:
-            return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id) \
-                + " cannot be found"}), 400
+            return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id)
+                           + " cannot be found"}), 400
 
         specimens = db.session.query(TolidSpecimen) \
             .filter(TolidSpecimen.species_id == taxonomy_id) \
@@ -161,8 +161,8 @@ def accept_tol_id_request(request_id=None):
         .one_or_none()
 
     if species is None:
-        return jsonify({'detail': "Species with taxonomyId " + str(request.species_id) \
-            + " cannot be found"}), 400
+        return jsonify({'detail': "Species with taxonomyId " + str(request.species_id)
+                       + " cannot be found"}), 400
 
     specimen = accept_request(request)
     return jsonify([specimen])

@@ -59,16 +59,16 @@ def tol_ids_for_user(api_key=None):
 
 def search_species(taxonomy_id=None, skip=None, limit=None):
     if not taxonomy_id.isnumeric():
-        return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id) \
-            + " cannot be found"}), 404
+        return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id)
+                       + " cannot be found"}), 404
 
     species = db.session.query(TolidSpecies) \
         .filter(TolidSpecies.taxonomy_id == taxonomy_id) \
         .one_or_none()
 
     if species is None:
-        return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id) \
-            + " cannot be found"}), 404
+        return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id)
+                       + " cannot be found"}), 404
 
     return jsonify([species.to_long_dict()])
 
@@ -116,8 +116,8 @@ def bulk_add_requests(body=None, api_key=None):
                 .one_or_none()
             if specimen is not None:
                 db.session.rollback()
-                return jsonify({'detail': "A ToLID already exists for specimenId " + specimen_id \
-                    + " and taxonomyId " + str(taxonomy_id)}), 400
+                return jsonify({'detail': "A ToLID already exists for specimenId " + specimen_id
+                               + " and taxonomyId " + str(taxonomy_id)}), 400
             try:
                 request = create_request(taxonomy_id, specimen_id, user)
             except Exception as e:

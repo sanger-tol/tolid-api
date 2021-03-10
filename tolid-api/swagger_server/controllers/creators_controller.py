@@ -29,8 +29,8 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
         .one_or_none()
 
     if species is None:
-        return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id) \
-            + " cannot be found"}), 400
+        return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id)
+                       + " cannot be found"}), 400
 
     role = db.session.query(TolidRole) \
         .filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')) \
