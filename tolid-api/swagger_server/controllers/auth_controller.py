@@ -105,3 +105,8 @@ def create_user_profile(body=None):
         return jsonify(user)
     else:
         return jsonify({'detail': 'Error getting data from Elixir'}), 404
+
+def revoke_token(token=None):
+    client_auth = HTTPBasicAuth(os.getenv('ELIXIR_CLIENT_ID'), os.getenv('ELIXIR_CLIENT_SECRET'))
+    response = requests.get('https://login.elixir-czech.org/oidc/revoke', params={"token": token}, auth=client_auth)
+    return jsonify(response.json())

@@ -9,7 +9,7 @@ class TolidUser(Base):
     organisation = db.Column(db.String(), nullable=True)
     api_key = db.Column(db.String(), nullable=True, unique=True)
     token = db.Column(db.String(), nullable=True, unique=True)
-    roles = db.relationship('TolidRole', lazy=False)
+    roles = db.relationship('TolidRole', lazy=False, back_populates="user")
 
     def to_dict(cls):
         return {'name': cls.name,

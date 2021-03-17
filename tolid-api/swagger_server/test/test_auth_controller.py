@@ -180,6 +180,23 @@ class TestAuthController(BaseTestCase):
                   'roles': [{"role": "creator"}]}
         self.assertEquals(expect, response.json)
 
+    # The real version of this does a call to the Elixir service. We mock that call here
+    @responses.activate
+    def test_logout(self):
+        mock_response_from_elixir = {}
+        responses.add(responses.GET, 'https://login.elixir-czech.org/oidc/revoke',
+                      json=mock_response_from_elixir, status=200)
+
+        # Do the actual request
+        response = self.client.open(
+            '/api/v2/auth/logout',
+            method='DELETE',
+            query_string={'token': '1234'})
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Our API passes the Elixir response straight on
+        self.assertEqual(response.json, mock_response_from_elixir)
 
 if __name__ == '__main__':
     import unittest
