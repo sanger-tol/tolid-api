@@ -198,6 +198,7 @@ class TestAuthController(BaseTestCase):
         # Our API passes the Elixir response straight on
         self.assertEqual(response.json, mock_response_from_elixir)
 
+
 if __name__ == '__main__':
     import unittest
     unittest.main()

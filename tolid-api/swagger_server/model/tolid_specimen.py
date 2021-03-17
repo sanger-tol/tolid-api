@@ -6,7 +6,8 @@ class TolidSpecimen(Base):
     specimen_id = db.Column(db.String())
 
     species_id = db.Column(db.Integer, db.ForeignKey('species.taxonomy_id'))
-    species = db.relationship("TolidSpecies", back_populates="specimens", uselist=False, foreign_keys=[species_id])
+    species = db.relationship("TolidSpecies", back_populates="specimens",
+                              uselist=False, foreign_keys=[species_id])
     public_name = db.Column(db.String(), primary_key=True)
     number = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
