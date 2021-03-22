@@ -17,6 +17,7 @@ services:
     #command: python3 -m swagger_server
     environment:
       - DB_URI
+      - TOLID_URL
       - ELIXIR_CLIENT_ID
       - ELIXIR_CLIENT_SECRET
       - ELIXIR_REDIRECT_URI
@@ -53,6 +54,7 @@ services:
         bash -c "pip3 install tox; tox"
     environment:
       - DB_URI
+      - TOLID_URL
       - ELIXIR_CLIENT_ID
       - ELIXIR_CLIENT_SECRET
       - ELIXIR_REDIRECT_URI

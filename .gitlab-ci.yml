@@ -73,11 +73,6 @@ test-api:
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ''
-    POSTGRES_DB: tolid
-    POSTGRES_USER: runner
-    POSTGRES_PASSWORD: runner
-    POSTGRES_HOST_AUTH_METHOD: trust
-    DB_URI: postgresql://runner:runner@db/tolid
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:

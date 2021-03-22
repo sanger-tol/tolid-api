@@ -62,9 +62,9 @@ def notify_requests_pending():
     if len(requests) > 0:
         # Send email notification
         try:
-            requests_pending_mail_template, subject = MailUtils.get_requests_pending_template()
+            requests_pending_mail_template, subject = MailUtils.get_requests_pending()
             MailUtils.send(requests_pending_mail_template, subject,
-                           os['MAIL_RECEIVER_REQUESTS_PENDING'])
+                           os.environ['MAIL_RECEIVER_REQUESTS_PENDING'])
         except Exception:
             pass
         # Set status to Pending
