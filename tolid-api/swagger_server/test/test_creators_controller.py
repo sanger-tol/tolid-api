@@ -679,7 +679,7 @@ class TestCreatorsController(BaseTestCase):
         file.close()
         self.assert200(response, 'Not received a 200 response')
         self.assertEqual('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                          response.content_type)
+                         response.content_type)
 
         # Save as Excel file
         file = open('swagger_server/test/test-manifest-validated.xlsx', 'wb')
@@ -708,7 +708,7 @@ class TestCreatorsController(BaseTestCase):
         file.close()
         self.assert200(response, 'Not received a 200 response')
         self.assertEqual('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                          response.content_type)
+                         response.content_type)
 
         # Save as Excel file
         file = open('swagger_server/test/test-manifest-validated.xlsx', 'wb')
