@@ -94,7 +94,7 @@ class TestCreatorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Specimen ID not in database - should create it
         query_string = [('taxonomyId', 6344),
@@ -122,7 +122,7 @@ class TestCreatorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Specimen ID not in database and first for species - should create it
         query_string = [('taxonomyId', 9606),
@@ -150,7 +150,7 @@ class TestCreatorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Existing - should return existing
         query_string = [('taxonomyId', 6344),
@@ -178,7 +178,7 @@ class TestCreatorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     def test_bulk_search_tol_ids(self):
         # No authorisation token given
@@ -237,7 +237,7 @@ class TestCreatorsController(BaseTestCase):
                    'species': {'taxonomyId': 999999999},
                    'specimen': {'specimenId': 'SAN0000100'},
                    'status': 'Pending'}]
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # User doesn't have creator role
         body = [{'taxonomyId': 6344,
@@ -293,7 +293,7 @@ class TestCreatorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Single search for existing
         body = [{'taxonomyId': 6344,
@@ -321,7 +321,7 @@ class TestCreatorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Search for existing and new
         body = [{'taxonomyId': 6344,
@@ -366,7 +366,7 @@ class TestCreatorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Search for existing and 2 new
         body = [{'taxonomyId': 6344,
@@ -428,7 +428,7 @@ class TestCreatorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Search for existing and new, plus duplicated queries
         body = [{'taxonomyId': 6344,
@@ -508,7 +508,7 @@ class TestCreatorsController(BaseTestCase):
 
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Later query returns a request
         body = [{'taxonomyId': 6344,
@@ -547,7 +547,7 @@ class TestCreatorsController(BaseTestCase):
             'species': {'taxonomyId': 9999999},
             'specimen': {'specimenId': 'SAN0000100'},
             'status': 'Pending'}]
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # And the new one should have been inserted
         response = self.client.open(
@@ -570,7 +570,7 @@ class TestCreatorsController(BaseTestCase):
                              "taxonomyId": 6344},
                  "tolId": "wuAreMari8"}]
         }]
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         response = self.client.open(
             '/api/v2/requests/2',
@@ -585,7 +585,7 @@ class TestCreatorsController(BaseTestCase):
                    'species': {'taxonomyId': 9999999},
                    'specimen': {'specimenId': 'SAN0000100'},
                    'status': 'Pending'}]
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     def test_validate_manifest(self):
         # No authorisation token given
@@ -632,7 +632,7 @@ class TestCreatorsController(BaseTestCase):
         file.close()
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expected, response.json)
+        self.assertEqual(expected, response.json)
 
         # Excel file with errors
         file = open('swagger_server/test/test-manifest-with-errors.xlsx', 'rb')
@@ -651,7 +651,7 @@ class TestCreatorsController(BaseTestCase):
         file.close()
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expected, response.json)
+        self.assertEqual(expected, response.json)
 
         # User not a creator
         file = open('swagger_server/test/test-manifest.xlsx', 'rb')
@@ -678,7 +678,7 @@ class TestCreatorsController(BaseTestCase):
             data=data)
         file.close()
         self.assert200(response, 'Not received a 200 response')
-        self.assertEquals('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        self.assertEqual('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                           response.content_type)
 
         # Save as Excel file
@@ -689,9 +689,9 @@ class TestCreatorsController(BaseTestCase):
         sheet = workbook.active
         (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = \
             find_columns(sheet, "scientific_name")
-        self.assertEquals('wuAreMari3', sheet.cell(row=2, column=tol_id_column).value)
-        self.assertEquals('wuAreMari4', sheet.cell(row=3, column=tol_id_column).value)
-        self.assertEquals('wuAreMari4', sheet.cell(row=4, column=tol_id_column).value)
+        self.assertEqual('wuAreMari3', sheet.cell(row=2, column=tol_id_column).value)
+        self.assertEqual('wuAreMari4', sheet.cell(row=3, column=tol_id_column).value)
+        self.assertEqual('wuAreMari4', sheet.cell(row=4, column=tol_id_column).value)
 
         # Different column name for species
         file = open('swagger_server/test/test-manifest-col.xlsx', 'rb')
@@ -707,7 +707,7 @@ class TestCreatorsController(BaseTestCase):
             data=data)
         file.close()
         self.assert200(response, 'Not received a 200 response')
-        self.assertEquals('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        self.assertEqual('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                           response.content_type)
 
         # Save as Excel file
@@ -718,8 +718,8 @@ class TestCreatorsController(BaseTestCase):
         sheet = workbook.active
         (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = \
             find_columns(sheet, "random column name")
-        self.assertEquals('wuAreMari3', sheet.cell(row=2, column=tol_id_column).value)
-        self.assertEquals('wuAreMari4', sheet.cell(row=3, column=tol_id_column).value)
+        self.assertEqual('wuAreMari3', sheet.cell(row=2, column=tol_id_column).value)
+        self.assertEqual('wuAreMari4', sheet.cell(row=3, column=tol_id_column).value)
 
 
 if __name__ == '__main__':

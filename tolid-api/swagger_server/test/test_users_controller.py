@@ -13,7 +13,7 @@ class TestUsersController(BaseTestCase):
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals([], response.json)
+        self.assertEqual([], response.json)
 
         # Single answer
         response = self.client.open(
@@ -41,13 +41,13 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Same again
         response = self.client.open(
             '/api/v2/specimens/SAN0000100',
             method='GET')
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Two answers
         response = self.client.open(
@@ -88,7 +88,7 @@ class TestUsersController(BaseTestCase):
                 }
             ]
         }]
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     def test_search_tol_id(self):
 
@@ -98,7 +98,7 @@ class TestUsersController(BaseTestCase):
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals([], response.json)
+        self.assertEqual([], response.json)
 
         # All data given
         response = self.client.open(
@@ -122,13 +122,13 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Same again
         response = self.client.open(
             '/api/v2/tol-ids/wuAreMari1',
             method='GET')
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # All data given - another taxon for same specimen
         response = self.client.open(
@@ -152,7 +152,7 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     def test_search_tol_id_by_taxon_specimen(self):
         # ToLID not in database
@@ -163,7 +163,7 @@ class TestUsersController(BaseTestCase):
             query_string=query_string)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals([], response.json)
+        self.assertEqual([], response.json)
 
         # All data given
         query_string = {'taxonomyId': 6344, 'specimenId': 'SAN0000100'}
@@ -189,14 +189,14 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Same again
         response = self.client.open(
             '/api/v2/tol-ids',
             method='GET',
             query_string=query_string)
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # All data given - another taxon for same specimen
         query_string = {'taxonomyId': 6344, 'specimenId': 'SAN0000101'}
@@ -222,7 +222,7 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     def test_search_tol_ids_for_user(self):
         self.specimen2.user = self.user2
@@ -285,7 +285,7 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Search for user2's ToLIDs
         response = self.client.open(
@@ -311,7 +311,7 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     def test_search_species(self):
         # Taxonomy ID not in database
@@ -360,13 +360,13 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Same again
         response = self.client.open(
             '/api/v2/species/6344',
             method='GET')
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     def test_search_species_by_taxon_prefix_name(self):
         # Taxonomy ID not in database
@@ -378,7 +378,7 @@ class TestUsersController(BaseTestCase):
         expect = []
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Taxonomy ID not in database and not an integer
         query_string = {'taxonomyId': 'abcd'}
@@ -389,7 +389,7 @@ class TestUsersController(BaseTestCase):
         expect = []
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # All data given
         query_string = {'taxonomyId': 6344,
@@ -458,7 +458,7 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     def test_search_requests_for_user(self):
         self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=6344, status="Pending")
@@ -543,7 +543,7 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Search for user4's ToLID requests
         response = self.client.open(
@@ -576,7 +576,7 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     def test_bulk_add_requests(self):
         # No authorisation token given
@@ -641,7 +641,7 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Specimen ID not in database, multiple taxons for same specimen - should create them
         body = [{'taxonomyId': 6344,
@@ -700,7 +700,7 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Existing ToLID
         body = [{'taxonomyId': 6344,
@@ -832,7 +832,7 @@ class TestUsersController(BaseTestCase):
 
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Error on later query
         body = [{'taxonomyId': 6344,
@@ -854,7 +854,7 @@ class TestUsersController(BaseTestCase):
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals([], response.json)
+        self.assertEqual([], response.json)
 
     def test_search_request(self):
         self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=6344, status="Pending")
@@ -874,7 +874,7 @@ class TestUsersController(BaseTestCase):
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals([], response.json)
+        self.assertEqual([], response.json)
 
         # All data given
         response = self.client.open(
@@ -905,13 +905,13 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Same again
         response = self.client.open(
             '/api/v2/requests/1',
             method='GET')
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # All data given - another taxon for same specimen
         response = self.client.open(
@@ -942,7 +942,7 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
 
 if __name__ == '__main__':

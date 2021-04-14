@@ -7,5 +7,5 @@ __pycache__
 swagger_server.egg-info/
 __init__.pyc
 launch.json
-.env.uat
+.env.dev
 .env.prod

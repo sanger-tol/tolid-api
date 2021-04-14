@@ -107,7 +107,7 @@ class TestAuthController(BaseTestCase):
                   "scope": 'openid profile email'}
         expect = {"loginUrl": "https://login.elixir-czech.org/oidc/authorize?"
                   + urllib.parse.urlencode(params)}
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     # The real version of this does a call to the Elixir service. We mock that call here
     @responses.activate
@@ -157,7 +157,7 @@ class TestAuthController(BaseTestCase):
                   'name': 'Elixir User',
                   'organisation': '',
                   'roles': []}
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     # The real version of this does a call to the Elixir service. We mock that call here
     @responses.activate
@@ -178,7 +178,7 @@ class TestAuthController(BaseTestCase):
                   'name': 'test_user_creator',
                   'organisation': 'Sanger Institute',
                   'roles': [{"role": "creator"}]}
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     # The real version of this does a call to the Elixir service. We mock that call here
     @responses.activate

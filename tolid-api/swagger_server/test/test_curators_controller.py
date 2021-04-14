@@ -96,7 +96,7 @@ class TestCuratorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Has it been added?
         response = self.client.open(
@@ -104,7 +104,7 @@ class TestCuratorsController(BaseTestCase):
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     def test_edit_species(self):
         # No authorisation token given
@@ -225,7 +225,7 @@ class TestCuratorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Has it changed?
         response = self.client.open(
@@ -233,7 +233,7 @@ class TestCuratorsController(BaseTestCase):
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     def test_list_specimens(self):
         # Add a couple more specimens
@@ -282,8 +282,8 @@ class TestCuratorsController(BaseTestCase):
             + "Perinereis vancaurica\tSAN0000101\t1\nmHomSap1\tHomo sapiens\tSAN0000103\t1"
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals('text/plain; charset=utf-8', response.content_type)
-        self.assertEquals(expect, response.data.decode('utf-8'))
+        self.assertEqual('text/plain; charset=utf-8', response.content_type)
+        self.assertEqual(expect, response.data.decode('utf-8'))
 
         # Taxonomy ID not in database
         query_string = [('taxonomyId', '999999999')]
@@ -306,8 +306,8 @@ class TestCuratorsController(BaseTestCase):
             + "SAN0000101\t2\nwuAreMari3\tArenicola marina\tSAN0000102\t3"
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals('text/plain; charset=utf-8', response.content_type)
-        self.assertEquals(expect, response.data.decode('utf-8'))
+        self.assertEqual('text/plain; charset=utf-8', response.content_type)
+        self.assertEqual(expect, response.data.decode('utf-8'))
 
     def test_list_species(self):
         # No authorisation token given
@@ -346,8 +346,8 @@ class TestCuratorsController(BaseTestCase):
             + "human\tHomo\tHominidae\tPrimates\tMammalia\tChordata"
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals('text/plain; charset=utf-8', response.content_type)
-        self.assertEquals(expect, response.data.decode('utf-8'))
+        self.assertEqual('text/plain; charset=utf-8', response.content_type)
+        self.assertEqual(expect, response.data.decode('utf-8'))
 
     def test_search_pending_requests(self):
         self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=6344, status="Pending")
@@ -442,7 +442,7 @@ class TestCuratorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     def test_accept_request(self):
         self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=999999, status="Pending")
@@ -507,7 +507,7 @@ class TestCuratorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
     def test_reject_request(self):
         self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=999999, status="Pending")
@@ -562,7 +562,7 @@ class TestCuratorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
         # Valid species
         response = self.client.open(
@@ -595,7 +595,7 @@ class TestCuratorsController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEquals(expect, response.json)
+        self.assertEqual(expect, response.json)
 
 
 if __name__ == '__main__':
