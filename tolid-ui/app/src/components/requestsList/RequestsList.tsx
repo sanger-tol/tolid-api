@@ -44,7 +44,7 @@ class RequestsList extends React.Component<Props, State> {
   }
 
   acceptRequest = (event: any) => {
-    const requestId = event.target.dataset["request-id"];
+    const requestId = event.target.getAttribute("data-request-id");
     httpClient().patch('requests/'+requestId+'/accept', {})
         // the JSON body is taken from the response
         .then(data => {
@@ -64,7 +64,7 @@ class RequestsList extends React.Component<Props, State> {
   }
 
   rejectRequest = (event: any) => {
-    const requestId = event.target.dataset["request-id"];
+    const requestId = event.target.getAttribute("data-request-id");
     httpClient().patch('requests/'+requestId+'/reject', {})
           .then(data => {
             this.setState({

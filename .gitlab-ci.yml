@@ -6,8 +6,8 @@ stages:
   - deploy
 
 variables:
-  DOCKER_IMAGE: gitlab-registry.internal.sanger.ac.uk/sanger-pathogens/sapp2/build-tools:1.0.1
-  DIND_IMAGE: gitlab-registry.internal.sanger.ac.uk/sanger-pathogens/sapp2/dind:1.0.0
+  DOCKER_IMAGE: $CI_REGISTRY/tol/sts/build-base:1.0.0
+  DIND_IMAGE: $CI_REGISTRY/tol/sts/dind:1.0.0
 
 lint:
   tags:
