@@ -79,6 +79,7 @@ class TestCreatorsController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "None",
+                "currentHighestTolidNumber": 2,
                 "family": "Nereididae",
                 "genus": "Perinereis",
                 "kingdom": "Metazoa",
@@ -107,6 +108,7 @@ class TestCreatorsController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 3,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -135,6 +137,7 @@ class TestCreatorsController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "human",
+                "currentHighestTolidNumber": 1,
                 "family": "Hominidae",
                 "genus": "Homo",
                 "order": "Primates",
@@ -163,6 +166,7 @@ class TestCreatorsController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 3,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -263,6 +267,7 @@ class TestCreatorsController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 3,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -278,6 +283,7 @@ class TestCreatorsController(BaseTestCase):
         }, {
             "species": {
                 "commonName": "None",
+                "currentHighestTolidNumber": 2,
                 "family": "Nereididae",
                 "genus": "Perinereis",
                 "kingdom": "Metazoa",
@@ -306,6 +312,7 @@ class TestCreatorsController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 3,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -336,6 +343,7 @@ class TestCreatorsController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 4,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -351,6 +359,7 @@ class TestCreatorsController(BaseTestCase):
         }, {
             'species': {
                 'commonName': 'lugworm',
+                "currentHighestTolidNumber": 4,
                 'family': 'Arenicolidae',
                 'genus': 'Arenicola',
                 'order': 'None',
@@ -383,6 +392,7 @@ class TestCreatorsController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 6,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -398,6 +408,7 @@ class TestCreatorsController(BaseTestCase):
         }, {
             'species': {
                 'commonName': 'lugworm',
+                "currentHighestTolidNumber": 6,
                 'family': 'Arenicolidae',
                 'genus': 'Arenicola',
                 'order': 'None',
@@ -413,6 +424,7 @@ class TestCreatorsController(BaseTestCase):
         }, {
             'species': {
                 'commonName': 'lugworm',
+                "currentHighestTolidNumber": 6,
                 'family': 'Arenicolidae',
                 'genus': 'Arenicola',
                 'order': 'None',
@@ -447,6 +459,7 @@ class TestCreatorsController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 7,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -462,6 +475,7 @@ class TestCreatorsController(BaseTestCase):
         }, {
             'species': {
                 'commonName': 'lugworm',
+                "currentHighestTolidNumber": 7,
                 'family': 'Arenicolidae',
                 'genus': 'Arenicola',
                 'order': 'None',
@@ -477,6 +491,7 @@ class TestCreatorsController(BaseTestCase):
         }, {
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 7,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -492,6 +507,7 @@ class TestCreatorsController(BaseTestCase):
         }, {
             'species': {
                 'commonName': 'lugworm',
+                "currentHighestTolidNumber": 7,
                 'family': 'Arenicolidae',
                 'genus': 'Arenicola',
                 'order': 'None',
@@ -526,6 +542,7 @@ class TestCreatorsController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 8,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -559,6 +576,7 @@ class TestCreatorsController(BaseTestCase):
             "specimenId": "SAN0000100bbbbb",
             "tolIds": [
                 {"species": {"commonName": "lugworm",
+                             "currentHighestTolidNumber": 8,
                              "family": "Arenicolidae",
                              "genus": "Arenicola",
                              "order": "None",

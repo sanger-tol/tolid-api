@@ -7,7 +7,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 2.1.1
+  version: 2.1.2
 servers:
   - url: http://0.0.0.0:8080/api/v2
 tags:
@@ -58,15 +58,6 @@ paths:
       description: |
         List the user's ToLIDs
       operationId: tol_ids_for_user
-      parameters:
-      - name: api-key
-        in: header
-        description: API-Key
-        required: True
-        style: simple
-        explode: true
-        schema:
-          type: string  
       responses:
         "200":
           description: search results matching criteria
@@ -165,15 +156,6 @@ paths:
         ]
         ```
       operationId: bulk_search_specimens
-      parameters:
-        - name: api-key
-          in: header
-          description: API-Key
-          required: True
-          style: simple
-          explode: true
-          schema:
-            type: string  
       requestBody:
         required: true
         content:
@@ -220,14 +202,6 @@ paths:
         explode: true
         schema:
           type: string
-      - name: api-key
-        in: header
-        description: API-Key
-        required: True
-        style: simple
-        explode: true
-        schema:
-          type: string  
       responses:
         "200":
           description: item created
@@ -254,14 +228,6 @@ paths:
         Returns a list of all ToLIDs in the database
       operationId: list_specimens
       parameters:
-      - name: api-key
-        in: header
-        description: API-Key
-        required: True
-        style: simple
-        explode: true
-        schema:
-          type: string  
       - name: taxonomyId
         in: query
         description: pass an NCBI taxonomy ID to filter results by
@@ -330,14 +296,6 @@ paths:
           explode: true
           schema:
             type: string
-        - name: api-key
-          in: header
-          description: API-Key
-          required: True
-          style: simple
-          explode: true
-          schema:
-            type: string  
         requestBody:
           description: Species to modify
           content:
@@ -414,15 +372,6 @@ paths:
       summary: Add a species
       description: Adds a new species to the system
       operationId: add_species
-      parameters:
-      - name: api-key
-        in: header
-        description: API-Key
-        required: True
-        style: simple
-        explode: true
-        schema:
-          type: string  
       requestBody:
         description: Species to add
         content:
@@ -454,15 +403,6 @@ paths:
       description: |
         Returns a list of all species in the database
       operationId: list_species
-      parameters:
-      - name: api-key
-        in: header
-        description: API-Key
-        required: True
-        style: simple
-        explode: true
-        schema:
-          type: string  
       responses:
         "200":
           description: search results matching criteria
@@ -486,14 +426,6 @@ paths:
         Validates an excel manifest and offers option to download manifest with ToLIDs filled in
       operationId: validate_manifest
       parameters:
-        - name: api-key
-          in: header
-          description: API-Key
-          required: True
-          style: simple
-          explode: true
-          schema:
-            type: string  
         - name: speciesColumnHeading
           in: query
           description: the column heading of the column containing the species name
@@ -538,15 +470,6 @@ paths:
       summary: Submit requests for ToLIDs in bulk
       description: Submit multiple requests in one go
       operationId: bulk_add_requests
-      parameters:
-        - name: api-key
-          in: header
-          description: API-Key
-          required: True
-          style: simple
-          explode: true
-          schema:
-            type: string  
       requestBody:
         required: true
         content:
@@ -576,15 +499,6 @@ paths:
       description: |
         List the user's ToLID requests
       operationId: requests_for_user
-      parameters:
-      - name: api-key
-        in: header
-        description: API-Key
-        required: True
-        style: simple
-        explode: true
-        schema:
-          type: string  
       responses:
         "200":
           description: search results matching criteria
@@ -608,15 +522,6 @@ paths:
       description: |
         List all pending ToLID requests
       operationId: requests_pending
-      parameters:
-      - name: api-key
-        in: header
-        description: API-Key
-        required: True
-        style: simple
-        explode: true
-        schema:
-          type: string  
       responses:
         "200":
           description: search results matching criteria
@@ -861,21 +766,6 @@ components:
           $ref: '#/components/schemas/SpeciesShort'
         specimenId:
           $ref: '#/components/schemas/SpecimenShort'
-      example:
-        tolId: wuAreMari1
-        species:
-          commonName: lugworm
-          phylum: Annelida
-          kingdom: Metazoa
-          scientificName: Arenicola marina
-          genus: Arenicola
-          prefix: wuAreMari
-          taxonomyId: 6344
-          taxaClass: Polychaeta
-          family: Arenicolidae
-          order: Capitellida    
-        specimen:
-          specimenId: SAN0000100
     ToLIDShort:
       required:
         - tolId
@@ -887,19 +777,6 @@ components:
           example: wuAreMari1
         species:
           $ref: '#/components/schemas/SpeciesShort'
-      example:
-        tolId: wuAreMari1
-        species:
-          commonName: lugworm
-          phylum: Annelida
-          kingdom: Metazoa
-          scientificName: Arenicola marina
-          genus: Arenicola
-          prefix: wuAreMari
-          taxonomyId: 6344
-          taxaClass: Polychaeta
-          family: Arenicolidae
-          order: Capitellida    
     SpeciesShort:
       required:
         - commonName
@@ -912,6 +789,7 @@ components:
         - scientificName
         - taxonomyId
         - taxaClass
+        - currentHighestTolidNumber
       type: object
       properties:
         prefix:
@@ -944,17 +822,10 @@ components:
         kingdom:
           type: string
           example: Metazoa
-      example:
-        commonName: lugworm
-        phylum: Annelida
-        kingdom: Metazoa
-        scientificName: Arenicola marina
-        genus: Arenicola
-        prefix: wuAreMari
-        taxonomyId: 6344
-        taxaClass: Polychaeta
-        family: Arenicolidae
-        order: Capitellida    
+        currentHighestTolidNumber:
+          type: integer
+          example: 2
+          readOnly: true
     SpeciesLong:
       required:
         - commonName
@@ -968,6 +839,7 @@ components:
         - taxonomyId
         - taxaClass
         - tolIds
+        - currentHighestTolidNumber
       type: object
       properties:
         prefix:
@@ -1000,6 +872,10 @@ components:
         kingdom:
           type: string
           example: Metazoa
+        currentHighestTolidNumber:
+          type: integer
+          example: 2
+          readOnly: true
         tolIds:
           type: array
           items:
@@ -1010,21 +886,6 @@ components:
                 example: wuAreMari1
               specimen:
                 $ref: '#/components/schemas/SpecimenShort'
-      example:
-        commonName: lugworm
-        phylum: Annelida
-        kingdom: Metazoa
-        scientificName: Arenicola marina
-        genus: Arenicola
-        prefix: wuAreMari
-        taxonomyId: 6344
-        taxaClass: Polychaeta
-        family: Arenicolidae
-        order: Capitellida
-        tolIds:
-          - tolId: wuAreMari1
-            specimen:
-              specimenId: SAN00001234 
     SpecimenShort:
       required:
         - specimenId
@@ -1033,8 +894,6 @@ components:
         specimenId:
           type: string
           example: SAN00001234
-      example:
-        specimenId: SAN00001234
     SpecimenLong:
       required:
         - specimenId
@@ -1069,26 +928,6 @@ components:
           $ref: '#/components/schemas/SpeciesShort'
         specimenId:
           $ref: '#/components/schemas/SpecimenShort'
-      example:
-        requestId: 1234
-        status: Pending
-        createdBy:
-          name: A User
-          email: user@example.com
-          organisation: Research Inc
-        species:
-          commonName: lugworm
-          phylum: Annelida
-          kingdom: Metazoa
-          scientificName: Arenicola marina
-          genus: Arenicola
-          prefix: wuAreMari
-          taxonomyId: 6344
-          taxaClass: Polychaeta
-          family: Arenicolidae
-          order: Capitellida    
-        specimen:
-          specimenId: SAN0000100
     User:
       required:
         - name
@@ -1110,11 +949,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Role'
-      example:
-        name: "A User"
-        email: "user@example.com"
-        organisation: "Research Inc"
-        roles:
     Role:
       required:
         - role
@@ -1123,8 +957,6 @@ components:
         role:
           type: string
           example: "creator"
-      example:
-        role: "creator"
     ErrorMessageList:
       required:
         - errors
@@ -1142,8 +974,6 @@ components:
         message:
           type: string
           example: "Something has gone wrong"
-      example:
-        message: "Something has gone wrong"
   securitySchemes:
     ApiKeyAuth:        # name for the security scheme
       type: apiKey

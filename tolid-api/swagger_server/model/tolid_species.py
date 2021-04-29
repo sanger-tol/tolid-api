@@ -1,4 +1,6 @@
 from .base import Base, db
+from sqlalchemy import func
+from .tolid_specimen import TolidSpecimen
 
 
 class TolidSpecies(Base):
@@ -26,7 +28,8 @@ class TolidSpecies(Base):
                 'order': cls.tax_order,
                 'taxaClass': cls.tax_class,
                 'phylum': cls.phylum,
-                'kingdom': cls.kingdom}
+                'kingdom': cls.kingdom,
+                'currentHighestTolidNumber': cls.current_highest_tolid_number()}
 
     def to_long_dict(cls):
         short = cls.to_dict()
@@ -37,3 +40,12 @@ class TolidSpecies(Base):
             tolIds.append(tolId)
         additional = {'tolIds': tolIds}
         return {**short, **additional}  # Merge the two together
+
+    def current_highest_tolid_number(cls):
+        # What is the current highest specimen number?
+        highest = db.session.query(func.max(TolidSpecimen.number)) \
+            .filter(TolidSpecimen.species_id == cls.taxonomy_id) \
+            .scalar()
+        if not highest:
+            highest = 0
+        return highest

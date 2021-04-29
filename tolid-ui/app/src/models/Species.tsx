@@ -11,6 +11,7 @@ export interface Species {
   scientificName: string;
   taxaClass: string;
   taxonomyId: number;
+  currentHighestTolidNumber: number;
   tolIds: ToLID[];
 }
 

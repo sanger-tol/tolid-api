@@ -100,7 +100,15 @@ class RequestsList extends React.Component<Props, State> {
           {this.state.requests.length > 0 &&
             <table className="table table-striped">
               <thead>
-                <tr><th>Request ID</th><th>Taxonomy ID</th><th>Name</th><th>Specimen ID</th><th>Requested by</th><th>Action</th></tr>
+                <tr>
+                  <th>Request ID</th>
+                  <th>Taxonomy ID</th>
+                  <th>Name</th>
+                  <th>Specimen ID</th>
+                  <th>Requested by</th>
+                  <th>Next ToLID</th>
+                  <th>Action</th>
+                </tr>
               </thead>
               <tbody>
                 {this.state.requests.map((item: Request) => (
@@ -110,6 +118,7 @@ class RequestsList extends React.Component<Props, State> {
                     <td>{item.species.scientificName}</td>
                     <td>{item.specimen.specimenId}</td>
                     <td>{item.createdBy.name}</td>
+                    <td>{item.species.prefix}{item.species.currentHighestTolidNumber ? item.species.currentHighestTolidNumber + 1 : 1}</td>
                     <td>
                       {item.species.scientificName &&
                         <button className="btn btn-sm btn-success" onClick={this.acceptRequest} data-request-id={item.requestId}>Accept</button>

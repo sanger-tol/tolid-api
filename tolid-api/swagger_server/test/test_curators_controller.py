@@ -83,6 +83,7 @@ class TestCuratorsController(BaseTestCase):
             json=body)
         expect = [{
             "commonName": "Common name",
+            "currentHighestTolidNumber": 0,
             "family": "Family",
             "genus": "Genus",
             "order": "Order",
@@ -199,6 +200,7 @@ class TestCuratorsController(BaseTestCase):
             json=body)
         expect = [{
             "commonName": "Common name",
+            "currentHighestTolidNumber": 2,
             "family": "Family",
             "genus": "Genus",
             "order": "Order",
@@ -406,6 +408,7 @@ class TestCuratorsController(BaseTestCase):
             },
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -428,6 +431,7 @@ class TestCuratorsController(BaseTestCase):
             },
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -493,6 +497,7 @@ class TestCuratorsController(BaseTestCase):
             "tolId": "wuAreMari3",
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 3,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -581,6 +586,7 @@ class TestCuratorsController(BaseTestCase):
             },
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",

@@ -1,16 +1,10 @@
-from sqlalchemy import func
 from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidRequest
 from swagger_server.email_utils import MailUtils
 import os
 
 
 def create_new_specimen(species, specimen_id, user):
-    # What is the current highest specimen number?
-    highest = db.session.query(func.max(TolidSpecimen.number)) \
-        .filter(TolidSpecimen.species_id == species.taxonomy_id) \
-        .scalar()
-    if not highest:
-        highest = 0
+    highest = species.current_highest_tolid_number()
     number = highest + 1
     specimen = TolidSpecimen(specimen_id=specimen_id, number=number,
                              public_name=species.prefix+str(number))
@@ -46,6 +40,15 @@ def accept_request(request):
     db.session.add(specimen)
     db.session.delete(request)
     db.session.commit()
+
+    if specimen.user.email.strip() != "":
+        try:
+            tolid_created_mail_template, subject = MailUtils.get_tolid_created(specimen)
+            MailUtils.send(tolid_created_mail_template, subject,
+                           specimen.user.email)
+        except Exception:
+            pass
+
     return specimen
 
 

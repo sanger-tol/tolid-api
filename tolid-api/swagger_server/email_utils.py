@@ -16,6 +16,14 @@ class MailUtils:
         return requests_pending_html, subject
 
     @staticmethod
+    def get_tolid_created(specimen):
+        tolid_created_html = MailUtils.__get_html_from_template('email_tolid_created')
+        url = f"{os.environ['TOLID_URL']}"
+        tolid_created_html = tolid_created_html.format(url=url, specimen=specimen)
+        subject = "ToLID created"
+        return tolid_created_html, subject
+
+    @staticmethod
     def __get_html_from_template(file_name):
         base_dir = os.path.dirname(__file__)
         path_template = os.path.abspath(os.path.join(base_dir, f'templates/{file_name}.html'))

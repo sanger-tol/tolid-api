@@ -26,6 +26,7 @@ class TestUsersController(BaseTestCase):
                     "tolId": "wuAreMari1",
                     "species": {
                         "commonName": "lugworm",
+                        "currentHighestTolidNumber": 2,
                         "family": "Arenicolidae",
                         "genus": "Arenicola",
                         "order": "None",
@@ -60,6 +61,7 @@ class TestUsersController(BaseTestCase):
                     "tolId": "wuAreMari2",
                     "species": {
                         "commonName": "lugworm",
+                        "currentHighestTolidNumber": 2,
                         "family": "Arenicolidae",
                         "genus": "Arenicola",
                         "order": "None",
@@ -75,6 +77,7 @@ class TestUsersController(BaseTestCase):
                     "tolId": "wpPerVanc1",
                     "species": {
                         "commonName": "None",
+                        "currentHighestTolidNumber": 1,
                         "family": "Nereididae",
                         "genus": "Perinereis",
                         "kingdom": "Metazoa",
@@ -107,6 +110,7 @@ class TestUsersController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -137,6 +141,7 @@ class TestUsersController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -174,6 +179,7 @@ class TestUsersController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -207,6 +213,7 @@ class TestUsersController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -255,6 +262,7 @@ class TestUsersController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -270,6 +278,7 @@ class TestUsersController(BaseTestCase):
         }, {
             "species": {
                 "commonName": "None",
+                "currentHighestTolidNumber": 1,
                 "family": "Nereididae",
                 "genus": "Perinereis",
                 "kingdom": "Metazoa",
@@ -296,6 +305,7 @@ class TestUsersController(BaseTestCase):
         expect = [{
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -334,6 +344,7 @@ class TestUsersController(BaseTestCase):
             method='GET')
         expect = [{
             "commonName": "lugworm",
+            "currentHighestTolidNumber": 2,
             "family": "Arenicolidae",
             "genus": "Arenicola",
             "order": "None",
@@ -401,6 +412,7 @@ class TestUsersController(BaseTestCase):
             query_string=query_string)
         expect = [{
             "commonName": "lugworm",
+            "currentHighestTolidNumber": 2,
             "family": "Arenicolidae",
             "genus": "Arenicola",
             "order": "None",
@@ -426,6 +438,7 @@ class TestUsersController(BaseTestCase):
             ]
         }, {
             "commonName": "None",
+            "currentHighestTolidNumber": 1,
             "family": "Nereididae",
             "genus": "Perinereis",
             "kingdom": "Metazoa",
@@ -445,6 +458,7 @@ class TestUsersController(BaseTestCase):
             ]
         }, {
             "commonName": "human",
+            "currentHighestTolidNumber": 0,
             "family": "Hominidae",
             "genus": "Homo",
             "kingdom": "Metazoa",
@@ -507,6 +521,7 @@ class TestUsersController(BaseTestCase):
             },
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -529,6 +544,7 @@ class TestUsersController(BaseTestCase):
             },
             "species": {
                 "commonName": "None",
+                "currentHighestTolidNumber": 1,
                 "family": "Nereididae",
                 "genus": "Perinereis",
                 "kingdom": "Metazoa",
@@ -562,6 +578,7 @@ class TestUsersController(BaseTestCase):
             },
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -664,6 +681,7 @@ class TestUsersController(BaseTestCase):
             },
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -686,6 +704,7 @@ class TestUsersController(BaseTestCase):
             },
             "species": {
                 "commonName": "None",
+                "currentHighestTolidNumber": 1,
                 "family": "Nereididae",
                 "genus": "Perinereis",
                 "kingdom": "Metazoa",
@@ -751,6 +770,7 @@ class TestUsersController(BaseTestCase):
             },
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -773,6 +793,7 @@ class TestUsersController(BaseTestCase):
             },
             'species': {
                 'commonName': 'lugworm',
+                "currentHighestTolidNumber": 2,
                 'family': 'Arenicolidae',
                 'genus': 'Arenicola',
                 'order': 'None',
@@ -795,6 +816,7 @@ class TestUsersController(BaseTestCase):
             },
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -817,6 +839,7 @@ class TestUsersController(BaseTestCase):
             },
             'species': {
                 'commonName': 'lugworm',
+                "currentHighestTolidNumber": 2,
                 'family': 'Arenicolidae',
                 'genus': 'Arenicola',
                 'order': 'None',
@@ -891,6 +914,7 @@ class TestUsersController(BaseTestCase):
             },
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
@@ -928,6 +952,7 @@ class TestUsersController(BaseTestCase):
             },
             "species": {
                 "commonName": "lugworm",
+                "currentHighestTolidNumber": 2,
                 "family": "Arenicolidae",
                 "genus": "Arenicola",
                 "order": "None",
