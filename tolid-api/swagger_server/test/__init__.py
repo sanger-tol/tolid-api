@@ -85,18 +85,18 @@ class BaseTestCase(TestCase):
                                      taxonomy_id=6355)
         db.session.add(self.species3)
         self.specimen1 = TolidSpecimen(specimen_id="SAN0000100",
-                                       number=1, public_name="wuAreMari1")
+                                       number=1, tolid="wuAreMari1")
         self.specimen1.species = self.species1
         self.specimen1.user = self.user1
         db.session.add(self.specimen1)
         # Another species for the same specimen
         self.specimen2 = TolidSpecimen(specimen_id="SAN0000101",
-                                       number=2, public_name="wuAreMari2")
+                                       number=2, tolid="wuAreMari2")
         self.specimen2.species = self.species1
         self.specimen2.user = self.user1
         db.session.add(self.specimen2)
         self.specimen3 = TolidSpecimen(specimen_id="SAN0000101",
-                                       number=1, public_name="wpPerVanc1")
+                                       number=1, tolid="wpPerVanc1")
         self.specimen3.species = self.species3
         self.specimen3.user = self.user1
         db.session.add(self.specimen3)

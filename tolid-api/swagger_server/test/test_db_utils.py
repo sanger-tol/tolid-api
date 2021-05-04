@@ -33,7 +33,7 @@ class TestDbUtils(BaseTestCase):
         self.request1.species_id = 6344
         tol_id = accept_request(self.request1)
         self.assertEqual(tol_id.user, self.user1)
-        self.assertEqual(tol_id.public_name, 'wuAreMari3')
+        self.assertEqual(tol_id.tolid, 'wuAreMari3')
         # Check the original request has been deleted
         request = db.session.query(TolidRequest).filter(TolidRequest.request_id == 1).one_or_none()
         self.assertIsNone(request)

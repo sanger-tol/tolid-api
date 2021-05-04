@@ -35,7 +35,7 @@ class TolidSpecies(Base):
         short = cls.to_dict()
         tolIds = []
         for specimen in cls.specimens:
-            tolId = {'tolId': specimen.public_name,
+            tolId = {'tolId': specimen.tolid,
                      'specimen': {'specimenId': specimen.specimen_id}}
             tolIds.append(tolId)
         additional = {'tolIds': tolIds}

@@ -239,10 +239,10 @@ class TestCuratorsController(BaseTestCase):
 
     def test_list_specimens(self):
         # Add a couple more specimens
-        specimen2 = TolidSpecimen(specimen_id="SAN0000102", number=3, public_name="wuAreMari3")
+        specimen2 = TolidSpecimen(specimen_id="SAN0000102", number=3, tolid="wuAreMari3")
         specimen2.species = self.species1
         specimen2.user = self.user1
-        specimen3 = TolidSpecimen(specimen_id="SAN0000103", number=1, public_name="mHomSap1")
+        specimen3 = TolidSpecimen(specimen_id="SAN0000103", number=1, tolid="mHomSap1")
         specimen3.species = self.species2
         specimen3.user = self.user1
         db.session.add(specimen2)

@@ -18,7 +18,7 @@ def search_specimen(specimen_id=None, skip=None, limit=None):
     # This can be simplified once the model can be changed
     tolIds = []
     for specimen in specimens:
-        tolId = {'tolId': specimen.public_name,
+        tolId = {'tolId': specimen.tolid,
                  'species': specimen.species}
         tolIds.append(tolId)
     return jsonify([{'specimenId': specimen_id,
@@ -27,7 +27,7 @@ def search_specimen(specimen_id=None, skip=None, limit=None):
 
 def search_tol_id(tol_id=None, skip=None, limit=None):
     specimen = db.session.query(TolidSpecimen) \
-        .filter(TolidSpecimen.public_name == tol_id) \
+        .filter(TolidSpecimen.tolid == tol_id) \
         .one_or_none()
 
     if specimen is None:

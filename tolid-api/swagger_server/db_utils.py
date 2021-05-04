@@ -7,7 +7,7 @@ def create_new_specimen(species, specimen_id, user):
     highest = species.current_highest_tolid_number()
     number = highest + 1
     specimen = TolidSpecimen(specimen_id=specimen_id, number=number,
-                             public_name=species.prefix+str(number))
+                             tolid=species.prefix+str(number))
     specimen.species = species
     specimen.user = user
     return specimen

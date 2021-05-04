@@ -105,7 +105,7 @@ def list_specimens(taxonomy_id=None, skip=None, limit=None):
 
     output = ""
     for specimen in specimens:
-        output += specimen.public_name + '\t' + specimen.species.name + '\t' \
+        output += specimen.tolid + '\t' + specimen.species.name + '\t' \
             + specimen.specimen_id + '\t' + str(specimen.number) + '\n'
     return output.strip()
 

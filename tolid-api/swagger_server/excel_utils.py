@@ -94,7 +94,7 @@ def validate_sheet(sheet, assign=False, user=None,
                     .one_or_none()
                 if (existing_specimen is not None):
                     sheet.cell(row=current_row, column=tol_id_column,
-                               value=existing_specimen.public_name)
+                               value=existing_specimen.tolid)
                 else:
                     existing_species = db.session.query(TolidSpecies) \
                         .filter(TolidSpecies.taxonomy_id == taxon_id) \
@@ -104,7 +104,7 @@ def validate_sheet(sheet, assign=False, user=None,
                     db.session.add(new_specimen)
                     db.session.commit()
                     sheet.cell(row=current_row, column=tol_id_column,
-                               value=new_specimen.public_name)
+                               value=new_specimen.tolid)
         else:
             if (re.search(r"sp\.$", scientific_name)):
                 errors.append({"message": "Row "+str(current_row)
@@ -136,7 +136,7 @@ def validate_sheet(sheet, assign=False, user=None,
                             .one_or_none()
                         if (existing_specimen is not None):
                             sheet.cell(row=current_row, column=tol_id_column,
-                                       value=existing_specimen.public_name)
+                                       value=existing_specimen.tolid)
                         else:
                             # No existing ToLID - deal with this later
                             pass
