@@ -41,7 +41,7 @@ def accept_request(request):
     db.session.delete(request)
     db.session.commit()
 
-    if specimen.user.email.strip() != "":
+    if specimen.user.email is not None and specimen.user.email.strip() != "":
         try:
             tolid_created_mail_template, subject = MailUtils.get_tolid_created(specimen)
             MailUtils.send(tolid_created_mail_template, subject,
