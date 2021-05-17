@@ -13,7 +13,8 @@ def search_specimen(specimen_id=None, skip=None, limit=None):
         .all()
 
     if not specimens:
-        return jsonify([])
+        return jsonify({'detail': "Specimen with ID " + specimen_id
+                       + " cannot be found"}), 404
 
     # This can be simplified once the model can be changed
     tolIds = []

@@ -11,9 +11,8 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/specimens/SAN0000100zzzzz',
             method='GET')
-        self.assert200(response,
+        self.assert404(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEqual([], response.json)
 
         # Single answer
         response = self.client.open(

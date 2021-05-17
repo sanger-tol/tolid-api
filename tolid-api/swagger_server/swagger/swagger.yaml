@@ -100,6 +100,8 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
+        "404":
+          description: specimen not found
       x-openapi-router-controller: swagger_server.controllers.users_controller
   /tol-ids:
     get:
