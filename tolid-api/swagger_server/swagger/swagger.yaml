@@ -412,6 +412,12 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpeciesShort'
+                x-content-type: application/json
         "400":
           description: bad input parameter
         "403":
@@ -791,7 +797,6 @@ components:
         - scientificName
         - taxonomyId
         - taxaClass
-        - currentHighestTolidNumber
       type: object
       properties:
         prefix:

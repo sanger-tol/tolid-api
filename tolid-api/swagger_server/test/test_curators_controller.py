@@ -316,6 +316,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/all',
             method='GET',
+            headers={"accept": "text/plain"},
             )
         self.assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -323,7 +324,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/all',
             method='GET',
-            headers={"api-key": "12345678"},
+            headers={"api-key": "12345678", "accept": "text/plain"},
             )
         self.assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -331,16 +332,16 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/all',
             method='GET',
-            headers={"api-key": self.user1.api_key},
+            headers={"api-key": self.user1.api_key, "accept": "text/plain"},
             )
         self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        # All correct
+        # All correct - text/plain
         query_string = []
         response = self.client.open(
             '/api/v2/species/all',
             method='GET',
-            headers={"api-key": self.user2.api_key},
+            headers={"api-key": self.user2.api_key, "accept": "text/plain"},
             query_string=query_string)
         expect = "wuAreMari\tArenicola marina\t6344\tlugworm\tArenicola\tArenicolidae\tNone\t" \
             + "Polychaeta\tAnnelida\nwpPerVanc\tPerinereis vancaurica\t6355\tNone\tPerinereis\t" \
@@ -348,8 +349,55 @@ class TestCuratorsController(BaseTestCase):
             + "human\tHomo\tHominidae\tPrimates\tMammalia\tChordata"
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
+        print(str(response))
         self.assertEqual('text/plain; charset=utf-8', response.content_type)
         self.assertEqual(expect, response.data.decode('utf-8'))
+
+        # All correct - application/json
+        query_string = []
+        response = self.client.open(
+            '/api/v2/species/all',
+            method='GET',
+            headers={"api-key": self.user2.api_key, "accept": "application/json"},
+            query_string=query_string)
+        expect = [{
+            "commonName": "lugworm",
+            "family": "Arenicolidae",
+            "genus": "Arenicola",
+            "order": "None",
+            "phylum": "Annelida",
+            "kingdom": "Metazoa",
+            "prefix": "wuAreMari",
+            "scientificName": "Arenicola marina",
+            "taxaClass": "Polychaeta",
+            "taxonomyId": 6344
+        }, {
+            "commonName": "None",
+            "family": "Nereididae",
+            "genus": "Perinereis",
+            "kingdom": "Metazoa",
+            "order": "Phyllodocida",
+            "phylum": "Annelida",
+            "prefix": "wpPerVanc",
+            "scientificName": "Perinereis vancaurica",
+            "taxaClass": "Polychaeta",
+            "taxonomyId": 6355
+        }, {
+            "commonName": "human",
+            "family": "Hominidae",
+            "genus": "Homo",
+            "kingdom": "Metazoa",
+            "order": "Primates",
+            "phylum": "Chordata",
+            "prefix": "mHomSap",
+            "scientificName": "Homo sapiens",
+            "taxaClass": "Mammalia",
+            "taxonomyId": 9606
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEqual('application/json', response.content_type)
+        self.assertEqual(expect, response.json)
 
     def test_search_pending_requests(self):
         self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=6344, status="Pending")

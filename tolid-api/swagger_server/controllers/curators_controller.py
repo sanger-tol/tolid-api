@@ -120,12 +120,22 @@ def list_species():
 
     speciess = db.session.query(TolidSpecies).order_by(TolidSpecies.taxonomy_id).all()
 
-    output = ""
-    for species in speciess:
-        output += species.prefix + '\t' + species.name + '\t' + str(species.taxonomy_id) + '\t' \
-            + species.common_name + '\t' + species.genus + '\t' + species.family + '\t' \
-            + species.tax_order + '\t' + species.tax_class + '\t' + species.phylum + '\n'
-    return output.strip()
+    if "accept" in connexion.request.headers \
+            and str(connexion.request.headers["accept"]).startswith("text/plain"):
+        # Set Content-Type header
+        output = ""
+        for species in speciess:
+            output += species.prefix + '\t' + species.name + '\t' + str(species.taxonomy_id) \
+                + '\t' + species.common_name + '\t' + species.genus + '\t' + species.family \
+                + '\t' + species.tax_order + '\t' + species.tax_class + '\t' + species.phylum \
+                + '\n'
+        return connexion.lifecycle.ConnexionResponse(
+            status_code=200,
+            mimetype='text/plain',
+            body=output.strip()
+        )
+
+    return jsonify([species.to_basic_dict() for species in speciess])
 
 
 def requests_pending(api_key=None):

@@ -75,20 +75,27 @@ def search_species(taxonomy_id=None, skip=None, limit=None):
 
 
 def search_species_by_taxon_prefix_name(taxonomy_id=None, prefix=None,
-                                        scientific_name=None, skip=None, limit=None):
-    if (taxonomy_id != "") and taxonomy_id.isnumeric():
-        speciess = db.session.query(TolidSpecies) \
-            .filter(or_(TolidSpecies.taxonomy_id == taxonomy_id,
-                        TolidSpecies.prefix == prefix,
-                        TolidSpecies.name == scientific_name)) \
-            .order_by(TolidSpecies.taxonomy_id) \
-            .all()
+                                        scientific_name=None, output=None):
+    query = db.session.query(TolidSpecies)
+    filters = []
+    if prefix is not None:
+        filters.append(TolidSpecies.prefix == prefix)
+    if scientific_name is not None:
+        filters.append(TolidSpecies.name == scientific_name)
+    if taxonomy_id is not None:
+        if (taxonomy_id != "") and taxonomy_id.isnumeric():
+            # Valid integer taxonomy ID
+            filters.append(TolidSpecies.taxonomy_id == taxonomy_id)
+        else:
+            # Force this filter to fail
+            filters.append(TolidSpecies.taxonomy_id == TolidSpecies.taxonomy_id + 1)
+
+    if len(filters) == 0:
+        return jsonify([])
     else:
-        speciess = db.session.query(TolidSpecies) \
-            .filter(or_(TolidSpecies.prefix == prefix,
-                        TolidSpecies.name == scientific_name)) \
-            .order_by(TolidSpecies.taxonomy_id) \
-            .all()
+        query = query.filter(or_(*filters))
+
+    speciess = query.order_by(TolidSpecies.taxonomy_id).all()
 
     return jsonify([species.to_long_dict() for species in speciess])
 

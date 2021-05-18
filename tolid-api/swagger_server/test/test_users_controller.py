@@ -473,6 +473,12 @@ class TestUsersController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEqual(expect, response.json)
 
+        # No data given
+        response = self.client.open(
+            '/api/v2/species',
+            method='GET')
+        self.assertEqual([], response.json)
+
     def test_search_requests_for_user(self):
         self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=6344, status="Pending")
         self.request1.user = self.user1

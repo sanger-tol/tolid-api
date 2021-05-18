@@ -18,7 +18,7 @@ class TolidSpecies(Base):
     specimens = db.relationship('TolidSpecimen', back_populates="species",
                                 lazy=False, order_by='TolidSpecimen.number')
 
-    def to_dict(cls):
+    def to_basic_dict(cls):
         return {'prefix': cls.prefix,
                 'scientificName': cls.name,
                 'taxonomyId': cls.taxonomy_id,
@@ -28,8 +28,12 @@ class TolidSpecies(Base):
                 'order': cls.tax_order,
                 'taxaClass': cls.tax_class,
                 'phylum': cls.phylum,
-                'kingdom': cls.kingdom,
-                'currentHighestTolidNumber': cls.current_highest_tolid_number()}
+                'kingdom': cls.kingdom}
+
+    def to_dict(cls):
+        basic = cls.to_basic_dict()
+        additional = {'currentHighestTolidNumber': cls.current_highest_tolid_number()}
+        return {**basic, **additional}  # Merge the two together
 
     def to_long_dict(cls):
         short = cls.to_dict()
