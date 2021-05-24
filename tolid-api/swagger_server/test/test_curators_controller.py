@@ -349,7 +349,6 @@ class TestCuratorsController(BaseTestCase):
             + "human\tHomo\tHominidae\tPrimates\tMammalia\tChordata"
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        print(str(response))
         self.assertEqual('text/plain; charset=utf-8', response.content_type)
         self.assertEqual(expect, response.data.decode('utf-8'))
 
