@@ -280,7 +280,7 @@ function Home() {
                     <tr><td>s</td><td></td><td>sharks</td><td>Chondrichthyes</td></tr>
                     <tr><td>t</td><td>a</td><td>other animal phyla</td><td>Acanthocephala</td></tr>
                     <tr><td>t</td><td>b</td><td>other animal phyla</td><td>Brachiopoda</td></tr>
-                    <tr><td>t</td><td>c</td><td>other animal phyla</td><td>Cephalorhyncha, Kinorhyncha, Loricifera, Priapulida</td></tr>
+                    <tr><td>t</td><td>c</td><td>other animal phyla</td><td>Kinorhyncha, Loricifera, Priapulida</td></tr>
                     <tr><td>t</td><td>d</td><td>other animal phyla</td><td>Dicyemida, Rhombozoa</td></tr>
                     <tr><td>t</td><td>e</td><td>other animal phyla</td><td>Entoprocta</td></tr>
                     <tr><td>t</td><td>f</td><td>other animal phyla</td><td>Nematomorpha</td></tr>
