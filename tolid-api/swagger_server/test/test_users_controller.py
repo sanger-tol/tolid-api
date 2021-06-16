@@ -169,6 +169,15 @@ class TestUsersController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEqual([], response.json)
 
+        # taxonomyId not an integer
+        query_string = {'taxonomyId': 'non-numeric', 'specimenId': 'SAN0000100'}
+        response = self.client.open(
+            '/api/v2/tol-ids',
+            method='GET',
+            query_string=query_string)
+        self.assert404(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
         # All data given
         query_string = {'taxonomyId': 6344, 'specimenId': 'SAN0000100'}
         response = self.client.open(

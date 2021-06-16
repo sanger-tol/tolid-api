@@ -39,6 +39,9 @@ def search_tol_id(tol_id=None, skip=None, limit=None):
 
 def search_tol_id_by_taxon_specimen(taxonomy_id=None, specimen_id=None,
                                     skip=None, limit=None):
+    if not taxonomy_id.isnumeric():
+        return jsonify({'detail': "taxonomyId must be an integer"}), 404
+
     specimen = db.session.query(TolidSpecimen) \
         .filter(TolidSpecimen.species_id == taxonomy_id) \
         .filter(TolidSpecimen.specimen_id == specimen_id) \
