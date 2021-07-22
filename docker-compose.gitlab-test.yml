@@ -1,5 +1,5 @@
 # Additional deployment details for testing in CI/CD (includes temporary database)
-version: '3'
+version: '3.9'
 services: 
   tolid-db:
     image: postgres:11
