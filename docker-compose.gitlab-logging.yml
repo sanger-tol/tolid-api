@@ -7,7 +7,9 @@ services:
       - tolid
     volumes:
       - /etc/hostname:/etc/host_hostname:ro
-      - /var/run/docker.sock:/var/run/docker.sock
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
     command:
       $SYSLOG_URI
     deploy:
