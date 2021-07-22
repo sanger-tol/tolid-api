@@ -156,7 +156,7 @@ push-ui-test:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker stack rm tolid
     - sleep 20
-    - docker stack deploy --with-registry-auth -c docker-compose.gitlab.yml -c docker-compose.gitlab-logging.yml tolid
+    - docker stack deploy --with-registry-auth -c docker-compose.gitlab.yml tolid
 
 deploy-staging:
   <<: *deploy-template
