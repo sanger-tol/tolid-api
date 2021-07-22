@@ -1,0 +1,21 @@
+# Used for deploying a logging container in Staging/Production
+version: '3'
+services: 
+  tolid-logspout:
+    image: gliderlabs/logspout:latest
+    networks:
+      - tolid
+    volumes:
+      - /etc/hostname:/etc/host_hostname:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      $SYSLOG_URI
+    deploy:
+      mode: global
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 256M
+        reservations:
+          cpus: '0.10'
+          memory: 128M

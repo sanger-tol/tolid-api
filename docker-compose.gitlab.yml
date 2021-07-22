@@ -25,7 +25,7 @@ services:
     ports: 
       - 8000:80
   tolid-dbutils:
-    image: $CI_REGISTRY/tol/sts/dbutils:1.0.1
+    image: $CI_REGISTRY/tol/sts/dbutils:1.0.2
     restart: always
     networks:
       - tolid
@@ -33,6 +33,6 @@ services:
       replicas: 1
     env_file:
       - ${ENV_FILE}
-networks:
+  networks:
     tolid:
       driver: overlay
