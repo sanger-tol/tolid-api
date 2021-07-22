@@ -33,6 +33,6 @@ services:
       replicas: 1
     env_file:
       - ${ENV_FILE}
-  networks:
-    tolid:
-      driver: overlay
+networks:
+  tolid:
+    driver: overlay
