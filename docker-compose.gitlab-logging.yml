@@ -1,5 +1,5 @@
 # Used for deploying a logging container in Staging/Production
-version: '3.9'
+version: '3'
 services: 
   tolid-logspout:
     image: gliderlabs/logspout:latest
@@ -7,9 +7,7 @@ services:
       - tolid
     volumes:
       - /etc/hostname:/etc/host_hostname:ro
-      - type: bind
-        source: /var/run/docker.sock
-        target: /var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     command:
       $SYSLOG_URI
     deploy:

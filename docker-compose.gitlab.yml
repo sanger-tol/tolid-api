@@ -1,5 +1,5 @@
 # This is used for staging and production deployment in CI/CD
-version: '3.9'
+version: '3'
 services: 
   tolid-api:
     image: $CI_REGISTRY_IMAGE/tolid-api:$CI_COMMIT_SHA
