@@ -1,5 +1,5 @@
 # This is used for staging and production deployment in CI/CD
-version: '3'
+version: '3.9'
 services: 
   tolid-api:
     image: $CI_REGISTRY_IMAGE/tolid-api:$CI_COMMIT_SHA
@@ -25,7 +25,7 @@ services:
     ports: 
       - 8000:80
   tolid-dbutils:
-    image: $CI_REGISTRY/tol/sts/dbutils:1.0.1
+    image: $CI_REGISTRY/tol/sts/dbutils:1.0.2
     restart: always
     networks:
       - tolid
@@ -34,5 +34,5 @@ services:
     env_file:
       - ${ENV_FILE}
 networks:
-    tolid:
-      driver: overlay
+  tolid:
+    driver: overlay
