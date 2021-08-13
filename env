@@ -1,0 +1,33 @@
+# All environment variables needed for running Submissions API
+# Ensure these are passed to docker-compose with the --env-file option
+
+# These are for the submissions-db (or a non-docker database in the case of staging or production)
+POSTGRES_USER=tolid-dev
+POSTGRES_PASSWORD=an-id-please
+POSTGRES_DB=tolid_local
+POSTGRES_HOST=tolid-db
+POSTGRES_PORT=5433
+
+# Location of the Submissions API from the point of view of the submissions-ui docker container (i.e. the internal port)
+# This is used to proxy api calls to the actual api docker container
+TOLID_API_LOCATION=http://tolid-api:8080
+
+# This is the URL of the web site and is used in emails sent from the API
+TOLID_URL=http://localhost:3002
+
+# Database connection string (you shouldn't need to change this unless using a non-postgres database)
+DB_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:5432/${POSTGRES_DB}
+
+# For sending mail from the api service
+MAIL_USERNAME_SMTP=mailuser
+MAIL_PASSWORD_SMTP=mailpassword
+MAIL_HOST=smtp.mail.example.com
+MAIL_PORT=587
+MAIL_SENDER=submissions@example.com
+MAIL_SENDER_NAME=Submissions Team
+
+# Elixir (authentication) service details
+ELIXIR_CLIENT_ID=e230942b-3b9e-48a2-80f5-6d94b9abeeaa
+ELIXIR_CLIENT_SECRET=3981e28c-6343-4aa2-a160-1f3f99259ef208412c9e-99f9-4716-a943-eb95206acb52
+ELIXIR_REDIRECT_URI=http://localhost:3002/callback
+ELIXIR_JWK={"kty":"RSA","e":"AQAB","kid":"rsa1","alg":"RS256","n":"uVHPfUHVEzpgOnDNi3e2pVsbK1hsINsTy_1mMT7sxDyP-1eQSjzYsGSUJ3GHq9LhiVndpwV8y7Enjdj0purywtwk_D8z9IIN36RJAh1yhFfbyhLPEZlCDdzxas5Dku9k0GrxQuV6i30Mid8OgRQ2q3pmsks414Afy6xugC6u3inyjLzLPrhR0oRPTGdNMXJbGw4sVTjnh5AzTgX-GrQWBHSjI7rMTcvqbbl7M8OOhE3MQ_gfVLXwmwSIoKHODC0RO-XnVhqd7Qf0teS1JiILKYLl5FS_7Uy2ClVrAYd2T6X9DIr_JlpRkwSD899pq6PR9nhKguipJE0qUXxamdY9nw"}
