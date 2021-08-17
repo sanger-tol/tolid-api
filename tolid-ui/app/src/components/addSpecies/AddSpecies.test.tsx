@@ -4,8 +4,9 @@ import { ErrorMessage } from '../../models/ErrorMessage';
 import AddSpecies from './AddSpecies';
 
 afterEach(() => {
-    if (AddSpecies.prototype.mock) {
-        AddSpecies.prototype.mockRestore()
+    // reset the mocks after each test
+    if (AddSpecies.prototype.postSpecies.mock) {
+        AddSpecies.prototype.postSpecies.mockRestore()
     }
 })
 
