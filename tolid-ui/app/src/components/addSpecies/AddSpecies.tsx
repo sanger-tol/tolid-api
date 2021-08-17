@@ -11,9 +11,8 @@ export interface AddSpeciesState {
 }
 
 const splitInput = (input: string): string[] => {
-    // split on contiguous whitespace (consisting only of "\n" and "\t",
-    // NOT spaces, as certain fields can contain spaces)
-    const regExp = /[\t\n]{1,}/;
+    // split on contiguous "\t"
+    const regExp = /[\t]{1,}/;
     return input.split(regExp);
 }
 
@@ -33,22 +32,11 @@ const parseSpecies = (split: string[]): Species => {
     return species;
 }
 
-const postSpecies = async (species: Species): Promise<ErrorMessage | null> => {
-    let errorMessage: ErrorMessage | null = null;
-    await httpClient().post('/species', species)
-        .catch(
-            (err: any) => {
-                errorMessage = err.response.data as ErrorMessage
-            }
-        )
-    return errorMessage;
-}
-
 const validateInput = (split: string[]): ErrorMessage | null => {
     if (split.length !== 9) {
         return {
-           detail: "9 entries must be provided",
-           title: "Client-Side Validation Error"
+            detail: "9 entries must be provided",
+            title: "Client-Side Validation Error"
         } as ErrorMessage;
     }
     try {
@@ -64,6 +52,17 @@ const validateInput = (split: string[]): ErrorMessage | null => {
 }
 
 class AddSpecies extends React.Component<AddSpeciesProps, AddSpeciesState> {
+    async postSpecies (species: Species): Promise<ErrorMessage | null> {
+        let errorMessage: ErrorMessage | null = null;
+        await httpClient().post('/species', species)
+            .catch(
+                async (err: any) => {
+                    errorMessage = err.response.data as ErrorMessage
+                }
+            )
+        return errorMessage;
+    }
+    
     sendRequest = async (event: any) => {
         event.preventDefault();
         const input = document.getElementById("add-species-input") as HTMLInputElement;
@@ -77,7 +76,7 @@ class AddSpecies extends React.Component<AddSpeciesProps, AddSpeciesState> {
         }
         // parse the species and POST
         const species = parseSpecies(split);
-        const serverSideError = await postSpecies(species);
+        const serverSideError = await this.postSpecies(species);
         // server side validation
         if (serverSideError !== null) {
             this.showErrorMessage(input, serverSideError);
