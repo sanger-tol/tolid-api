@@ -64,10 +64,6 @@ const validateInput = (split: string[]): ErrorMessage | null => {
 }
 
 class AddSpecies extends React.Component<AddSpeciesProps, AddSpeciesState> {
-    constructor(props: AddSpeciesProps) {
-        super(props);
-    }
-
     sendRequest = async (event: any) => {
         event.preventDefault();
         const input = document.getElementById("add-species-input") as HTMLInputElement;
