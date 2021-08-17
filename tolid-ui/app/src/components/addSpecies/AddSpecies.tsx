@@ -20,10 +20,10 @@ const splitInput = (input: string) => {
 const parseInput = (split: string[]): Species => {
     const species = {
         prefix: split[0],
-        scientificName: split[1],
-        taxonomyId: parseInt(split[2]),
+        genus: split[1],
+        scientificName: split[2],
+        taxonomyId: parseInt(split[3]),
         commonName: split[3],
-        genus: split[4],
         family: split[5],
         order: split[6],
         taxaClass: split[7],
@@ -35,23 +35,11 @@ const parseInput = (split: string[]): Species => {
 class AddSpecies extends React.Component<AddSpeciesProps, AddSpeciesState> {
     constructor(props: AddSpeciesProps) {
         super(props);
-        this.state = {
-            error: null
-        };
     }
 
-    postSpecies = async (species: Species) => {
-        // return an empty error message, can't possibly return null due to a bug
-        // in the typescript compiler causing inference that it's always null,
-        // thus preventing compilation
-        var errorMessage = {
-            detail: "",
-            title: ""
-        }
+    postSpecies = async (species: Species): Promise<ErrorMessage | null> => {
+        var errorMessage: ErrorMessage | null = null;
         await httpClient().post('/species', species)
-            .then((data: any) => {
-                // do nothing yet
-            })
             .catch(
                 (err: any) => {
                     errorMessage = err.response.data as ErrorMessage
@@ -86,10 +74,10 @@ class AddSpecies extends React.Component<AddSpeciesProps, AddSpeciesState> {
         }
         // parse the species and POST
         const species = parseInput(split);
-        const errorMessageDetail = (await this.postSpecies(species)).detail;
+        const errorMessage = await this.postSpecies(species);
         // server side validation
-        if (errorMessageDetail !== "") {
-            this.showErrorMessage(input, errorMessageDetail);
+        if (errorMessage !== null) {
+            this.showErrorMessage(input, errorMessage.detail);
             return;
         }
         // set the success
