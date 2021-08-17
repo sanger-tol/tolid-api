@@ -102,12 +102,16 @@ class AddSpecies extends React.Component<AddSpeciesProps, AddSpeciesState> {
         input.classList.add("is-invalid");
         input.setCustomValidity(error.detail);
         input.reportValidity();
+        const successPane = document.getElementById("success-pane") as HTMLElement;
+        successPane.className = "hidden";
     }
 
     setSuccess = (input: HTMLInputElement, form: HTMLFormElement) => {
         // reset the form
         input.classList.remove("is-invalid");
         form.reset();
+        const successPane = document.getElementById("success-pane") as HTMLElement;
+        successPane.className = "";
     }
 
     public render() {
@@ -124,6 +128,9 @@ class AddSpecies extends React.Component<AddSpeciesProps, AddSpeciesState> {
                         Add Species
                     </button>
                 </form>
+                <div className="hidden" id="success-pane">
+                    <h4>Species added successfully!</h4>
+                </div>
             </div>
         );
     }
