@@ -33,25 +33,31 @@ const parseSpecies = (split: string[]): Species => {
     return species;
 }
 
+const createClientSideError = (detail: string): ErrorMessage => {
+    return {
+        detail: detail,
+        title: "Client-Side Validation Error"
+    } as ErrorMessage;
+}
+
+const createWrongNumberOfFieldsError = (): ErrorMessage => {
+    return createClientSideError("9 entries must be provided");
+}
+
+const createNonIntegralTaxonomyIdError = (): ErrorMessage => {
+    return createClientSideError("The taxonomy ID (3rd entry) must be an integer");
+}
+
 const validateInput = (split: string[]): ErrorMessage | null => {
     if (split.length !== 9) {
-        return {
-            detail: "9 entries must be provided",
-            title: "Client-Side Validation Error"
-        } as ErrorMessage;
+        return createWrongNumberOfFieldsError();
     }
     try {
         if (isNaN(parseInt(split[2]))) {
-            return {
-                detail: "The taxonomy ID (3rd entry) must be an integer",
-                title: "Client-Side Validation Error"
-            } as ErrorMessage;
+            return createNonIntegralTaxonomyIdError();
         }
     } catch (exception) {
-        return {
-            detail: "The taxonomy ID (3rd entry) must be an integer",
-            title: "Client-Side Validation Error"
-        } as ErrorMessage;
+        return createNonIntegralTaxonomyIdError();
     }
     // all good, return null
     return null;
