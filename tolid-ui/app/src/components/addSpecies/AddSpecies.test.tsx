@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { example } from 'yargs';
 import AddSpecies from './AddSpecies';
 
 afterEach(() => {
