@@ -50,12 +50,24 @@ it("incorrect number of species data fields", async () => {
     })
 });
 
+it("Non integer taxonomy id", async () => {
+    // render component
+    render(<AddSpecies />);
+    
+    // input otherwise correct data, except the taxonomy id (3rd) should be an integer
+    const badSpeciesData = "fake1\t\t\tfake2\tfake      3\t\tf a k e 4\tfake5\tfake6\t\t\tfake7\t\t\t fa ke 8\tfake9";
+    inputSpeciesData(badSpeciesData).then(async input => {
+        await sendSpeciesData();
+        expect(input).toHaveProperty("validationMessage", "The taxonomy ID (3rd entry) must be an integer");
+    })
+});
+
 it("good species data", async () => {
     // render component
     render(<AddSpecies />);
 
     // input good species data
-    const goodSpeciesData = "fake1\t\t\tfake2\tfake      3\t\tf a k e 4\tfake5\tfake6\t\t\tfake7\t\t\t fa ke 8\tfake9";
+    const goodSpeciesData = "fake1\t\t\tfake2\t1234567890\t\tf a k e 4\tfake5\tfake6\t\t\tfake7\t\t\t fa ke 8\tfake9";
     inputSpeciesData(goodSpeciesData).then(async input => {
         await sendSpeciesData();
         expect(input).toHaveProperty("validationMessage", "");
@@ -74,12 +86,10 @@ it("server-side error-message", async () => {
     } as ErrorMessage);
 
     // send off request with good data
-    const goodSpeciesData = "fake1\t\t\tfake2\tfake      3\t\tf a k e 4\tfake5\tfake6\t\t\tfake7\t\t\t fa ke 8\tfake9";
+    const goodSpeciesData = "fake1\t\t\tfake2\t1234567890\t\tf a k e 4\tfake5\tfake6\t\t\tfake7\t\t\t fa ke 8\tfake9";
     inputSpeciesData(goodSpeciesData).then(async input => {
         await sendSpeciesData();
         // expect our server-side error to appear
         expect(input).toHaveProperty("validationMessage", errorDetail);
     })
 });
-
-// add test for non integer taxonomy id
