@@ -10,55 +10,62 @@ export interface AddSpeciesProps {
 export interface AddSpeciesState {
 }
 
-const splitInput = (input: string) => {
+const splitInput = (input: string): string[] => {
     // split on contiguous whitespace (consisting only of "\n" and "\t",
     // NOT spaces, as certain fields can contain spaces)
     const regExp = /[\t\n]{1,}/;
     return input.split(regExp);
 }
 
-const parseInput = (split: string[]): Species => {
+const parseSpecies = (split: string[]): Species => {
     const species = {
         prefix: split[0],
-        genus: split[1],
-        scientificName: split[2],
-        taxonomyId: parseInt(split[3]),
+        scientificName: split[1],
+        taxonomyId: parseInt(split[2]),
         commonName: split[3],
+        genus: split[4],
         family: split[5],
         order: split[6],
         taxaClass: split[7],
         phylum: split[8]
     } as Species;
+
     return species;
+}
+
+const postSpecies = async (species: Species): Promise<ErrorMessage | null> => {
+    let errorMessage: ErrorMessage | null = null;
+    await httpClient().post('/species', species)
+        .catch(
+            (err: any) => {
+                errorMessage = err.response.data as ErrorMessage
+            }
+        )
+    return errorMessage;
+}
+
+const validateInput = (split: string[]): ErrorMessage | null => {
+    if (split.length !== 9) {
+        return {
+           detail: "9 entries must be provided",
+           title: "Client-Side Validation Error"
+        } as ErrorMessage;
+    }
+    try {
+        parseInt(split[2]);
+    } catch (exception) {
+        return {
+            detail: "The taxonomy ID (3rd entry) must be an integer",
+            title: "Client-Side Validation Error"
+        } as ErrorMessage;
+    }
+    // all good, return null
+    return null;
 }
 
 class AddSpecies extends React.Component<AddSpeciesProps, AddSpeciesState> {
     constructor(props: AddSpeciesProps) {
         super(props);
-    }
-
-    postSpecies = async (species: Species): Promise<ErrorMessage | null> => {
-        var errorMessage: ErrorMessage | null = null;
-        await httpClient().post('/species', species)
-            .catch(
-                (err: any) => {
-                    errorMessage = err.response.data as ErrorMessage
-                }
-            )
-        return errorMessage;
-    }
-
-    getInputError = (split: string[]) => {
-        if (split.length !== 9) {
-            return "9 entries must be provided";
-        }
-        try {
-            parseInt(split[2]);
-        } catch (exception) {
-            return "The taxonomy ID (3rd entry) must be an integer";
-        }
-        // all good, return null
-        return null;
     }
 
     sendRequest = async (event: any) => {
@@ -67,26 +74,26 @@ class AddSpecies extends React.Component<AddSpeciesProps, AddSpeciesState> {
         const form = document.getElementById("add-species-form") as HTMLFormElement;
         const split = splitInput(input.value);
         // client side validation
-        const error = this.getInputError(split);
-        if (error !== null) {
-            this.showErrorMessage(input, error);
+        const clientSideError = validateInput(split);
+        if (clientSideError !== null) {
+            this.showErrorMessage(input, clientSideError);
             return;
         }
         // parse the species and POST
-        const species = parseInput(split);
-        const errorMessage = await this.postSpecies(species);
+        const species = parseSpecies(split);
+        const serverSideError = await postSpecies(species);
         // server side validation
-        if (errorMessage !== null) {
-            this.showErrorMessage(input, errorMessage.detail);
+        if (serverSideError !== null) {
+            this.showErrorMessage(input, serverSideError);
             return;
         }
         // set the success
         this.setSuccess(input, form);
     }
 
-    showErrorMessage = (input: HTMLInputElement, error: string) => {
+    showErrorMessage = (input: HTMLInputElement, error: ErrorMessage) => {
         input.classList.add("is-invalid");
-        input.setCustomValidity(error);
+        input.setCustomValidity(error.detail);
         input.reportValidity();
     }
 
