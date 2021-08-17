@@ -10,13 +10,13 @@ afterEach(() => {
 })
 
 const inputSpeciesData = async (speciesData: string): Promise<HTMLInputElement> => {
-    const input = screen.queryByRole('textbox');
+    const input = screen.queryByRole('textbox') as HTMLInputElement;
     userEvent.type(input, speciesData);
     return input as HTMLInputElement;
 }
 
 const sendSpeciesData = async () => {
-    const sendButton = screen.queryByRole('button');
+    const sendButton = screen.queryByRole('button') as HTMLElement;
     userEvent.click(sendButton);
 }
 
