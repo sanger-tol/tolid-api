@@ -82,3 +82,4 @@ it("server-side error-message", async () => {
     })
 });
 
+// add test for non integer taxonomy id

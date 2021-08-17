@@ -26,7 +26,8 @@ const parseSpecies = (split: string[]): Species => {
         family: split[5],
         order: split[6],
         taxaClass: split[7],
-        phylum: split[8]
+        phylum: split[8],
+        kingdom: ""
     } as Species;
 
     return species;
@@ -40,7 +41,12 @@ const validateInput = (split: string[]): ErrorMessage | null => {
         } as ErrorMessage;
     }
     try {
-        parseInt(split[2]);
+        if (isNaN(parseInt(split[2]))) {
+            return {
+                detail: "The taxonomy ID (3rd entry) must be an integer",
+                title: "Client-Side Validation Error"
+            } as ErrorMessage;
+        }
     } catch (exception) {
         return {
             detail: "The taxonomy ID (3rd entry) must be an integer",
