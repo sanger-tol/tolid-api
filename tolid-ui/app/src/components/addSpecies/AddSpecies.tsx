@@ -11,8 +11,8 @@ export interface AddSpeciesState {
 }
 
 const splitInput = (input: string): string[] => {
-    // split on contiguous "\t"
-    const regExp = /[\t]{1,}/;
+    // split on contiguous combinations of "\t" and "\n"
+    const regExp = /[\t\n]{1,}/;
     return input.split(regExp);
 }
 
