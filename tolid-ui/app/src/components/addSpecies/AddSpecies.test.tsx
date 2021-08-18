@@ -71,7 +71,8 @@ it("good species data", async () => {
     inputSpeciesData(goodSpeciesData).then(async input => {
         await sendSpeciesData();
         expect(input).toHaveProperty("validationMessage", "");
-    })
+        expect(screen.getByText("Species added successfully!")).toBeInTheDocument();
+    });
 });
 
 it("server-side error-message", async () => {
