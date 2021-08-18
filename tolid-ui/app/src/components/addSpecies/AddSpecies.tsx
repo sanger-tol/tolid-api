@@ -121,7 +121,10 @@ class AddSpecies extends React.Component<AddSpeciesProps, AddSpeciesState> {
             <div id="add-species-container">
                 <form className="form mb-3" id="add-species-form">
                     <div className="form-group">
-                        <input type="text" className="form-control form-control-lg" id="add-species-input" placeholder="Species data..." />
+                        <textarea className="form-control form-control-lg"
+                                  id="add-species-input"
+                                  placeholder="Species data...">
+                        </textarea>
                         <small className="form-text text-muted">
                             Add a new species to the database.
                         </small>

@@ -67,7 +67,7 @@ it("good species data", async () => {
     render(<AddSpecies updateRequestsList={()=>{}}/>);
 
     // input good species data
-    const goodSpeciesData = "fake1\t\t\tfake2\t1234567890\t\tf a k e 4\tfake5\tfake6\t\t\tfake7\t\t\t fa ke 8\tfake9";
+    const goodSpeciesData = "fake1\t\t\tfake2\t1234567890\t\t\n\nf a k e 4\tfake5\tfake6\t\t\tfake7\t\t\t fa ke 8\nfake9";
     inputSpeciesData(goodSpeciesData).then(async input => {
         await sendSpeciesData();
         expect(input).toHaveProperty("validationMessage", "");
