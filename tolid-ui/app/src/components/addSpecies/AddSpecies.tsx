@@ -119,7 +119,7 @@ class AddSpecies extends React.Component<AddSpeciesProps, AddSpeciesState> {
     public render() {
         return (
             <div id="add-species-container">
-                <form className="form" id="add-species-form">
+                <form className="form mb-3" id="add-species-form">
                     <div className="form-group">
                         <input type="text" className="form-control form-control-lg" id="add-species-input" placeholder="Species data..." />
                         <small className="form-text text-muted">
