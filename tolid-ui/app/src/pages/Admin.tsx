@@ -17,7 +17,7 @@ function Admin() {
         <div className="bg-circle-3 bg-circle"></div>
         <div className="bg-circle-4 bg-circle"></div>
       </header>
-      <div className="container">
+      <div className="container mt-2">
         <Tabs defaultActiveKey="request" id="admin-tab" className="ml-auto">
           <Tab eventKey="request"  title="Pending Requests">
             <section>
