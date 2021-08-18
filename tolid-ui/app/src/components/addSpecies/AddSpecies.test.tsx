@@ -29,7 +29,7 @@ const mockPostSpecies = (error: ErrorMessage) => {
 
 it("no species data", async () => {
     // render component
-    render(<AddSpecies />);
+    render(<AddSpecies updateRequestsList={()=>{}}/>);
     
     // input empty data
     inputSpeciesData("").then(async input => {
@@ -40,7 +40,7 @@ it("no species data", async () => {
 
 it("incorrect number of species data fields", async () => {
     // render component
-    render(<AddSpecies />);
+    render(<AddSpecies updateRequestsList={()=>{}}/>);
     
     // input incorrect number of species data
     const badSpeciesData = "fake1\tfake2\tfake3";
@@ -52,7 +52,7 @@ it("incorrect number of species data fields", async () => {
 
 it("Non integer taxonomy id", async () => {
     // render component
-    render(<AddSpecies />);
+    render(<AddSpecies updateRequestsList={()=>{}}/>);
     
     // input otherwise correct data, except the taxonomy id (3rd) should be an integer
     const badSpeciesData = "fake1\t\t\tfake2\tfake      3\t\tf a k e 4\tfake5\tfake6\t\t\tfake7\t\t\t fa ke 8\tfake9";
@@ -64,10 +64,10 @@ it("Non integer taxonomy id", async () => {
 
 it("good species data", async () => {
     // render component
-    render(<AddSpecies />);
+    render(<AddSpecies updateRequestsList={()=>{}}/>);
 
     // input good species data
-    const goodSpeciesData = "fake1\t\t\n\tfake2\t1234567890\t\n\n\tf a k e 4\tfake5\tfake6\t\t\tfake7\t\t\t fa ke 8\nfake9";
+    const goodSpeciesData = "fake1\t\t\tfake2\t1234567890\t\tf a k e 4\tfake5\tfake6\t\t\tfake7\t\t\t fa ke 8\tfake9";
     inputSpeciesData(goodSpeciesData).then(async input => {
         await sendSpeciesData();
         expect(input).toHaveProperty("validationMessage", "");
@@ -77,7 +77,7 @@ it("good species data", async () => {
 
 it("server-side error-message", async () => {
     // render component
-    render(<AddSpecies />);
+    render(<AddSpecies updateRequestsList={()=>{}}/>);
 
     // mock a server side error
     const errorDetail = "A very important error message";
