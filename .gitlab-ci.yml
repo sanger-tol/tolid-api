@@ -80,7 +80,7 @@ test-api:
     - docker stack deploy --with-registry-auth -c docker-compose.gitlab.yml -c docker-compose.gitlab-test.yml tolid
     - sleep 60
     - docker service logs tolid_tolid-api
-    - docker exec $(docker ps -q -f name="tolid_tolid-api") bash -c "pip3 install tox; tox"
+    - docker exec $(docker ps -f name="tolid_tolid-api") bash -c "pip3 install tox; tox"
 
 test-ui:
   tags:
