@@ -6,6 +6,7 @@ import { httpClient } from '../../services/http/httpClient';
 import './AddSpecies.scss'
 
 export interface AddSpeciesProps {
+    updateRequestsList: () => void
 }
 export interface AddSpeciesState {
 }
@@ -112,6 +113,7 @@ class AddSpecies extends React.Component<AddSpeciesProps, AddSpeciesState> {
         form.reset();
         const successPane = document.getElementById("success-pane") as HTMLElement;
         successPane.className = "";
+        this.props.updateRequestsList();
     }
 
     public render() {

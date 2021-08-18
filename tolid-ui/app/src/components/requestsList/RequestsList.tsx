@@ -6,6 +6,8 @@ import { httpClient } from '../../services/http/httpClient';
 import './RequestsList.scss'
 
 export interface Props {
+  openAddSpeciesTab: () => void,
+  numSpeciesAdded: number
 }
 export interface State {
     requests: Request[],
@@ -19,7 +21,14 @@ class RequestsList extends React.Component<Props, State> {
     this.state = {
       requests: [],
       error: null,
-      message: ''
+      message: '',
+    }
+  }
+
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    // update requests if a new species has been added
+    if (prevProps.numSpeciesAdded !== this.props.numSpeciesAdded) {
+      this.updateRequestsList();
     }
   }
   
@@ -82,6 +91,10 @@ class RequestsList extends React.Component<Props, State> {
         })   
   }
 
+  addSpecies = (event: any) => {
+    this.props.openAddSpeciesTab();
+  }
+
 
   public render() {
       return (
@@ -122,6 +135,9 @@ class RequestsList extends React.Component<Props, State> {
                     <td>
                       {item.species.scientificName &&
                         <button className="btn btn-sm btn-success" onClick={this.acceptRequest} data-request-id={item.requestId}>Accept</button>
+                      }
+                      {!item.species.scientificName &&
+                        <button className="btn btn-sm btn-secondary" onClick={this.addSpecies}>Add Species</button>
                       }
                       <button className="btn btn-sm btn-danger" onClick={this.rejectRequest} data-request-id={item.requestId}>Reject</button>
                     </td>
