@@ -17,32 +17,34 @@ function Admin() {
         <div className="bg-circle-3 bg-circle"></div>
         <div className="bg-circle-4 bg-circle"></div>
       </header>
-      <Tabs defaultActiveKey="request" id="uncontrolled-tab-example" className="ml-auto">
-        <Tab eventKey="request" title="Pending Requests">
-          <section>
-            <div className="container">
-              <div className="row align-items-center">
-                <div className="col-lg-12 order-lg-1">
-                    <h2>Pending requests</h2>
-                    <RequestsList/>
+      <div className="container">
+        <Tabs defaultActiveKey="request" id="admin-tab" className="ml-auto">
+          <Tab eventKey="request"  title="Pending Requests">
+            <section>
+              <div className="container">
+                <div className="row align-items-center">
+                  <div className="col-lg-12 order-lg-1 mt-3">
+                      <h2>Pending requests</h2>
+                      <RequestsList/>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
-        </Tab>
-        <Tab eventKey="add-species" title="Add Species">
-          <section>
-            <div className="container">
-              <div className="row align-items-center">
-                <div className="col-lg-12 order-lg-1">
-                    <h2>Add Species</h2>
-                    <AddSpecies/>
+            </section>
+          </Tab>
+          <Tab eventKey="add-species" title="Add Species">
+            <section>
+              <div className="container">
+                <div className="row align-items-center">
+                  <div className="col-lg-12 order-lg-1 mt-3">
+                      <h2>Add Species</h2>
+                      <AddSpecies/>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
-        </Tab>
-      </Tabs>
+            </section>
+          </Tab>
+        </Tabs>
+      </div>
     </div>
   );
 }
