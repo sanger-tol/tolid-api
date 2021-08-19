@@ -49,8 +49,6 @@ test-api:
     - docker swarm init
     - docker stack deploy --with-registry-auth -c docker-compose.gitlab.yml -c docker-compose.gitlab-test.yml tolid
     - docker service logs tolid_tolid-api
-    - ip a
-    - host -t a docker
     - sleep 60 &&
     - docker ps -a
     - docker ps -q -f name="tolid_tolid-api"
