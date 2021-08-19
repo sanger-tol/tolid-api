@@ -51,6 +51,7 @@ test-api:
     - docker service logs tolid_tolid-api
     - ip a
     - host -t a docker
+    - sleep 60 &&
     - docker ps -a
     - docker ps -q -f name="tolid_tolid-api"
     - docker exec $(docker ps -q -f name="tolid_tolid-api") bash -c "pip3 install tox; tox"
