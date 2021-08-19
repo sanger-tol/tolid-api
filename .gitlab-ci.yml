@@ -1,9 +1,6 @@
 stages:
-  - lint
   - build
   - test
-  - push
-  - deploy
 
 variables:
   DOCKER_IMAGE: $CI_REGISTRY/tol/sts/build-base:1.0.0
@@ -52,6 +49,8 @@ test-api:
     - docker swarm init
     - docker stack deploy --with-registry-auth -c docker-compose.gitlab.yml -c docker-compose.gitlab-test.yml tolid
     - docker service logs tolid_tolid-api
+    - ip a
+    - host -t a docker
     - docker ps -a
     - docker ps -q -f name="tolid_tolid-api"
     - docker exec $(docker ps -q -f name="tolid_tolid-api") bash -c "pip3 install tox; tox"
