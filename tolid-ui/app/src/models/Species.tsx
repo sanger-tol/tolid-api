@@ -14,4 +14,3 @@ export interface Species {
   currentHighestTolidNumber: number;
   tolIds: ToLID[];
 }
-
