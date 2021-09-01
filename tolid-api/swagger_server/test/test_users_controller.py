@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 
 from swagger_server.test import BaseTestCase
-from swagger_server.model import db, TolidRequest
+from swagger_server.model import db, TolidRequest, \
+    TolidPrimaryPrefix, TolidSecondaryPrefix
 
 
 class TestUsersController(BaseTestCase):
@@ -981,6 +982,46 @@ class TestUsersController(BaseTestCase):
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEqual(expect, response.json)
+
+    def test_retrieve_prefixes(self):
+        self.primary1 = TolidPrimaryPrefix(letter="a",
+                                           name="amphibia")
+        db.session.add(self.primary1)
+        self.secondary1 = TolidSecondaryPrefix(letter="",
+                                               name="Amphibia",
+                                               primary_prefix_letter="a")
+        db.session.add(self.secondary1)
+        self.primary2 = TolidPrimaryPrefix(letter="c",
+                                           name="non-vascular plants")
+        db.session.add(self.primary2)
+        self.secondary2 = TolidSecondaryPrefix(letter="a",
+                                               name="Andreaeopsida",
+                                               primary_prefix_letter="c")
+        db.session.add(self.secondary2)
+        db.session.commit()
+
+        response = self.client.open(
+            '/api/v2/prefix/all',
+            method='GET')
+        expect = [
+                    {
+                        "letter": "a",
+                        "name": "amphibia",
+                        "secondaryPrefixes": [{
+                            "letter": "",
+                            "name": "Amphibia"
+                        }]
+                    },
+                    {
+                        "letter": "c",
+                        "name": "non-vascular plants",
+                        "secondaryPrefixes": [{
+                            "letter": "a",
+                            "name": "Andreaeopsida"
+                        }]
+                    }
+        ]
         self.assertEqual(expect, response.json)
 
 

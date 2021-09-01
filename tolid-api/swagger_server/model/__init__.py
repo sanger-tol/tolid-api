@@ -6,3 +6,5 @@ from .tolid_user import TolidUser  # noqa
 from .tolid_role import TolidRole  # noqa
 from .tolid_request import TolidRequest  # noqa
 from .tolid_state import TolidState  # noqa
+from .tolid_primary_prefix import TolidPrimaryPrefix  # noqa
+from .tolid_secondary_prefix import TolidSecondaryPrefix  # noqa

@@ -423,6 +423,28 @@ paths:
         "403":
           description: user not authorised to use this function
       x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /prefix/all:
+    get:
+      tags:
+      - users
+      summary: List all prefixes and their description
+      description: |
+        Returns a list of all assigned prefixes and their descriptions in the database
+      operationId: retrieve_prefixes
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PrimaryPrefix'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.users_controller
   /validate-manifest:
     post:
       security:
@@ -914,6 +936,35 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ToLIDShort'
+    PrimaryPrefix:
+      required:
+        - letter
+        - name
+        - secondaryPrefixes
+      type: object
+      properties:
+        letter:
+          type: string
+          example: c
+        name:
+          type: string
+          example: non-vascular plants
+        secondaryPrefixes:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecondaryPrefix'
+    SecondaryPrefix:
+      required:
+        - letter
+        - name
+      type: object
+      properties:
+        letter:
+          type: string
+          example: a
+        name:
+          type: string
+          example: Andreaeopsida
     RequestLong:
       required:
         - requestId
@@ -989,4 +1040,3 @@ components:
       x-apikeyInfoFunc: swagger_server.controllers.auth_controller.apikey_auth
 # security:
 #   - ApiKeyAuth: []     # 2) Apply the API key globally to all operations
-  

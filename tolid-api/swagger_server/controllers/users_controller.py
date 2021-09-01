@@ -1,5 +1,5 @@
 from swagger_server.model import db, TolidSpecies, \
-    TolidSpecimen, TolidUser, TolidRequest
+    TolidSpecimen, TolidUser, TolidRequest, TolidPrimaryPrefix
 from swagger_server.db_utils import create_request, \
     notify_requests_pending
 from flask import jsonify
@@ -153,3 +153,10 @@ def search_request(request_id=None, skip=None, limit=None):
         return jsonify([])
 
     return jsonify([request])
+
+
+def retrieve_prefixes():
+    primary_prefixes = db.session.query(TolidPrimaryPrefix) \
+       .order_by(TolidPrimaryPrefix.letter) \
+       .all()
+    return jsonify(primary_prefixes)

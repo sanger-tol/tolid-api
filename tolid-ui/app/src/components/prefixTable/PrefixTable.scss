@@ -1,0 +1,14 @@
+p.msg {
+  border-style: solid;
+  border-width: 2px;
+  text-align: center;
+  padding: 10px;
+}
+
+.msg.err {
+  border-color: red;
+}
+
+.msg.war {
+  border-color: orange;
+}
