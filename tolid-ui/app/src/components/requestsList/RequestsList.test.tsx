@@ -2,6 +2,7 @@ import React from "react";
 import { act } from "react-dom/test-utils";
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
+import { httpClient } from '../../services/http/httpClient';
 import RequestsList from "./RequestsList";
 
 it("successful request", async () => {
@@ -51,7 +52,7 @@ it("successful request", async () => {
 }]
   const fakeResults2 = [];
 
-  jest.spyOn(global, "fetch").mockImplementationOnce(() =>
+  jest.spyOn(httpClient, "get").mockImplementationOnce(() =>
       Promise.resolve({
       json: () => Promise.resolve(fakeResults),
       ok: true
