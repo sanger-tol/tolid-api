@@ -984,7 +984,6 @@ class TestUsersController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEqual(expect, response.json)
 
-
     def test_retrieve_prefixes(self):
         self.primary1 = TolidPrimaryPrefix(letter="a",
                                            name="amphibia")
@@ -1025,7 +1024,6 @@ class TestUsersController(BaseTestCase):
         ]
         self.assertEqual(expect, response.json)
 
-    
     def test_list_assigned_tolid_species(self):
         response = self.client.open(
             '/api/v2/species/tol-ids/all/0',
