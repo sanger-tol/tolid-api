@@ -984,6 +984,7 @@ class TestUsersController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEqual(expect, response.json)
 
+
     def test_retrieve_prefixes(self):
         self.primary1 = TolidPrimaryPrefix(letter="a",
                                            name="amphibia")
@@ -1022,6 +1023,66 @@ class TestUsersController(BaseTestCase):
                         }]
                     }
         ]
+        self.assertEqual(expect, response.json)
+
+    
+    def test_list_assigned_tolid_species(self):
+        response = self.client.open(
+            '/api/v2/species/tol-ids/all/0',
+            method='GET')
+        expect = [{
+            "commonName": "lugworm",
+            "currentHighestTolidNumber": 2,
+            "family": "Arenicolidae",
+            "genus": "Arenicola",
+            "order": "None",
+            "phylum": "Annelida",
+            "kingdom": "Metazoa",
+            "prefix": "wuAreMari",
+            "scientificName": "Arenicola marina",
+            "taxaClass": "Polychaeta",
+            "taxonomyId": 6344,
+            "tolIds": [
+                {
+                    "specimen": {
+                        "specimenId": "SAN0000100"
+                    },
+                    "tolId": "wuAreMari1"
+                },
+                {
+                    "specimen": {
+                        "specimenId": "SAN0000101"
+                    },
+                    "tolId": "wuAreMari2"
+                }
+            ]
+        }, {
+            "commonName": "None",
+            "currentHighestTolidNumber": 1,
+            "family": "Nereididae",
+            "genus": "Perinereis",
+            "kingdom": "Metazoa",
+            "order": "Phyllodocida",
+            "phylum": "Annelida",
+            "prefix": "wpPerVanc",
+            "scientificName": "Perinereis vancaurica",
+            "taxaClass": "Polychaeta",
+            "taxonomyId": 6355,
+            "tolIds": [
+                {
+                    "specimen": {
+                        "specimenId": "SAN0000101"
+                    },
+                    "tolId": "wpPerVanc1"
+                }
+            ]
+        }]
+        self.assertEqual(expect, response.json)
+
+        response = self.client.open(
+            '/api/v2/species/tol-ids/all/5',
+            method='GET')
+        expect = []
         self.assertEqual(expect, response.json)
 
 

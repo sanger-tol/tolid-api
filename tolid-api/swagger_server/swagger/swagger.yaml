@@ -423,6 +423,39 @@ paths:
         "403":
           description: user not authorised to use this function
       x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /species/tol-ids/all/{page}:
+    get:
+      tags:
+      - users
+      summary: List all species that already have assigned ToLIDs
+      description: |
+        Returns all species that already have assigned tol-ids in schema SpeciesLong
+      operationId: list_assigned_tolid_species
+      parameters:
+      - name: page
+        in: path
+        description: pass a page number to view a set of species that have assigned TolIDs
+        required: true
+        style: simple
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpeciesLong'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-openapi-router-controller: swagger_server.controllers.users_controller
   /prefix/all:
     get:
       tags:

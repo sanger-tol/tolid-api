@@ -160,3 +160,16 @@ def retrieve_prefixes():
        .order_by(TolidPrimaryPrefix.letter) \
        .all()
     return jsonify(primary_prefixes)
+
+
+def list_assigned_tolid_species(page=None):
+    # pages work like indexes & 50 species to a page
+    page = int(page)
+    species = db.session.query(TolidSpecies) \
+        .join(TolidSpecimen) \
+        .order_by(TolidSpecies.name) \
+        .offset((page*50)+1) \
+        .limit((page+1)*50) \
+        .all()
+
+    return jsonify([individual.to_long_dict() for individual in species])
