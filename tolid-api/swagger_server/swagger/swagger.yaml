@@ -809,6 +809,9 @@ components:
         specimenId:
           type: string
           example: "SAN0000100"
+        confirmationName:
+          type: string
+          example: Arenicola marina
     TaxonSpecimen:
       type: array
       items:

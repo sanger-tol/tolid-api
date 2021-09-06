@@ -8,5 +8,6 @@ export interface Request {
   createdBy: User;
   species: Species;
   specimen: Specimen;
+  confirmationName?: string;
 }
 

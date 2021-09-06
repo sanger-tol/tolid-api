@@ -13,7 +13,7 @@ def create_new_specimen(species, specimen_id, user):
     return specimen
 
 
-def create_request(taxonomy_id, specimen_id, user):
+def create_request(taxonomy_id, specimen_id, user, confirmation_name=None):
     request = db.session.query(TolidRequest) \
         .filter(TolidRequest.specimen_id == specimen_id) \
         .filter(TolidRequest.species_id == taxonomy_id) \
@@ -21,7 +21,8 @@ def create_request(taxonomy_id, specimen_id, user):
     if request is None:
         request = TolidRequest(specimen_id=specimen_id,
                                species_id=taxonomy_id,
-                               status="Pre-pending")
+                               status="Pre-pending",
+                               confirmation_name=confirmation_name)
         request.user = user
     else:
         if request.user != user:

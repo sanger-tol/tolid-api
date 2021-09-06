@@ -2,8 +2,15 @@ import * as React from 'react';
 import { Request } from '../../models/Request'
 import { ErrorMessage } from '../../models/ErrorMessage'
 import { httpClient } from '../../services/http/httpClient';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import './RequestsList.scss'
+
+const ConfirmationOverlay = (props: any) => (
+    <Tooltip id="confirmation-tooltip" className="show" {...props}>
+      Entered during the request creation. Compare to the "Name" column.
+    </Tooltip>
+)
 
 export interface Props {
   openAddSpeciesTab?: () => void,
@@ -54,7 +61,7 @@ class RequestsList extends React.Component<Props, State> {
 
   acceptRequest = (event: any) => {
     const requestId = event.target.getAttribute("data-request-id");
-    httpClient().patch('requests/'+requestId+'/accept', {})
+    httpClient().patch('/requests/'+requestId+'/accept', {})
         // the JSON body is taken from the response
         .then(data => {
             this.setState({
@@ -74,7 +81,7 @@ class RequestsList extends React.Component<Props, State> {
 
   rejectRequest = (event: any) => {
     const requestId = event.target.getAttribute("data-request-id");
-    httpClient().patch('requests/'+requestId+'/reject', {})
+    httpClient().patch('/requests/'+requestId+'/reject', {})
           .then(data => {
             this.setState({
               error: null,
@@ -118,6 +125,17 @@ class RequestsList extends React.Component<Props, State> {
                   <th>Request ID</th>
                   <th>Taxonomy ID</th>
                   <th>Name</th>
+                  <th>
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={ConfirmationOverlay}
+                    delay={{ show: 0, hide: 300 }}
+                  >
+                    <div>
+                      Name Confirmation
+                    </div>
+                  </OverlayTrigger>
+                  </th>
                   <th>Specimen ID</th>
                   <th>Requested by</th>
                   <th>Next ToLID</th>
@@ -130,6 +148,7 @@ class RequestsList extends React.Component<Props, State> {
                     <td>{item.requestId}</td>
                     <td>{item.species.taxonomyId}</td>
                     <td>{item.species.scientificName}</td>
+                    <td>{item.confirmationName ?? ""}</td>
                     <td>{item.specimen.specimenId}</td>
                     <td>{item.createdBy.name}</td>
                     <td>{item.species.prefix}{item.species.currentHighestTolidNumber ? item.species.currentHighestTolidNumber + 1 : 1}</td>

@@ -11,12 +11,15 @@ export interface State {
     ret: Request | ErrorMessage | null,
 }
 
-function makeRequest(taxonomyId: number, specimenId: string): Promise<Request|ErrorMessage> {
-
-  var postData = [{taxonomyId: taxonomyId, specimenId: specimenId}];
+function makeRequest(taxonomyId: number, specimenId: string, confirmationName: string): Promise<Request|ErrorMessage> {
+  const postData = [{
+    taxonomyId: taxonomyId,
+    specimenId: specimenId,
+    confirmationName: confirmationName
+  }];
   return httpClient().post('/requests', postData)
     .then((data: any) => {
-      return data.data[0] as Request       
+      return data.data[0] as Request
     })
     .catch((err: any) => {
       return err as ErrorMessage
@@ -36,19 +39,25 @@ class RequestForm extends React.Component<Props, State> {
         const form = document.getElementById("requestForm") as HTMLFormElement;
         const taxonomyId = document.getElementById("taxonomyId") as HTMLInputElement;
         const specimenId = document.getElementById("specimenId") as HTMLInputElement;
+        const confirmationName = document.getElementById("confirmationName") as HTMLInputElement;
 
         // If our input has a value
-        if ((taxonomyId.value !== "") && (specimenId.value !== "")) {
-          makeRequest(parseInt(taxonomyId.value), specimenId.value)
-            .then(request => this.setState({ ret: request }))
+        if ((taxonomyId.value !== "") && (specimenId.value !== "") && (confirmationName.value !== "")) {
+          makeRequest(
+            parseInt(taxonomyId.value),
+            specimenId.value,
+            confirmationName.value)
+          .then(request => this.setState({ ret: request }))
           // Finally, we need to reset the form
           taxonomyId.classList.remove("is-invalid");
           specimenId.classList.remove("is-invalid");
+          confirmationName.classList.remove("is-invalid");
           form.reset();
         } else {
           // If the input doesn't have a value, make the border red since it's required
           taxonomyId.classList.add("is-invalid");
           specimenId.classList.add("is-invalid");
+          confirmationName.classList.add("is-invalid");
         }
     };
 
@@ -75,6 +84,10 @@ class RequestForm extends React.Component<Props, State> {
                   <input type="text" className="form-control form-control-lg" id="specimenId" placeholder="Specimen ID" />
                   <small className="form-text text-muted">
                     The internal ID of the specimen. This is only used in the ToLID system and should be how you refer to the specimen in your lab
+                  </small>
+                  <input type="text" className="form-control form-control-lg" id="confirmationName" placeholder="Scientific Name" />
+                  <small className="form-text text-muted">
+                    The scientific name of the species. This is used for later consistency checks.
                   </small>
                 </div>
                 <button className="btn btn-primary" id="makeRequestButton" onClick={this.sendRequest}>

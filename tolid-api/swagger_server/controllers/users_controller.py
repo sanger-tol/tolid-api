@@ -121,6 +121,10 @@ def bulk_add_requests(body=None, api_key=None):
         for row in body:
             specimen_id = row['specimenId']
             taxonomy_id = row['taxonomyId']
+            if 'confirmationName' in row:
+                confirmation_name = row['confirmationName']
+            else:
+                confirmation_name = None
             specimen = db.session.query(TolidSpecimen) \
                 .filter(TolidSpecimen.species_id == taxonomy_id) \
                 .filter(TolidSpecimen.specimen_id == specimen_id) \
@@ -130,7 +134,7 @@ def bulk_add_requests(body=None, api_key=None):
                 return jsonify({'detail': "A ToLID already exists for specimenId " + specimen_id
                                + " and taxonomyId " + str(taxonomy_id)}), 400
             try:
-                request = create_request(taxonomy_id, specimen_id, user)
+                request = create_request(taxonomy_id, specimen_id, user, confirmation_name)
             except Exception as e:
                 # Another user created a request
                 db.session.rollback()
