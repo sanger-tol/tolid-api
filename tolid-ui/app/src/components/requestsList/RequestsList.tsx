@@ -1,14 +1,91 @@
 import * as React from 'react';
 import { Request } from '../../models/Request'
 import { ErrorMessage } from '../../models/ErrorMessage'
+import { Species } from '../../models/Species';
 import { httpClient } from '../../services/http/httpClient';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { NcbiData } from '../../models/NcbiData';
 
 import './RequestsList.scss'
 
+const tick = () => (
+  <span className="match tick">
+    &nbsp;
+    {String.fromCharCode(0x2714)}
+    &nbsp;
+  </span>
+)
+
+const cross = () => (
+  <span className="match cross">
+    &nbsp;
+    {String.fromCharCode(0x2718)}
+    &nbsp;
+  </span>
+)
+
+const synonymMatch = () => (
+  <span className="match synonym">
+    &nbsp;
+    {String.fromCharCode(0x2714)}
+    &nbsp;
+  </span>
+)
+
+const getSynonymsForId = async (taxonomyID: number): Promise<string[]> => {
+  return httpClient().get('/species/'
+                    + taxonomyID.toString()
+                    + '/ncbi')
+        .then((data: any) => {
+          const body: NcbiData = data.data;
+          return body.synonyms.concat([body.scientificName]).map(
+            (synonym: string) => synonym.toLowerCase()
+          );
+        });
+}
+
+const confirmationMatchesSpecies = (confirmationName: string, species?: Species): boolean => {
+  if (species === undefined) return false;
+  const scientificName = (species.scientificName ?? "").toLowerCase();
+  return scientificName === confirmationName;
+}
+
+const getSymbol = (request: Request) => {
+  const confirmation = (request.confirmationName ?? "").toLowerCase();
+  if (confirmation === "") return cross();
+  if (confirmationMatchesSpecies(confirmation, request.species)) return tick();
+  if (request.synonyms === undefined || request.synonyms.length === 0) return cross();
+  if (request.synonyms.includes(confirmation)) return synonymMatch();
+  return cross();
+}
+
+const getSynonyms = async (data: Request[]): Promise<Request[]> => {
+  const newRequests: Promise<Request>[] = data.map(async (request: Request) => {
+    if (request.confirmationName !== "" &&
+        request.confirmationName !== undefined &&
+        request.species.scientificName !== request.confirmationName) {
+            request.synonyms = await getSynonymsForId(request.species.taxonomyId);
+        }
+    return request;
+  });
+  return await Promise.all(newRequests);
+}
+
+const noConfirmationName = () => (
+  <i>
+    None
+  </i>
+)
+
 const ConfirmationOverlay = (props: any) => (
     <Tooltip id="confirmation-tooltip" className="show" {...props}>
-      Entered during the request creation. Compare to the "Name" column.
+      Entered during the request creation, as confirmation.
+      <br></br>
+      {tick()} - The confirmation matches
+      <br></br>
+      {synonymMatch()} - The confirmation matches a synonym
+      <br></br>
+      {cross()} - The confirmation does not match
     </Tooltip>
 )
 
@@ -19,7 +96,8 @@ export interface Props {
 export interface State {
     requests: Request[],
     error: ErrorMessage | null,
-    message: string
+    message: string,
+    synonymsLoaded: boolean
 }
 
 class RequestsList extends React.Component<Props, State> {
@@ -29,6 +107,7 @@ class RequestsList extends React.Component<Props, State> {
       requests: [],
       error: null,
       message: '',
+      synonymsLoaded: false
     }
   }
 
@@ -46,17 +125,26 @@ class RequestsList extends React.Component<Props, State> {
   updateRequestsList() {
     httpClient().get('/requests/pending')
         .then(data => {
-            this.setState({
-              requests: data.data,
-              error: null
-            })
+              this.setState((oldState: State) => ({
+                requests: data.data,
+                error: null,
+                synonymsLoaded: false
+              }));
           })
         .catch((err: any) => {
-            this.setState({
+            this.setState((oldState: State) => ({
               requests: [],
               error: err
-            })
+            }))
         })
+        .finally(() => {
+          getSynonyms(this.state.requests).then((requests: Request[]) => {
+            this.setState((oldState: State) => ({
+              requests: requests,
+              synonymsLoaded: true
+            }));
+          });
+        });
   }
 
   acceptRequest = (event: any) => {
@@ -148,7 +236,11 @@ class RequestsList extends React.Component<Props, State> {
                     <td>{item.requestId}</td>
                     <td>{item.species.taxonomyId}</td>
                     <td>{item.species.scientificName}</td>
-                    <td>{item.confirmationName ?? ""}</td>
+                    <td>
+                      {item.confirmationName ?? noConfirmationName()} 
+                      &nbsp;
+                      {this.state.synonymsLoaded && getSymbol(item)}
+                    </td>
                     <td>{item.specimen.specimenId}</td>
                     <td>{item.createdBy.name}</td>
                     <td>{item.species.prefix}{item.species.currentHighestTolidNumber ? item.species.currentHighestTolidNumber + 1 : 1}</td>
