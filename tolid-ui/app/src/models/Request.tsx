@@ -9,5 +9,5 @@ export interface Request {
   species: Species;
   specimen: Specimen;
   confirmationName?: string;
+  synonyms?: string[];
 }
-

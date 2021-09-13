@@ -70,7 +70,7 @@ class PrefixTable extends React.Component<Props, State> {
           :
           <p className="msg err">Error: Unable to connect to ToLID database</p>
         )}
-        {(this.state.primaryPrefix.length == 0 && !this.state.err &&
+        {(this.state.primaryPrefix.length === 0 && !this.state.err &&
           <p className="msg war">Warning: No ToLID prefix data found in database</p>
         )}
       </div>

@@ -321,6 +321,40 @@ paths:
           "404":
             description: species does not exist
         x-openapi-router-controller: swagger_server.controllers.curators_controller
+  /species/{taxonomyId}/ncbi:
+    get:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - curators
+      summary: Returns the scientific name and synonyms for a given taxonomy id
+      description: |
+        Returns the scientific name and synonyms for a given taxonomy id
+      operationId: get_ncbi_data
+      parameters:
+      - name: taxonomyId
+        in: path
+        description: the NCBI taxonomy ID
+        required: true
+        style: simple
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: NCBI data matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NcbiData'
+                x-content-type: application/json
+        "400":
+            description: invalid input, object invalid
+        "403":
+          description: user not authorised to use this function
+        "404":
+          description: species does not exist
+      x-openapi-router-controller: swagger_server.controllers.curators_controller
   /species:
     get:
       tags:
@@ -1068,6 +1102,19 @@ components:
         message:
           type: string
           example: "Something has gone wrong"
+    NcbiData:
+      required:
+        - scientificName
+      type: object
+      properties:
+        scientificName:
+          type: string
+          example: Arenicola marina
+        synonyms:
+          type: array
+          items:
+            type: string
+            example: Arenicola marina synonyma
   securitySchemes:
     ApiKeyAuth:        # name for the security scheme
       type: apiKey

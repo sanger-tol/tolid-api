@@ -4,6 +4,7 @@ from __future__ import absolute_import
 
 from swagger_server.test import BaseTestCase
 from swagger_server.model import db, TolidSpecimen, TolidRequest
+from unittest.mock import patch
 
 
 class TestCuratorsController(BaseTestCase):
@@ -649,6 +650,60 @@ class TestCuratorsController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertEqual(expect, response.json)
+
+    @patch('Bio.Entrez.efetch')
+    @patch('Bio.Entrez.read')
+    def test_get_ncbi_data(self, read, efetch):
+        # No authorisation token given
+        response = self.client.open(
+            '/api/v2/species/270330/ncbi',
+            method='GET')
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        # Invalid authorisation token given
+        response = self.client.open(
+            '/api/v2/species/270330/ncbi',
+            method='GET',
+            headers={"api-key": "12345678"})
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Not admin
+        response = self.client.open(
+            '/api/v2/species/270330/ncbi',
+            method='GET',
+            headers={"api-key": self.user1.api_key})
+        self.assert403(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # Admin, correct
+        mock_ncbi_data = [{
+            "ScientificName": "Lepomis megalotis",
+            "OtherNames": {
+                "Synonym": [
+                    "syn1",
+                ],
+                "GenbankSynonym": [
+                    "syn2",
+                ],
+            },
+        }]
+        efetch.return_value = None
+        read.return_value = mock_ncbi_data
+        response = self.client.open(
+            '/api/v2/species/270330/ncbi',
+            method='GET',
+            headers={"api-key": self.user2.api_key})
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        expected = {
+            "scientificName": "Lepomis megalotis",
+            "synonyms": [
+                "syn1",
+                "syn2"
+            ]
+        }
+        self.assertEqual(expected, response.json)
 
 
 if __name__ == '__main__':

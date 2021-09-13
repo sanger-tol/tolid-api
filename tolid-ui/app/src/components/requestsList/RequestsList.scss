@@ -1,3 +1,21 @@
 #requestsList {
   margin-top: 10px;
 }
+
+.match {
+  color: white;
+  border-radius: 4px;
+  font-size: large;
+}
+
+.tick {
+  background-color: green;
+}
+
+.cross {
+  background-color: red;
+}
+
+.synonym {
+  background-color: #FFBF00;
+}

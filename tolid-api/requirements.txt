@@ -8,3 +8,4 @@ psycopg2-binary == 2.8.6
 openpyxl == 3.0.6
 responses
 jwt
+biopython==1.73

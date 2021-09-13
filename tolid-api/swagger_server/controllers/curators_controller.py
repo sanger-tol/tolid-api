@@ -2,6 +2,8 @@ from flask import jsonify
 from swagger_server.db_utils import accept_request, reject_request
 from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidRole, TolidRequest
 import connexion
+import os
+from Bio import Entrez
 
 
 def add_species(body=None, api_key=None):
@@ -136,6 +138,32 @@ def list_species():
         )
 
     return jsonify([species.to_basic_dict() for species in speciess])
+
+
+def get_ncbi_data(taxonomy_id):
+    role = db.session.query(TolidRole) \
+        .filter(TolidRole.role == 'admin') \
+        .filter(TolidRole.user_id == connexion.context["user"]) \
+        .one_or_none()
+    if role is None:
+        return jsonify({'detail': "User does not have permission to use this function"}), 403
+    Entrez.api_key = os.getenv("NIH_API_KEY")
+    handle = Entrez.efetch(db="Taxonomy", id=str(taxonomy_id), retmode="xml")
+    records = Entrez.read(handle)
+    if len(records) < 1:
+        return jsonify(
+            {'detail': "Species not found with taxonomy id '{}'".format(taxonomy_id)},
+            404
+        )
+    record = records[0]
+    scientific_name = record["ScientificName"]
+    other_names = record["OtherNames"]
+    synonyms = other_names["Synonym"] + other_names["GenbankSynonym"]
+
+    return jsonify({
+        "scientificName": scientific_name,
+        "synonyms": synonyms
+    })
 
 
 def requests_pending(api_key=None):
