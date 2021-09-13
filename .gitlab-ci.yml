@@ -1,42 +1,18 @@
+include:
+  - project: 'tol/tol-core'
+    ref: main
+    file: '/gitlab/main.yml'
+
 stages:
   - lint
   - build
-  - test
+  - unit test
   - push
   - deploy
-
-variables:
-  DOCKER_IMAGE: $CI_REGISTRY/tol/sts/build-base:1.0.0
-  DIND_IMAGE: $CI_REGISTRY/tol/sts/dind:1.0.0
-
-lint:
-  tags:
-    - autoscale
-  image: python:3.7
-  stage: lint
-  script:
-    - pip install flake8
-    - flake8 tolid-api/swagger_server/
-
-.build-template: &build-template
-  tags:
-    - autoscale
-  image: $DOCKER_IMAGE
-  variables:
-    DOCKER_TLS_CERTDIR: ''
-  stage: build
-  services:
-    - name: $DIND_IMAGE
-      alias: docker
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker pull $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_REF_SLUG || true
-    - docker build --pull --cache-from $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_REF_SLUG -t $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_SHA -f $DOCKERFILE $PART
-    - docker push $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_SHA
+  - integration test
 
 build-api:
-  <<: *build-template
+  extends: .build-template
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ''
@@ -45,7 +21,7 @@ build-api:
     NAME: "tolid-api"
 
 build-ui:
-  <<: *build-template
+  extends: .build-template
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ''
@@ -54,7 +30,7 @@ build-ui:
     NAME: "tolid-ui"
 
 build-ui-test:
-  <<: *build-template
+  extends: .build-template
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ''
@@ -62,32 +38,9 @@ build-ui-test:
     DOCKERFILE: 'tolid-ui/Dockerfile.dev'
     NAME: "tolid-ui-test"
 
-test-api:
-  tags:
-    - autoscale
-  image: $DOCKER_IMAGE
-  stage: test
-  services:
-    - name: $DIND_IMAGE
-      alias: docker
-  variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker swarm init
-    - docker stack deploy --with-registry-auth -c docker-compose.gitlab.yml -c docker-compose.gitlab-test.yml tolid
-    - sleep 60
-    - docker service logs tolid_tolid-api
-    - docker exec $(docker ps -q -f name="tolid_tolid-api") bash -c "pip3 install tox; tox"
-  allow_failure: true
-
 test-ui:
-  tags:
-    - autoscale
   image: $DOCKER_IMAGE
-  stage: test
+  stage: unit test
   services:
     - name: $DIND_IMAGE
       alias: docker
@@ -98,28 +51,13 @@ test-ui:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker run -e CI=true $CI_REGISTRY_IMAGE/tolid-ui-test:$CI_COMMIT_SHA yarn test
+  except:
+    - production
+    - staging
   allow_failure: true
 
-.push-template: &push-template
-  tags:
-    - autoscale
-  image: $DOCKER_IMAGE
-  stage: push
-  services:
-    - name: $DIND_IMAGE
-      alias: docker
-  variables:
-    GIT_STRATEGY: none
-    DOCKER_TLS_CERTDIR: ''
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker pull $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_SHA
-    - docker tag $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_REF_SLUG
-    - docker push $CI_REGISTRY_IMAGE/$NAME:$CI_COMMIT_REF_SLUG
-
 push-api:
-  <<: *push-template
+  extends: .push-template
   variables:
     GIT_STRATEGY: none
     DOCKER_HOST: "tcp://docker:2375"
@@ -127,7 +65,7 @@ push-api:
     NAME: tolid-api
 
 push-ui:
-  <<: *push-template
+  extends: .push-template
   variables:
     GIT_STRATEGY: none
     DOCKER_HOST: "tcp://docker:2375"
@@ -135,47 +73,60 @@ push-ui:
     NAME: tolid-ui
 
 push-ui-test:
-  <<: *push-template
+  extends: .push-template
   variables:
     GIT_STRATEGY: none
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ''
     NAME: tolid-ui-test
 
-.deploy-template: &deploy-template
-  tags:
-    - autoscale
-  image: $DOCKER_IMAGE
-  variables:
-    DOCKER_TLS_CERTDIR: ''
-  stage: deploy
-  script:
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | ssh-add -
-    - mkdir -p ~/.ssh
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker stack rm tolid
-    - sleep 20
-    - docker stack deploy --with-registry-auth -c docker-compose.gitlab.yml -c docker-compose.gitlab-logging.yml tolid
-
 deploy-staging:
-  <<: *deploy-template
+  extends: .swarm-deploy-template
   environment:
     name: staging
-    url: http://172.27.21.233/
+    url: https://id-staging.tol.sanger.ac.uk
   variables:
     DOCKER_HOST: "ssh://ubuntu@172.27.21.233"
+    EXTRA_DEPLOY_FILES: "-c docker-compose.gitlab-logging.yml"
+    STACK_NAME: tolid
+  script:
+    - echo "Deployed to staging"
   only:
     - staging
 
 deploy-production:
-  <<: *deploy-template
+  extends: .swarm-deploy-template
   environment:
     name: production
     url: https://id.tol.sanger.ac.uk/
   variables:
     DOCKER_HOST: "ssh://ubuntu@172.27.18.201"
+    EXTRA_DEPLOY_FILES: "-c docker-compose.gitlab-logging.yml"
+    STACK_NAME: tolid
+  script:
+    - echo "Deployed to production"
   only:
-    - master
+    - production
   when: manual
+
+test-api:
+  extends: .swarm-deploy-template
+  image: $DOCKER_IMAGE
+  stage: integration test
+  resource_group: testing
+  services:
+    - name: $DIND_IMAGE
+      alias: docker
+  environment:
+    name: testing
+    url: http://172.27.19.196:8000
+  variables:
+    DOCKER_HOST: "ssh://ubuntu@172.27.19.196"
+    EXTRA_DEPLOY_FILES: "-c docker-compose.gitlab-test.yml"
+    STACK_NAME: tolid
+  script:
+    - sleep 60
+    - docker exec $(docker ps -q -f name="tolid_tolid-api") bash -c "pip3 install tox; tox"
+  except:
+    - staging
+    - production
