@@ -41,6 +41,9 @@ const getSynonymsForId = async (taxonomyID: number): Promise<string[]> => {
           return body.synonyms.concat([body.scientificName]).map(
             (synonym: string) => synonym.toLowerCase()
           );
+        })
+        .catch((err: any) => {
+          return [];
         });
 }
 
