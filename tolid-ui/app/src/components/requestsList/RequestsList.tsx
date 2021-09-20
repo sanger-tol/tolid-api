@@ -5,6 +5,7 @@ import { Species } from '../../models/Species';
 import { httpClient } from '../../services/http/httpClient';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { NcbiData } from '../../models/NcbiData';
+import RejectModal from './RejectModal'
 
 import './RequestsList.scss'
 
@@ -100,7 +101,9 @@ export interface State {
     requests: Request[],
     error: ErrorMessage | null,
     message: string,
-    synonymsLoaded: boolean
+    synonymsLoaded: boolean,
+    modal: boolean,
+    requestId: number
 }
 
 class RequestsList extends React.Component<Props, State> {
@@ -110,8 +113,10 @@ class RequestsList extends React.Component<Props, State> {
       requests: [],
       error: null,
       message: '',
-      synonymsLoaded: false
-    }
+      synonymsLoaded: false,
+      modal: false,
+      requestId: -1
+    };
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -170,29 +175,22 @@ class RequestsList extends React.Component<Props, State> {
         })    
   }
 
-  rejectRequest = (event: any) => {
-    const requestId = event.target.getAttribute("data-request-id");
-    httpClient().patch('/requests/'+requestId+'/reject', {})
-          .then(data => {
-            this.setState({
-              error: null,
-              message: "Request "+data.data[0].requestId+" has been rejected"
-            })
-          })
-        .catch((err: any) => {
-            this.setState({
-              error: err
-            })
-          })
-        .finally(() => {
-          this.updateRequestsList();
-        })   
-  }
-
-  addSpecies = (event: any) => {
+  addSpecies = () => {
     if (this.props.openAddSpeciesTab) {
       this.props.openAddSpeciesTab();
     }
+  }
+
+  toggleModal = () => {
+    this.setState({
+      modal: !this.state.modal
+    });
+  }
+
+  setRequestId = (requestId: number) => {
+    this.setState({
+      requestId: requestId
+    })
   }
 
   public render() {
@@ -253,15 +251,21 @@ class RequestsList extends React.Component<Props, State> {
                         :
                         <button className="btn btn-sm btn-secondary" onClick={this.addSpecies}>Add Species</button>
                       }
-                      <button className="btn btn-sm btn-danger" onClick={this.rejectRequest} data-request-id={item.requestId}>Reject</button>
+                      <button className="btn btn-sm btn-danger" onClick={() => {this.toggleModal(); this.setRequestId(item.requestId)}}>Reject</button>
                     </td>
                   </tr>
                   ))}
               </tbody>
             </table>
           }
+          <RejectModal
+            show={this.state.modal}
+            toggle={this.toggleModal.bind(this)}
+            requestId={this.state.requestId}
+          />
         </div>
-      );
-    }
+    );
   }
-  export default RequestsList;
+}
+
+export default RequestsList;

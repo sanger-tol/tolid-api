@@ -62,7 +62,7 @@ class UserRequestsList extends React.Component<Props, State> {
                     <td>{item.species.taxonomyId}</td>
                     <td>{item.species.scientificName}</td>
                     <td>{item.specimen.specimenId}</td>
-                    <td>{item.status}</td>
+                    <td>{item.status} {(item.reason !== null) && " (" + item.reason + ")"}</td>
                   </tr>
                   ))}
               </tbody>

@@ -24,6 +24,18 @@ class MailUtils:
         return tolid_created_html, subject
 
     @staticmethod
+    def get_tolid_rejected(request):
+        reason = "N/A"
+        if request.reason != "":
+            reason = request.reason
+
+        tolid_rejected_html = MailUtils.__get_html_from_template('email_tolid_rejected')
+        url = f"{os.environ['TOLID_URL']}"
+        tolid_rejected_html = tolid_rejected_html.format(url=url, request=request, reason=reason)
+        subject = "ToLID request rejected"
+        return tolid_rejected_html, subject
+
+    @staticmethod
     def __get_html_from_template(file_name):
         base_dir = os.path.dirname(__file__)
         path_template = os.path.abspath(os.path.join(base_dir, f'templates/{file_name}.html'))

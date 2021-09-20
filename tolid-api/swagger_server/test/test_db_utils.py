@@ -40,12 +40,14 @@ class TestDbUtils(BaseTestCase):
 
     def test_reject_request(self):
         self.request1 = TolidRequest(specimen_id="SAN0000100xxxxx",
-                                     species_id=6344, status="Pending")
+                                     species_id=6344, status="Pending",
+                                     reason="Invalid")
         self.request1.user = self.user1
         db.session.add(self.request1)
 
-        request = reject_request(self.request1)
+        request = reject_request(self.request1, 'Invalid')
         self.assertEqual(request.status, 'Rejected')
+        self.assertEqual(request.reason, 'Invalid')
 
     def test_create_request(self):
         new_request = create_request(self.species1.taxonomy_id, "TEST44444", self.user1)

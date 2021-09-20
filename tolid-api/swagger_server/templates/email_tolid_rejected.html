@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ToLID created</title>
+    <title>ToLID request rejected</title>
 </head>
 <body style="position: absolute; left: 0; top: 0; width: 600px; height: 550px; background: inherit;
                 background-color: rgba(255, 255, 255, 1); box-sizing: border-box; border-width: 1px;
@@ -17,7 +17,8 @@
                                 font-style: normal; font-size: 14px">
     <h4>Greetings from Sanger ToLID,</h4>
 
-    <p>We're glad to announce that a new ToLID has been <span style="color: green">created</span>: {specimen.tolid}.</p>
+    <p>Unfortunately ToLID request {request.request_id} has been <span style="color: red">rejected</span>.</p>
+    <p>Reason: {reason}</p>
     <p>Please click on the button below to view it in the ToLID system.</p>
 
     <a style="text-decoration: none;" href="{url}/profile">

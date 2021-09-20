@@ -1,4 +1,4 @@
-from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidRequest
+from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidRequest, TolidUser
 from swagger_server.email_utils import MailUtils
 import os
 
@@ -53,9 +53,24 @@ def accept_request(request):
     return specimen
 
 
-def reject_request(request):
+def reject_request(request, reason):
     request.status = "Rejected"
+    if reason is not None:
+        request.reason = reason
     db.session.commit()
+
+    user = db.session.query(TolidUser) \
+        .filter(request.created_by == TolidUser.user_id) \
+        .one_or_none()
+
+    if user.email is not None and user.email.strip() != "":
+        try:
+            tolid_created_mail_template, subject = MailUtils.get_tolid_rejected(request)
+            MailUtils.send(tolid_created_mail_template, subject,
+                           user.email)
+        except Exception:
+            pass
+
     return request
 
 

@@ -206,7 +206,7 @@ def accept_tol_id_request(request_id=None):
     return jsonify([specimen])
 
 
-def reject_tol_id_request(request_id=None):
+def reject_tol_id_request(request_id=None, reason=None):
     role = db.session.query(TolidRole) \
         .filter(TolidRole.role == 'admin') \
         .filter(TolidRole.user_id == connexion.context["user"]) \
@@ -220,5 +220,5 @@ def reject_tol_id_request(request_id=None):
     if request is None:
         return jsonify([])
 
-    reject_request(request)
+    reject_request(request, reason)
     return jsonify([request])

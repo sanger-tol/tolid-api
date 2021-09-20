@@ -446,6 +446,7 @@ class TestCuratorsController(BaseTestCase):
             headers={"api-key": self.user2.api_key}
             )
         expect = [{
+            "reason": None,
             "requestId": 1,
             "status": "Pending",
             "createdBy": {
@@ -469,6 +470,7 @@ class TestCuratorsController(BaseTestCase):
             },
             "specimen": {"specimenId": "SAN0000100"},
         }, {
+            "reason": None,
             "requestId": 2,
             "status": "Pending",
             "createdBy": {
@@ -600,6 +602,7 @@ class TestCuratorsController(BaseTestCase):
             headers={"api-key": self.user2.api_key}
             )
         expect = [{
+            "reason": None,
             "requestId": 1,
             "status": "Rejected",
             "createdBy": {
@@ -619,11 +622,12 @@ class TestCuratorsController(BaseTestCase):
 
         # Valid species
         response = self.client.open(
-            '/api/v2/requests/2/reject',
+            '/api/v2/requests/2/reject?reason=Taxonomy+ID+is+not+species-level',
             method='PATCH',
             headers={"api-key": self.user2.api_key}
             )
         expect = [{
+            "reason": "Taxonomy ID is not species-level",
             "requestId": 2,
             "status": "Rejected",
             "createdBy": {

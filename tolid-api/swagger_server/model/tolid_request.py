@@ -8,6 +8,7 @@ class TolidRequest(Base):
     specimen_id = db.Column(db.String())
     species_id = db.Column(db.Integer)
     status = db.Column(db.String())
+    reason = db.Column(db.String(), nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     user = db.relationship("TolidUser", uselist=False, foreign_keys=[created_by])
@@ -23,6 +24,7 @@ class TolidRequest(Base):
             dict_request = {
                 'requestId': cls.request_id,
                 'status': cls.status,
+                'reason': cls.reason,
                 'createdBy': cls.user,
                 'species': {'taxonomyId': cls.species_id},
                 'specimen': {'specimenId': cls.specimen_id},
@@ -31,6 +33,7 @@ class TolidRequest(Base):
             dict_request = {
                 'requestId': cls.request_id,
                 'status': cls.status,
+                'reason': cls.reason,
                 'createdBy': cls.user,
                 'species': species,
                 'specimen': {'specimenId': cls.specimen_id},

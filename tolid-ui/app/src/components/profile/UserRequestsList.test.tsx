@@ -22,7 +22,7 @@ it("successful request", async () => {
         "specimenId": "SAN0000200"
       },
       "id": "1",
-      "status": "Pending",
+      "": "Pending",
       "createdBy": {
         "email": "user@example.com",
         "name": "A User",

@@ -5,6 +5,7 @@ import { User } from './User';
 export interface Request {
   requestId: number;
   status: string;
+  reason: string;
   createdBy: User;
   species: Species;
   specimen: Specimen;
