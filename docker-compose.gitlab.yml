@@ -25,7 +25,7 @@ services:
     ports: 
       - 8000:80
     volumes:
-      - schema-html:/var/www/tolid-ui/schema
+      - schema-html:/var/www/schema
   tolid-dbutils:
     image: $CI_REGISTRY/tol/sts/dbutils:1.0.2
     restart: always
