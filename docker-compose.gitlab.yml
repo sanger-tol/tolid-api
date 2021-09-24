@@ -42,6 +42,8 @@ services:
       - tolid
     deploy:
       replicas: 1
+      restart_policy:
+        condition: none
     env_file:
       - ${ENV_FILE}
     volumes:
