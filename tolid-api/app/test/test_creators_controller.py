@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
-from swagger_server.test import BaseTestCase
-from swagger_server.excel_utils import find_columns
+from test import BaseTestCase
+from main.excel_utils import find_columns
 from openpyxl import load_workbook
 
 
@@ -638,7 +638,7 @@ class TestCreatorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Excel file with no taxon ID, specimen ID, ToLID column
-        file = open('swagger_server/test/test-manifest-no-columns.xlsx', 'rb')
+        file = open('test/test-manifest-no-columns.xlsx', 'rb')
         data = {
             'excelFile': (file, 'test_file.xlsx'),
         }
@@ -656,7 +656,7 @@ class TestCreatorsController(BaseTestCase):
         self.assertEqual(expected, response.json)
 
         # Excel file with errors
-        file = open('swagger_server/test/test-manifest-with-errors.xlsx', 'rb')
+        file = open('test/test-manifest-with-errors.xlsx', 'rb')
         data = {
             'excelFile': (file, 'test_file.xlsx'),
         }
@@ -675,7 +675,7 @@ class TestCreatorsController(BaseTestCase):
         self.assertEqual(expected, response.json)
 
         # User not a creator
-        file = open('swagger_server/test/test-manifest.xlsx', 'rb')
+        file = open('test/test-manifest.xlsx', 'rb')
         data = {
             'excelFile': (file, 'test_file.xlsx'),
         }
@@ -688,7 +688,7 @@ class TestCreatorsController(BaseTestCase):
         self.assert403(response, 'Not received a 403 response')
 
         # Excel file correct
-        file = open('swagger_server/test/test-manifest.xlsx', 'rb')
+        file = open('test/test-manifest.xlsx', 'rb')
         data = {
             'excelFile': (file, 'test_file.xlsx'),
         }
@@ -703,10 +703,10 @@ class TestCreatorsController(BaseTestCase):
                          response.content_type)
 
         # Save as Excel file
-        file = open('swagger_server/test/test-manifest-validated.xlsx', 'wb')
+        file = open('test/test-manifest-validated.xlsx', 'wb')
         file.write(response.get_data())
         file.close()
-        workbook = load_workbook(filename='swagger_server/test/test-manifest-validated.xlsx')
+        workbook = load_workbook(filename='test/test-manifest-validated.xlsx')
         sheet = workbook.active
         (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = \
             find_columns(sheet, "scientific_name")
@@ -715,7 +715,7 @@ class TestCreatorsController(BaseTestCase):
         self.assertEqual('wuAreMari4', sheet.cell(row=4, column=tol_id_column).value)
 
         # Different column name for species
-        file = open('swagger_server/test/test-manifest-col.xlsx', 'rb')
+        file = open('test/test-manifest-col.xlsx', 'rb')
         data = {
             'excelFile': (file, 'test_file.xlsx'),
          }
@@ -732,10 +732,10 @@ class TestCreatorsController(BaseTestCase):
                          response.content_type)
 
         # Save as Excel file
-        file = open('swagger_server/test/test-manifest-validated.xlsx', 'wb')
+        file = open('test/test-manifest-validated.xlsx', 'wb')
         file.write(response.get_data())
         file.close()
-        workbook = load_workbook(filename='swagger_server/test/test-manifest-validated.xlsx')
+        workbook = load_workbook(filename='test/test-manifest-validated.xlsx')
         sheet = workbook.active
         (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = \
             find_columns(sheet, "random column name")

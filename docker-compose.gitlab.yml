@@ -11,7 +11,7 @@ services:
     env_file:
       - ${ENV_FILE}
     ports: 
-      - 5000:8080
+      - 5000:80
   tolid-ui:
     image: $CI_REGISTRY_IMAGE/tolid-ui:$CI_COMMIT_SHA
     restart: always

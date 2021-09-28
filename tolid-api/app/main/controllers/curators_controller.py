@@ -1,6 +1,6 @@
 from flask import jsonify
-from swagger_server.db_utils import accept_request, reject_request
-from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidRole, TolidRequest
+from main.db_utils import accept_request, reject_request
+from main.model import db, TolidSpecies, TolidSpecimen, TolidRole, TolidRequest
 import connexion
 import os
 from Bio import Entrez

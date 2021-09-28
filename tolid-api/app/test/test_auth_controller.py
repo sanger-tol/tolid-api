@@ -1,8 +1,8 @@
 from __future__ import absolute_import
 
-from swagger_server.test import BaseTestCase
-from swagger_server.model import db, TolidState
-from swagger_server.controllers.auth_controller import apikey_auth
+from test import BaseTestCase
+from main.model import db, TolidState
+from main.controllers.auth_controller import apikey_auth
 
 import urllib.parse
 import os

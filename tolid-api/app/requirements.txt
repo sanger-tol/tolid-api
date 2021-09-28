@@ -9,3 +9,10 @@ openpyxl == 3.0.6
 responses
 jwt
 biopython==1.73
+
+flask_testing==0.8.0
+coverage>=4.0.3
+pluggy>=0.3.1
+py>=1.4.31
+randomize>=0.13
+pytest==6.0.1

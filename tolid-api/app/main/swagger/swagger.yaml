@@ -9,7 +9,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 2.1.2
 servers:
-  - url: http://0.0.0.0:8080/api/v2
+  - url: http://0.0.0.0:80/api/v2
 tags:
 - name: users
   description: Browsing ToLIDs and requesting new ToLIDs
@@ -47,7 +47,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.users_controller
+      x-openapi-router-controller: main.controllers.users_controller
   /tol-ids/mine:
     get:
       security:
@@ -70,7 +70,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.users_controller
+      x-openapi-router-controller: main.controllers.users_controller
   /specimens/{specimenId}:
     get:
       tags:
@@ -102,7 +102,7 @@ paths:
           description: bad input parameter
         "404":
           description: specimen not found
-      x-openapi-router-controller: swagger_server.controllers.users_controller
+      x-openapi-router-controller: main.controllers.users_controller
   /tol-ids:
     get:
       tags:
@@ -140,7 +140,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.users_controller
+      x-openapi-router-controller: main.controllers.users_controller
     post:
       security:
         - ApiKeyAuth: []
@@ -178,7 +178,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.creators_controller
+      x-openapi-router-controller: main.controllers.creators_controller
     put:
       security:
         - ApiKeyAuth: []
@@ -218,7 +218,7 @@ paths:
           description: invalid input, object invalid
         "409":
           description: an existing item already exists
-      x-openapi-router-controller: swagger_server.controllers.creators_controller
+      x-openapi-router-controller: main.controllers.creators_controller
   /tol-ids/all:
     get:
       security:
@@ -249,7 +249,7 @@ paths:
           description: bad input parameter
         "403":
           description: user not authorised to use this function
-      x-openapi-router-controller: swagger_server.controllers.curators_controller
+      x-openapi-router-controller: main.controllers.curators_controller
   /species/{taxonomyId}:
     get:
       tags:
@@ -280,7 +280,7 @@ paths:
                 x-content-type: application/json
         "404":
           description: species not found
-      x-openapi-router-controller: swagger_server.controllers.users_controller
+      x-openapi-router-controller: main.controllers.users_controller
     put:
         security:
           - ApiKeyAuth: []
@@ -320,7 +320,7 @@ paths:
             description: user not authorised to use this function
           "404":
             description: species does not exist
-        x-openapi-router-controller: swagger_server.controllers.curators_controller
+        x-openapi-router-controller: main.controllers.curators_controller
   /species/{taxonomyId}/ncbi:
     get:
       security:
@@ -354,7 +354,7 @@ paths:
           description: user not authorised to use this function
         "404":
           description: species does not exist
-      x-openapi-router-controller: swagger_server.controllers.curators_controller
+      x-openapi-router-controller: main.controllers.curators_controller
   /species:
     get:
       tags:
@@ -399,7 +399,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/SpeciesLong'
                 x-content-type: application/json
-      x-openapi-router-controller: swagger_server.controllers.users_controller
+      x-openapi-router-controller: main.controllers.users_controller
     post:
       security:
         - ApiKeyAuth: []
@@ -428,7 +428,7 @@ paths:
           description: invalid input, object invalid, or item already exists
         "403":
           description: user not authorised to use this function
-      x-openapi-router-controller: swagger_server.controllers.curators_controller
+      x-openapi-router-controller: main.controllers.curators_controller
   /species/all:
     get:
       security:
@@ -456,7 +456,7 @@ paths:
           description: bad input parameter
         "403":
           description: user not authorised to use this function
-      x-openapi-router-controller: swagger_server.controllers.curators_controller
+      x-openapi-router-controller: main.controllers.curators_controller
   /species/tol-ids/all/{page}:
     get:
       tags:
@@ -489,7 +489,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.users_controller
+      x-openapi-router-controller: main.controllers.users_controller
   /prefix/all:
     get:
       tags:
@@ -511,7 +511,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/PrimaryPrefix'
                 x-content-type: application/json
-      x-openapi-router-controller: swagger_server.controllers.users_controller
+      x-openapi-router-controller: main.controllers.users_controller
   /validate-manifest:
     post:
       security:
@@ -557,7 +557,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageList'
-      x-openapi-router-controller: swagger_server.controllers.creators_controller
+      x-openapi-router-controller: main.controllers.creators_controller
   /requests:
     post:
       security:
@@ -585,7 +585,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.users_controller  
+      x-openapi-router-controller: main.controllers.users_controller  
   /requests/mine:
     get:
       security:
@@ -608,7 +608,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.users_controller
+      x-openapi-router-controller: main.controllers.users_controller
   /requests/pending:
     get:
       security:
@@ -631,7 +631,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.curators_controller
+      x-openapi-router-controller: main.controllers.curators_controller
   /requests/{requestId}:
     get:
       tags:
@@ -661,7 +661,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.users_controller
+      x-openapi-router-controller: main.controllers.users_controller
   /requests/{requestId}/accept:
     patch:
       security:
@@ -693,7 +693,7 @@ paths:
                 x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.curators_controller    
+      x-openapi-router-controller: main.controllers.curators_controller    
   /requests/{requestId}/reject:
     patch:
       security:
@@ -733,7 +733,7 @@ paths:
                   x-content-type: application/json
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.curators_controller    
+      x-openapi-router-controller: main.controllers.curators_controller    
   /auth/login:
     get:
       tags:
@@ -754,7 +754,7 @@ paths:
                       type: string
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.auth_controller
+      x-openapi-router-controller: main.controllers.auth_controller
   /auth/token:
     post:
       tags:
@@ -786,7 +786,7 @@ paths:
                       type: string
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.auth_controller
+      x-openapi-router-controller: main.controllers.auth_controller
   /auth/profile:
     post:
       tags:
@@ -813,7 +813,7 @@ paths:
                   $ref: '#/components/schemas/User'
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.auth_controller
+      x-openapi-router-controller: main.controllers.auth_controller
   /auth/logout:
     delete:
       tags:
@@ -836,7 +836,7 @@ paths:
           description: success
         "400":
           description: bad input parameter
-      x-openapi-router-controller: swagger_server.controllers.auth_controller
+      x-openapi-router-controller: main.controllers.auth_controller
 components:
   schemas:
     TaxSpec:
@@ -1132,6 +1132,6 @@ components:
       type: apiKey
       in: header       # can be "header", "query" or "cookie"
       name: api-key    # name of the header, query parameter or cookie
-      x-apikeyInfoFunc: swagger_server.controllers.auth_controller.apikey_auth
+      x-apikeyInfoFunc: main.controllers.auth_controller.apikey_auth
 # security:
 #   - ApiKeyAuth: []     # 2) Apply the API key globally to all operations

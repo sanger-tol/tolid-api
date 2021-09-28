@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 
-import connexion
 import os
+import connexion
 
-from flask import render_template
-from swagger_server import encoder
-from swagger_server.model import db
+from main import encoder
+from main.model import db
 
 
-def main():
+def application():
     app = connexion.App(__name__, specification_dir='./swagger/')
     app.app.json_encoder = encoder.JSONEncoder
     app.add_api('swagger.yaml', arguments={'title': 'Tree of Life ToLID API'},
@@ -16,13 +15,4 @@ def main():
     app.app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URI']
     app.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app.app)
-
-    # Simple website
-    @app.route('/')
-    def index():
-        return render_template('index.html')
-    app.run(port=8080)
-
-
-if __name__ == '__main__':
-    main()
+    return app

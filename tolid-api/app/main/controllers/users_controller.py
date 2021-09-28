@@ -1,6 +1,6 @@
-from swagger_server.model import db, TolidSpecies, \
+from main.model import db, TolidSpecies, \
     TolidSpecimen, TolidUser, TolidRequest, TolidPrimaryPrefix
-from swagger_server.db_utils import create_request, \
+from main.db_utils import create_request, \
     notify_requests_pending
 from flask import jsonify
 from sqlalchemy import or_

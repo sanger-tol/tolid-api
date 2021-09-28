@@ -126,7 +126,7 @@ test-api:
     STACK_NAME: tolid
   script:
     - sleep 60
-    - docker exec $(docker ps -q -f name="tolid_tolid-api") bash -c "pip3 install tox; tox"
+    - docker exec $(docker ps -q -f name="tolid_tolid-api") bash -c "pytest -v"
   except:
     - staging
     - production

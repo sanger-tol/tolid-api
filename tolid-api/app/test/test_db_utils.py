@@ -1,10 +1,10 @@
 from __future__ import absolute_import
 
-from swagger_server.test import BaseTestCase
+from test import BaseTestCase
 
-from swagger_server.db_utils import create_new_specimen, accept_request, \
+from main.db_utils import create_new_specimen, accept_request, \
     reject_request, create_request
-from swagger_server.model import db, TolidRequest
+from main.model import db, TolidRequest
 
 
 class TestDbUtils(BaseTestCase):

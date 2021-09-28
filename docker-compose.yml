@@ -30,7 +30,7 @@ services:
       - MAIL_PORT
       - MAIL_RECEIVER_REQUESTS_PENDING
     ports:
-      - 8080:8080
+      - 8080:80
 
   tolid-ui:
     build:
@@ -50,8 +50,8 @@ services:
   tolid-api-test:
     image: tolid-api
     command: dockerize
-        -wait tcp://tolid-db:5432 -wait tcp://tolid-api:8080 -timeout 10s
-        bash -c "pip3 install tox; tox"
+        -wait tcp://tolid-db:5432 -wait tcp://tolid-api:80 -timeout 10s
+        bash -c "pytest -v"
     environment:
       - DB_URI
       - TOLID_URL

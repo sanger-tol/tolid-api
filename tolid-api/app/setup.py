@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-NAME = "swagger_server"
+NAME = "app"
 VERSION = "1.1.0"
 # To install the library, run the following
 #
@@ -25,7 +25,7 @@ setup(
     package_data={'': ['swagger/swagger.yaml']},
     include_package_data=True,
     entry_points={
-        'console_scripts': ['swagger_server=swagger_server.__main__:main']},
+        'console_scripts': ['app=main.run:main']},
     long_description="""\
     API for ToL Public name registry
     """

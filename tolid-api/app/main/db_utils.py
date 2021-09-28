@@ -1,5 +1,5 @@
-from swagger_server.model import db, TolidSpecies, TolidSpecimen, TolidRequest, TolidUser
-from swagger_server.email_utils import MailUtils
+from main.model import db, TolidSpecies, TolidSpecimen, TolidRequest, TolidUser
+from main.email_utils import MailUtils
 import os
 
 

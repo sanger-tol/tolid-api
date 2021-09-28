@@ -2,8 +2,8 @@
 # ToDo not implemented yet!
 from __future__ import absolute_import
 
-from swagger_server.test import BaseTestCase
-from swagger_server.model import db, TolidSpecimen, TolidRequest
+from test import BaseTestCase
+from main.model import db, TolidSpecimen, TolidRequest
 from unittest.mock import patch
 
 

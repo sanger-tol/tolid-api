@@ -1,7 +1,7 @@
 from openpyxl import load_workbook
 import re
-from swagger_server.model import db, TolidSpecies, TolidSpecimen
-from swagger_server.db_utils import create_new_specimen
+from main.model import db, TolidSpecies, TolidSpecimen
+from main.db_utils import create_new_specimen
 
 
 def clean_cell(value):

@@ -52,7 +52,7 @@ insert into user(user_id, name, api_key) values(100, 'Test User 1', 'b06810c5-2b
 To run the server:
 ```
 source venv/bin/activate
-python -m swagger_server
+python -m app
 ```
 
 and open your browser to here:

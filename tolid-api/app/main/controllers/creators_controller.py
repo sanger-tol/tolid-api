@@ -1,10 +1,10 @@
 from flask import jsonify, send_from_directory
 from sqlalchemy import or_
-from swagger_server.db_utils import create_new_specimen, \
+from main.db_utils import create_new_specimen, \
     create_request, notify_requests_pending
-from swagger_server.model import db, TolidSpecies, TolidSpecimen, \
+from main.model import db, TolidSpecies, TolidSpecimen, \
     TolidUser, TolidRole, TolidRequest
-from swagger_server.excel_utils import validate_excel
+from main.excel_utils import validate_excel
 import connexion
 import tempfile
 

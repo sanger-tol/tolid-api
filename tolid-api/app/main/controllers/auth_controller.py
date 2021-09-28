@@ -1,4 +1,4 @@
-from swagger_server.model import db, TolidUser, TolidState
+from main.model import db, TolidUser, TolidState
 from flask import jsonify
 import uuid
 import urllib.parse
