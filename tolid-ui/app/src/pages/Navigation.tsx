@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, withRouter, useHistory } from "react-router-dom";
+import { withRouter, useHistory } from "react-router-dom";
+import { Container, Navbar, Nav } from 'react-bootstrap';
 import { useAuth } from '../contexts/auth.context';
 import { authLogout } from '../services/auth/authService';
 import {
@@ -29,79 +30,44 @@ function Navigation(props: NavigationProps) {
 
     return (
     <div className="navigation">
-      <nav className="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
-        <div className="container">
-          <Link className="navbar-brand" to="/">ToLID</Link>
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarResponsive">
-            <ul className="navbar-nav ml-auto">
-            <li
-                className={`nav-item  ${
-                  props.location.pathname === "/search" ? "active" : ""
-                }`}
-              >
-                <Link className="nav-link" to="/search">
-                  Search
-                </Link>
-              </li>
+      <Navbar className="navbar-dark navbar-custom fixed-top" expand="lg">
+        <Container>
+          <Navbar.Brand href="/">ToLID</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ml-auto">
+              <Nav.Link href="/search">
+                Search
+              </Nav.Link>
               {token && !tokenHasExpired(token) &&
-                <li
-                  className={`nav-item  ${
-                    props.location.pathname === "/request" ? "active" : ""
-                  }`}
-                >
-                  <Link className="nav-link" to="/request">
-                    Create
-                  </Link>
-                </li>
-              } 
+                <Nav.Link className="nav-link" href="/request">
+                  Create
+                </Nav.Link>
+              }
               {token && !tokenHasExpired(token) && user && user.roles && user.roles.some(role => role.role === "admin") &&
-                <li
-                  className={`nav-item  ${
-                    props.location.pathname === "/admin" ? "active" : ""
-                  }`}
-                >
-                  <Link className="nav-link" to="/admin">
-                    Admin
-                  </Link>
-                </li>
+                <Nav.Link className="nav-link" href="/admin">
+                  Admin
+                </Nav.Link>
               }
               {token && !tokenHasExpired(token) &&
-                <li
-                  className={`nav-item  ${
-                    props.location.pathname === "/profile" ? "active" : ""
-                  }`}
-                >
-                  <Link className="nav-link" to="/profile">
-                    Profile
-                  </Link>
-                </li>
+                <Nav.Link className="nav-link" href="/profile">
+                  Profile
+                </Nav.Link>
               }
               {(!token || tokenHasExpired(token)) &&
-                <li
-                  className={`nav-item  ${
-                    props.location.pathname === "/login" ? "active" : ""
-                  }`}
-                >
-                  <Link className="nav-link" to="/login">
-                    Login
-                  </Link>
-                </li>
+                <Nav.Link className="nav-link" href="/login">
+                  Login
+                </Nav.Link>
               }
               {token && !tokenHasExpired(token) &&
-                <li
-                  className="nav-item" 
-                >
-                    <a onClick={logout} className="nav-link" href="/">Logout</a>
-                </li>
+                <Nav.Link onClick={logout} className="nav-link" href="/">
+                  Logout
+                </Nav.Link>
               }
-
-            </ul>
-          </div>
-        </div>
-      </nav>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
     </div>
   );
 }
