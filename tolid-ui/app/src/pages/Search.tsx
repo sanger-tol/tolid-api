@@ -1,4 +1,5 @@
 import React from "react";
+import { Container, Col, Row } from "react-bootstrap";
 import SearchResults from "../components/search/SearchResults"
 
 function Search() {
@@ -16,13 +17,13 @@ function Search() {
         <div className="bg-circle-4 bg-circle"></div>
       </header>
       <section>
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-12 order-lg-1">
-                <SearchResults/>
-            </div>
-          </div>
-        </div>
+        <Container>
+          <Row className="align-items-center">
+            <Col lg="12" className="order-lg-1">
+              <SearchResults/>
+            </Col>
+          </Row>
+        </Container>
       </section>
     </div>
   );

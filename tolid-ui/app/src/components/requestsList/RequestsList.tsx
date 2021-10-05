@@ -3,7 +3,7 @@ import { Request } from '../../models/Request'
 import { ErrorMessage } from '../../models/ErrorMessage'
 import { Species } from '../../models/Species';
 import { httpClient } from '../../services/http/httpClient';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { OverlayTrigger, Tooltip, Table } from 'react-bootstrap';
 import { NcbiData } from '../../models/NcbiData';
 import RejectModal from './RejectModal'
 
@@ -208,7 +208,7 @@ class RequestsList extends React.Component<Props, State> {
             }
           
           {this.state.requests.length > 0 &&
-            <table className="table table-striped">
+            <Table responsive striped>
               <thead>
                 <tr>
                   <th>Request ID</th>
@@ -256,7 +256,7 @@ class RequestsList extends React.Component<Props, State> {
                   </tr>
                   ))}
               </tbody>
-            </table>
+            </Table>
           }
           <RejectModal
             show={this.state.modal}

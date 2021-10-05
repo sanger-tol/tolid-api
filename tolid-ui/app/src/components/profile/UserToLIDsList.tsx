@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Table } from "react-bootstrap";
 import { ToLID } from '../../models/ToLID'
 import { ErrorMessage } from '../../models/ErrorMessage'
 import { httpClient } from '../../services/http/httpClient';
@@ -51,7 +52,7 @@ class UserToLIDsList extends React.Component<Props, State> {
             }
           
           {this.state.tolIds.length > 0 &&
-            <table className="table table-striped">
+            <Table responsive striped>
               <thead>
                 <tr><th>ToLID</th><th>Taxonomy ID</th><th>Name</th><th>Specimen ID</th></tr>
               </thead>
@@ -65,7 +66,7 @@ class UserToLIDsList extends React.Component<Props, State> {
                   </tr>
                   ))}
               </tbody>
-            </table>
+            </Table>
           }
           {this.state.tolIds.length === 0 &&
             <p>No ToLIDs created by you</p>

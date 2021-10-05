@@ -1,4 +1,5 @@
 import React from "react";
+import { Table } from "react-bootstrap";
 import { PrimaryPrefix } from '../../models/PrimaryPrefix'
 import { SecondaryPrefix } from "../../models/SecondaryPrefix";
 import { httpClient } from '../../services/http/httpClient';
@@ -45,7 +46,7 @@ class PrefixTable extends React.Component<Props, State> {
     return (
       <div>
         {(!this.state.err ?
-          <table className="table table-striped">
+          <Table responsive striped>
             <thead>
               <tr>
                 <th>First prefix</th>
@@ -66,7 +67,7 @@ class PrefixTable extends React.Component<Props, State> {
                 ))
               ))}
             </tbody>
-          </table>
+          </Table>
           :
           <p className="msg err">Error: Unable to connect to ToLID database</p>
         )}

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Table } from "react-bootstrap";
 import { Request } from '../../models/Request'
 import { ErrorMessage } from '../../models/ErrorMessage'
 import { httpClient } from '../../services/http/httpClient';
@@ -51,7 +52,7 @@ class UserRequestsList extends React.Component<Props, State> {
             }
           
           {this.state.requests.length > 0 &&
-            <table className="table table-striped">
+            <Table responsive striped>
               <thead>
                 <tr><th>Request ID</th><th>Taxonomy ID</th><th>Name</th><th>Specimen ID</th><th>Status</th></tr>
               </thead>
@@ -66,7 +67,7 @@ class UserRequestsList extends React.Component<Props, State> {
                   </tr>
                   ))}
               </tbody>
-            </table>
+            </Table>
           }
           {this.state.requests.length === 0 &&
             <p>No current ToLID requests by you</p>
