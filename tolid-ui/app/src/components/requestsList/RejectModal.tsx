@@ -28,8 +28,13 @@ class RejectModal extends React.Component<Props, State> {
     };
   }
 
-  rejectRequest = (event: any) => {    
-    httpClient().patch('requests/'+this.props.requestId+'/reject', null, { params: {reason: this.state.rejectInput} })
+  rejectRequest = (event: any) => {
+    var rejectReason: string | null = null;
+    if (this.state.rejectInput !== '') {
+      rejectReason = this.state.rejectInput
+    }
+
+    httpClient().patch('requests/'+this.props.requestId+'/reject', null, { params: {reason: rejectReason} })
       .then(data => {
         this.setState({
           error: null,
