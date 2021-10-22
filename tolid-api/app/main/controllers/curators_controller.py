@@ -157,8 +157,13 @@ def get_ncbi_data(taxonomy_id):
         )
     record = records[0]
     scientific_name = record["ScientificName"]
-    other_names = record["OtherNames"]
-    synonyms = other_names["Synonym"] + other_names["GenbankSynonym"]
+
+    # confirm that the "OtherNames" keys exists
+    if "OtherNames" in record:
+        other_names = record["OtherNames"]
+        synonyms = other_names["Synonym"] + other_names["GenbankSynonym"]
+    else:
+        synonyms = []
 
     return jsonify({
         "scientificName": scientific_name,
