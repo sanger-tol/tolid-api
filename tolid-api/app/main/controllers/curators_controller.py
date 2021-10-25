@@ -160,7 +160,7 @@ def get_ncbi_data(taxonomy_id):
 
     # confirm that the "OtherNames" key exists
     other_names = record.get("OtherNames")
-    if other_names != None:
+    if other_names is not None:
         synonyms = other_names.get("Synonym", []) + other_names.get("GenbankSynonym", [])
     else:
         synonyms = []
