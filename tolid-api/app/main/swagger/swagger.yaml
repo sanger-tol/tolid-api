@@ -321,6 +321,31 @@ paths:
           "404":
             description: species does not exist
         x-openapi-router-controller: main.controllers.curators_controller
+  
+  /environment:
+    get:
+      tags:
+      - users
+      summary: Gets the nature of the environment (e.g. production/dev)
+      description: |
+        Gets the nature of the environment (e.g. production/dev)
+      operationId: get_environment
+      responses:
+        "200":
+          description: The environment type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+                x-content-type: application/json
+        "500":
+          description: Internal environment error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentError'
+                x-content-type: application/json
+      x-openapi-router-controller: main.controllers.users_controller
   /species/{taxonomyId}/ncbi:
     get:
       security:
@@ -1127,6 +1152,25 @@ components:
           items:
             type: string
             example: Arenicola marina synonyma
+    Environment:
+      required:
+        - environment
+      type: object
+      additionalProperties: false
+      properties:
+        environment:
+          type: string
+          enum: [dev, test, staging, production]
+          example: dev
+    EnvironmentError:
+      required:
+        - detail
+      type: object
+      additionalProperties: false
+      properties:
+        detail:
+          type: string
+          example: "Missing environment information"
   securitySchemes:
     ApiKeyAuth:        # name for the security scheme
       type: apiKey

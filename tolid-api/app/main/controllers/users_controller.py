@@ -5,6 +5,8 @@ from main.db_utils import create_request, \
 from flask import jsonify
 from sqlalchemy import or_
 import connexion
+import os
+import logging
 
 
 def search_specimen(specimen_id=None, skip=None, limit=None):
@@ -177,3 +179,13 @@ def list_assigned_tolid_species(page=None):
         .all()
 
     return jsonify([individual.to_long_dict() for individual in species])
+
+
+def get_environment():
+    flask_env = os.getenv("FLASK_ENV")
+    if flask_env is not None and flask_env != "":
+        return jsonify({'environment': flask_env})
+
+    # if unset, return error
+    logging.warn("FLASK_ENV is unset - this should probably be 'dev'")
+    return jsonify({'detail': "Environment information not found"}), 500
