@@ -182,10 +182,10 @@ def list_assigned_tolid_species(page=None):
 
 
 def get_environment():
-    flask_env = os.getenv("FLASK_ENV")
-    if flask_env is not None and flask_env != "":
-        return jsonify({'environment': flask_env})
+    deployment_environment = os.getenv("ENVIRONMENT")
+    if deployment_environment is not None and deployment_environment != "":
+        return jsonify({'environment': deployment_environment})
 
-    # if unset, return error
-    logging.warn("FLASK_ENV is unset - this should probably be 'dev'")
-    return jsonify({'detail': "Environment information not found"}), 500
+    # if unset, assume dev
+    logging.warn("$ENVIRONMENT is unset - assuming a 'dev' environment")
+    return jsonify({'environment': 'dev'})

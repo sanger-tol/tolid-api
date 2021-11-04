@@ -10,6 +10,8 @@ services:
       replicas: 1
     env_file:
       - ${ENV_FILE}
+    environment:
+      - ENVIRONMENT=${CI_ENVIRONMENT_NAME}
     ports: 
       - 5000:80
   tolid-ui:
