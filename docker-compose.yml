@@ -29,7 +29,6 @@ services:
       - MAIL_HOST
       - MAIL_PORT
       - MAIL_RECEIVER_REQUESTS_PENDING
-      - FLASK_ENV
     ports:
       - 8080:80
 
