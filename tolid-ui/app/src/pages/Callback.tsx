@@ -1,8 +1,8 @@
-{/*
+/*
 SPDX-FileCopyrightText: 2021 Genome Research Ltd.
 
 SPDX-License-Identifier: MIT
-*/}
+*/
 
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';

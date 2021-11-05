@@ -1,8 +1,8 @@
-{/*
+/*
 SPDX-FileCopyrightText: 2021 Genome Research Ltd.
 
 SPDX-License-Identifier: MIT
-*/}
+*/
 
 import React, { useCallback, useEffect } from 'react';
 import { Container, Row, Col } from "react-bootstrap";

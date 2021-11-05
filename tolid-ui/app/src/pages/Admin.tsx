@@ -1,8 +1,8 @@
-{/*
+/*
 SPDX-FileCopyrightText: 2021 Genome Research Ltd.
 
 SPDX-License-Identifier: MIT
-*/}
+*/
 
 import { useState } from "react";
 import { Tab, Tabs, Container, Row, Col } from "react-bootstrap";

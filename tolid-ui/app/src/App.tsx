@@ -1,8 +1,8 @@
-{/*
+/*
 SPDX-FileCopyrightText: 2021 Genome Research Ltd.
 
 SPDX-License-Identifier: MIT
-*/}
+*/
 
 import React, { useState }  from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
