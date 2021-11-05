@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
 from openpyxl import load_workbook
 import re
 from main.model import db, TolidSpecies, TolidSpecimen

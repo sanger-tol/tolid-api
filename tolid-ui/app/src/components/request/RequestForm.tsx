@@ -1,3 +1,9 @@
+{/*
+SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+
+SPDX-License-Identifier: MIT
+*/}
+
 import * as React from 'react';
 import { Request } from '../../models/Request'
 import { ErrorMessage } from '../../models/ErrorMessage'

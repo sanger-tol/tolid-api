@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+
+SPDX-License-Identifier: MIT
+-->
+
 ## Running with Docker
 
 To run the app on a Docker container, first you will need to set up a file with the necessary environment variables. Let's call this .env.dev (there is a template file .env.template you can use as a template!). Then, execute the following from the root directory:

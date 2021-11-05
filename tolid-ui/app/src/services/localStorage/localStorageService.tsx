@@ -1,3 +1,9 @@
+{/*
+SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+
+SPDX-License-Identifier: MIT
+*/}
+
 import { User } from '../../models/User'
 
 export function setTokenToLocalStorage(token: string) {

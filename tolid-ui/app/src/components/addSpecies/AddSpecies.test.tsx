@@ -1,3 +1,9 @@
+{/*
+SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+
+SPDX-License-Identifier: MIT
+*/}
+
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ErrorMessage } from '../../models/ErrorMessage';

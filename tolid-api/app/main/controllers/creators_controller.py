@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
 from flask import jsonify, send_from_directory
 from sqlalchemy import or_
 from main.db_utils import create_new_specimen, \

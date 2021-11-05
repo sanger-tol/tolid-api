@@ -1,3 +1,9 @@
+{/*
+SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+
+SPDX-License-Identifier: MIT
+*/}
+
 import React, { useState }  from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Navigation, Footer, Home, Search, Request, Admin, Profile, Login, Callback } from "./pages";

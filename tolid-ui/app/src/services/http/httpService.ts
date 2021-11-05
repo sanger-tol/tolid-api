@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+//
+// SPDX-License-Identifier: MIT
+
 import { createAxiosInstance } from './axios';
 import { CONFIG } from './config';
 import { AxiosInstance, AxiosRequestConfig } from 'axios';

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
 # coding: utf-8
 # ToDo not implemented yet!
 from __future__ import absolute_import

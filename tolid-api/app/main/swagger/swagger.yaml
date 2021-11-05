@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
 openapi: 3.0.0
 info:
   title: Tree of Life ToLID API
