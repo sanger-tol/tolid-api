@@ -156,9 +156,14 @@ def get_ncbi_data(taxonomy_id):
             404
         )
     record = records[0]
-    scientific_name = record["ScientificName"]
-    other_names = record["OtherNames"]
-    synonyms = other_names["Synonym"] + other_names["GenbankSynonym"]
+    scientific_name = record.get("ScientificName", "")
+
+    # confirm that the "OtherNames" key exists
+    other_names = record.get("OtherNames")
+    if other_names is not None:
+        synonyms = other_names.get("Synonym", []) + other_names.get("GenbankSynonym", [])
+    else:
+        synonyms = []
 
     return jsonify({
         "scientificName": scientific_name,
