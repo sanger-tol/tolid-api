@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
 from connexion.apps.flask_app import FlaskJSONEncoder
 from main.model import Base
 

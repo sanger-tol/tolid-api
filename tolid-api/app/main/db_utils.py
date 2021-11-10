@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
 from main.model import db, TolidSpecies, TolidSpecimen, TolidRequest, TolidUser
 from main.email_utils import MailUtils
 import os

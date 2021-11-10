@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
 FROM tiangolo/uwsgi-nginx-flask:python3.8
 
 ENV PYTHONDONTWRITEBYTECODE 1

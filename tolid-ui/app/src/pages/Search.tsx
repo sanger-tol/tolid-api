@@ -1,3 +1,9 @@
+/*
+SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+
+SPDX-License-Identifier: MIT
+*/
+
 import React from "react";
 import { Container, Col, Row } from "react-bootstrap";
 import SearchResults from "../components/search/SearchResults"

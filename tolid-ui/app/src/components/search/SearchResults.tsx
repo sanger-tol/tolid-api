@@ -1,3 +1,9 @@
+/*
+SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+
+SPDX-License-Identifier: MIT
+*/
+
 import * as React from 'react';
 import { ToLID } from '../../models/ToLID'
 import { Species } from '../../models/Species'

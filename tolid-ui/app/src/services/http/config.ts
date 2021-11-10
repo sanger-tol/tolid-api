@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+//
+// SPDX-License-Identifier: MIT
+
 export const CONFIG = {
   baseURL: '/api/v2',
   headers: {

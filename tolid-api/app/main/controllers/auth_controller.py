@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
 from main.model import db, TolidUser, TolidState
 from flask import jsonify
 import uuid

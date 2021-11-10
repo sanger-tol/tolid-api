@@ -1,3 +1,9 @@
+/*
+SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+
+SPDX-License-Identifier: MIT
+*/
+
 import { END_POINT } from '../http/config';
 import { httpClient } from '../http/httpClient';
 

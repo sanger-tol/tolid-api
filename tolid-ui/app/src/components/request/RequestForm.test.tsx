@@ -1,3 +1,8 @@
+/*
+SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+
+SPDX-License-Identifier: MIT
+*/
 
 import React from "react";
 import { act } from "react-dom/test-utils";
