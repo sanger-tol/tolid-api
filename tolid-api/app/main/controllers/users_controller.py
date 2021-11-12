@@ -112,8 +112,8 @@ def search_species_by_taxon_prefix_genus(taxonomy_id=None, prefix=None,
     return jsonify([species.to_long_dict() for species in speciess])
 
 
-def search_species_by_scientific_name(scientific_name, page=0):
-    if scientific_name == "":
+def search_species_by_scientific_name(scientific_name_fragment, page=0):
+    if scientific_name_fragment == "":
         return jsonify({'detail': 'A section of a scientific name is needed'}), 400
     
     max_species = os.getenv(
@@ -123,7 +123,7 @@ def search_species_by_scientific_name(scientific_name, page=0):
 
     speciess = db.session.query(TolidSpecies) \
         .filter(
-            TolidSpecies.name.like("%{}%".format(scientific_name))
+            TolidSpecies.name.like("%{}%".format(scientific_name_fragment))
         ) \
         .order_by(TolidSpecies.name) \
         .offset((page * max_species) + 1) \
