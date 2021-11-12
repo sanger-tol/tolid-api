@@ -385,7 +385,7 @@ paths:
       description: |
         By passing in the appropriate options, you can search for
         available species in the system.
-      operationId: search_species_by_taxon_prefix_scientific_genus
+      operationId: search_species_by_taxon_prefix_genus
       parameters:
       - name: taxonomyId
         in: query
@@ -459,6 +459,42 @@ paths:
         "403":
           description: user not authorised to use this function
       x-openapi-router-controller: main.controllers.curators_controller
+  /species/scientific-name:
+    get:
+      tags:
+      - users
+      summary: Returns paginated lists of species containing a search phrase
+      description:
+        Returns paginated lists of species containing a search phrase
+      operationId: search_species_by_scientific_name
+      parameters:
+      - name: scientificNameFragment
+        in: query
+        description: a fragment of a scientific name
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: the page of the results
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpeciesLong'
+                x-content-type: application/json
+      x-openapi-router-controller: main.controllers.users_controller
   /species/all:
     get:
       security:
