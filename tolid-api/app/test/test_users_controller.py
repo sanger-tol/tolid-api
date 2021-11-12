@@ -476,7 +476,7 @@ class TestUsersController(BaseTestCase):
     
     def test_search_species_by_scientific_name(self):
         # whitespace scientific name fragment
-        query_string = {'scientificName': '   '}
+        query_string = {'scientificNameFragment': '   '}
         response = self.client.open(
             '/api/v2/species/scientific-name',
             method='GET',
@@ -485,9 +485,9 @@ class TestUsersController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # valid scientific name fragment
-        query_string = {'scientificName': ' vancau'}
+        query_string = {'scientificNameFragment': ' vancau'}
         response = self.client.open(
-            '/api/v2/species',
+            '/api/v2/species/scientific-name',
             method='GET',
             query_string=query_string)
         expect = [{

@@ -121,16 +121,15 @@ def search_species_by_scientific_name(scientific_name_fragment, page=0):
         DEFAULT_MAX_SPECIES_RETURNED
     )
 
+    formatted = "%{}%".format(scientific_name_fragment)
+
     speciess = db.session.query(TolidSpecies) \
-        .filter(
-            TolidSpecies.name.like("%{}%".format(scientific_name_fragment))
-        ) \
+        .filter(TolidSpecies.name.ilike(formatted)) \
         .order_by(TolidSpecies.name) \
-        .offset((page * max_species) + 1) \
-        .limit((page + 1) * max_species) \
         .all()
 
     return jsonify([species.to_long_dict() for species in speciess])
+
 
 def requests_for_user(api_key=None):
     requests = db.session.query(TolidRequest) \
