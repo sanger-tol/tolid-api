@@ -113,7 +113,7 @@ def search_species_by_taxon_prefix_genus(taxonomy_id=None, prefix=None,
 
 
 def search_species_by_scientific_name(scientific_name_fragment, page=0):
-    if scientific_name_fragment == "":
+    if scientific_name_fragment.isspace():
         return jsonify({'detail': 'A section of a scientific name is needed'}), 400
     
     max_species = os.getenv(

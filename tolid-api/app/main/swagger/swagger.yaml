@@ -494,6 +494,12 @@ paths:
                 items:
                   $ref: '#/components/schemas/SpeciesLong'
                 x-content-type: application/json
+        "400":
+          description: Bad request, e.g. whitespace scientific name
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
       x-openapi-router-controller: main.controllers.users_controller
   /species/all:
     get:
