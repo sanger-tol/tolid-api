@@ -87,7 +87,7 @@ def search_species(taxonomy_id=None, skip=None, limit=None):
 
 
 def search_species_by_taxon_prefix_genus(taxonomy_id=None, prefix=None,
-                                        genus=None, output=None):
+                                         genus=None, output=None):
     query = db.session.query(TolidSpecies)
     filters = []
     if prefix is not None:
@@ -115,7 +115,7 @@ def search_species_by_taxon_prefix_genus(taxonomy_id=None, prefix=None,
 def search_species_by_scientific_name(scientific_name_fragment, page=0):
     if scientific_name_fragment.isspace():
         return jsonify({'detail': 'A section of a scientific name is needed'}), 400
-    
+
     max_species = os.getenv(
         "MAX_SPECIES_RETURNED",
         DEFAULT_MAX_SPECIES_RETURNED
@@ -202,8 +202,8 @@ def list_assigned_tolid_species(page=None):
     species = db.session.query(TolidSpecies) \
         .join(TolidSpecimen) \
         .order_by(TolidSpecies.name) \
-        .offset((page*50)+1) \
-        .limit((page+1)*50) \
+        .offset(page*50) \
+        .limit(50) \
         .all()
 
     return jsonify([individual.to_long_dict() for individual in species])

@@ -449,8 +449,7 @@ class TestUsersController(BaseTestCase):
                     "tolId": "wuAreMari2"
                 }
             ]
-        },
-        {
+        }, {
             "commonName": "human",
             "currentHighestTolidNumber": 0,
             "family": "Hominidae",
@@ -473,7 +472,7 @@ class TestUsersController(BaseTestCase):
             '/api/v2/species',
             method='GET')
         self.assertEqual([], response.json)
-    
+
     def test_search_species_by_scientific_name(self):
         # whitespace scientific name fragment
         query_string = {'scientificNameFragment': '   '}
