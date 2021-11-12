@@ -13,6 +13,9 @@ import os
 import logging
 
 
+DEFAULT_MAX_SPECIES_RETURNED = 50
+
+
 def search_specimen(specimen_id=None, skip=None, limit=None):
     specimens = db.session.query(TolidSpecimen) \
         .filter(TolidSpecimen.specimen_id == specimen_id) \
@@ -83,17 +86,12 @@ def search_species(taxonomy_id=None, skip=None, limit=None):
     return jsonify([species.to_long_dict()])
 
 
-def search_species_by_taxon_prefix_scientific_genus(taxonomy_id=None, prefix=None,
-                                        scientific_name=None, genus=None,
-                                        output=None):
+def search_species_by_taxon_prefix_genus(taxonomy_id=None, prefix=None,
+                                        genus=None, output=None):
     query = db.session.query(TolidSpecies)
     filters = []
     if prefix is not None:
         filters.append(TolidSpecies.prefix == prefix)
-    if scientific_name is not None:
-        filters.append(
-            TolidSpecies.name.like("%{}%".format(scientific_name))
-        )
     if taxonomy_id is not None:
         if (taxonomy_id != "") and taxonomy_id.isnumeric():
             # Valid integer taxonomy ID
@@ -113,6 +111,26 @@ def search_species_by_taxon_prefix_scientific_genus(taxonomy_id=None, prefix=Non
 
     return jsonify([species.to_long_dict() for species in speciess])
 
+
+def search_species_by_scientific_name(scientific_name, page=0):
+    if scientific_name == "":
+        return jsonify({'detail': 'A section of a scientific name is needed'}), 400
+    
+    max_species = os.getenv(
+        "MAX_SPECIES_RETURNED",
+        DEFAULT_MAX_SPECIES_RETURNED
+    )
+
+    speciess = db.session.query(TolidSpecies) \
+        .filter(
+            TolidSpecies.name.like("%{}%".format(scientific_name))
+        ) \
+        .order_by(TolidSpecies.name) \
+        .offset((page * max_species) + 1) \
+        .limit((page + 1) * max_species) \
+        .all()
+
+    return jsonify([species.to_long_dict() for species in speciess])
 
 def requests_for_user(api_key=None):
     requests = db.session.query(TolidRequest) \
