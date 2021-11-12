@@ -392,7 +392,7 @@ class TestUsersController(BaseTestCase):
             method='GET')
         self.assertEqual(expect, response.json)
 
-    def test_search_species_by_taxon_prefix_scientific_genus(self):
+    def search_species_by_taxon_prefix_genus(self):
         # Taxonomy ID not in database
         query_string = {'taxonomyId': 999999999}
         response = self.client.open(
@@ -449,27 +449,8 @@ class TestUsersController(BaseTestCase):
                     "tolId": "wuAreMari2"
                 }
             ]
-        }, {
-            "commonName": "None",
-            "currentHighestTolidNumber": 1,
-            "family": "Nereididae",
-            "genus": "Perinereis",
-            "kingdom": "Metazoa",
-            "order": "Phyllodocida",
-            "phylum": "Annelida",
-            "prefix": "wpPerVanc",
-            "scientificName": "Perinereis vancaurica",
-            "taxaClass": "Polychaeta",
-            "taxonomyId": 6355,
-            "tolIds": [
-                {
-                    "specimen": {
-                        "specimenId": "SAN0000101"
-                    },
-                    "tolId": "wpPerVanc1"
-                }
-            ]
-        }, {
+        },
+        {
             "commonName": "human",
             "currentHighestTolidNumber": 0,
             "family": "Hominidae",
@@ -492,6 +473,47 @@ class TestUsersController(BaseTestCase):
             '/api/v2/species',
             method='GET')
         self.assertEqual([], response.json)
+    
+    def test_search_species_by_scientific_name(self):
+        # whitespace scientific name fragment
+        query_string = {'scientificName': '   '}
+        response = self.client.open(
+            '/api/v2/species/scientific-name',
+            method='GET',
+            query_string=query_string)
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        # valid scientific name fragment
+        query_string = {'scientificName': ' vancau'}
+        response = self.client.open(
+            '/api/v2/species',
+            method='GET',
+            query_string=query_string)
+        expect = [{
+            "commonName": "None",
+            "currentHighestTolidNumber": 1,
+            "family": "Nereididae",
+            "genus": "Perinereis",
+            "kingdom": "Metazoa",
+            "order": "Phyllodocida",
+            "phylum": "Annelida",
+            "prefix": "wpPerVanc",
+            "scientificName": "Perinereis vancaurica",
+            "taxaClass": "Polychaeta",
+            "taxonomyId": 6355,
+            "tolIds": [
+                {
+                    "specimen": {
+                        "specimenId": "SAN0000101"
+                    },
+                    "tolId": "wpPerVanc1"
+                }
+            ]
+        }]
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEqual(expect, response.json)
 
     def test_search_requests_for_user(self):
         self.request1 = TolidRequest(specimen_id="SAN0000100", species_id=6344, status="Pending")
