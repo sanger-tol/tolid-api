@@ -392,7 +392,7 @@ class TestUsersController(BaseTestCase):
             method='GET')
         self.assertEqual(expect, response.json)
 
-    def test_search_species_by_taxon_prefix_name(self):
+    def test_search_species_by_taxon_prefix_scientific_genus(self):
         # Taxonomy ID not in database
         query_string = {'taxonomyId': 999999999}
         response = self.client.open(

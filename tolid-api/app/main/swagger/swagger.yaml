@@ -385,7 +385,7 @@ paths:
       description: |
         By passing in the appropriate options, you can search for
         available species in the system.
-      operationId: search_species_by_taxon_prefix_name
+      operationId: search_species_by_taxon_prefix_scientific_genus
       parameters:
       - name: taxonomyId
         in: query
@@ -406,6 +406,14 @@ paths:
       - name: scientificName
         in: query
         description: a scientific name
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: genus
+        in: query
+        description: a genus
         required: false
         style: form
         explode: true

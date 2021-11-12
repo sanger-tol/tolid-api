@@ -83,8 +83,9 @@ def search_species(taxonomy_id=None, skip=None, limit=None):
     return jsonify([species.to_long_dict()])
 
 
-def search_species_by_taxon_prefix_name(taxonomy_id=None, prefix=None,
-                                        scientific_name=None, output=None):
+def search_species_by_taxon_prefix_scientific_genus(taxonomy_id=None, prefix=None,
+                                        scientific_name=None, genus=None,
+                                        output=None):
     query = db.session.query(TolidSpecies)
     filters = []
     if prefix is not None:
@@ -98,6 +99,8 @@ def search_species_by_taxon_prefix_name(taxonomy_id=None, prefix=None,
         else:
             # Force this filter to fail
             filters.append(TolidSpecies.taxonomy_id == TolidSpecies.taxonomy_id + 1)
+    if genus is not None:
+        filters.append(TolidSpecies.genus == genus)
 
     if len(filters) == 0:
         return jsonify([])
