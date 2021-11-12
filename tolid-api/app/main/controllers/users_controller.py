@@ -126,6 +126,8 @@ def search_species_by_scientific_name(scientific_name_fragment, page=0):
     speciess = db.session.query(TolidSpecies) \
         .filter(TolidSpecies.name.ilike(formatted)) \
         .order_by(TolidSpecies.name) \
+        .offset(page * max_species) \
+        .limit((page + 1) * max_species) \
         .all()
 
     return jsonify([species.to_long_dict() for species in speciess])
