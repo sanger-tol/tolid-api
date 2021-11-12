@@ -91,7 +91,9 @@ def search_species_by_taxon_prefix_scientific_genus(taxonomy_id=None, prefix=Non
     if prefix is not None:
         filters.append(TolidSpecies.prefix == prefix)
     if scientific_name is not None:
-        filters.append(TolidSpecies.name == scientific_name)
+        filters.append(
+            TolidSpecies.name.like("%{}%".format(scientific_name))
+        )
     if taxonomy_id is not None:
         if (taxonomy_id != "") and taxonomy_id.isnumeric():
             # Valid integer taxonomy ID
