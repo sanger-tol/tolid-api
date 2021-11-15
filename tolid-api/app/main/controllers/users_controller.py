@@ -13,9 +13,6 @@ import os
 import logging
 
 
-DEFAULT_MAX_SPECIES_RETURNED = 50
-
-
 def search_specimen(specimen_id=None, skip=None, limit=None):
     specimens = db.session.query(TolidSpecimen) \
         .filter(TolidSpecimen.specimen_id == specimen_id) \
@@ -116,10 +113,7 @@ def search_species_by_scientific_name(scientific_name_fragment, page=0):
     if scientific_name_fragment.isspace():
         return jsonify({'detail': 'A section of a scientific name is needed'}), 400
 
-    max_species = os.getenv(
-        "MAX_SPECIES_RETURNED",
-        DEFAULT_MAX_SPECIES_RETURNED
-    )
+    max_species = 50
 
     formatted = "%{}%".format(scientific_name_fragment)
 
@@ -127,7 +121,7 @@ def search_species_by_scientific_name(scientific_name_fragment, page=0):
         .filter(TolidSpecies.name.ilike(formatted)) \
         .order_by(TolidSpecies.name) \
         .offset(page * max_species) \
-        .limit((page + 1) * max_species) \
+        .limit(max_species) \
         .all()
 
     return jsonify([species.to_long_dict() for species in speciess])
