@@ -385,7 +385,7 @@ paths:
       description: |
         By passing in the appropriate options, you can search for
         available species in the system.
-      operationId: search_species_by_taxon_prefix_genus
+      operationId: search_species_by_search_term
       parameters:
       - name: taxonomyId
         in: query
@@ -403,17 +403,17 @@ paths:
         explode: true
         schema:
           type: string
-      - name: scientificName
+      - name: genus
         in: query
-        description: a scientific name
+        description: a genus
         required: false
         style: form
         explode: true
         schema:
           type: string
-      - name: genus
+      - name: scientificNameFragment
         in: query
-        description: a genus
+        description: a fragment of a scientific name
         required: false
         style: form
         explode: true
@@ -459,48 +459,6 @@ paths:
         "403":
           description: user not authorised to use this function
       x-openapi-router-controller: main.controllers.curators_controller
-  /species/scientific-name:
-    get:
-      tags:
-      - users
-      summary: Returns paginated lists of species containing a search phrase
-      description:
-        Returns paginated lists of species containing a search phrase
-      operationId: search_species_by_scientific_name
-      parameters:
-      - name: scientificNameFragment
-        in: query
-        description: a fragment of a scientific name
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: page
-        in: query
-        description: the page of the results
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: integer
-      responses:
-        "200":
-          description: search results matching criteria
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SpeciesLong'
-                x-content-type: application/json
-        "400":
-          description: Bad request, e.g. whitespace scientific name
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
-      x-openapi-router-controller: main.controllers.users_controller
   /species/all:
     get:
       security:

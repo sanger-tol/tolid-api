@@ -83,8 +83,9 @@ def search_species(taxonomy_id=None, skip=None, limit=None):
     return jsonify([species.to_long_dict()])
 
 
-def search_species_by_taxon_prefix_genus(taxonomy_id=None, prefix=None,
-                                         genus=None, output=None):
+def search_species_by_search_term(taxonomy_id=None, prefix=None,
+                                  genus=None, scientific_name_fragment=None,
+                                  page=0, output=None):
     query = db.session.query(TolidSpecies)
     filters = []
     if prefix is not None:
@@ -98,31 +99,22 @@ def search_species_by_taxon_prefix_genus(taxonomy_id=None, prefix=None,
             filters.append(TolidSpecies.taxonomy_id == TolidSpecies.taxonomy_id + 1)
     if genus is not None:
         filters.append(TolidSpecies.genus == genus)
+    if scientific_name_fragment is not None:
+        filters.append(TolidSpecies.name.ilike(
+            "%{}%".format(scientific_name_fragment)
+        ))
 
     if len(filters) == 0:
         return jsonify([])
     else:
         query = query.filter(or_(*filters))
+    
+    max_species_per_page = 50
 
-    speciess = query.order_by(TolidSpecies.taxonomy_id).all()
-
-    return jsonify([species.to_long_dict() for species in speciess])
-
-
-def search_species_by_scientific_name(scientific_name_fragment, page=0):
-    if scientific_name_fragment.isspace():
-        return jsonify({'detail': 'A section of a scientific name is needed'}), 400
-
-    max_species = 50
-
-    formatted = "%{}%".format(scientific_name_fragment)
-
-    speciess = db.session.query(TolidSpecies) \
-        .filter(TolidSpecies.name.ilike(formatted)) \
-        .order_by(TolidSpecies.name) \
-        .offset(page * max_species) \
-        .limit(max_species) \
-        .all()
+    speciess = query.order_by(TolidSpecies.taxonomy_id) \
+                    .offset(page * max_species_per_page) \
+                    .limit(max_species_per_page) \
+                    .all()
 
     return jsonify([species.to_long_dict() for species in speciess])
 
