@@ -7,5 +7,6 @@ SPDX-License-Identifier: MIT
 import { Species } from "./Species";
 
 export interface SpeciesPage {
-    speciess: Species[] | undefined;
+    species: Species[];
+    totalNumSpecies: number;
 }

@@ -23,7 +23,8 @@ export interface State {
     speciess: Species[];
     specimens: Specimen[],
     searchTermIsValid: boolean,
-    currentPageNumber: number
+    currentPageNumber: number,
+    totalNumSpecies: number
 }
 
 function getToLIDs(searchTerm: string): Promise<ToLID[]> {
@@ -39,21 +40,22 @@ function getToLIDs(searchTerm: string): Promise<ToLID[]> {
             return res as ToLID[]
         })
 }
-function getSpeciess(searchTerm: string, page: number): Promise<SpeciesPage> {
+function getSpeciessPage(searchTerm: string, page: number): Promise<SpeciesPage> {
     return fetch(
       `/api/v2/species?taxonomyId=${searchTerm}&genus=${searchTerm}&prefix=${searchTerm}&scientificNameFragment=${searchTerm}&page=${page}`
     )
         // the JSON body is taken from the response
         .then(res => {
             if (res.ok) { 
-             return res.json();
+                return res.json();
             }
-            return undefined; 
+            return {
+                species: [],
+                totalNumSpecies: 0
+            }; 
           })
         .then(res => {
-            return {
-              speciess: res
-            } as SpeciesPage;
+            return res as SpeciesPage;
         })
 }
 function getSpecimens(searchTerm: string): Promise<Specimen[]> {
@@ -78,7 +80,8 @@ class SearchResults extends React.Component<Props, State> {
         speciess: [],
         specimens: [],
         searchTermIsValid: true,
-        currentPageNumber: 0
+        currentPageNumber: 0,
+        totalNumSpecies: 0
       }
     }
 
@@ -91,7 +94,8 @@ class SearchResults extends React.Component<Props, State> {
     // add a page to the array of species
     joinSpeciess = (speciesPage: SpeciesPage) => {
       this.setState((oldState, oldProps) => ({
-        speciess: oldState.speciess.concat(speciesPage.speciess ?? [])
+        speciess: oldState.speciess.concat(speciesPage.species),
+        totalNumSpecies: speciesPage.totalNumSpecies
       }))
     }
 
@@ -110,13 +114,13 @@ class SearchResults extends React.Component<Props, State> {
             .then(tolids => this.setState({ tolids: tolids }));
           getSpecimens(searchTerm.value)
             .then(specimens => this.setState({ specimens: specimens }));
-          getSpeciess(searchTerm.value, 0)
+          getSpeciessPage(searchTerm.value, 0)
             .then(speciesPage => this.joinSpeciess(speciesPage));
           this.resetForm(form);
         } else {
           this.setState({searchTermIsValid: false})
         }
-    };
+    }
 
     public render() {
       return (
