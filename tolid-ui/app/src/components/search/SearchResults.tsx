@@ -85,6 +85,16 @@ class SearchResults extends React.Component<Props, State> {
       }
     }
 
+    getNumPages = () => {
+      const numPages = Math.ceil();
+    }
+
+    componentDidUpdate(prevProps: Props, prevState: State) {
+      if (this.state.currentPageNumber !== prevState.currentPageNumber) {
+
+      }
+    }
+
     resetForm = (form: HTMLFormElement) => {
       // Finally, we need to reset the form
       this.setState({searchTermIsValid: true});
