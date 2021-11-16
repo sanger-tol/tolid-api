@@ -105,18 +105,26 @@ def search_species_by_search_term(taxonomy_id=None, prefix=None,
         ))
 
     if len(filters) == 0:
-        return jsonify([])
+        return jsonify({
+            "totalNumSpecies": 0,
+            "species": []
+        })
     else:
         query = query.filter(or_(*filters))
     
     max_species_per_page = 50
+
+    total_num_species = query.count()
 
     speciess = query.order_by(TolidSpecies.taxonomy_id) \
                     .offset(page * max_species_per_page) \
                     .limit(max_species_per_page) \
                     .all()
 
-    return jsonify([species.to_long_dict() for species in speciess])
+    return jsonify({
+        "totalNumSpecies": total_num_species,
+        "species": [species.to_long_dict() for species in speciess]
+    })
 
 
 def requests_for_user(api_key=None):

@@ -433,10 +433,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SpeciesLong'
-                x-content-type: application/json
+                $ref: '#/components/schemas/SpeciesSearch'
       x-openapi-router-controller: main.controllers.users_controller
     post:
       security:
@@ -1031,6 +1028,19 @@ components:
                 example: wuAreMari1
               specimen:
                 $ref: '#/components/schemas/SpecimenShort'
+    SpeciesSearch:
+      required:
+        - totalNumSpecies
+        - species
+      type: object
+      properties:
+        totalNumSpecies:
+          type: integer
+          example: 300
+        species:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpeciesLong'
     SpecimenShort:
       required:
         - specimenId
