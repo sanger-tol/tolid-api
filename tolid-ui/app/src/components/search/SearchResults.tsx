@@ -41,7 +41,7 @@ function getToLIDs(searchTerm: string): Promise<ToLID[]> {
 }
 function getSpeciess(searchTerm: string, page: number): Promise<SpeciesPage> {
     return fetch(
-      `/api/v2/species?taxonomyId=${searchTerm}&genus=${searchTerm}&prefix=${searchTerm}&scientificNameFragment=${searchTerm}`
+      `/api/v2/species?taxonomyId=${searchTerm}&genus=${searchTerm}&prefix=${searchTerm}&scientificNameFragment=${searchTerm}&page=${page}`
     )
         // the JSON body is taken from the response
         .then(res => {

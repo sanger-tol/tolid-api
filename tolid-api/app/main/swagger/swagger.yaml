@@ -419,6 +419,14 @@ paths:
         explode: true
         schema:
           type: string
+      - name: page
+        in: query
+        description: the page of the results
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
       responses:
         "200":
           description: search results matching criteria
