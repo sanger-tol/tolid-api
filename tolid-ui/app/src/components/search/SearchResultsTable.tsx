@@ -5,14 +5,12 @@ SPDX-License-Identifier: MIT
 */
 
 import { Pagination } from 'react-bootstrap';
-import SearchResultsSpecies from './SearchResultsSpecies'
 import { Species } from '../../models/Species'
 import * as React from 'react'
 import { StyledSearchResultsTable } from './SearchResultsTableStyled'
 import { ToLID } from '../../models/ToLID';
 import { Specimen } from '../../models/Specimen';
-import SearchResultsToLID from './SearchResultsToLID';
-import SearchResultsSpecimen from './SearchResultsSpecimen';
+import { SearchResultsTableTab } from './SearchResultsTableTab';
 
 interface Props {
     getNextSpeciesPage: () => Promise<void>;
@@ -27,7 +25,7 @@ interface State {
     requestIsPending: boolean;
 }
 
-enum SearchResultType {
+export enum SearchResultType {
     ToLID,
     Specimen,
     Species
@@ -47,7 +45,7 @@ export default class SearchResultsTable extends React.Component<Props, State> {
     getNumTabs = () => {
         const totalSearchResults = this.props.tolIds.length +
                                    this.props.specimens.length +
-                                   this.props.species.length;
+                                   this.props.totalNumSpecies;
         return Math.ceil(totalSearchResults / numResultsPerTab);
     }
 
@@ -92,7 +90,7 @@ export default class SearchResultsTable extends React.Component<Props, State> {
     
             // if within threshold, get next page
             if (numTabs - this.state.currentTabNum < preloadDifference) {
-                // there is already a request in progress, abort
+                // if there is already a request in progress, abort
                 if (this.state.requestIsPending === true) return;
 
                 // indicate that a request is pending
@@ -111,34 +109,16 @@ export default class SearchResultsTable extends React.Component<Props, State> {
         }
     }
 
-    getSearchResultView = (searchResultPair: [ToLID | Specimen | Species, SearchResultType]) => {
-        const searchResultType = searchResultPair[1];
-        const searchResult = searchResultPair[0];
-        switch (searchResultType) {
-            case SearchResultType.ToLID:
-                return (
-                    <SearchResultsToLID tolid={searchResult as ToLID} />
-                )
-            case SearchResultType.Specimen:
-                return (
-                    <SearchResultsSpecimen specimen={searchResult as Specimen} />
-                )
-            case SearchResultType.Species:
-                return (
-                    <SearchResultsSpecies species={searchResult as Species} />
-                )
-        }
-    }
-
     public render() {
         return (
             <StyledSearchResultsTable>
-                {this.props.species &&
-                    this.getSearchResultsInCurrentTab().map(
-                        (searchResult: [ToLID | Specimen | Species, SearchResultType]) => 
-                            this.getSearchResultView(searchResult)
-                    )
-                }
+                <SearchResultsTableTab
+                    searchResults={this.getSearchResultsInCurrentTab()}
+                >
+                </SearchResultsTableTab>
+                <p>
+                    Page {this.state.currentTabNum + 1} of {this.getNumTabs()}.
+                </p>
             </StyledSearchResultsTable>
         )
     }

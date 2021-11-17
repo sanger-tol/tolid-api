@@ -136,6 +136,7 @@ class SearchResults extends React.Component<Props, State> {
                 </button>
             </form>
             <ul className="searchResults">
+              {(this.state.tolids.length !== 0 || this.state.speciess.length !== 0 || this.state.specimens.length !== 0) &&
                 <SearchResultsTable
                   getNextSpeciesPage={() => Promise.resolve()}
                   tolIds={this.state.tolids}
@@ -143,6 +144,7 @@ class SearchResults extends React.Component<Props, State> {
                   species={this.state.speciess}
                   totalNumSpecies={this.state.totalNumSpecies}
                 />
+              }
             </ul>
             {this.state.tolids.length === 0 && this.state.speciess.length === 0 && this.state.specimens.length === 0 &&
             <p>
