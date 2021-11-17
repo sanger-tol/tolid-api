@@ -11,6 +11,7 @@ import { Specimen } from '../../models/Specimen'
 import { SpeciesPage } from '../../models/SpeciesPage';
 import SearchResultsTable from './SearchResultsTable';
 import './SearchResults.scss'
+import { Form } from 'react-bootstrap';
 
 export interface Props {
     list?: string[]
@@ -20,7 +21,9 @@ export interface State {
     speciess: Species[];
     specimens: Specimen[],
     searchTermIsValid: boolean,
-    totalNumSpecies: number
+    totalNumSpecies: number,
+    searchTerm?: string,
+    currentSpeciesPageNum: number,
 }
 
 function getToLIDs(searchTerm: string): Promise<ToLID[]> {
@@ -76,7 +79,8 @@ class SearchResults extends React.Component<Props, State> {
         speciess: [],
         specimens: [],
         searchTermIsValid: true,
-        totalNumSpecies: 0
+        totalNumSpecies: 0,
+        currentSpeciesPageNum: 0
       }
     }
 
@@ -84,6 +88,21 @@ class SearchResults extends React.Component<Props, State> {
       // Finally, we need to reset the form
       this.setState({searchTermIsValid: true});
       form.reset();
+    }
+
+    fetchNextPageIfExists = async () => {
+      if (this.state.searchTerm === undefined || this.state.searchTerm === "") {
+        return;
+      }
+      await getSpeciessPage(
+        this.state.searchTerm,
+        this.state.currentSpeciesPageNum + 1
+      ).then((speciesPage: SpeciesPage) => {
+        this.joinSpeciess(speciesPage);
+        this.setState((oldState, oldProps) => ({
+          currentSpeciesPageNum: oldState.currentSpeciesPageNum + 1
+        }));
+      })
     }
 
     // add a page to the array of species
@@ -119,26 +138,27 @@ class SearchResults extends React.Component<Props, State> {
     public render() {
       return (
         <div>
-            <form className="form" id="searchForm">
-                <div className="form-group">
-                    <input
+            <Form id="searchForm">
+                <Form.Group>
+                    <Form.Control
                       type="text"
-                      className={"form-control form-control-lg" + this.state.searchTermIsValid ? "" : " is-invalid"}
+                      className="form-control form-control-lg"
                       id="searchInput"
                       placeholder="Search..."
+                      isInvalid={!this.state.searchTermIsValid}
                     />
-                    <small className="form-text text-muted">
+                    <Form.Label className="form-text text-muted">
                         Search on ToLID prefix (e.g. mHomSap), taxonomy ID (e.g. 9606), species name (e.g. Homo sapiens) or ToLID (e.g. mHomSap1)
-                    </small>
-                </div>
+                    </Form.Label>
+                </Form.Group>
                 <button className="btn btn-primary" id="searchButton" onClick={this.doSearch}>
                 Search
                 </button>
-            </form>
+            </Form>
             <ul className="searchResults">
               {(this.state.tolids.length !== 0 || this.state.speciess.length !== 0 || this.state.specimens.length !== 0) &&
                 <SearchResultsTable
-                  getNextSpeciesPage={() => Promise.resolve()}
+                  getNextSpeciesPage={this.fetchNextPageIfExists}
                   tolIds={this.state.tolids}
                   specimens={this.state.specimens}
                   species={this.state.speciess}

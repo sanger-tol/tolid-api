@@ -99,12 +99,11 @@ export default class SearchResultsTable extends React.Component<Props, State> {
 
     componentDidUpdate(prevProps: Props, prevState: State) {
         if (this.state.currentTabNum !== prevState.currentTabNum) {
-            const numTabs = this.getNumTabs();
+            const lastPopulatedTab = this.getLastPopulatedTabNumber();
             // the number of tabs to go before the next page should be fetched
             const preloadDifference = 2;
-    
             // if within threshold, get next page
-            if (numTabs - this.state.currentTabNum < preloadDifference) {
+            if (lastPopulatedTab - this.state.currentTabNum < preloadDifference) {
                 // if there is already a request in progress, abort
                 if (this.state.requestIsPending === true) return;
 
@@ -112,6 +111,7 @@ export default class SearchResultsTable extends React.Component<Props, State> {
                 this.setState((oldState, oldProps) => ({
                     requestIsPending: true
                 }));
+                console.log("here");
                 // get next page of species
                 this.props.getNextSpeciesPage()
                     .then(() => {
@@ -135,13 +135,18 @@ export default class SearchResultsTable extends React.Component<Props, State> {
 
     isOnFinalTab = () => this.state.currentTabNum === this.getNumTabs() - 1;
 
-    isOnLastPopulatedTab = () => {
+    getLastPopulatedTabNumber = () => {
         const numberFetchedSearchResults = this.props.tolIds.length +
                                            this.props.specimens.length +
                                            this.props.species.length;
         const lastPopulatedTab = Math.ceil(
             numberFetchedSearchResults / numResultsPerTab
         );
+        return lastPopulatedTab;
+    }
+
+    isOnLastPopulatedTab = () => {
+        const lastPopulatedTab = this.getLastPopulatedTabNumber();
         return this.state.currentTabNum === lastPopulatedTab - 1;
     }
 
