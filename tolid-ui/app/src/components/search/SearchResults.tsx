@@ -141,6 +141,7 @@ class SearchResults extends React.Component<Props, State> {
                   tolIds={this.state.tolids}
                   specimens={this.state.specimens}
                   species={this.state.speciess}
+                  totalNumSpecies={this.state.totalNumSpecies}
                 />
             </ul>
             {this.state.tolids.length === 0 && this.state.speciess.length === 0 && this.state.specimens.length === 0 &&

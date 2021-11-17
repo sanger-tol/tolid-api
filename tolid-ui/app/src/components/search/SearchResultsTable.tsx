@@ -8,7 +8,7 @@ import { Pagination } from 'react-bootstrap';
 import SearchResultsSpecies from './SearchResultsSpecies'
 import { Species } from '../../models/Species'
 import * as React from 'react'
-import { StyledSpeciesTable } from './SpeciesTableStyled'
+import { StyledSearchResultsTable } from './SearchResultsTableStyled'
 import { ToLID } from '../../models/ToLID';
 import { Specimen } from '../../models/Specimen';
 import SearchResultsToLID from './SearchResultsToLID';
@@ -19,6 +19,7 @@ interface Props {
     tolIds: ToLID[];
     specimens: Specimen[];
     species: Species[];
+    totalNumSpecies: number;
 }
 
 interface State {
@@ -50,6 +51,8 @@ export default class SearchResultsTable extends React.Component<Props, State> {
         return Math.ceil(totalSearchResults / numResultsPerTab);
     }
 
+    // pairs each search result of any type (ToLID/Specimen/Species) with an enum
+    // value indicating its type
     getAllSearchResults = () => {
         const searchResultTypes: SearchResultType[] = Array(this.props.tolIds.length)
             .fill(SearchResultType.ToLID)
@@ -129,14 +132,14 @@ export default class SearchResultsTable extends React.Component<Props, State> {
 
     public render() {
         return (
-            <StyledSpeciesTable>
+            <StyledSearchResultsTable>
                 {this.props.species &&
                     this.getSearchResultsInCurrentTab().map(
                         (searchResult: [ToLID | Specimen | Species, SearchResultType]) => 
                             this.getSearchResultView(searchResult)
                     )
                 }
-            </StyledSpeciesTable>
+            </StyledSearchResultsTable>
         )
     }
 }

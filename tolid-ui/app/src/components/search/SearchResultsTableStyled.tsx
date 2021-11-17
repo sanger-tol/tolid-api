@@ -6,5 +6,5 @@ SPDX-License-Identifier: MIT
 
 import styled from '@emotion/styled';
   
-export const StyledSpeciesTable = styled.div`
+export const StyledSearchResultsTable = styled.div`
 `;
