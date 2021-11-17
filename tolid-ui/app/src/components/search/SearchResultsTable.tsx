@@ -31,7 +31,7 @@ export enum SearchResultType {
     Species
 }
 
-const numResultsPerTab = 10;
+const numResultsPerTab = 5;
 
 const LastTabOverlay = (props: any) => (
     <Tooltip id="cannot-go-next-tooltip" className="show" {...props}>
