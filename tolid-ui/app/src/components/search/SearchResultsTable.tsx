@@ -112,6 +112,24 @@ export default class SearchResultsTable extends React.Component<Props, State> {
         }
     }
 
+    goToPreviousTab = () => {
+        // don't decrement below 0
+        if (this.state.currentTabNum === 0) return;
+        // decrement the current tab number
+        this.setState((prevState, prevProps) => ({
+            currentTabNum: prevState.currentTabNum - 1
+        }));
+    }
+
+    goToNextTab = () => {
+        // don't increment above max
+        if (this.state.currentTabNum === this.getNumTabs() - 1) return;
+        // increment the current tab number
+        this.setState((prevState, prevProps) => ({
+            currentTabNum: prevState.currentTabNum + 1
+        }));
+    }
+
     public render() {
         return (
             <StyledSearchResultsTable>
@@ -119,6 +137,10 @@ export default class SearchResultsTable extends React.Component<Props, State> {
                     searchResults={this.getSearchResultsInCurrentTab()}
                 >
                 </SearchResultsTableTab>
+                <Pagination>
+                    <Pagination.Prev onClick={this.goToPreviousTab}/>
+                    <Pagination.Next onClick={this.goToNextTab}/>
+                </Pagination>
                 <p>
                     Page {this.state.currentTabNum + 1} of {this.getNumTabs()}.
                 </p>
