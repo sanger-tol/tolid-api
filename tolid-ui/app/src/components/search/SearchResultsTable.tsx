@@ -43,6 +43,9 @@ export default class SearchResultsTable extends React.Component<Props, State> {
     }
 
     getNumTabs = () => {
+        // total number of search results is the sum of the given number of ToLID's,
+        // specimens, and the specified _total_ number of species, **not** the given
+        // number of species, as they are not all fetched at once
         const totalSearchResults = this.props.tolIds.length +
                                    this.props.specimens.length +
                                    this.props.totalNumSpecies;
