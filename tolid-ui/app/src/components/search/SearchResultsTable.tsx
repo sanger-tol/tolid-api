@@ -155,6 +155,8 @@ export default class SearchResultsTable extends React.Component<Props, State> {
         return true;
     }
 
+    canGoToPreviousTab = () => this.state.currentTabNum !== 0;
+
     goToNextTab = () => {
         // don't increment above max
         if (!this.canGoToNextTab()) return;
@@ -171,8 +173,11 @@ export default class SearchResultsTable extends React.Component<Props, State> {
                     searchResults={this.getSearchResultsInCurrentTab()}
                 >
                 </SearchResultsTableTab>
-                <Pagination>
-                    <Pagination.Prev onClick={this.goToPreviousTab}/>
+                <Pagination size="lg">
+                    <Pagination.Prev
+                        onClick={this.goToPreviousTab}
+                        disabled={!this.canGoToPreviousTab}
+                    />
                     {this.canGoToNextTab() ?
                         <Pagination.Next onClick={this.goToNextTab}/>
                         :
