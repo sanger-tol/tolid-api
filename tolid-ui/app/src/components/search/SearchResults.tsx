@@ -94,15 +94,17 @@ class SearchResults extends React.Component<Props, State> {
       if (this.state.searchTerm === undefined || this.state.searchTerm === "") {
         return;
       }
-      await getSpeciessPage(
+      if (this.state.speciess.length >= this.state.totalNumSpecies) {
+        return;
+      }
+      const speciesPage = await getSpeciessPage(
         this.state.searchTerm,
         this.state.currentSpeciesPageNum + 1
-      ).then((speciesPage: SpeciesPage) => {
-        this.joinSpeciess(speciesPage);
-        this.setState((oldState, oldProps) => ({
-          currentSpeciesPageNum: oldState.currentSpeciesPageNum + 1
-        }));
-      })
+      )
+      this.joinSpeciess(speciesPage);
+      this.setState((oldState, oldProps) => ({
+        currentSpeciesPageNum: oldState.currentSpeciesPageNum + 1
+      }));
     }
 
     // add a page to the array of species
@@ -115,23 +117,28 @@ class SearchResults extends React.Component<Props, State> {
 
     doSearch = (event: any) => {
         event.preventDefault();
-        const searchTerm = document.getElementById("searchInput") as HTMLInputElement;
+        const searchInput = document.getElementById("searchInput") as HTMLInputElement;
         const form = document.getElementById("searchForm") as HTMLFormElement;
+        const searchTerm = searchInput.value;
         // If our input has a value
-        if (searchTerm.value !== "") {
+        if (searchTerm !== "") {
           // reset the paged results
           this.setState((oldState, oldProps) => ({
             speciess: [],
+            searchTerm: searchTerm
           }));
-          getToLIDs(searchTerm.value)
+          getToLIDs(searchTerm)
             .then(tolids => this.setState({ tolids: tolids }));
-          getSpecimens(searchTerm.value)
+          getSpecimens(searchTerm)
             .then(specimens => this.setState({ specimens: specimens }));
-          getSpeciessPage(searchTerm.value, 0)
+          getSpeciessPage(searchTerm, 0)
             .then(speciesPage => this.joinSpeciess(speciesPage));
           this.resetForm(form);
         } else {
-          this.setState({searchTermIsValid: false})
+          this.setState({
+            searchTermIsValid: false,
+            searchTerm: undefined
+          })
         }
     }
 

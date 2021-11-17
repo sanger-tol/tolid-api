@@ -111,7 +111,6 @@ export default class SearchResultsTable extends React.Component<Props, State> {
                 this.setState((oldState, oldProps) => ({
                     requestIsPending: true
                 }));
-                console.log("here");
                 // get next page of species
                 this.props.getNextSpeciesPage()
                     .then(() => {
