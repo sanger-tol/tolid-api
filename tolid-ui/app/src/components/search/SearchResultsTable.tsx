@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2021 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { Pagination } from 'react-bootstrap';
+import { OverlayTrigger, Pagination, Tooltip } from 'react-bootstrap';
 import { Species } from '../../models/Species'
 import * as React from 'react'
 import { StyledSearchResultsTable } from './SearchResultsTableStyled'
@@ -32,6 +32,18 @@ export enum SearchResultType {
 }
 
 const numResultsPerTab = 10;
+
+const LastTabOverlay = (props: any) => (
+    <Tooltip id="cannot-go-next-tooltip" className="show" {...props}>
+        <p>The end of the results has been reached.</p>
+    </Tooltip>
+)
+
+const StillFetchingOverlay = (props: any) => (
+    <Tooltip id="cannot-go-next-tooltip" className="show" {...props}>
+        <p>Search results are still being fetched.</p>
+    </Tooltip>
+)
 
 export default class SearchResultsTable extends React.Component<Props, State> {
     constructor(props: Props) {
@@ -121,9 +133,27 @@ export default class SearchResultsTable extends React.Component<Props, State> {
         }));
     }
 
+    isOnFinalTab = () => this.state.currentTabNum === this.getNumTabs() - 1;
+
+    isOnLastPopulatedTab = () => {
+        const numberFetchedSearchResults = this.props.tolIds.length +
+                                           this.props.specimens.length +
+                                           this.props.species.length;
+        const lastPopulatedTab = Math.ceil(
+            numberFetchedSearchResults / numResultsPerTab
+        );
+        return this.state.currentTabNum === lastPopulatedTab - 1;
+    }
+
+    canGoToNextTab = () => {
+        if (this.isOnFinalTab()) return false;
+        if (this.isOnLastPopulatedTab()) return false;
+        return true;
+    }
+
     goToNextTab = () => {
         // don't increment above max
-        if (this.state.currentTabNum === this.getNumTabs() - 1) return;
+        if (!this.canGoToNextTab()) return;
         // increment the current tab number
         this.setState((prevState, prevProps) => ({
             currentTabNum: prevState.currentTabNum + 1
@@ -139,7 +169,23 @@ export default class SearchResultsTable extends React.Component<Props, State> {
                 </SearchResultsTableTab>
                 <Pagination>
                     <Pagination.Prev onClick={this.goToPreviousTab}/>
-                    <Pagination.Next onClick={this.goToNextTab}/>
+                    {this.canGoToNextTab() ?
+                        <Pagination.Next onClick={this.goToNextTab}/>
+                        :
+                        <OverlayTrigger
+                            placement="top"
+                            overlay={
+                                this.isOnFinalTab() ?
+                                LastTabOverlay :
+                                StillFetchingOverlay
+                            }
+                            delay={{ show: 0, hide: 150 }}
+                        >
+                            <div>
+                                <Pagination.Next disabled/>
+                            </div>
+                        </OverlayTrigger>
+                    }
                 </Pagination>
                 <p>
                     Page {this.state.currentTabNum + 1} of {this.getNumTabs()}.
