@@ -101,6 +101,8 @@ class SearchResults extends React.Component<Props, State> {
         this.state.searchTerm,
         this.state.currentSpeciesPageNum + 1
       )
+      // something went wrong, try again later
+      if (speciesPage.totalNumSpecies === 0) return;
       this.joinSpeciess(speciesPage);
       this.setState((oldState, oldProps) => ({
         currentSpeciesPageNum: oldState.currentSpeciesPageNum + 1
