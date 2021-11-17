@@ -111,7 +111,7 @@ def search_species_by_search_term(taxonomy_id=None, prefix=None,
         })
     else:
         query = query.filter(or_(*filters))
-    
+
     max_species_per_page = 50
 
     total_num_species = query.count()

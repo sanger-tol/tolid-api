@@ -9,10 +9,7 @@ import { ToLID } from '../../models/ToLID'
 import { Species } from '../../models/Species'
 import { Specimen } from '../../models/Specimen'
 import { SpeciesPage } from '../../models/SpeciesPage';
-import SearchResultsToLID from './SearchResultsToLID'
-import SearchResultsSpecies from './SearchResultsSpecies'
-import SearchResultsSpecimen from './SearchResultsSpecimen'
-import { Pagination } from 'react-bootstrap';
+import SearchResultsTable from './SearchResultsTable';
 import './SearchResults.scss'
 
 export interface Props {
@@ -23,7 +20,6 @@ export interface State {
     speciess: Species[];
     specimens: Specimen[],
     searchTermIsValid: boolean,
-    currentPageNumber: number,
     totalNumSpecies: number
 }
 
@@ -80,18 +76,7 @@ class SearchResults extends React.Component<Props, State> {
         speciess: [],
         specimens: [],
         searchTermIsValid: true,
-        currentPageNumber: 0,
         totalNumSpecies: 0
-      }
-    }
-
-    getNumPages = () => {
-      const numPages = Math.ceil();
-    }
-
-    componentDidUpdate(prevProps: Props, prevState: State) {
-      if (this.state.currentPageNumber !== prevState.currentPageNumber) {
-
       }
     }
 
@@ -118,7 +103,6 @@ class SearchResults extends React.Component<Props, State> {
           // reset the paged results
           this.setState((oldState, oldProps) => ({
             speciess: [],
-            currentPageNumber: 0
           }));
           getToLIDs(searchTerm.value)
             .then(tolids => this.setState({ tolids: tolids }));
@@ -152,13 +136,12 @@ class SearchResults extends React.Component<Props, State> {
                 </button>
             </form>
             <ul className="searchResults">
-                {this.state.tolids.map((item: ToLID) => (
-                <li key={item.tolId} className="searchResult"><SearchResultsToLID tolid={item}/></li>
-                ))}
-                {this.state.specimens.map((item: Specimen) => (
-                <li key={item.specimenId} className="searchResult"><SearchResultsSpecimen specimen={item}/></li>
-                ))}
-                
+                <SearchResultsTable
+                  getNextSpeciesPage={() => Promise.resolve()}
+                  tolIds={this.state.tolids}
+                  specimens={this.state.specimens}
+                  species={this.state.speciess}
+                />
             </ul>
             {this.state.tolids.length === 0 && this.state.speciess.length === 0 && this.state.specimens.length === 0 &&
             <p>
