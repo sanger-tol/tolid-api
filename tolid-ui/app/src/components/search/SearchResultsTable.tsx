@@ -173,7 +173,7 @@ export default class SearchResultsTable extends React.Component<Props, State> {
                     searchResults={this.getSearchResultsInCurrentTab()}
                 >
                 </SearchResultsTableTab>
-                <Pagination size="lg">
+                <Pagination size="lg" className="d-flex justify-content-center">
                     <Pagination.Prev
                         onClick={this.goToPreviousTab}
                         disabled={!this.canGoToPreviousTab}
@@ -196,7 +196,7 @@ export default class SearchResultsTable extends React.Component<Props, State> {
                         </OverlayTrigger>
                     }
                 </Pagination>
-                <p>
+                <p className="text-center">
                     Page {this.state.currentTabNum + 1} of {this.getNumTabs()}.
                 </p>
             </StyledSearchResultsTable>
