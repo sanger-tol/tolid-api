@@ -21,22 +21,37 @@ interface Props {
 const SearchResultsTableTab: React.FunctionComponent<Props> = ({
   searchResults,
 }: Props) => {
+  const getTolIdRender = (tolId: ToLID) => (
+    <SearchResultsToLID
+        tolid={tolId}
+        key={`ToLID-${tolId.tolId}`}
+    />
+  );
+
+  const getSpecimenRender = (specimen: Specimen) => (
+    <SearchResultsSpecimen
+        specimen={specimen}
+        key={`Specimen-${specimen.specimenId}`}
+    />
+  );
+
+  const getSpeciesRender = (species: Species) => (
+    <SearchResultsSpecies
+        species={species}
+        key={`Species-${species.taxonomyId}`}
+    />
+  );
+
   const getSearchResultView = (searchResultPair: [ToLID | Specimen | Species, SearchResultType]) => {
     const searchResultType = searchResultPair[1];
     const searchResult = searchResultPair[0];
     switch (searchResultType) {
         case SearchResultType.ToLID:
-            return (
-                <SearchResultsToLID tolid={searchResult as ToLID} />
-            )
+            return getTolIdRender(searchResult as ToLID);
         case SearchResultType.Specimen:
-            return (
-                <SearchResultsSpecimen specimen={searchResult as Specimen} />
-            )
+            return getSpecimenRender(searchResult as Specimen);
         case SearchResultType.Species:
-            return (
-                <SearchResultsSpecies species={searchResult as Species} />
-            )
+            return getSpeciesRender(searchResult as Species);
     }
   }
 
