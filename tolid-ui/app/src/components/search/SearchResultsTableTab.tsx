@@ -8,7 +8,7 @@ import { Species } from '../../models/Species'
 import * as React from 'react'
 import { ToLID } from '../../models/ToLID';
 import { Specimen } from '../../models/Specimen'
-import { SearchResultType } from './SearchResultsTable'
+import SearchResultType from '../../models/SearchResultType';
 import { StyledSearchResultsTableTab } from './SearchResultsTableTabStyled';
 import SearchResultsToLID from './SearchResultsToLID';
 import SearchResultsSpecimen from './SearchResultsSpecimen';
@@ -49,4 +49,4 @@ const SearchResultsTableTab: React.FunctionComponent<Props> = ({
   )
 }
 
-export { SearchResultsTableTab };
+export default SearchResultsTableTab;

@@ -10,7 +10,8 @@ import * as React from 'react'
 import { StyledSearchResultsTable } from './SearchResultsTableStyled'
 import { ToLID } from '../../models/ToLID';
 import { Specimen } from '../../models/Specimen';
-import { SearchResultsTableTab } from './SearchResultsTableTab';
+import SearchResultsTableTab from './SearchResultsTableTab';
+import SearchResultType from '../../models/SearchResultType';
 
 interface Props {
     getNextSpeciesPage: () => Promise<void>;
@@ -23,12 +24,6 @@ interface Props {
 interface State {
     currentTabNum: number;
     requestIsPending: boolean;
-}
-
-export enum SearchResultType {
-    ToLID,
-    Specimen,
-    Species
 }
 
 const numResultsPerTab = 5;
