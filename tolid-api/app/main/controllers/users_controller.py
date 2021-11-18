@@ -83,14 +83,13 @@ def search_species(taxonomy_id=None, skip=None, limit=None):
     return jsonify([species.to_long_dict()])
 
 
-def search_species_by_taxon_prefix_name(taxonomy_id=None, prefix=None,
-                                        scientific_name=None, output=None):
+def search_species_by_search_term(taxonomy_id=None, prefix=None,
+                                  genus=None, scientific_name_fragment=None,
+                                  page=0, output=None):
     query = db.session.query(TolidSpecies)
     filters = []
     if prefix is not None:
         filters.append(TolidSpecies.prefix == prefix)
-    if scientific_name is not None:
-        filters.append(TolidSpecies.name == scientific_name)
     if taxonomy_id is not None:
         if (taxonomy_id != "") and taxonomy_id.isnumeric():
             # Valid integer taxonomy ID
@@ -98,15 +97,34 @@ def search_species_by_taxon_prefix_name(taxonomy_id=None, prefix=None,
         else:
             # Force this filter to fail
             filters.append(TolidSpecies.taxonomy_id == TolidSpecies.taxonomy_id + 1)
+    if genus is not None:
+        filters.append(TolidSpecies.genus == genus)
+    if scientific_name_fragment is not None:
+        filters.append(TolidSpecies.name.ilike(
+            "%{}%".format(scientific_name_fragment)
+        ))
 
     if len(filters) == 0:
-        return jsonify([])
+        return jsonify({
+            "totalNumSpecies": 0,
+            "species": []
+        })
     else:
         query = query.filter(or_(*filters))
 
-    speciess = query.order_by(TolidSpecies.taxonomy_id).all()
+    max_species_per_page = 50
 
-    return jsonify([species.to_long_dict() for species in speciess])
+    total_num_species = query.count()
+
+    speciess = query.order_by(TolidSpecies.taxonomy_id) \
+                    .offset(page * max_species_per_page) \
+                    .limit(max_species_per_page) \
+                    .all()
+
+    return jsonify({
+        "totalNumSpecies": total_num_species,
+        "species": [species.to_long_dict() for species in speciess]
+    })
 
 
 def requests_for_user(api_key=None):
@@ -178,8 +196,8 @@ def list_assigned_tolid_species(page=None):
     species = db.session.query(TolidSpecies) \
         .join(TolidSpecimen) \
         .order_by(TolidSpecies.name) \
-        .offset((page*50)+1) \
-        .limit((page+1)*50) \
+        .offset(page*50) \
+        .limit(50) \
         .all()
 
     return jsonify([individual.to_long_dict() for individual in species])

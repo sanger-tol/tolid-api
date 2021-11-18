@@ -392,7 +392,7 @@ class TestUsersController(BaseTestCase):
             method='GET')
         self.assertEqual(expect, response.json)
 
-    def test_search_species_by_taxon_prefix_name(self):
+    def search_species_by_taxon_prefix_genus(self):
         # Taxonomy ID not in database
         query_string = {'taxonomyId': 999999999}
         response = self.client.open(
@@ -447,26 +447,6 @@ class TestUsersController(BaseTestCase):
                         "specimenId": "SAN0000101"
                     },
                     "tolId": "wuAreMari2"
-                }
-            ]
-        }, {
-            "commonName": "None",
-            "currentHighestTolidNumber": 1,
-            "family": "Nereididae",
-            "genus": "Perinereis",
-            "kingdom": "Metazoa",
-            "order": "Phyllodocida",
-            "phylum": "Annelida",
-            "prefix": "wpPerVanc",
-            "scientificName": "Perinereis vancaurica",
-            "taxaClass": "Polychaeta",
-            "taxonomyId": 6355,
-            "tolIds": [
-                {
-                    "specimen": {
-                        "specimenId": "SAN0000101"
-                    },
-                    "tolId": "wpPerVanc1"
                 }
             ]
         }, {
