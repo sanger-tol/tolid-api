@@ -171,7 +171,7 @@ export default class SearchResultsTable extends React.Component<Props, State> {
                 <Pagination size="lg" className="d-flex justify-content-center">
                     <Pagination.Prev
                         onClick={this.goToPreviousTab}
-                        disabled={!this.canGoToPreviousTab}
+                        disabled={!this.canGoToPreviousTab()}
                     />
                     {this.canGoToNextTab() ?
                         <Pagination.Next onClick={this.goToNextTab}/>
