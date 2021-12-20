@@ -50,4 +50,4 @@ services:
       - 7902:7900
     shm_size: '2gb'
     extra_hosts:
-      - "tolid-test.com:127.0.0.1"
+      - "tolid-test.lan:127.0.0.1"

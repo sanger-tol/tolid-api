@@ -21,4 +21,16 @@ http {
 			proxy_pass ${TOLID_UI_TEST_URL};
 		}
 	}
+	server {
+		## port
+		listen 80;
+		## Your website name goes here.
+		server_name tolid-test.lan;
+
+		autoindex off;
+
+		location / {
+			proxy_pass ${TOLID_UI_TEST_URL};
+		}
+	}
 }
