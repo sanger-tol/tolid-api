@@ -83,3 +83,12 @@ services:
     volumes:
       - './tolid-ui/app:/usr/src/app'
       - '/usr/src/app/node_modules'
+  
+  tolid-selenium-chrome:
+    build: tolid-selenium/
+    environment:
+      - TOLID_UI_TEST_URL=http://tolid-ui:3000
+    ports:
+      - 4444:4444
+      - 7902:7900
+    shm_size: '2gb'

@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
+worker_processes 4;
+
+events {
+	worker_connections 1024;
+}
+
+http {
+	server {
+		## port
+		listen 3002;
+		## Your website name goes here.
+		server_name 127.0.0.1;
+
+		autoindex off;
+
+		location / {
+			proxy_pass ${TOLID_UI_TEST_URL};
+		}
+	}
+}

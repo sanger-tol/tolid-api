@@ -7,4 +7,4 @@
 TEST_ENV_FILE="${1:-.env.dev}"
 
 # stop everything and teardown
-docker-compose --env-file "$TEST_ENV_FILE" down
+docker-compose --env-file "$TEST_ENV_FILE" down --remove-orphans
