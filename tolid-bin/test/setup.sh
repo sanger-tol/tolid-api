@@ -7,4 +7,18 @@
 TEST_ENV_FILE="${1:-.env.dev}"
 
 # start everything
-docker-compose --env-file "$TEST_ENV_FILE" -f tolid-automated-test/docker-compose.automation.yml up -d --build tolid-api tolid-ui tolid-db tolid-selenium-chrome
+docker-compose \
+    --env-file "$TEST_ENV_FILE" \
+    -f tolid-automated-test/docker-compose.automation.yml \
+    up -d \
+    --build \
+    tolid-api tolid-ui tolid-db tolid-selenium-chrome tolid-api-test && \
+
+# wait 60 seconds (after announcing)
+echo && \
+echo 'Waiting for the database to create' && \
+sleep 60s && \
+
+# print the link
+echo && \
+echo 'Everything is setup! Go to http://localhost:7902'
