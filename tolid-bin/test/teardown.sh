@@ -7,4 +7,4 @@
 TEST_ENV_FILE="${1:-.env.dev}"
 
 # stop everything and teardown
-docker-compose --env-file "$TEST_ENV_FILE" down --remove-orphans
+docker-compose --env-file "$TEST_ENV_FILE" -f tolid-automated-test/docker-compose.automation.yml down --remove-orphans

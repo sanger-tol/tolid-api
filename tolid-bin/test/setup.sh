@@ -7,4 +7,4 @@
 TEST_ENV_FILE="${1:-.env.dev}"
 
 # start everything
-docker-compose --env-file "$TEST_ENV_FILE" up -d --build tolid-api tolid-ui tolid-db tolid-selenium-chrome
+docker-compose --env-file "$TEST_ENV_FILE" -f tolid-automated-test/docker-compose.automation.yml up -d --build tolid-api tolid-ui tolid-db tolid-selenium-chrome
