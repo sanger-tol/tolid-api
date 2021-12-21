@@ -16,5 +16,4 @@ ${URL}  http://tolid-test.lan
 Navigate to the Index Page
     Go to  ${URL}
 
-    Maximize Browser Window
     Capture Page Screenshot
