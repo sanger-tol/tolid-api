@@ -10,7 +10,6 @@ ${URL}  http://tolid-test.lan
 *** Test Cases ***
 Create the Webdriver for Remote Chrome
     ${options} =  Evaluate  sys.modules['selenium.webdriver'].ChromeOptions()  sys, selenium.webdriver
-    Call Method  ${options}  add_argument  headless
     Call Method  ${options}  add_argument  disable_gpu
     ${options} =  Call Method  ${options}  to_capabilities
 
