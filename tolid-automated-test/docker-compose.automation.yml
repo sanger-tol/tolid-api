@@ -81,6 +81,11 @@ services:
     entrypoint: sh -c "mkdir -p /tests && python -m http.server --directory /tests"
     volumes:
       - robot-tests:/tests
+  
+  tolid-automated-test:
+    build: .
+    volumes:
+      - robot-tests:/tests
 
 volumes:
   robot-tests:
