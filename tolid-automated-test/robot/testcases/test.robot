@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
 *** Settings ***
 Suite Setup  Common - Open Browser
 Suite Teardown  Close All Browsers
