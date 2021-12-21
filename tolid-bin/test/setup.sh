@@ -12,7 +12,7 @@ docker-compose \
     -f tolid-automated-test/docker-compose.automation.yml \
     up -d \
     --build \
-    tolid-api tolid-ui tolid-db tolid-selenium-chrome tolid-api-test && \
+    tolid-api tolid-ui tolid-db tolid-selenium-chrome tolid-api-test tolid-report-server && \
 
 # wait 60 seconds (after announcing)
 echo && \

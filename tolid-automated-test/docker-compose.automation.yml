@@ -73,3 +73,14 @@ services:
     shm_size: '2gb'
     extra_hosts:
       - "tolid-test.lan:127.0.0.1"
+  
+  tolid-report-server:
+    image: python:3.8
+    ports:
+      - 8022:8000
+    entrypoint: sh -c "mkdir -p /tests && python -m http.server --directory /tests"
+    volumes:
+      - robot-tests:/tests
+
+volumes:
+  robot-tests:
