@@ -37,3 +37,9 @@ TODO - change this password to an ENV variable
 As the tests run, they will preview in realtime here.
 
 TODO - make this more refined (they currently move almost too quickly to watch).
+
+## Viewing the reports
+
+The report, and associated screenshots, are available at:
+
+`http://localhost:8022/`
