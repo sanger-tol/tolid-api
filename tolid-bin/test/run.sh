@@ -16,4 +16,4 @@ docker-compose \
 docker-compose \
     --env-file "$TEST_ENV_FILE" \
     -f tolid-automated-test/docker-compose.automation.yml \
-    run tolid-automated-test robot -d /tests test.robot
+    run tolid-automated-test robot -d /tests testcases/test.robot
