@@ -56,8 +56,9 @@ test-ui:
   script:
     - docker run -e CI=true $CI_REGISTRY_IMAGE/tolid-ui-test:$CI_COMMIT_SHA yarn test
   except:
-    - production
+    - qa
     - staging
+    - production
   allow_failure: true
 
 push-api:
@@ -83,6 +84,20 @@ push-ui-test:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ''
     NAME: tolid-ui-test
+
+deploy-qa:
+  extends: .swarm-deploy-template
+  environment:
+    name: qa
+    url: http://172.27.27.109:8000
+  variables:
+    DOCKER_HOST: "ssh://ubuntu@172.27.27.109"
+    EXTRA_DEPLOY_FILES: ""
+    STACK_NAME: tolid
+  script:
+    - echo "Deployed to qa"
+  only:
+    - qa
 
 deploy-staging:
   extends: .swarm-deploy-template
@@ -132,5 +147,6 @@ test-api:
     - sleep 60
     - docker exec $(docker ps -q -f name="tolid_tolid-api") bash -c "pytest -v"
   except:
+    - qa
     - staging
     - production
