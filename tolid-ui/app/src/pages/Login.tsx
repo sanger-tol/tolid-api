@@ -43,7 +43,7 @@ function Login() {
         <Container>
           <Row className="align-items-center">
             <Col lg="12" className="order-lg-1 text-center">
-              <ElixirLoginButton onClick={login}/>
+              <ElixirLoginButton id="elixirLoginButton" onClick={login}/>
             </Col>
           </Row>
         </Container>
