@@ -33,6 +33,7 @@ services:
       - MAIL_HOST
       - MAIL_PORT
       - MAIL_RECEIVER_REQUESTS_PENDING
+      - ENVIRONMENT
     ports:
       - 8080:80
 
