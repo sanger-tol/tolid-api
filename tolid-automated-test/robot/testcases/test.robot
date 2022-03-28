@@ -17,3 +17,5 @@ Navigate to the Index Page
     Go to  ${URL}
 
     Capture Page Screenshot
+
+    Sleep  10s
