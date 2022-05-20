@@ -10,6 +10,7 @@ Werkzeug == 1.0.1
 Flask-SQLAlchemy == 2.4.4
 psycopg2-binary == 2.8.6
 openpyxl == 3.0.6
+markupsafe==2.0.1
 responses
 jwt
 biopython==1.73
