@@ -16,9 +16,12 @@ services:
       - 5433:5432
 
   tolid-api:
-    build: tolid-api/.
+    build: 
+      context: tolid-api/.
+      dockerfile: Dockerfile.dev
     image: tolid-api
-    #command: python3 -m swagger_server
+    # force amd64 on M1 MacOS
+    platform: linux/amd64
     environment:
       - DB_URI
       - TOLID_URL
@@ -36,13 +39,16 @@ services:
       - ENVIRONMENT
     ports:
       - 8080:80
+    volumes:
+      - './tolid-api/app/main:/app/main'
 
   tolid-ui:
     build:
       context: tolid-ui/.
       dockerfile: Dockerfile.dev
     image: tolid-ui
-    #command: python3 -m swagger_server
+    # force amd64 on M1 MacOS
+    platform: linux/amd64
     stdin_open: true
     environment:
       - NODE_ENV=development
@@ -55,7 +61,7 @@ services:
   tolid-api-test:
     image: tolid-api
     command: dockerize
-        -wait tcp://tolid-db:5432 -wait tcp://tolid-api:80 -timeout 10s
+        -wait tcp://tolid-db:5432 -timeout 10s
         bash -c "pytest -v"
     environment:
       - DB_URI
