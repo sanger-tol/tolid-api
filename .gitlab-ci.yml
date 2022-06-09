@@ -6,10 +6,12 @@ include:
   - project: 'tol/tol-core'
     ref: main
     file: '/gitlab/main.yml'
+  - template: Security/Secret-Detection.gitlab-ci.yml
 
 stages:
   - lint
   - build
+  - test
   - deploy
 
 build-api:
