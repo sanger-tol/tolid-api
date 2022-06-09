@@ -10,10 +10,7 @@ include:
 stages:
   - lint
   - build
-  - unit test
-  - push
   - deploy
-  - integration test
 
 build-api:
   extends: .build-template
@@ -32,58 +29,6 @@ build-ui:
     PART: "tolid-ui"
     DOCKERFILE: 'tolid-ui/Dockerfile'
     NAME: "tolid-ui"
-
-build-ui-test:
-  extends: .build-template
-  variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
-    PART: "tolid-ui"
-    DOCKERFILE: 'tolid-ui/Dockerfile.dev'
-    NAME: "tolid-ui-test"
-
-test-ui:
-  image: $DOCKER_IMAGE
-  stage: unit test
-  services:
-    - name: $DIND_IMAGE
-      alias: docker
-  variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker run -e CI=true $CI_REGISTRY_IMAGE/tolid-ui-test:$CI_COMMIT_SHA yarn test
-  except:
-    - qa
-    - staging
-    - production
-  allow_failure: true
-
-push-api:
-  extends: .push-template
-  variables:
-    GIT_STRATEGY: none
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
-    NAME: tolid-api
-
-push-ui:
-  extends: .push-template
-  variables:
-    GIT_STRATEGY: none
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
-    NAME: tolid-ui
-
-push-ui-test:
-  extends: .push-template
-  variables:
-    GIT_STRATEGY: none
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
-    NAME: tolid-ui-test
 
 deploy-qa:
   extends: .swarm-deploy-template
@@ -127,26 +72,3 @@ deploy-production:
   only:
     - production
   when: manual
-
-test-api:
-  extends: .swarm-deploy-template
-  image: $DOCKER_IMAGE
-  stage: integration test
-  resource_group: testing
-  services:
-    - name: $DIND_IMAGE
-      alias: docker
-  environment:
-    name: testing
-    url: http://172.27.19.196:8000
-  variables:
-    DOCKER_HOST: "ssh://ubuntu@172.27.19.196"
-    EXTRA_DEPLOY_FILES: "-c docker-compose.gitlab-test.yml"
-    STACK_NAME: tolid
-  script:
-    - sleep 60
-    - docker exec $(docker ps -q -f name="tolid_tolid-api") bash -c "pytest -v"
-  except:
-    - qa
-    - staging
-    - production
