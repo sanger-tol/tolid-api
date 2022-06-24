@@ -121,10 +121,10 @@ tolcore:
       MAIL_RECEIVER_REQUESTS_PENDING: mail.receiver.requests_pending
       TOLID_URL: public_url.tolid
       NIH_API_KEY: keys.nih
-      ELIXIR_CLIENT_ID: auth.client.id
-      ELIXIR_CLIENT_SECRET: auth.client.secret
-      ELIXIR_REDIRECT_URI: auth.elixir.url.redirect
-      ELIXIR_JWK: auth.elixir.jwk
+      ELIXIR_CLIENT_ID: elixir.client.id
+      ELIXIR_CLIENT_SECRET: elixir.client.secret
+      ELIXIR_REDIRECT_URI: elixir.url.redirect
+      ELIXIR_JWK: elixir.jwk
   flask:
     env: ""
   ui:
@@ -153,11 +153,10 @@ tolcore:
     tolid: ""
   keys:
     nih: ""
-  auth:
+  elixir:
     client:
       id: ""
       secret: ""
     url:
       redirect: ""
-    elixir:
-      jwk: ""
+    jwk: ""

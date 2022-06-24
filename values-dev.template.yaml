@@ -104,11 +104,10 @@ tolcore:
     tolid: ""
   keys:
     nih: ""
-  auth:
+  elixir:
     client:
       id: ""
       secret: ""
     url:
       redirect: ""
-    elixir:
-      jwk: ""
+    jwk: ""
