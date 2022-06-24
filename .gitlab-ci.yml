@@ -43,7 +43,7 @@ deploy-qa:
   extends: .auto-deploy
   environment:
     name: qa
-    url: http://qc-qa.tol.sanger.ac.uk
+    url: http://id-qa.tol.sanger.ac.uk
   only:
     - qa
 
@@ -51,7 +51,7 @@ deploy-staging:
   extends: .auto-deploy
   environment:
     name: staging
-    url: https://qc-staging.tol.sanger.ac.uk
+    url: https://id-staging.tol.sanger.ac.uk
   only:
     - staging
 
@@ -59,7 +59,7 @@ deploy-production:
   extends: .auto-deploy
   environment:
     name: production
-    url: https://qc.tol.sanger.ac.uk/
+    url: https://id.tol.sanger.ac.uk/
   only:
     - production
   when: manual
