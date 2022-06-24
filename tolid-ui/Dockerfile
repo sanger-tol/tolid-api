@@ -27,5 +27,3 @@ RUN rm -rf /var/www/tolid-ui/*
 COPY --from=builder /workspace/build/ /var/www/tolid-ui/
 
 EXPOSE 80
-
-ENTRYPOINT ["/etc/nginx/entrypoint.sh"]

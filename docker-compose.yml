@@ -90,3 +90,11 @@ services:
     volumes:
       - './tolid-ui/app:/usr/src/app'
       - '/usr/src/app/node_modules'
+
+  tolid-alembic:
+    image: tolid-api
+    working_dir: /migrations
+    environment:
+      - DB_URI
+    volumes:
+      - './tolid-api/migrations/alembic/versions:/migrations/alembic/versions'

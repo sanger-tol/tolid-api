@@ -1,0 +1,163 @@
+# SPDX-FileCopyrightText: 2022 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
+# Default values for tolid-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+tolcore:
+  app:
+    name: tolid
+
+  replicaCount: 1
+
+  image:
+    repository: ""
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  imagePullSecrets: []
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: "serviceaccount"
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: chart-example.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  job:
+    restartPolicy: "OnFailure"
+
+  deployment:
+    environment: "dev"
+  db:
+    fullname: "tolid-db"
+    user: ""
+    password: ""
+    name: ""
+    host: ""
+    port: "" # specify as a string
+    create_local: ""
+  dbutils:
+    image:
+      repository: ""
+      tag: ""
+  schemaspy:
+    image:
+      repository: ""
+      tag: ""
+  api:
+    fullname: "tolid-api"
+    probe_url: '/api/v1/ui'
+    extra_env:
+      MAIL_USERNAME_SMTP: mail.username
+      MAIL_PASSWORD_SMTP: mail.password
+      MAIL_HOST: mail.host
+      MAIL_PORT: mail.port
+      MAIL_SENDER: mail.sender.address
+      MAIL_SENDER_NAME: mail.sender.name
+      MAIL_RECEIVER_REQUESTS_PENDING: mail.receiever.requests-pending
+      TOLID_URL: public_url.tolid
+      NIH_API_KEY: keys.nih
+      ELIXIR_CLIENT_ID: auth.client.id
+      ELIXIR_CLIENT_SECRET: auth.client.secret
+      ELIXIR_REDIRECT_URI: auth.elixir.url.redirect
+      ELIXIR_JWK: auth.elixir.jwk
+  flask:
+    env: ""
+  ui:
+    fullname: "tolid-ui"
+    probe_url: '/'
+  backup:
+    uri: ""
+    access_key: ""
+    secret_key: ""
+    bucket: ""
+    secure: ""
+    schedule: ""
+  restore:
+    prefix: ""
+  mail:
+    username: ""
+    password: ""
+    host: ""
+    port: ""
+    sender:
+      address: ""
+      name: ""
+    receiver:
+      requests-pending: ""
+  public_url:
+    tolid: ""
+  keys:
+    nih: ""
+  auth:
+    client:
+      id: ""
+      secret: ""
+    url:
+      redirect: ""
+    elixir:
+      jwk: ""
