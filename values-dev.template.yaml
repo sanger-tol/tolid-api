@@ -90,7 +90,7 @@ tolcore:
     schedule: ""
   restore:
     prefix: "" # only set this if you want the database reset on each deploy
-    mail:
+  mail:
     username: ""
     password: ""
     host: ""
