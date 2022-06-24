@@ -110,7 +110,7 @@ tolcore:
       tag: ""
   api:
     fullname: "tolid-api"
-    probe_url: '/api/v1/ui'
+    probe_url: '/api/v2/ui'
     extra_env:
       MAIL_USERNAME_SMTP: mail.username
       MAIL_PASSWORD_SMTP: mail.password
