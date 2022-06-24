@@ -118,7 +118,7 @@ tolcore:
       MAIL_PORT: mail.port
       MAIL_SENDER: mail.sender.address
       MAIL_SENDER_NAME: mail.sender.name
-      MAIL_RECEIVER_REQUESTS_PENDING: mail.receiver.requests-pending
+      MAIL_RECEIVER_REQUESTS_PENDING: mail.receiver.requests_pending
       TOLID_URL: public_url.tolid
       NIH_API_KEY: keys.nih
       ELIXIR_CLIENT_ID: auth.client.id
@@ -148,7 +148,7 @@ tolcore:
       address: ""
       name: ""
     receiver:
-      requests-pending: ""
+      requests_pending: ""
   public_url:
     tolid: ""
   keys:

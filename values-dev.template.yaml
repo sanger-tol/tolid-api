@@ -99,7 +99,7 @@ tolcore:
       address: ""
       name: ""
     receiver:
-      requests-pending: ""
+      requests_pending: ""
   public_url:
     tolid: ""
   keys:
