@@ -10,6 +10,7 @@ include:
 stages:
   - lint
   - build
+  - unit test
   - deploy
 
 build-api:
@@ -30,45 +31,35 @@ build-ui:
     DOCKERFILE: 'tolid-ui/Dockerfile'
     NAME: "tolid-ui"
 
+test-migrations:
+  extends: .test-migrations
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    GIT_STRATEGY: none
+    NAME: tolid-api
+
 deploy-qa:
-  extends: .swarm-deploy-template
+  extends: .auto-deploy
   environment:
     name: qa
-    url: http://172.27.27.109:8000
-  variables:
-    DOCKER_HOST: "ssh://ubuntu@172.27.27.109"
-    EXTRA_DEPLOY_FILES: ""
-    STACK_NAME: tolid
-  script:
-    - echo "Deployed to qa"
+    url: http://id-qa.tol.sanger.ac.uk
   only:
     - qa
 
 deploy-staging:
-  extends: .swarm-deploy-template
+  extends: .auto-deploy
   environment:
     name: staging
     url: https://id-staging.tol.sanger.ac.uk
-  variables:
-    DOCKER_HOST: "ssh://ubuntu@172.27.21.233"
-    EXTRA_DEPLOY_FILES: "-c docker-compose.gitlab-logging.yml"
-    STACK_NAME: tolid
-  script:
-    - echo "Deployed to staging"
   only:
     - staging
 
 deploy-production:
-  extends: .swarm-deploy-template
+  extends: .auto-deploy
   environment:
     name: production
     url: https://id.tol.sanger.ac.uk/
-  variables:
-    DOCKER_HOST: "ssh://ubuntu@172.27.18.201"
-    EXTRA_DEPLOY_FILES: "-c docker-compose.gitlab-logging.yml"
-    STACK_NAME: tolid
-  script:
-    - echo "Deployed to production"
   only:
     - production
   when: manual

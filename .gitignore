@@ -13,3 +13,6 @@ __init__.pyc
 launch.json
 .env.dev
 .env.prod
+values-*.yaml
+*.tgz
+chart/charts

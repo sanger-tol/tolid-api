@@ -14,6 +14,7 @@ markupsafe==2.0.1
 responses
 jwt
 biopython==1.73
+alembic==1.8.0
 
 flask_testing==0.8.0
 coverage>=4.0.3
