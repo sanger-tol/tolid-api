@@ -6,12 +6,13 @@ SPDX-License-Identifier: MIT
 
 import React, { useState }  from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { Navigation, Footer, Home, Search, Request, Admin, Profile, Login, Callback } from "./pages";
+import { Navigation, Home, Search, Request, Admin, Profile, Login, Callback } from "./pages";
 import { getTokenFromLocalStorage,
   getUserFromLocalStorage, 
   tokenHasExpired} from './services/localStorage/localStorageService';
 import { AuthProvider } from './contexts/auth.context';
 import { Redirect } from 'react-router-dom';
+import { Footer } from '@tol/tol-ui'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './scss/one-page-wonder.scss';
