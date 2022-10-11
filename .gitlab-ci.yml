@@ -30,8 +30,6 @@ build-ui:
     PART: "tolid-ui"
     DOCKERFILE: 'tolid-ui/Dockerfile'
     NAME: "tolid-ui"
-  script:
-    - yarn install
 
 test-migrations:
   extends: .test-migrations
