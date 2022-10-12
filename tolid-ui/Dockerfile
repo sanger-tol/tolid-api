@@ -13,9 +13,9 @@ WORKDIR /workspace
 
 RUN echo \"@tol:registry\" \"https://gitlab.internal.sanger.ac.uk/api/v4/projects/3596/packages/npm/\" >> .yarnrc
 
-COPY app/ .
+COPY app/package.json ./
 RUN yarn install
-RUN yarn build
+COPY app/ .
 
 # Stage 2
 FROM nginx:alpine
