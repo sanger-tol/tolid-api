@@ -7,6 +7,7 @@
 FROM node:12-alpine as builder
 
 RUN apk add yarn
+RUN npm install react-scripts@2.1.8 -g --silent
 RUN mkdir /workspace
 
 WORKDIR /workspace
