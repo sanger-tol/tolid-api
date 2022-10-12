@@ -14,7 +14,7 @@ WORKDIR /workspace
 RUN echo \"@tol:registry\" \"https://gitlab.internal.sanger.ac.uk/api/v4/projects/3596/packages/npm/\" >> .yarnrc
 
 COPY app/ .
-RUN yarn install
+RUN yarn install --ignore-engines
 RUN yarn build
 
 # Stage 2
