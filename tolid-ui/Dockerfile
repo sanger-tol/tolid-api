@@ -7,16 +7,15 @@
 FROM node:12-alpine as builder
 
 RUN apk add yarn
-RUN npm install react-scripts@2.1.8 -g --silent
 RUN mkdir /workspace
 
 WORKDIR /workspace
 
 RUN echo \"@tol:registry\" \"https://gitlab.internal.sanger.ac.uk/api/v4/projects/3596/packages/npm/\" >> .yarnrc
 
-COPY app/package.json ./
-RUN yarn install
 COPY app/ .
+RUN yarn install
+RUN yarn build
 
 # Stage 2
 FROM nginx:alpine
