@@ -14,11 +14,12 @@ import {
   setUserToLocalStorage,
   tokenHasExpired
 } from '../services/localStorage/localStorageService';
+import Login from './Login';
+
 
 interface NavigationProps {
   location: {pathname: string};
 }
-
 
 interface Environment {
   environment: string | undefined;
@@ -66,7 +67,7 @@ function Navigation(props: NavigationProps) {
   const { token, setToken, user, setUser } = useAuth();
   const history = useHistory();
   const [environment, setEnvironment] = useState("");
-  React.useEffect(() => {
+    useEffect(() => {
     fetchEnvironment()
     .then((fetchedEnvironment: string) => {
       setEnvironment(fetchedEnvironment);
@@ -127,8 +128,8 @@ function Navigation(props: NavigationProps) {
                 </Nav.Link>
               }
               {(!token || tokenHasExpired(token)) &&
-                <Nav.Link className="nav-link" href="/login">
-                  Login
+                <Nav.Link className="nav-link" href="/">
+                  <Login />
                 </Nav.Link>
               }
               {token && !tokenHasExpired(token) &&
