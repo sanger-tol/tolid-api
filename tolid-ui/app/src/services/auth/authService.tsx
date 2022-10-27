@@ -7,8 +7,8 @@ SPDX-License-Identifier: MIT
 import { END_POINT } from '../http/config';
 import { httpClient } from '../http/httpClient';
 
-export function getUrlElixirLogin() {
-  return httpClient().get(END_POINT.authUrlElixir);
+export function getUrlLogin() {
+  return httpClient().get(END_POINT.authUrlLogin);
 }
 
 export function getToken(dataPost: any) {

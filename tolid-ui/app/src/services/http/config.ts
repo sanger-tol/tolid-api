@@ -10,7 +10,7 @@ export const CONFIG = {
 };
 
 export const END_POINT = {
-  authUrlElixir: '/auth/login',
+  authUrlLogin: '/auth/login',
   authToken: '/auth/token',
   authProfile: '/auth/profile',
   authLogout: '/auth/logout',

@@ -1,5 +1,5 @@
 /*
-SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+SPDX-FileCopyrightText: 2022 Genome Research Ltd.
 
 SPDX-License-Identifier: MIT
 */
@@ -128,7 +128,7 @@ function Navigation(props: NavigationProps) {
                 </Nav.Link>
               }
               {(!token || tokenHasExpired(token)) &&
-                <Nav.Link className="nav-link" href="/">
+                <Nav.Link className="nav-link">
                   <Login />
                 </Nav.Link>
               }

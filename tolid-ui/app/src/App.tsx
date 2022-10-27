@@ -40,7 +40,6 @@ function App() {
             <Route path="/request" exact>{(token && !tokenHasExpired(token)) ? <Request /> : <Redirect to="/" />}</Route>
             <Route path="/admin" exact>{(token && !tokenHasExpired(token)) ? <Admin /> : <Redirect to="/" />}</Route>
             <Route path="/profile" exact>{(token && !tokenHasExpired(token)) ? <Profile /> : <Redirect to="/" />}</Route>
-            <Route path="/login" exact><Login /></Route>
             <Route path="/callback" exact><Callback /></Route>
           </Switch>
           <Footer />
