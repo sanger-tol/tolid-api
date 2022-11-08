@@ -65,12 +65,12 @@ tolcore:
   affinity: {}
 
   db:
+    enabled: true
     user: ""
     password: ""
     name: ""
     host: ""
     port: "" # specify as a string
-    create_local: ""
   dbutils:
     image:
       repository: ""

@@ -11,6 +11,8 @@ stages:
   - lint
   - build
   - unit test
+  - review
+  - cleanup
   - deploy
 
 build-api:
