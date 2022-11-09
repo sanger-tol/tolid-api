@@ -10,9 +10,9 @@ include:
 
 stages:
   - lint
+  - test
   - build
   - unit test
-  - test
   - review
   - cleanup
   - deploy
