@@ -6,7 +6,6 @@ include:
   - project: 'tol/tol-core'
     ref: main
     file: '/gitlab/main.yml'
-include:
   - template: Jobs/SAST.gitlab-ci.yml
 
 stages:
