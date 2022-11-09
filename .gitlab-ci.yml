@@ -5,63 +5,7 @@
 include:
   - project: 'tol/tol-core'
     ref: main
-    file: '/gitlab/main.yml'
+    file: '/gitlab/app.yml'
 
-stages:
-  - lint
-  - build
-  - unit test
-  - review
-  - cleanup
-  - deploy
-
-build-api:
-  extends: .build-template
-  variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
-    PART: "tolid-api"
-    DOCKERFILE: "tolid-api/Dockerfile"
-    NAME: "tolid-api"
-
-build-ui:
-  extends: .build-template
-  variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
-    PART: "tolid-ui"
-    DOCKERFILE: 'tolid-ui/Dockerfile'
-    NAME: "tolid-ui"
-
-test-migrations:
-  extends: .test-migrations
-  variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
-    GIT_STRATEGY: none
-    NAME: tolid-api
-
-deploy-qa:
-  extends: .auto-deploy
-  environment:
-    name: qa
-    url: http://id-qa.tol.sanger.ac.uk
-  only:
-    - qa
-
-deploy-staging:
-  extends: .auto-deploy
-  environment:
-    name: staging
-    url: https://id-staging.tol.sanger.ac.uk
-  only:
-    - staging
-
-deploy-production:
-  extends: .auto-deploy
-  environment:
-    name: production
-    url: https://id.tol.sanger.ac.uk/
-  only:
-    - production
-  when: manual
+variables:
+  APP_NAME: "tolid"
