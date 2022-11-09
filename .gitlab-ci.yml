@@ -12,6 +12,7 @@ stages:
   - lint
   - build
   - unit test
+  - test
   - review
   - cleanup
   - deploy
