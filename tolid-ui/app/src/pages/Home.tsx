@@ -15,7 +15,7 @@ function Home() {
       <header className="masthead text-center text-white">
         <div className="masthead-content">
           <Container>
-            <h1 className="masthead-heading mb-0">ToLID</h1>
+            <h1 className="masthead-heading mb-0">ToLID AAAA</h1>
             <h2 className="masthead-subheading mb-0">Tree of Life Identifiers</h2>
             <a href="api/v2/ui/" className="btn btn-primary btn-xl rounded-pill mt-5">Use the API</a>
             <Link to="/search" className="btn btn-primary btn-xl rounded-pill mt-5">Search</Link>
