@@ -8,7 +8,7 @@ import * as React from 'react';
 import { Table } from "react-bootstrap";
 import { ToLID } from '../../models/ToLID'
 import { ErrorMessage } from '../../models/ErrorMessage'
-import { httpClient } from '../../services/http/httpClient';
+import { httpClient } from '@tol/tol-ui'
 
 import './UserToLIDsList.scss'
 
@@ -42,6 +42,7 @@ class UserToLIDsList extends React.Component<Props, State> {
         })
       })
       .catch((err: any) => {
+        console.log("ERROR")
         console.log(err)
       })
     

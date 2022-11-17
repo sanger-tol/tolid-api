@@ -7,12 +7,36 @@ SPDX-License-Identifier: MIT
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Home, Profile, Search } from "./pages";
+import { CreateTolpApp, Page } from '@tol/tol-ui'
+import './scss/styling.scss';
+
+
+const profile: Page = {
+  name: 'Profile',
+  auth_required: false,
+  admin_only: false,
+  ui_element: <Profile />
+};
+
+const search: Page = {
+  name: 'Search',
+  auth_required: true,
+  admin_only: false,
+  ui_element: <Search />
+};
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <CreateTolpApp
+      brand='TOLID'
+      home_page={<Home />}
+      pages={[
+        profile,
+        search
+      ]}
+    />
   </React.StrictMode>,
   document.getElementById('root')
 );

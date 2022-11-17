@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@tol/tol-ui": "0.0.2",
+    "@types/react-native": "^0.70.6",
+    "react-native": "^0.70.5"
+  }
+}

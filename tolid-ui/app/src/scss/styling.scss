@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-// Required variables
-$primary: #ee0979 !default;
-$secondary: #ff6a00 !default;
+@import "variables.scss";
+
+@import '~@tol/tol-ui/src/scss/tol-styling.scss';
+ 

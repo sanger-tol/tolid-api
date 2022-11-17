@@ -4,11 +4,11 @@ SPDX-FileCopyrightText: 2021 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import React from "react";
-import { Table } from "react-bootstrap";
+import React from "react"
+import { Table } from "react-bootstrap"
 import { PrimaryPrefix } from '../../models/PrimaryPrefix'
-import { SecondaryPrefix } from "../../models/SecondaryPrefix";
-import { httpClient } from '../../services/http/httpClient';
+import { SecondaryPrefix } from "../../models/SecondaryPrefix"
+import { httpClient } from '@tol/tol-ui'
 
 import './PrefixTable.scss'
 
