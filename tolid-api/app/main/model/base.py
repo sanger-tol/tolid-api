@@ -10,8 +10,8 @@ db = SQLAlchemy()
 class Base(db.Model):
     __abstract__ = True
 
-    def to_dict(cls):
-        return {"override": "this"}
+    def to_dict(self):
+        return {'override': 'this'}
 
     def add(self):
         db.session.add(self)

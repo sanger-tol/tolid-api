@@ -2,9 +2,9 @@
 #
 # SPDX-License-Identifier: MIT
 
-import connexion
-
 import tempfile
+
+import connexion
 
 from flask import jsonify, send_from_directory
 
