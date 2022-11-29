@@ -2,15 +2,19 @@
 #
 # SPDX-License-Identifier: MIT
 
+import connexion
+
+import tempfile
+
 from flask import jsonify, send_from_directory
-from sqlalchemy import or_
+
 from main.db_utils import create_new_specimen, \
     create_request, notify_requests_pending
-from main.model import db, TolidSpecies, TolidSpecimen, \
-    TolidUser, TolidRole, TolidRequest
 from main.excel_utils import validate_excel
-import connexion
-import tempfile
+from main.model import TolidRequest, TolidRole, TolidSpecies, \
+    TolidSpecimen, TolidUser, db
+
+from sqlalchemy import or_
 
 
 def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
@@ -26,22 +30,22 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
     :return: JSON with complete ToLID and taxa structure
     """
     user = db.session.query(TolidUser) \
-        .filter(TolidUser.user_id == connexion.context["user"]) \
+        .filter(TolidUser.user_id == connexion.context['user']) \
         .one_or_none()
     species = db.session.query(TolidSpecies) \
         .filter(TolidSpecies.taxonomy_id == taxonomy_id) \
         .one_or_none()
 
     if species is None:
-        return jsonify({'detail': "Species with taxonomyId " + str(taxonomy_id)
-                       + " cannot be found"}), 400
+        return jsonify({'detail': f'Species with taxonomyId {taxonomy_id}'
+                        ' cannot be found'}), 400
 
     role = db.session.query(TolidRole) \
         .filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')) \
-        .filter(TolidRole.user_id == connexion.context["user"]) \
+        .filter(TolidRole.user_id == connexion.context['user']) \
         .one_or_none()
     if role is None:
-        return jsonify({'detail': "User does not have permission to use this function"}), 403
+        return jsonify({'detail': 'User does not have permission to use this function'}), 403
 
     specimen = db.session.query(TolidSpecimen) \
         .filter(TolidSpecimen.specimen_id == specimen_id) \
@@ -59,13 +63,13 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
 def bulk_search_specimens(body=None, api_key=None):
     role = db.session.query(TolidRole) \
         .filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')) \
-        .filter(TolidRole.user_id == connexion.context["user"]) \
+        .filter(TolidRole.user_id == connexion.context['user']) \
         .one_or_none()
     if role is None:
-        return jsonify({'detail': "User does not have permission to use this function"}), 403
+        return jsonify({'detail': 'User does not have permission to use this function'}), 403
 
     user = db.session.query(TolidUser) \
-        .filter(TolidUser.user_id == connexion.context["user"]) \
+        .filter(TolidUser.user_id == connexion.context['user']) \
         .one_or_none()
     results = []
     # body contains the rows of data
@@ -106,36 +110,36 @@ def bulk_search_specimens(body=None, api_key=None):
     return jsonify(results)
 
 
-def validate_manifest(excel_file=None, species_column_heading="scientific_name"):  # noqa: E501
+def validate_manifest(excel_file=None, species_column_heading='scientific_name'):  # noqa: E501
     role = db.session.query(TolidRole) \
         .filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')) \
-        .filter(TolidRole.user_id == connexion.context["user"]) \
+        .filter(TolidRole.user_id == connexion.context['user']) \
         .one_or_none()
     if role is None:
-        return jsonify({'detail': "User does not have permission to use this function"}), 403
+        return jsonify({'detail': 'User does not have permission to use this function'}), 403
 
     user = db.session.query(TolidUser) \
-        .filter(TolidUser.user_id == connexion.context["user"]) \
+        .filter(TolidUser.user_id == connexion.context['user']) \
         .one_or_none()
     uploaded_file = connexion.request.files['excelFile']
 
     # Save to a temporary location
-    dir = tempfile.TemporaryDirectory()
-    uploaded_file.save(dir.name+'/manifest.xlsx')
+    dir_ = tempfile.TemporaryDirectory()
+    uploaded_file.save(dir_.name + '/manifest.xlsx')
 
     # Do the validation
     (validated, updated_filename, errors) = \
-        validate_excel(dirname=dir.name,
+        validate_excel(dirname=dir_.name,
                        filename='manifest.xlsx',
                        user=user,
                        species_column_heading=species_column_heading)
     if validated:
         # Stream out the validated Excel file and remove
-        return send_from_directory(dir.name, filename=updated_filename,
+        return send_from_directory(dir_.name, filename=updated_filename,
                                    as_attachment=True)
     else:
         # Return the error
-        return jsonify({"errors": errors}), 400
+        return jsonify({'errors': errors}), 400
 
     # Remove old file
-    dir.cleanup()
+    dir_.cleanup()

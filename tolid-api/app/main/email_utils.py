@@ -16,7 +16,7 @@ class MailUtils:
         requests_pending_html = MailUtils.__get_html_from_template('email_requests_pending')
         url = f"{os.environ['TOLID_URL']}"
         requests_pending_html = requests_pending_html.format(url=url)
-        subject = "ToLID requests pending"
+        subject = 'ToLID requests pending'
         return requests_pending_html, subject
 
     @staticmethod
@@ -24,19 +24,19 @@ class MailUtils:
         tolid_created_html = MailUtils.__get_html_from_template('email_tolid_created')
         url = f"{os.environ['TOLID_URL']}"
         tolid_created_html = tolid_created_html.format(url=url, specimen=specimen)
-        subject = "ToLID created"
+        subject = 'ToLID created'
         return tolid_created_html, subject
 
     @staticmethod
     def get_tolid_rejected(request):
-        reason = "N/A"
-        if request.reason != "":
+        reason = 'N/A'
+        if request.reason != '':
             reason = request.reason
 
         tolid_rejected_html = MailUtils.__get_html_from_template('email_tolid_rejected')
         url = f"{os.environ['TOLID_URL']}"
         tolid_rejected_html = tolid_rejected_html.format(url=url, request=request, reason=reason)
-        subject = "ToLID request rejected"
+        subject = 'ToLID request rejected'
         return tolid_rejected_html, subject
 
     @staticmethod
@@ -86,7 +86,7 @@ class MailUtils:
             fp = open(path_image, 'rb')
             msg_image = MIMEImage(fp.read())
             fp.close()
-            msg_image.add_header('Content-ID', f"<{image}>")
+            msg_image.add_header('Content-ID', f'<{image}>')
             msg_root.attach(msg_image)
 
         if host:

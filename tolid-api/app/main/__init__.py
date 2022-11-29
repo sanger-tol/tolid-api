@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: MIT
 
 import os
+
 import connexion
 
 from main import encoder

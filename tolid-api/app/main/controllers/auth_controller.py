@@ -2,15 +2,16 @@
 #
 # SPDX-License-Identifier: MIT
 
-from main.model import db, TolidUser, TolidState
-from flask import jsonify
-import uuid
-import urllib.parse
-from datetime import datetime, timedelta
-import os
-import requests
 import json
-from requests.auth import HTTPBasicAuth
+import os
+import urllib.parse
+import uuid
+from datetime import datetime, timedelta
+
+from connexion.exceptions import OAuthProblem
+
+from flask import jsonify
+
 from jwt import (
     JWT,
     jwk_from_dict,
@@ -18,7 +19,11 @@ from jwt import (
 from jwt.exceptions import (
     JWTDecodeError,
 )
-from connexion.exceptions import OAuthProblem
+
+from main.model import TolidState, TolidUser, db
+
+import requests
+from requests.auth import HTTPBasicAuth
 
 
 def apikey_auth(token, required_scopes):
@@ -36,24 +41,24 @@ def apikey_auth(token, required_scopes):
         # Is the Elixir token valid and in date
         instance = JWT()
         # This is the Elixir public key as found at https://login.elixir-czech.org/oidc/jwk
-        signing_key = jwk_from_dict(json.loads(os.getenv("ELIXIR_JWK")))
+        signing_key = jwk_from_dict(json.loads(os.getenv('ELIXIR_JWK')))
         try:
             payload = instance.decode(token, signing_key,
                                       do_verify=True, do_time_check=True,
                                       algorithms=['RS256'])
         except JWTDecodeError as e:
-            raise OAuthProblem('Invalid Elixir token: '+e.args[0])
+            raise OAuthProblem('Invalid Elixir token: ' + e.args[0])
         print(payload)
-    return {"user": user.name, "uid": user.user_id}
+    return {'user': user.name, 'uid': user.user_id}
 
 
 def login():
     state_uuid = str(uuid.uuid4())
-    params = {"client_id": os.getenv('ELIXIR_CLIENT_ID'),
-              "response_type": "code",
-              "state": state_uuid,
-              "redirect_uri": os.getenv('ELIXIR_REDIRECT_URI'),
-              "scope": 'openid profile email'}
+    params = {'client_id': os.getenv('ELIXIR_CLIENT_ID'),
+              'response_type': 'code',
+              'state': state_uuid,
+              'redirect_uri': os.getenv('ELIXIR_REDIRECT_URI'),
+              'scope': 'openid profile email'}
     # Save the state in a table so that we can use it
     state = TolidState()
     state.state = state_uuid
@@ -67,7 +72,7 @@ def login():
         .delete()
     db.session.commit()
 
-    return jsonify({'loginUrl': "https://login.elixir-czech.org/oidc/authorize?"
+    return jsonify({'loginUrl': 'https://login.elixir-czech.org/oidc/authorize?'
                    + urllib.parse.urlencode(params)})
 
 
@@ -79,9 +84,9 @@ def get_token_from_callback(body=None):
     if state_from_db is None:
         return jsonify({'detail': 'Unknown state'}), 404
     client_auth = HTTPBasicAuth(os.getenv('ELIXIR_CLIENT_ID'), os.getenv('ELIXIR_CLIENT_SECRET'))
-    post_data = {"grant_type": "authorization_code",
-                 "code": body['code'],
-                 "redirect_uri": os.getenv('ELIXIR_REDIRECT_URI')}
+    post_data = {'grant_type': 'authorization_code',
+                 'code': body['code'],
+                 'redirect_uri': os.getenv('ELIXIR_REDIRECT_URI')}
     response = requests.post('https://login.elixir-czech.org/oidc/token',
                              auth=client_auth,
                              data=post_data)
@@ -91,7 +96,7 @@ def get_token_from_callback(body=None):
 def create_user_profile(body=None):
     # Get the user infromation from Elixir for this token
     response = requests.get('https://login.elixir-czech.org/oidc/userinfo',
-                            headers={"Authorization": "Bearer " + body["token"]})
+                            headers={'Authorization': 'Bearer ' + body['token']})
     user_info_from_elixir = response.json()
     if user_info_from_elixir.get('error') is None:
         user = db.session.query(TolidUser) \
@@ -104,7 +109,7 @@ def create_user_profile(body=None):
             user.name = user_info_from_elixir['name']
             db.session.add(user)
         # Save the token so that we can authenticate against it in future
-        user.token = body["token"]
+        user.token = body['token']
         db.session.commit()
         return jsonify(user)
     else:
@@ -114,5 +119,5 @@ def create_user_profile(body=None):
 def revoke_token(token=None):
     client_auth = HTTPBasicAuth(os.getenv('ELIXIR_CLIENT_ID'), os.getenv('ELIXIR_CLIENT_SECRET'))
     response = requests.get('https://login.elixir-czech.org/oidc/revoke',
-                            params={"token": token}, auth=client_auth)
+                            params={'token': token}, auth=client_auth)
     return jsonify(response.json())
