@@ -4,24 +4,27 @@
 
 from __future__ import absolute_import
 
-from test import BaseTestCase
-from main.model import db, TolidState
-from main.controllers.auth_controller import apikey_auth
-
-import urllib.parse
-import os
-import responses
 import json
-from connexion.exceptions import OAuthProblem
+import os
+import urllib.parse
 from datetime import datetime, timedelta, timezone
+from test import BaseTestCase
+
+from connexion.exceptions import OAuthProblem
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
+
 from jwt import (
     JWT
 )
 from jwt.jwk import RSAJWK
 from jwt.utils import get_int_from_datetime
+
+from main.controllers.auth_controller import apikey_auth
+from main.model import TolidState, db
+
+import responses
 
 
 class TestAuthController(BaseTestCase):
@@ -29,14 +32,14 @@ class TestAuthController(BaseTestCase):
     def test_api_key_auth(self):
         # Nothing
         try:
-            apikey_auth("MadeUpKey", None)
+            apikey_auth('MadeUpKey', None)
             self.assertEqual(True, False)
         except OAuthProblem:
             pass
 
         # Auth using API key
         ret = apikey_auth(self.user3.api_key, None)
-        expect = {"user": self.user3.name, "uid": self.user3.user_id}
+        expect = {'user': self.user3.name, 'uid': self.user3.user_id}
         self.assertEqual(expect, ret)
 
         # Mock Elixir key
@@ -46,7 +49,7 @@ class TestAuthController(BaseTestCase):
             backend=default_backend()
         )
         key = RSAJWK(private_key)
-        os.environ["ELIXIR_JWK"] = json.dumps(key.to_dict())
+        os.environ['ELIXIR_JWK'] = json.dumps(key.to_dict())
         instance = JWT()
 
         # Expired Elixir token
@@ -92,7 +95,7 @@ class TestAuthController(BaseTestCase):
         self.user3.token = jwt
         db.session.commit()
         ret = apikey_auth(self.user3.token, None)
-        expect = {"user": self.user3.name, "uid": self.user3.user_id}
+        expect = {'user': self.user3.name, 'uid': self.user3.user_id}
         self.assertEqual(expect, ret)
 
     def test_login(self):
@@ -104,23 +107,23 @@ class TestAuthController(BaseTestCase):
 
         # Get the state
         state = db.session.query(TolidState).one_or_none()
-        params = {"client_id": os.getenv('ELIXIR_CLIENT_ID'),
-                  "response_type": "code",
-                  "state": state.state,
-                  "redirect_uri": os.getenv('ELIXIR_REDIRECT_URI'),
-                  "scope": 'openid profile email'}
-        expect = {"loginUrl": "https://login.elixir-czech.org/oidc/authorize?"
+        params = {'client_id': os.getenv('ELIXIR_CLIENT_ID'),
+                  'response_type': 'code',
+                  'state': state.state,
+                  'redirect_uri': os.getenv('ELIXIR_REDIRECT_URI'),
+                  'scope': 'openid profile email'}
+        expect = {'loginUrl': 'https://login.elixir-czech.org/oidc/authorize?'
                   + urllib.parse.urlencode(params)}
         self.assertEqual(expect, response.json)
 
     # The real version of this does a call to the Elixir service. We mock that call here
     @responses.activate
     def test_token(self):
-        mock_response_from_elixir = {"access_token": "9876",
-                                     "expires_in": 3599,
-                                     "id_token": "5432",
-                                     "scope": "openid email profile",
-                                     "token_type": "Bearer"}
+        mock_response_from_elixir = {'access_token': '9876',
+                                     'expires_in': 3599,
+                                     'id_token': '5432',
+                                     'scope': 'openid email profile',
+                                     'token_type': 'Bearer'}
         responses.add(responses.POST, 'https://login.elixir-czech.org/oidc/token',
                       json=mock_response_from_elixir, status=200)
 
@@ -144,9 +147,9 @@ class TestAuthController(BaseTestCase):
     # The real version of this does a call to the Elixir service. We mock that call here
     @responses.activate
     def test_profile_new_user(self):
-        mock_response_from_elixir = {"name": "Elixir User",
-                                     "email": "elixir-user@sanger.ac.uk",
-                                     "organisation": "Sanger Institute"}
+        mock_response_from_elixir = {'name': 'Elixir User',
+                                     'email': 'elixir-user@sanger.ac.uk',
+                                     'organisation': 'Sanger Institute'}
         responses.add(responses.GET, 'https://login.elixir-czech.org/oidc/userinfo',
                       json=mock_response_from_elixir, status=200)
 
@@ -181,7 +184,7 @@ class TestAuthController(BaseTestCase):
         expect = {'email': 'test_user_creator@sanger.ac.uk',
                   'name': 'test_user_creator',
                   'organisation': 'Sanger Institute',
-                  'roles': [{"role": "creator"}]}
+                  'roles': [{'role': 'creator'}]}
         self.assertEqual(expect, response.json)
 
     # The real version of this does a call to the Elixir service. We mock that call here
