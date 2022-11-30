@@ -4,6 +4,4 @@
 
 [flake8]
 max-line-length = 99
-extend-exclude =
-    tolid-api/migrations/alembic/versions
 extend-ignore = D,B902
