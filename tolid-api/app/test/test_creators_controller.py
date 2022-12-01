@@ -5,7 +5,9 @@
 from __future__ import absolute_import
 
 from test import BaseTestCase
+
 from main.excel_utils import find_columns
+
 from openpyxl import load_workbook
 
 
@@ -25,7 +27,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": "12345678"},
+            headers={'api-key': '12345678'},
             query_string=query_string)
         self.assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -35,7 +37,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -45,7 +47,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -56,7 +58,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -67,7 +69,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user1.api_key},
+            headers={'api-key': self.user1.api_key},
             query_string=query_string)
         self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -78,24 +80,24 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             query_string=query_string)
         expect = [{
-            "species": {
-                "commonName": "None",
-                "currentHighestTolidNumber": 2,
-                "family": "Nereididae",
-                "genus": "Perinereis",
-                "kingdom": "Metazoa",
-                "order": "Phyllodocida",
-                "phylum": "Annelida",
-                "prefix": "wpPerVanc",
-                "scientificName": "Perinereis vancaurica",
-                "taxaClass": "Polychaeta",
-                "taxonomyId": 6355
+            'species': {
+                'commonName': 'None',
+                'currentHighestTolidNumber': 2,
+                'family': 'Nereididae',
+                'genus': 'Perinereis',
+                'kingdom': 'Metazoa',
+                'order': 'Phyllodocida',
+                'phylum': 'Annelida',
+                'prefix': 'wpPerVanc',
+                'scientificName': 'Perinereis vancaurica',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6355
             },
-            "tolId": "wpPerVanc2",
-            "specimen": {"specimenId": "SAN0000100"},
+            'tolId': 'wpPerVanc2',
+            'specimen': {'specimenId': 'SAN0000100'},
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -107,24 +109,24 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             query_string=query_string)
         expect = [{
-            "species": {
-                "commonName": "lugworm",
-                "currentHighestTolidNumber": 3,
-                "family": "Arenicolidae",
-                "genus": "Arenicola",
-                "order": "None",
-                "phylum": "Annelida",
-                "kingdom": "Metazoa",
-                "prefix": "wuAreMari",
-                "scientificName": "Arenicola marina",
-                "taxaClass": "Polychaeta",
-                "taxonomyId": 6344
+            'species': {
+                'commonName': 'lugworm',
+                'currentHighestTolidNumber': 3,
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
             },
-            "tolId": "wuAreMari3",
-            "specimen": {"specimenId": "SAN0000100xxxxx"},
+            'tolId': 'wuAreMari3',
+            'specimen': {'specimenId': 'SAN0000100xxxxx'},
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -136,24 +138,24 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             query_string=query_string)
         expect = [{
-            "species": {
-                "commonName": "human",
-                "currentHighestTolidNumber": 1,
-                "family": "Hominidae",
-                "genus": "Homo",
-                "order": "Primates",
-                "phylum": "Chordata",
-                "kingdom": "Metazoa",
-                "prefix": "mHomSap",
-                "scientificName": "Homo sapiens",
-                "taxaClass": "Mammalia",
-                "taxonomyId": 9606
+            'species': {
+                'commonName': 'human',
+                'currentHighestTolidNumber': 1,
+                'family': 'Hominidae',
+                'genus': 'Homo',
+                'order': 'Primates',
+                'phylum': 'Chordata',
+                'kingdom': 'Metazoa',
+                'prefix': 'mHomSap',
+                'scientificName': 'Homo sapiens',
+                'taxaClass': 'Mammalia',
+                'taxonomyId': 9606
             },
-            "tolId": "mHomSap1",
-            "specimen": {"specimenId": "SAN0000999xxxxx"}
+            'tolId': 'mHomSap1',
+            'specimen': {'specimenId': 'SAN0000999xxxxx'}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -165,24 +167,24 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             query_string=query_string)
         expect = [{
-            "species": {
-                "commonName": "lugworm",
-                "currentHighestTolidNumber": 3,
-                "family": "Arenicolidae",
-                "genus": "Arenicola",
-                "order": "None",
-                "phylum": "Annelida",
-                "kingdom": "Metazoa",
-                "prefix": "wuAreMari",
-                "scientificName": "Arenicola marina",
-                "taxaClass": "Polychaeta",
-                "taxonomyId": 6344
+            'species': {
+                'commonName': 'lugworm',
+                'currentHighestTolidNumber': 3,
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
             },
-            "tolId": "wuAreMari1",
-            "specimen": {"specimenId": "SAN0000100"},
+            'tolId': 'wuAreMari1',
+            'specimen': {'specimenId': 'SAN0000100'},
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -202,7 +204,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": "12345678"},
+            headers={'api-key': '12345678'},
             json=body)
         self.assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -212,7 +214,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -222,7 +224,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -233,14 +235,14 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             json=body)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         expect = [{'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
                                  'name': 'test_user_creator',
                                  'organisation': 'Sanger Institute',
-                                 'roles': [{"role": "creator"}]},
+                                 'roles': [{'role': 'creator'}]},
                    'reason': None,
                    'requestId': 1,
                    'species': {'taxonomyId': 999999999},
@@ -254,7 +256,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={'api-key': self.user1.api_key},
             json=body)
         self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -267,40 +269,40 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             json=body)
         expect = [{
-            "species": {
-                "commonName": "lugworm",
-                "currentHighestTolidNumber": 3,
-                "family": "Arenicolidae",
-                "genus": "Arenicola",
-                "order": "None",
-                "phylum": "Annelida",
-                "kingdom": "Metazoa",
-                "prefix": "wuAreMari",
-                "scientificName": "Arenicola marina",
-                "taxaClass": "Polychaeta",
-                "taxonomyId": 6344
+            'species': {
+                'commonName': 'lugworm',
+                'currentHighestTolidNumber': 3,
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
             },
-            "tolId": "wuAreMari3",
-            "specimen": {"specimenId": "SAN0000100xxxxx"},
+            'tolId': 'wuAreMari3',
+            'specimen': {'specimenId': 'SAN0000100xxxxx'},
         }, {
-            "species": {
-                "commonName": "None",
-                "currentHighestTolidNumber": 2,
-                "family": "Nereididae",
-                "genus": "Perinereis",
-                "kingdom": "Metazoa",
-                "order": "Phyllodocida",
-                "phylum": "Annelida",
-                "prefix": "wpPerVanc",
-                "scientificName": "Perinereis vancaurica",
-                "taxaClass": "Polychaeta",
-                "taxonomyId": 6355
+            'species': {
+                'commonName': 'None',
+                'currentHighestTolidNumber': 2,
+                'family': 'Nereididae',
+                'genus': 'Perinereis',
+                'kingdom': 'Metazoa',
+                'order': 'Phyllodocida',
+                'phylum': 'Annelida',
+                'prefix': 'wpPerVanc',
+                'scientificName': 'Perinereis vancaurica',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6355
             },
-            "tolId": "wpPerVanc2",
-            "specimen": {"specimenId": "SAN0000100xxxxx"},
+            'tolId': 'wpPerVanc2',
+            'specimen': {'specimenId': 'SAN0000100xxxxx'},
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -312,24 +314,24 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             json=body)
         expect = [{
-            "species": {
-                "commonName": "lugworm",
-                "currentHighestTolidNumber": 3,
-                "family": "Arenicolidae",
-                "genus": "Arenicola",
-                "order": "None",
-                "phylum": "Annelida",
-                "kingdom": "Metazoa",
-                "prefix": "wuAreMari",
-                "scientificName": "Arenicola marina",
-                "taxaClass": "Polychaeta",
-                "taxonomyId": 6344
+            'species': {
+                'commonName': 'lugworm',
+                'currentHighestTolidNumber': 3,
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
             },
-            "tolId": "wuAreMari1",
-            "specimen": {"specimenId": "SAN0000100"},
+            'tolId': 'wuAreMari1',
+            'specimen': {'specimenId': 'SAN0000100'},
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -343,28 +345,28 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             json=body)
         expect = [{
-            "species": {
-                "commonName": "lugworm",
-                "currentHighestTolidNumber": 4,
-                "family": "Arenicolidae",
-                "genus": "Arenicola",
-                "order": "None",
-                "phylum": "Annelida",
-                "kingdom": "Metazoa",
-                "prefix": "wuAreMari",
-                "scientificName": "Arenicola marina",
-                "taxaClass": "Polychaeta",
-                "taxonomyId": 6344
+            'species': {
+                'commonName': 'lugworm',
+                'currentHighestTolidNumber': 4,
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
             },
-            "tolId": "wuAreMari1",
-            "specimen": {"specimenId": "SAN0000100"},
+            'tolId': 'wuAreMari1',
+            'specimen': {'specimenId': 'SAN0000100'},
         }, {
             'species': {
                 'commonName': 'lugworm',
-                "currentHighestTolidNumber": 4,
+                'currentHighestTolidNumber': 4,
                 'family': 'Arenicolidae',
                 'genus': 'Arenicola',
                 'order': 'None',
@@ -392,28 +394,28 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             json=body)
         expect = [{
-            "species": {
-                "commonName": "lugworm",
-                "currentHighestTolidNumber": 6,
-                "family": "Arenicolidae",
-                "genus": "Arenicola",
-                "order": "None",
-                "phylum": "Annelida",
-                "kingdom": "Metazoa",
-                "prefix": "wuAreMari",
-                "scientificName": "Arenicola marina",
-                "taxaClass": "Polychaeta",
-                "taxonomyId": 6344
+            'species': {
+                'commonName': 'lugworm',
+                'currentHighestTolidNumber': 6,
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
             },
-            "tolId": "wuAreMari1",
-            "specimen": {"specimenId": "SAN0000100"},
+            'tolId': 'wuAreMari1',
+            'specimen': {'specimenId': 'SAN0000100'},
         }, {
             'species': {
                 'commonName': 'lugworm',
-                "currentHighestTolidNumber": 6,
+                'currentHighestTolidNumber': 6,
                 'family': 'Arenicolidae',
                 'genus': 'Arenicola',
                 'order': 'None',
@@ -429,7 +431,7 @@ class TestCreatorsController(BaseTestCase):
         }, {
             'species': {
                 'commonName': 'lugworm',
-                "currentHighestTolidNumber": 6,
+                'currentHighestTolidNumber': 6,
                 'family': 'Arenicolidae',
                 'genus': 'Arenicola',
                 'order': 'None',
@@ -459,28 +461,28 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             json=body)
         expect = [{
-            "species": {
-                "commonName": "lugworm",
-                "currentHighestTolidNumber": 7,
-                "family": "Arenicolidae",
-                "genus": "Arenicola",
-                "order": "None",
-                "phylum": "Annelida",
-                "kingdom": "Metazoa",
-                "prefix": "wuAreMari",
-                "scientificName": "Arenicola marina",
-                "taxaClass": "Polychaeta",
-                "taxonomyId": 6344
+            'species': {
+                'commonName': 'lugworm',
+                'currentHighestTolidNumber': 7,
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
             },
-            "tolId": "wuAreMari1",
-            "specimen": {"specimenId": "SAN0000100"},
+            'tolId': 'wuAreMari1',
+            'specimen': {'specimenId': 'SAN0000100'},
         }, {
             'species': {
                 'commonName': 'lugworm',
-                "currentHighestTolidNumber": 7,
+                'currentHighestTolidNumber': 7,
                 'family': 'Arenicolidae',
                 'genus': 'Arenicola',
                 'order': 'None',
@@ -494,25 +496,25 @@ class TestCreatorsController(BaseTestCase):
             'tolId': 'wuAreMari7',   # We created wuAreMari3,4,5,6 earlier on in this method
             'specimen': {'specimenId': 'SAN0000100rrrrr'},
         }, {
-            "species": {
-                "commonName": "lugworm",
-                "currentHighestTolidNumber": 7,
-                "family": "Arenicolidae",
-                "genus": "Arenicola",
-                "order": "None",
-                "phylum": "Annelida",
-                "kingdom": "Metazoa",
-                "prefix": "wuAreMari",
-                "scientificName": "Arenicola marina",
-                "taxaClass": "Polychaeta",
-                "taxonomyId": 6344
+            'species': {
+                'commonName': 'lugworm',
+                'currentHighestTolidNumber': 7,
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
             },
-            "tolId": "wuAreMari1",
-            "specimen": {"specimenId": "SAN0000100"},
+            'tolId': 'wuAreMari1',
+            'specimen': {'specimenId': 'SAN0000100'},
         }, {
             'species': {
                 'commonName': 'lugworm',
-                "currentHighestTolidNumber": 7,
+                'currentHighestTolidNumber': 7,
                 'family': 'Arenicolidae',
                 'genus': 'Arenicola',
                 'order': 'None',
@@ -539,32 +541,32 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             json=body)
 
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         expect = [{
-            "species": {
-                "commonName": "lugworm",
-                "currentHighestTolidNumber": 8,
-                "family": "Arenicolidae",
-                "genus": "Arenicola",
-                "order": "None",
-                "phylum": "Annelida",
-                "kingdom": "Metazoa",
-                "prefix": "wuAreMari",
-                "scientificName": "Arenicola marina",
-                "taxaClass": "Polychaeta",
-                "taxonomyId": 6344
+            'species': {
+                'commonName': 'lugworm',
+                'currentHighestTolidNumber': 8,
+                'family': 'Arenicolidae',
+                'genus': 'Arenicola',
+                'order': 'None',
+                'phylum': 'Annelida',
+                'kingdom': 'Metazoa',
+                'prefix': 'wuAreMari',
+                'scientificName': 'Arenicola marina',
+                'taxaClass': 'Polychaeta',
+                'taxonomyId': 6344
             },
-            "tolId": "wuAreMari8",
-            "specimen": {"specimenId": "SAN0000100bbbbb"},
+            'tolId': 'wuAreMari8',
+            'specimen': {'specimenId': 'SAN0000100bbbbb'},
         }, {
             'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
                           'name': 'test_user_creator',
                           'organisation': 'Sanger Institute',
-                          'roles': [{"role": "creator"}]},
+                          'roles': [{'role': 'creator'}]},
             'reason': None,
             'requestId': 2,
             'species': {'taxonomyId': 9999999},
@@ -579,20 +581,20 @@ class TestCreatorsController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         expect = [{
-            "specimenId": "SAN0000100bbbbb",
-            "tolIds": [
-                {"species": {"commonName": "lugworm",
-                             "currentHighestTolidNumber": 8,
-                             "family": "Arenicolidae",
-                             "genus": "Arenicola",
-                             "order": "None",
-                             "phylum": "Annelida",
-                             "kingdom": "Metazoa",
-                             "prefix": "wuAreMari",
-                             "scientificName": "Arenicola marina",
-                             "taxaClass": "Polychaeta",
-                             "taxonomyId": 6344},
-                 "tolId": "wuAreMari8"}]
+            'specimenId': 'SAN0000100bbbbb',
+            'tolIds': [
+                {'species': {'commonName': 'lugworm',
+                             'currentHighestTolidNumber': 8,
+                             'family': 'Arenicolidae',
+                             'genus': 'Arenicola',
+                             'order': 'None',
+                             'phylum': 'Annelida',
+                             'kingdom': 'Metazoa',
+                             'prefix': 'wuAreMari',
+                             'scientificName': 'Arenicola marina',
+                             'taxaClass': 'Polychaeta',
+                             'taxonomyId': 6344},
+                 'tolId': 'wuAreMari8'}]
         }]
         self.assertEqual(expect, response.json)
 
@@ -604,7 +606,7 @@ class TestCreatorsController(BaseTestCase):
         expect = [{'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
                                  'name': 'test_user_creator',
                                  'organisation': 'Sanger Institute',
-                                 'roles': [{"role": "creator"}]},
+                                 'roles': [{'role': 'creator'}]},
                    'reason': None,
                    'requestId': 2,
                    'species': {'taxonomyId': 9999999},
@@ -626,7 +628,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={"api-key": "12345678"},
+            headers={'api-key': '12345678'},
             json=body)
         self.assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -636,7 +638,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={'api-key': self.user1.api_key},
             data=data)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -652,7 +654,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             data=data)
         file.close()
         self.assert400(response,
@@ -671,7 +673,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             data=data)
         file.close()
         self.assert400(response,
@@ -686,7 +688,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={"api-key": self.user1.api_key},
+            headers={'api-key': self.user1.api_key},
             data=data)
         file.close()
         self.assert403(response, 'Not received a 403 response')
@@ -699,7 +701,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             data=data)
         file.close()
         self.assert200(response, 'Not received a 200 response')
@@ -713,7 +715,7 @@ class TestCreatorsController(BaseTestCase):
         workbook = load_workbook(filename='test/test-manifest-validated.xlsx')
         sheet = workbook.active
         (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = \
-            find_columns(sheet, "scientific_name")
+            find_columns(sheet, 'scientific_name')
         self.assertEqual('wuAreMari3', sheet.cell(row=2, column=tol_id_column).value)
         self.assertEqual('wuAreMari4', sheet.cell(row=3, column=tol_id_column).value)
         self.assertEqual('wuAreMari4', sheet.cell(row=4, column=tol_id_column).value)
@@ -722,12 +724,12 @@ class TestCreatorsController(BaseTestCase):
         file = open('test/test-manifest-col.xlsx', 'rb')
         data = {
             'excelFile': (file, 'test_file.xlsx'),
-         }
+        }
         query_string = {'speciesColumnHeading': 'random column name'}
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={"api-key": self.user3.api_key},
+            headers={'api-key': self.user3.api_key},
             query_string=query_string,
             data=data)
         file.close()
@@ -742,7 +744,7 @@ class TestCreatorsController(BaseTestCase):
         workbook = load_workbook(filename='test/test-manifest-validated.xlsx')
         sheet = workbook.active
         (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = \
-            find_columns(sheet, "random column name")
+            find_columns(sheet, 'random column name')
         self.assertEqual('wuAreMari3', sheet.cell(row=2, column=tol_id_column).value)
         self.assertEqual('wuAreMari4', sheet.cell(row=3, column=tol_id_column).value)
 

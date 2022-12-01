@@ -4,10 +4,10 @@
 
 # coding: utf-8
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
-NAME = "app"
-VERSION = "1.1.0"
+NAME = 'app'
+VERSION = '1.1.0'
 # To install the library, run the following
 #
 # python setup.py install
@@ -15,15 +15,15 @@ VERSION = "1.1.0"
 # prerequisite: setuptools
 # http://pypi.python.org/pypi/setuptools
 
-REQUIRES = ["connexion"]
+REQUIRES = ['connexion']
 
 setup(
     name=NAME,
     version=VERSION,
-    description="Tree of Life public name API",
-    author_email="tolid-help@sanger.ac.uk",
-    url="",
-    keywords=["Swagger", "Tree of Life public name API"],
+    description='Tree of Life public name API',
+    author_email='tolid-help@sanger.ac.uk',
+    url='',
+    keywords=['Swagger', 'Tree of Life public name API'],
     install_requires=REQUIRES,
     packages=find_packages(),
     package_data={'': ['swagger/swagger.yaml']},
