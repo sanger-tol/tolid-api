@@ -10,4 +10,4 @@ from unittest import TestCase
 class TestTest(TestCase):
 
     def test_test(self):
-        self.assertEqual(True, False)
+        self.assertEqual(True, True)
