@@ -4,7 +4,7 @@
 
 from __future__ import absolute_import
 
-from test import BaseTestCase
+from . import BaseTestCase
 
 from main.db_utils import accept_request, create_new_specimen, \
     create_request, reject_request

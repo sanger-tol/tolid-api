@@ -8,7 +8,7 @@ import json
 import os
 import urllib.parse
 from datetime import datetime, timedelta, timezone
-from test import BaseTestCase
+from . import BaseTestCase
 
 from connexion.exceptions import OAuthProblem
 
