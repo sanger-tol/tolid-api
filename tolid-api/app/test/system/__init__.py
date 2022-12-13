@@ -122,7 +122,7 @@ class BaseTestCase(TestCase):
     def create_app(self):
         logging.getLogger('connexion').setLevel('ERROR')
         logging.getLogger('openapi_spec_validator').setLevel('ERROR')
-        app = connexion.App(__name__, specification_dir='../main/swagger/')
+        app = connexion.App(__name__, specification_dir='../../main/swagger/')
         app.app.json_encoder = JSONEncoder
         app.add_api('swagger.yaml', pythonic_params=True)
         app.app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URI']

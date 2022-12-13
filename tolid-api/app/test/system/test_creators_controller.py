@@ -4,11 +4,11 @@
 
 from __future__ import absolute_import
 
-from . import BaseTestCase
-
 from main.excel_utils import find_columns
 
 from openpyxl import load_workbook
+
+from . import BaseTestCase
 
 
 class TestCreatorsController(BaseTestCase):

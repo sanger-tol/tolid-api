@@ -8,7 +8,6 @@ import json
 import os
 import urllib.parse
 from datetime import datetime, timedelta, timezone
-from . import BaseTestCase
 
 from connexion.exceptions import OAuthProblem
 
@@ -25,6 +24,8 @@ from main.controllers.auth_controller import apikey_auth
 from main.model import TolidState, db
 
 import responses
+
+from . import BaseTestCase
 
 
 class TestAuthController(BaseTestCase):

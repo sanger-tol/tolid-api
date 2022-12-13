@@ -6,10 +6,11 @@
 # ToDo not implemented yet!
 from __future__ import absolute_import
 
-from . import BaseTestCase
 from unittest.mock import patch
 
 from main.model import TolidRequest, TolidSpecimen, db
+
+from . import BaseTestCase
 
 
 class TestCuratorsController(BaseTestCase):

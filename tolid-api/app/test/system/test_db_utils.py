@@ -4,11 +4,11 @@
 
 from __future__ import absolute_import
 
-from . import BaseTestCase
-
 from main.db_utils import accept_request, create_new_specimen, \
     create_request, reject_request
 from main.model import TolidRequest, db
+
+from . import BaseTestCase
 
 
 class TestDbUtils(BaseTestCase):

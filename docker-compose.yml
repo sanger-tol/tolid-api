@@ -58,6 +58,23 @@ services:
       - './tolid-ui/app:/usr/src/app'
       - '/usr/src/app/node_modules'
     
+  tolid-python-db:
+    image: postgres:11
+    environment:
+      - POSTGRES_USER=test-user
+      - POSTGRES_PASSWORD=test-password
+      - POSTGRES_DB=test-db
+    
+  tolid-python-system-test:
+    build:
+      context: tolid-api
+      dockerfile: Dockerfile.test
+    command: pytest -v system
+    environment:
+      - DB_URI
+    depends_on:
+      - tolid-python-db
+
   tolid-api-test:
     image: tolid-api
     command: dockerize

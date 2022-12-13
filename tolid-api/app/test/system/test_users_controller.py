@@ -4,10 +4,10 @@
 
 from __future__ import absolute_import
 
-from . import BaseTestCase
-
 from main.model import TolidPrimaryPrefix, TolidRequest, \
     TolidSecondaryPrefix, db
+
+from . import BaseTestCase
 
 
 class TestUsersController(BaseTestCase):
