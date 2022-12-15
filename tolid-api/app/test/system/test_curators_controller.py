@@ -6,7 +6,7 @@
 # ToDo not implemented yet!
 from __future__ import absolute_import
 
-from test import BaseTestCase
+from test.system import BaseTestCase
 from unittest.mock import patch
 
 from main.model import TolidRequest, TolidSpecimen, db
