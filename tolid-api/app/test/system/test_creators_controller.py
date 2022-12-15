@@ -644,7 +644,7 @@ class TestCreatorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Excel file with no taxon ID, specimen ID, ToLID column
-        file = open('test/test-manifest-no-columns.xlsx', 'rb')
+        file = open('/app/test/system/test-manifest-no-columns.xlsx', 'rb')
         data = {
             'excelFile': (file, 'test_file.xlsx'),
         }
@@ -662,7 +662,7 @@ class TestCreatorsController(BaseTestCase):
         self.assertEqual(expected, response.json)
 
         # Excel file with errors
-        file = open('test/test-manifest-with-errors.xlsx', 'rb')
+        file = open('/app/test/system/test-manifest-with-errors.xlsx', 'rb')
         data = {
             'excelFile': (file, 'test_file.xlsx'),
         }
@@ -681,7 +681,7 @@ class TestCreatorsController(BaseTestCase):
         self.assertEqual(expected, response.json)
 
         # User not a creator
-        file = open('test/test-manifest.xlsx', 'rb')
+        file = open('/app/test/system/test-manifest.xlsx', 'rb')
         data = {
             'excelFile': (file, 'test_file.xlsx'),
         }
@@ -694,7 +694,7 @@ class TestCreatorsController(BaseTestCase):
         self.assert403(response, 'Not received a 403 response')
 
         # Excel file correct
-        file = open('test/test-manifest.xlsx', 'rb')
+        file = open('/app/test/system/test-manifest.xlsx', 'rb')
         data = {
             'excelFile': (file, 'test_file.xlsx'),
         }
@@ -709,10 +709,10 @@ class TestCreatorsController(BaseTestCase):
                          response.content_type)
 
         # Save as Excel file
-        file = open('test/test-manifest-validated.xlsx', 'wb')
+        file = open('/app/test/system/test-manifest-validated.xlsx', 'wb')
         file.write(response.get_data())
         file.close()
-        workbook = load_workbook(filename='test/test-manifest-validated.xlsx')
+        workbook = load_workbook(filename='/app/test/system/test-manifest-validated.xlsx')
         sheet = workbook.active
         (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = \
             find_columns(sheet, 'scientific_name')
@@ -721,7 +721,7 @@ class TestCreatorsController(BaseTestCase):
         self.assertEqual('wuAreMari4', sheet.cell(row=4, column=tol_id_column).value)
 
         # Different column name for species
-        file = open('test/test-manifest-col.xlsx', 'rb')
+        file = open('/app/test/system/test-manifest-col.xlsx', 'rb')
         data = {
             'excelFile': (file, 'test_file.xlsx'),
         }
@@ -738,10 +738,10 @@ class TestCreatorsController(BaseTestCase):
                          response.content_type)
 
         # Save as Excel file
-        file = open('test/test-manifest-validated.xlsx', 'wb')
+        file = open('/app/test/system/test-manifest-validated.xlsx', 'wb')
         file.write(response.get_data())
         file.close()
-        workbook = load_workbook(filename='test/test-manifest-validated.xlsx')
+        workbook = load_workbook(filename='/app/test/system/test-manifest-validated.xlsx')
         sheet = workbook.active
         (taxon_id_column, specimen_id_column, scientific_name_column, tol_id_column) = \
             find_columns(sheet, 'random column name')
