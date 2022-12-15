@@ -116,3 +116,26 @@ services:
       - BACKUP_SCHEDULE
       - RESTORE_FILE_PREFIX
       - FLASK_ENV
+
+  tolid-api-python-db:
+    image: postgres:11
+    environment:
+      - POSTGRES_USER=test-user
+      - POSTGRES_PASSWORD=test-password
+      - POSTGRES_DB=test-db
+  
+  tolid-api-python-unit-test:
+    build:
+      context: tolid-api
+      dockerfile: Dockerfile.test
+    command: pytest -v unit
+
+  tolid-api-python-system-test:
+    build:
+      context: tolid-api
+      dockerfile: Dockerfile.test
+    command: pytest -v system
+    environment:
+      - DB_URI=postgresql://test-user:test-password@tolid-api-python-db:5432/test-db
+    depends_on:
+      - tolid-api-python-db
