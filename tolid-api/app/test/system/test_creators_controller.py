@@ -4,7 +4,7 @@
 
 from __future__ import absolute_import
 
-from test import BaseTestCase
+from test.system import BaseTestCase
 
 from main.excel_utils import find_columns
 
