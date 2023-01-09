@@ -1,0 +1,141 @@
+# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
+# This is used for local development only
+version: '3.1'
+
+services:
+  tolid-db:
+    image: postgres:11
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    ports:
+      - 5433:5432
+
+  tolid-api:
+    build: 
+      context: tolid-api/.
+      dockerfile: Dockerfile.dev
+    image: tolid-api
+    # force amd64 on M1 MacOS
+    platform: linux/amd64
+    environment:
+      - DB_URI
+      - TOLID_URL
+      - ELIXIR_CLIENT_ID
+      - ELIXIR_CLIENT_SECRET
+      - ELIXIR_REDIRECT_URI
+      - ELIXIR_JWK
+      - MAIL_SENDER
+      - MAIL_SENDER_NAME
+      - MAIL_USERNAME_SMTP
+      - MAIL_PASSWORD_SMTP
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_RECEIVER_REQUESTS_PENDING
+      - ENVIRONMENT
+    ports:
+      - 8080:80
+    volumes:
+      - './tolid-api/app/main:/app/main'
+
+  tolid-ui:
+    build:
+      context: tolid-ui/.
+      dockerfile: Dockerfile.dev
+    image: tolid-ui
+    # force amd64 on M1 MacOS
+    platform: linux/amd64
+    stdin_open: true
+    environment:
+      - NODE_ENV=development
+    ports:
+      - 3002:3000
+    volumes:
+      - './tolid-ui/app:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    
+  tolid-api-test:
+    image: tolid-api
+    command: dockerize
+        -wait tcp://tolid-db:5432 -timeout 10s
+        bash -c "pytest -v"
+    environment:
+      - DB_URI
+      - TOLID_URL
+      - ELIXIR_CLIENT_ID
+      - ELIXIR_CLIENT_SECRET
+      - ELIXIR_REDIRECT_URI
+      - ELIXIR_JWK
+      - MAIL_SENDER
+      - MAIL_SENDER_NAME
+      - MAIL_USERNAME_SMTP
+      - MAIL_PASSWORD_SMTP
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_RECEIVER_REQUESTS_PENDING
+    depends_on:
+      - tolid-db
+      - tolid-api
+
+  tolid-ui-test:
+    image: tolid-ui
+    command: yarn test
+    stdin_open: true
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - './tolid-ui/app:/usr/src/app'
+      - '/usr/src/app/node_modules'
+
+  tolid-alembic:
+    image: tolid-api
+    working_dir: /migrations
+    environment:
+      - DB_URI
+    volumes:
+      - './tolid-api/migrations/alembic/versions:/migrations/alembic/versions'
+
+  tolid-dbutils:
+    image: gitlab-registry.internal.sanger.ac.uk/tol/tol-core/dbutils:1.0.2
+    restart: always
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - BACKUP_S3_URI
+      - BACKUP_S3_ACCESS_KEY
+      - BACKUP_S3_SECRET_KEY
+      - BACKUP_S3_BUCKET
+      - BACKUP_S3_SECURE
+      - BACKUP_SCHEDULE
+      - RESTORE_FILE_PREFIX
+      - FLASK_ENV
+
+  tolid-api-python-db:
+    image: postgres:11
+    environment:
+      - POSTGRES_USER=test-user
+      - POSTGRES_PASSWORD=test-password
+      - POSTGRES_DB=test-db
+  
+  tolid-api-python-unit-test:
+    build:
+      context: tolid-api
+      dockerfile: Dockerfile.test
+    command: pytest -v unit
+
+  tolid-api-python-system-test:
+    build:
+      context: tolid-api
+      dockerfile: Dockerfile.test
+    command: pytest -v system
+    environment:
+      - DB_URI=postgresql://test-user:test-password@tolid-api-python-db:5432/test-db
+    depends_on:
+      - tolid-api-python-db
