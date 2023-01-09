@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 *** Settings ***
-Resource  ../../../Resources/imports.robot
+Resource  ../../../resources/imports.robot
 
 
 *** Variables ***

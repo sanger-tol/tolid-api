@@ -4,7 +4,7 @@
 
 *** Settings ***
 Documentation  ToLID Basic Home Page Login and Search
-Resource  ../Resources/imports.robot
+Resource  ../resources/imports.robot
 
 # Suite Setup    Run Keywords  Open Browser
 Suite Setup  CommonUtils.Start Testcase
