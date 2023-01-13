@@ -3,18 +3,34 @@
 # SPDX-License-Identifier: MIT
 
 # This is used for local development only
-version: '3.1'
+#version: '3.1'
+#
+#services:
+#  tolid-robot-runner:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    platform: linux/amd64
+#    environment: {}
+#  
+#  tolid-chrome:
+#    image: selenium/standalone-chrome
+#    ports:
+#      - 4444:4444
+#      - 7900:7900
 
+# Ashish #
+version: '3.3'
 services:
-  tolid-robot-runner:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    platform: linux/amd64
-    environment: {}
-  
-  tolid-chrome:
-    image: selenium/standalone-chrome
-    ports:
-      - 4444:4444
-      - 7900:7900
+    test:
+        network_mode: host
+        image: ypasmk/robot-framework
+        shm_size: "256M"
+        environment:
+            USERNAME: Ipatios Asmanidis
+        volumes: [
+           "$PWD/output:/output",
+           "$PWD/suites:/suites",
+           "$PWD/scripts:/scripts",
+           "$PWD/reports:/reports"
+        ]

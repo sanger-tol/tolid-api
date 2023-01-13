@@ -3,17 +3,19 @@
 # SPDX-License-Identifier: MIT
 
 *** Settings ***
-# Library  Selenium2Library
+Resource  ../../imports.robot
 
 *** Variables ***
 # Note: We need to add path for browser drivers in the bash profile and save browser drivers to that location
-${browser}  safari  chrome  firefox  opera
-${env}  dev  staging  production
-&{url}  dev=http://localhost:3002  staging=https://id-staging.tol.sanger.ac.uk  production=https://id.tol.sanger.ac.uk
+# ${browser}  safari  chrome  firefox  opera
+# ${env}  dev  staging  production
+# &{url}  dev=http://localhost:3002  staging=https://id-staging.tol.sanger.ac.uk  production=https://id.tol.sanger.ac.uk
+&{url}  dev=http://localhost:3002 
 
 *** Keywords ***
 Start Testcase
-    Open Browser  ${url.${env}}  ${browser}
+    # Open Browser  ${url.${env}}  ${browser}
+    Open Browser  ${url}
     Page Should Contain  What are ToLIDs?
     Maximize Browser Window
     Sleep  2s
@@ -30,9 +32,11 @@ Start Testcase
 Setup WebDriver
     ${driver}  Get Variable Value  ${headless}
     ${driver}  Run Keyword If  "${driver}" == "${None}"
-    ...        Create Webdriver    ${browser}    executable_path=${driverPath}
-    ...        ELSE
-    ...        Run Keyword  Setup Headless ${browser} WebDriver
+    # ...        Create Webdriver    ${browser}    executable_path=${driverPath}
+    ...        Create Webdriver    Chrome    executable_path=/Users/am66/homebrew/bin/chromedriver
+    ...        ELSE 
+    # ...        Run Keyword  Setup Headless ${browser} WebDriver
+    ...        Run Keyword  Setup Headless Chrome WebDriver
     [Return]  ${driver}
 
 # Common - Setup Headless Firefox WebDriver

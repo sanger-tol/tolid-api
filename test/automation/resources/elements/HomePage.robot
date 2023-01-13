@@ -8,4 +8,5 @@
 # ${sts_sidebar}    //aside[@id='left-sidebar']
 
 # Common *** variables ***
-${PortalLogo}    (//a[@href='/'][contains(.,'ToLID-dev')])
+# ${PortalLogo}    (//a[@href='/'][contains(.,'ToLID-dev')])
+${PortalLogo}    (//a[@class='navbar-brand'])
