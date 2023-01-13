@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
 robotframework==4.0.2
 robotframework-selenium2library==3.0.0
 robotframework-seleniumlibrary==5.1.3
