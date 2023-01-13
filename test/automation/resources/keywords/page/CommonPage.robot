@@ -14,7 +14,7 @@ Common - Open Browser
     Maximize Browser Window
 
 Navigate To Homepage
-    # Click On Homepage Portal Logo
+    Click On Homepage Portal Logo
     Sleep  2s
 
 Validate Homepage Text

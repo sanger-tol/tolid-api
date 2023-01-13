@@ -11,7 +11,9 @@ services:
       context: .
       dockerfile: Dockerfile
     platform: linux/amd64
-    environment: {}
+    volumes:
+      # run from test/automation directory
+      - "$PWD/results:/app/src/results"
   
   tolid-chrome:
     image: seleniarm/standalone-chromium
