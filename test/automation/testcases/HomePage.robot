@@ -11,6 +11,7 @@ Suite Setup  CommonUtils.Start Testcase
 Suite Teardown    Close Browser
 
 # robot -d results --include Admin -v ENV:QA -v browser:chrome Tests/Web/ToLID_web_Tests.robot
+# python3 ./run.py run --env dev --browser Chrome --test 'TC_1.1*' --output-path results --webdriver-path /Users/am66/Desktop/BrowserDrivers/chromedriver
 
 *** Variables ***
 
