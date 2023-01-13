@@ -4,7 +4,7 @@
 
 *** Settings ***
 Documentation  ToLID Basic Home Page Login and Search
-Resource  ../resources/imports.robot
+Resource  ../../resources/imports.robot
 
 Suite Setup  Common - Open Browser
 # Suite Setup  CommonUtils.Start Testcase
@@ -18,7 +18,17 @@ ${URL}  http://host.docker.internal:3002
 
 
 *** Test Cases ***
-TC_1.1 - User should be able to access portal homepage
+TC_Login_1.1 - User should be able to access portal homepage
+    [Documentation]  This test case verifies the accessability of the portal
+    [Tags]  test_007
+
+    Go to  ${URL}
+    Navigate To Homepage
+    Validate Homepage Text
+    Sleep  5s
+    Search a TolID
+
+TC_Login_1.2 - User should be able to access portal homepage
     [Documentation]  This test case verifies the accessability of the portal
     [Tags]  test_007
 
