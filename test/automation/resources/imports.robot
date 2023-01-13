@@ -5,7 +5,7 @@
 *** Settings ***
 # config
 # Variables         ../resources/config_${env}.yaml
-Variables         ../resources/config_dev.yaml
+# Variables         ../resources/config_dev.yaml
 
 # library
 Library           SeleniumLibrary
@@ -21,7 +21,6 @@ Library           DateTime
 # Library            ./pythonlibs/database/DatabaseLibrary/
 
 # elements
-Resource          ../resources/keywords/common/UserDefinedKeywords.robot
 Resource          ../resources/keywords/common/CommonUtils.robot
 Resource          ../resources/keywords/page/CommonPage.robot
 Resource          ../resources/keywords/page/HomePage.robot
