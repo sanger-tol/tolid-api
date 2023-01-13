@@ -20,3 +20,5 @@ RUN yarn install
 COPY ./app/ ./
 
 CMD yarn start
+
+ENV DANGEROUSLY_DISABLE_HOST_CHECK=true
