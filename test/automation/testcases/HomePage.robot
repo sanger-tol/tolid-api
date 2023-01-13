@@ -24,5 +24,6 @@ TC_1.1 - User should be able to access portal homepage
 
     Go to  ${URL}
     Navigate To Homepage
-    Sleep  5s
     Validate Homepage Text
+    Sleep  5s
+    Search a TolID

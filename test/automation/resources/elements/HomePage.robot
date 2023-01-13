@@ -9,3 +9,4 @@
 
 # Common *** variables ***
 ${PortalLogo}    (//a[@href='/'][contains(.,'ToLID-dev')])
+${HomepageSearch}    (//a[@class='btn btn-primary btn-xl rounded-pill mt-5'][contains(.,'Search')])

@@ -15,7 +15,9 @@ Common - Open Browser
 
 Navigate To Homepage
     Click On Homepage Portal Logo
-    Sleep  2s
 
 Validate Homepage Text
     Verify Homepage Text
+
+Search a TolID
+    Click on Homepage Search Button

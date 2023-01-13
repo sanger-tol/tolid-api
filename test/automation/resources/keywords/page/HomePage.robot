@@ -16,5 +16,9 @@ Click On Homepage Portal Logo
 Verify Homepage Text
     Page Should Contain  Tree of Life Identifiers
     Page Should Contain  How did you make the ToLIDs?
-    Sleep  2s
+
+Click on Homepage Search Button
+    Click Element  ${HomepageSearch}
+    Sleep  5s
+    Page Should Contain  Search on ToLID prefix
     
