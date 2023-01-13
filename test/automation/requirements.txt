@@ -4,4 +4,4 @@ robotframework-seleniumlibrary==5.1.3
 selenium==3.141.0
 six==1.11.0
 webdrivermanager==0.10.0
-
+pyyaml
