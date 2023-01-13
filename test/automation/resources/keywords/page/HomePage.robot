@@ -8,14 +8,6 @@ Resource  ../../imports.robot
 *** Variables ***
 
 *** Keywords ***
-# Click Search
-#     Press Keys  ${HomePageSearchButton}  RETURN
-
-# Click Use the API
-#     Press Keys  ${HomePageApiButton}  RETURN
-
-# Click Login Link
-#    Press Keys  ${HomePageLoginLink}  RETURN
 
 Click On Homepage Portal Logo
     Click Element  ${PortalLogo}
