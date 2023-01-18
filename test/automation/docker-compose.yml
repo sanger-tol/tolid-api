@@ -20,4 +20,4 @@ services:
     ports:
       - 4444:4444
       - 7900:7900
-    shm_size: 256M
+    shm_size: 2gb
