@@ -4,9 +4,10 @@
 
 include:
   - project: 'tol/tol-core'
-    ref: '0d2866ab0df08fc520238f060a4b5c21346a42ab' # TODO change back!!!! #v1.3.1
+    ref: '7aef31242526fc54b9a426471888a48facef81c2' # TODO change back!!!! #v1.3.1
     file: '/gitlab/app.yml'
 
 variables:
   APP_NAME: "tolid"
   SERVICE_NAME: "id"
+  ENABLE_ROBOT: "true"
