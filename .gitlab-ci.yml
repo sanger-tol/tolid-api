@@ -4,7 +4,7 @@
 
 include:
   - project: 'tol/tol-core'
-    ref: '0a6997d295da1023e4f290441c9bc5b2726f8d39' # TODO change back!!!! #v1.3.1
+    ref: '16bccae7dec1073f07312d49e13a9ab706f80b5f' # TODO change back!!!! #v1.3.1
     file: '/gitlab/app.yml'
 
 variables:
