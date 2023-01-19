@@ -93,7 +93,7 @@ tolcore:
   deployment:
     environment: "dev"
   db:
-    fullname: "tolid-db"
+    fullname: tolid-db
     user: ""
     password: ""
     name: ""
@@ -109,7 +109,7 @@ tolcore:
       repository: ""
       tag: ""
   api:
-    fullname: "tolid-api"
+    fullname: tolid-api
     probe_url: '/api/v2/ui'
     extra_env:
       MAIL_USERNAME_SMTP: mail.username
@@ -128,7 +128,7 @@ tolcore:
   flask:
     env: ""
   ui:
-    fullname: "tolid-ui"
+    fullname: tolid-ui
     probe_url: '/'
   backup:
     uri: ""
