@@ -14,7 +14,6 @@ Suite Teardown    Close Browser
 # python3 ./run.py run --env dev --browser Chrome --test 'TC_1.1*' --output-path results --webdriver-path /Users/am66/Desktop/BrowserDrivers/chromedriver
 
 *** Variables ***
-${URL}  http://tolid.local
 
 
 *** Test Cases ***
