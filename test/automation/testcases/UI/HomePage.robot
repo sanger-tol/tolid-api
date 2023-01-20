@@ -14,15 +14,13 @@ Suite Teardown    Close Browser
 # python3 ./run.py run --env dev --browser Chrome --test 'TC_1.1*' --output-path results --webdriver-path /Users/am66/Desktop/BrowserDrivers/chromedriver
 
 *** Variables ***
-${URL}  http://host.docker.internal:3002
-
 
 *** Test Cases ***
 TC_Homepage_1.1 - User should be able to access portal homepage
     [Documentation]  This test case verifies the accessability of the portal
     [Tags]  test_007
 
-    Go to  ${URL}
+    Go to  ${base_url}
     Navigate To Homepage
     Validate Homepage Text
     Sleep  5s
@@ -32,7 +30,7 @@ TC_Homepage_1.2 - User should be able to access portal homepage
     [Documentation]  This test case verifies the accessability of the portal
     [Tags]  test_007
 
-    Go to  ${URL}
+    Go to  ${base_url}
     Navigate To Homepage
     Validate Homepage Text
     Sleep  5s

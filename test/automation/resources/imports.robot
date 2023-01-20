@@ -25,3 +25,4 @@ Resource          ../resources/keywords/common/CommonUtils.robot
 Resource          ../resources/keywords/page/CommonPage.robot
 Resource          ../resources/keywords/page/HomePage.robot
 Resource          ../resources/elements/HomePage.robot
+Resource          ../resources/variables/EnvConfig.robot
