@@ -19,7 +19,7 @@ Common - Setup Webdriver
     Call Method  ${options}  add_argument  disable_gpu
     ${options} =  Call Method  ${options}  to_capabilities
 
-    ${driver}  Create Webdriver  Remote  command_executor=http://host.docker.internal:4444/wd/hub  desired_capabilities=${options}
+    ${driver}  Create Webdriver  Remote  command_executor=%{webdriver_url}  desired_capabilities=${options}
 
     [Return]  ${driver}
 

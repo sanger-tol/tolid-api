@@ -18,10 +18,11 @@ services:
       - env
       - browser
       - base_url
+      - webdriver_url=http://tolid-chrome:4444/wd/hub
   
   tolid-chrome:
     image: seleniarm/standalone-chromium
     ports:
-      - 4444:4444
-      - 7900:7900
+      # this left port needs to be different on every app!
+      - 7902:7900
     shm_size: 2gb
