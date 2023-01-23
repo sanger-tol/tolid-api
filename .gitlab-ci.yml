@@ -19,6 +19,16 @@ variables:
 
 
 # TODO remove everything below here!!!!....
+stages:
+  - lint
+  - build
+  - unit test
+  - system test
+  - review
+  - integration test
+  - cleanup
+  - deploy
+
 review_app:
   extends: .review_app
   rules:
