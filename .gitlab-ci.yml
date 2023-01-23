@@ -8,7 +8,7 @@ include:
     #file: '/gitlab/app.yml'
 
     ref: 'd343fbf151cb05fe75eb78005fdcae5ac0647de1' # TODO change back!!!!
-    file: '/gitlab/app.yml' # TODO change back!!!
+    file: '/gitlab/main.yml' # TODO change back!!!
 
 variables:
   APP_NAME: "tolid"
