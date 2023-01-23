@@ -7,7 +7,7 @@ include:
     #ref: v1.3.1
     #file: '/gitlab/app.yml'
 
-    ref: '13f9b51645e9a0e4473c7cc5a7ffb4ee16724900' # TODO change back!!!!
+    ref: '8bfd8afd1d9b77922724f37d607635dcf4fa64a0' # TODO change back!!!!
     file: '/gitlab/main.yml' # TODO change back!!!
 
 variables:
