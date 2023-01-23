@@ -38,6 +38,7 @@ review_app:
 
 test_robot:
   extends: .test-robot
+  needs: ["review_app"]
 
 stop_review:
   extends: .stop_review
