@@ -13,7 +13,7 @@ include:
 variables:
   APP_NAME: "tolid"
   SERVICE_NAME: "id"
-  ENABLE_ROBOT: "true"
+  ENABLE_ROBOT_REVIEW: "true"
 
   CI_COMMIT_SHA: "d93fff4b706254e862d9d4ad39844d3a58655d52" # TODO remove!!!!
 
