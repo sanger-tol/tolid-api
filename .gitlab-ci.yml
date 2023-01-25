@@ -5,11 +5,38 @@
 include:
   - project: 'tol/tol-core'
 
-    ref: 'f6c4fd905ca7e18ac518e36aab706cc55bf58b1f' # TODO change back!!!!
+    ref: 'e9a3ba32f1c5c6abc36eb5870f71ac67209d69eb' # TODO change back!!!!
 
-    file: '/gitlab/app.yml'
+    file: '/gitlab/main.yml'
 
 variables:
   APP_NAME: "tolid"
   SERVICE_NAME: "id"
   ENABLE_ROBOT_REVIEW: "true"
+
+
+
+# DELETE below here!!
+  CI_COMMIT_SHA: "bb9d32fd493f4b1b98e62552dd3e14e835b691a5"
+
+
+review_app:
+  extends: .review_app
+  rules:
+    - if: $DISABLE_REVIEW_APPS
+      when: never
+    - if: $CI_COMMIT_BRANCH =~ /^TOLP-.*$/
+
+test-robot:
+  extends: .test-robot
+  needs: ["review_app", "build-robot"]
+  dependencies: ["review_app"]
+
+stop_review:
+  extends: .stop_review
+  rules:
+    - if: $DISABLE_REVIEW_APPS
+      when: never
+    - if: $CI_COMMIT_BRANCH =~ /^TOLP-.*$/
+      when: manual
+
