@@ -20,6 +20,17 @@ variables:
   CI_COMMIT_SHA: "bb9d32fd493f4b1b98e62552dd3e14e835b691a5"
 
 
+stages:
+  - lint
+  - build
+  - unit test
+  - system test
+  - review
+  - integration test
+  - cleanup
+  - deploy
+
+
 review_app:
   extends: .review_app
   rules:
