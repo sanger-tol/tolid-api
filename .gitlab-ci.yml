@@ -40,7 +40,7 @@ review_app:
 
 test-robot:
   extends: .test-robot
-  needs: ["review_app", "build-robot"]
+  needs: ["review_app"]
   dependencies: ["review_app"]
 
 stop_review:
