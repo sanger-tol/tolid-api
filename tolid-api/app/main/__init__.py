@@ -19,5 +19,7 @@ def application():
                 pythonic_params=True)
     app.app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URI']
     app.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_pre_ping': True,
+                                                   'pool_recycle': 1800}
     db.init_app(app.app)
     return app
