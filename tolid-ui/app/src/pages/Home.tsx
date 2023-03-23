@@ -44,13 +44,13 @@ function Home() {
                   </li>
                   <li>a number to indicate the individual that was sampled. The number is assigned in order of request and does not represent any ranking.</li>
                 </ul>
-                <p>e.g. <strong>aRanTem1</strong> for the first sampled individual of Rana temporaria, <strong>xgPerPere3</strong> for the third sampled individual of Peregriana peregra</p>
-                
+                <p>e.g. <strong>aRanTem1</strong> for the first registered individual of Rana temporaria, <strong>xgPerPere3</strong> for the third registered individual of Peregriana peregra</p>
+
                 <p>For naming genome assemblies of samples, we recommend to use the full ToLID and add .&lt;version&gt;
                 Examples:</p>
                 <ul>
-                  <li>fCotGob3.1 (first assembly version of the 3rd individual of Cottoperca gobio)</li>
-                  <li>fAstCal1.2 (second assembly version of the first individual of Astatotilapia calliptera)</li>
+                  <li>fCotGob3.1 (first assembly version of the 3rd registered individual of Cottoperca gobio)</li>
+                  <li>fAstCal1.2 (second assembly version of the first registered individual of Astatotilapia calliptera)</li>
                 </ul>
               </div>
             </Col>
