@@ -564,6 +564,10 @@ class TestCuratorsController(BaseTestCase):
                 'taxonomyId': 6344
             },
             'specimen': {'specimenId': 'SAN0000101'},
+            'user': {'email': self.user4.email,
+                     'name': self.user4.name,
+                     'organisation': self.user4.organisation,
+                     'roles': []}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))

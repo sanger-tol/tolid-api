@@ -30,7 +30,8 @@ def search_specimen(specimen_id=None, skip=None, limit=None):
     tolids = []
     for specimen in specimens:
         tolid = {'tolId': specimen.tolid,
-                 'species': specimen.species}
+                 'species': specimen.species,
+                 'user': specimen.user}
         tolids.append(tolid)
     return jsonify([{'specimenId': specimen_id,
                     'tolIds': tolids}])

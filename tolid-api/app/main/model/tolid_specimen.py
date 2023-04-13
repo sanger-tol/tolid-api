@@ -21,4 +21,5 @@ class TolidSpecimen(Base):
     def to_dict(self):
         return {'tolId': self.tolid,
                 'species': self.species,
-                'specimen': {'specimenId': self.specimen_id}}
+                'specimen': {'specimenId': self.specimen_id},
+                'user': self.user}

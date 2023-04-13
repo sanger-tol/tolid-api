@@ -900,6 +900,7 @@ components:
         - tolId
         - species
         - specimenId
+        - user
       type: object
       properties:
         tolId:
@@ -909,6 +910,8 @@ components:
           $ref: '#/components/schemas/SpeciesShort'
         specimenId:
           $ref: '#/components/schemas/SpecimenShort'
+        user:
+          $ref: '#/components/schemas/User'
     ToLIDShort:
       required:
         - tolId
@@ -920,6 +923,8 @@ components:
           example: wuAreMari1
         species:
           $ref: '#/components/schemas/SpeciesShort'
+        user:
+          $ref: '#/components/schemas/User'
     SpeciesShort:
       required:
         - commonName
