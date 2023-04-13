@@ -98,6 +98,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wpPerVanc2',
             'specimen': {'specimenId': 'SAN0000100'},
+            'user': {'email': self.user3.email,
+                     'name': self.user3.name,
+                     'organisation': self.user3.organisation,
+                     'roles': [{'role': 'creator'}]}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -127,6 +131,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari3',
             'specimen': {'specimenId': 'SAN0000100xxxxx'},
+            'user': {'email': self.user3.email,
+                     'name': self.user3.name,
+                     'organisation': self.user3.organisation,
+                     'roles': [{'role': 'creator'}]}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -155,7 +163,11 @@ class TestCreatorsController(BaseTestCase):
                 'taxonomyId': 9606
             },
             'tolId': 'mHomSap1',
-            'specimen': {'specimenId': 'SAN0000999xxxxx'}
+            'specimen': {'specimenId': 'SAN0000999xxxxx'},
+            'user': {'email': self.user3.email,
+                     'name': self.user3.name,
+                     'organisation': self.user3.organisation,
+                     'roles': [{'role': 'creator'}]}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -185,6 +197,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari1',
             'specimen': {'specimenId': 'SAN0000100'},
+            'user': {'email': self.user1.email,
+                     'name': self.user1.name,
+                     'organisation': self.user1.organisation,
+                     'roles': []}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -287,6 +303,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari3',
             'specimen': {'specimenId': 'SAN0000100xxxxx'},
+            'user': {'email': self.user3.email,
+                     'name': self.user3.name,
+                     'organisation': self.user3.organisation,
+                     'roles': [{'role': 'creator'}]}
         }, {
             'species': {
                 'commonName': 'None',
@@ -303,6 +323,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wpPerVanc2',
             'specimen': {'specimenId': 'SAN0000100xxxxx'},
+            'user': {'email': self.user3.email,
+                     'name': self.user3.name,
+                     'organisation': self.user3.organisation,
+                     'roles': [{'role': 'creator'}]}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -332,6 +356,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari1',
             'specimen': {'specimenId': 'SAN0000100'},
+            'user': {'email': self.user1.email,
+                     'name': self.user1.name,
+                     'organisation': self.user1.organisation,
+                     'roles': []}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -363,6 +391,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari1',
             'specimen': {'specimenId': 'SAN0000100'},
+            'user': {'email': self.user1.email,
+                     'name': self.user1.name,
+                     'organisation': self.user1.organisation,
+                     'roles': []}
         }, {
             'species': {
                 'commonName': 'lugworm',
@@ -379,6 +411,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari4',
             'specimen': {'specimenId': 'SAN0000100wwwww'},
+            'user': {'email': self.user3.email,
+                     'name': self.user3.name,
+                     'organisation': self.user3.organisation,
+                     'roles': [{'role': 'creator'}]}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -412,6 +448,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari1',
             'specimen': {'specimenId': 'SAN0000100'},
+            'user': {'email': self.user1.email,
+                     'name': self.user1.name,
+                     'organisation': self.user1.organisation,
+                     'roles': []}
         }, {
             'species': {
                 'commonName': 'lugworm',
@@ -428,6 +468,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari5',
             'specimen': {'specimenId': 'SAN0000100ppppp'},
+            'user': {'email': self.user3.email,
+                     'name': self.user3.name,
+                     'organisation': self.user3.organisation,
+                     'roles': [{'role': 'creator'}]}
         }, {
             'species': {
                 'commonName': 'lugworm',
@@ -444,6 +488,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari6',
             'specimen': {'specimenId': 'SAN0000100qqqqq'},
+            'user': {'email': self.user3.email,
+                     'name': self.user3.name,
+                     'organisation': self.user3.organisation,
+                     'roles': [{'role': 'creator'}]}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -479,6 +527,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari1',
             'specimen': {'specimenId': 'SAN0000100'},
+            'user': {'email': self.user1.email,
+                     'name': self.user1.name,
+                     'organisation': self.user1.organisation,
+                     'roles': []}
         }, {
             'species': {
                 'commonName': 'lugworm',
@@ -495,6 +547,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari7',   # We created wuAreMari3,4,5,6 earlier on in this method
             'specimen': {'specimenId': 'SAN0000100rrrrr'},
+            'user': {'email': self.user3.email,
+                     'name': self.user3.name,
+                     'organisation': self.user3.organisation,
+                     'roles': [{'role': 'creator'}]}
         }, {
             'species': {
                 'commonName': 'lugworm',
@@ -511,6 +567,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari1',
             'specimen': {'specimenId': 'SAN0000100'},
+            'user': {'email': self.user1.email,
+                     'name': self.user1.name,
+                     'organisation': self.user1.organisation,
+                     'roles': []}
         }, {
             'species': {
                 'commonName': 'lugworm',
@@ -527,6 +587,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari7',
             'specimen': {'specimenId': 'SAN0000100rrrrr'},
+            'user': {'email': self.user3.email,
+                     'name': self.user3.name,
+                     'organisation': self.user3.organisation,
+                     'roles': [{'role': 'creator'}]}
         }]
 
         self.assert200(response,
@@ -562,6 +626,10 @@ class TestCreatorsController(BaseTestCase):
             },
             'tolId': 'wuAreMari8',
             'specimen': {'specimenId': 'SAN0000100bbbbb'},
+            'user': {'email': self.user3.email,
+                     'name': self.user3.name,
+                     'organisation': self.user3.organisation,
+                     'roles': [{'role': 'creator'}]}
         }, {
             'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
                           'name': 'test_user_creator',
@@ -594,7 +662,12 @@ class TestCreatorsController(BaseTestCase):
                              'scientificName': 'Arenicola marina',
                              'taxaClass': 'Polychaeta',
                              'taxonomyId': 6344},
-                 'tolId': 'wuAreMari8'}]
+                 'tolId': 'wuAreMari8',
+                 'user': {'email': self.user3.email,
+                          'name': self.user3.name,
+                          'organisation': self.user3.organisation,
+                          'roles': [{'role': 'creator'}]}}
+            ]
         }]
         self.assertEqual(expect, response.json)
 

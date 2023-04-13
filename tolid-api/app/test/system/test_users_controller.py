@@ -41,7 +41,11 @@ class TestUsersController(BaseTestCase):
                         'scientificName': 'Arenicola marina',
                         'taxaClass': 'Polychaeta',
                         'taxonomyId': 6344
-                    }
+                    },
+                    'user': {'email': self.user1.email,
+                             'name': self.user1.name,
+                             'organisation': self.user1.organisation,
+                             'roles': []}
                 }
             ]
         }]
@@ -76,7 +80,11 @@ class TestUsersController(BaseTestCase):
                         'scientificName': 'Arenicola marina',
                         'taxaClass': 'Polychaeta',
                         'taxonomyId': 6344
-                    }
+                    },
+                    'user': {'email': self.user1.email,
+                             'name': self.user1.name,
+                             'organisation': self.user1.organisation,
+                             'roles': []}
                 },
                 {
                     'tolId': 'wpPerVanc1',
@@ -92,7 +100,12 @@ class TestUsersController(BaseTestCase):
                         'scientificName': 'Perinereis vancaurica',
                         'taxaClass': 'Polychaeta',
                         'taxonomyId': 6355
-                    }
+                    },
+                    'user': {'email': self.user1.email,
+                             'name': self.user1.name,
+                             'organisation': self.user1.organisation,
+                             'roles': []}
+
                 }
             ]
         }]
@@ -127,7 +140,11 @@ class TestUsersController(BaseTestCase):
                 'taxonomyId': 6344
             },
             'tolId': 'wuAreMari1',
-            'specimen': {'specimenId': 'SAN0000100'}
+            'specimen': {'specimenId': 'SAN0000100'},
+            'user': {'email': self.user1.email,
+                     'name': self.user1.name,
+                     'organisation': self.user1.organisation,
+                     'roles': []}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -158,7 +175,11 @@ class TestUsersController(BaseTestCase):
                 'taxonomyId': 6344
             },
             'tolId': 'wuAreMari2',
-            'specimen': {'specimenId': 'SAN0000101'}
+            'specimen': {'specimenId': 'SAN0000101'},
+            'user': {'email': self.user1.email,
+                     'name': self.user1.name,
+                     'organisation': self.user1.organisation,
+                     'roles': []}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -205,7 +226,11 @@ class TestUsersController(BaseTestCase):
                 'taxonomyId': 6344
             },
             'tolId': 'wuAreMari1',
-            'specimen': {'specimenId': 'SAN0000100'}
+            'specimen': {'specimenId': 'SAN0000100'},
+            'user': {'email': self.user1.email,
+                     'name': self.user1.name,
+                     'organisation': self.user1.organisation,
+                     'roles': []}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -239,7 +264,11 @@ class TestUsersController(BaseTestCase):
                 'taxonomyId': 6344
             },
             'tolId': 'wuAreMari2',
-            'specimen': {'specimenId': 'SAN0000101'}
+            'specimen': {'specimenId': 'SAN0000101'},
+            'user': {'email': self.user1.email,
+                     'name': self.user1.name,
+                     'organisation': self.user1.organisation,
+                     'roles': []}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -289,6 +318,10 @@ class TestUsersController(BaseTestCase):
             },
             'tolId': 'wuAreMari1',
             'specimen': {'specimenId': 'SAN0000100'},
+            'user': {'email': self.user1.email,
+                     'name': self.user1.name,
+                     'organisation': self.user1.organisation,
+                     'roles': []}
         }, {
             'species': {
                 'commonName': 'None',
@@ -305,6 +338,10 @@ class TestUsersController(BaseTestCase):
             },
             'tolId': 'wpPerVanc1',
             'specimen': {'specimenId': 'SAN0000101'},
+            'user': {'email': self.user1.email,
+                     'name': self.user1.name,
+                     'organisation': self.user1.organisation,
+                     'roles': []}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -332,6 +369,10 @@ class TestUsersController(BaseTestCase):
             },
             'tolId': 'wuAreMari2',
             'specimen': {'specimenId': 'SAN0000101'},
+            'user': {'email': self.user2.email,
+                     'name': self.user2.name,
+                     'organisation': self.user2.organisation,
+                     'roles': [{'role': 'admin'}]}
         }]
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
