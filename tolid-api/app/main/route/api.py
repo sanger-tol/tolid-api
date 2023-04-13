@@ -4,12 +4,12 @@
 
 from flask import Blueprint
 
-from flask_restx import Api, Namespace, Resource
+from flask_restx import Api
 
 from main.resource import api_species
 
 from tol.api_base.auth import authorizations
-from tol.api_base.resource import api_auth, api_environment, api_user
+from tol.api_base.resource import api_auth, api_environment
 
 
 def _get_environment_string(app):
