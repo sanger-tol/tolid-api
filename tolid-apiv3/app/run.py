@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+# SPDX-FileCopyrightText: 2023 Genome Research Ltd.
 #
 # SPDX-License-Identifier: MIT
 
@@ -11,10 +11,7 @@ def main():
     app.run(
         host='0.0.0.0',
         debug=True,
-        port=80,
-        extra_files=(
-            'main/swagger/swagger.yaml',
-        ),
+        port=80
     )
 
 

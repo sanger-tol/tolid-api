@@ -1,24 +1,25 @@
 #!/usr/bin/env python3
 
-# SPDX-FileCopyrightText: 2023 Genome Research Ltd.
+# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
 #
 # SPDX-License-Identifier: MIT
 
-from flask import Flask
+import os
 
-from main.config import set_config
+import connexion
+
+from main import encoder
 from main.model import db
-from main.route import init_blueprint
-
-
-from tol.api_base.encoder import JSONEncoder
 
 
 def application():
-    app = Flask(__name__)
-    set_config(app, JSONEncoder)
-    blueprint = init_blueprint(app)
-    app.register_blueprint(blueprint)
-    app.json_encoder = JSONEncoder
-    db.init_app(app)
+    app = connexion.App(__name__, specification_dir='./swagger/')
+    app.app.json_encoder = encoder.JSONEncoder
+    app.add_api('swagger.yaml', arguments={'title': 'Tree of Life ToLID API'},
+                pythonic_params=True)
+    app.app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URI']
+    app.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_pre_ping': True,
+                                                   'pool_recycle': 1800}
+    db.init_app(app.app)
     return app
