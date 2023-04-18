@@ -1,17 +1,10 @@
-# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+# SPDX-FileCopyrightText: 2022 Genome Research Ltd.
 #
 # SPDX-License-Identifier: MIT
 
-Cython == 0.29.21
-connexion == 2.14.1
+--extra-index-url=https://gitlab.internal.sanger.ac.uk/api/v4/projects/3429/packages/pypi/simple
+
 python_dateutil == 2.8.1
 setuptools == 53.0.0
-Werkzeug == 1.0.1
-Flask-SQLAlchemy == 2.4.4
-psycopg2-binary == 2.8.6
-openpyxl == 3.0.6
-markupsafe==2.0.1
-jwt
-biopython==1.73
-alembic==1.8.0
-SQLAlchemy==1.4.1  # Pin to <2.0
+tol-sdk[all]==0.9.5
+psycopg2-binary==2.9.1

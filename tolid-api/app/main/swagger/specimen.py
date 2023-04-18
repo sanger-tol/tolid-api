@@ -2,12 +2,12 @@
 #
 # SPDX-License-Identifier: MIT
 
-from main.schema import SpeciesSchema
+from main.schema import SpecimenSchema
 
 from tol.api_base.swagger import BaseSwagger, setup_swagger
 
 
 @setup_swagger
-class SpeciesSwagger(BaseSwagger):
+class SpecimenSwagger(BaseSwagger):
     class Meta:
-        schema = SpeciesSchema
+        schema = SpecimenSchema
