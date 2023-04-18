@@ -42,6 +42,36 @@ services:
     volumes:
       - './tolid-api/app/main:/app/main'
       - '../tol-sdk:/packages/tol-sdk:rw'
+    depends_on:
+      - "tolid-apiv3"  # Not really a dependency, but we want to start both
+
+  tolid-apiv3:
+    build: 
+      context: tolid-apiv3/.
+      dockerfile: Dockerfile.dev
+    image: tolid-apiv3
+    # force amd64 on M1 MacOS
+    platform: linux/amd64
+    environment:
+      - DB_URI
+      - TOLID_URL
+      - ELIXIR_CLIENT_ID
+      - ELIXIR_CLIENT_SECRET
+      - ELIXIR_REDIRECT_URI
+      - ELIXIR_JWK
+      - MAIL_SENDER
+      - MAIL_SENDER_NAME
+      - MAIL_USERNAME_SMTP
+      - MAIL_PASSWORD_SMTP
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_RECEIVER_REQUESTS_PENDING
+      - ENVIRONMENT
+    ports:
+      - 8180:80
+    volumes:
+      - './tolid-apiv3/app/main:/app/main'
+      - '../tol-sdk:/packages/tol-sdk:rw'
 
   tolid-ui:
     build:
