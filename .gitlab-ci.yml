@@ -10,3 +10,11 @@ include:
 variables:
   APP_NAME: "tolid"
   SERVICE_NAME: "id"
+  APIS: [${APP_NAME}-api, ${APP_NAME}-apiv3]
+
+build-apis:
+  stage: build
+  trigger:
+    include: .gitlab-ci.yml
+  parallel:
+    matrix: ${APIS}
