@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tolid-apiv3
+  labels:
+    {{- include "tolid-app.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.tolcore.autoscaling.enabled }}
+  replicas: 1
+  {{- end }}
+  selector:
+    matchLabels:
+      app: tolid-apiv3
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Subcharts.tolcore.Template.BasePath "/configmaps/api.yaml") .Subcharts.tolcore | sha256sum }}
+        image: {{ .Values.tolcore.image.tag }}
+      labels:
+        app: tolid-apiv3
+    spec:
+      {{- with .Values.tolcore.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.tolcore.podSecurityContext | nindent 8 }}
+      containers:
+        - name: tolid-apiv3
+          envFrom:
+            - configMapRef:
+                name: '{{ include "tol-core.api.fullname" .Subcharts.tolcore }}'
+#          env:
+#            - name: "JOB_ENABLE"
+#              value: "Enable"
+          securityContext:
+            {{- toYaml .Values.tolcore.securityContext | nindent 12 }}
+          command: ['python3']
+          args: ["run.py"]
+          image: '{{ include "tol-core.api.image" .Subcharts.tolcore }}'
+          imagePullPolicy: {{ .Values.tolcore.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.tolcore.resources | nindent 12 }}
+      {{- with .Values.tolcore.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolcore.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolcore.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
