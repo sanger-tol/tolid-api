@@ -125,6 +125,9 @@ tolcore:
       ELIXIR_CLIENT_SECRET: elixir.client.secret
       ELIXIR_REDIRECT_URI: elixir.url.redirect
       ELIXIR_JWK: elixir.jwk
+  apiv3:
+    fullname: "tolid-apiv3"
+    probe_url: '/api/v3/ui'
   flask:
     env: ""
   ui:

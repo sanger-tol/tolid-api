@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2022 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
+--extra-index-url=https://gitlab.internal.sanger.ac.uk/api/v4/projects/3429/packages/pypi/simple
+
+python_dateutil == 2.8.1
+setuptools == 53.0.0
+tol-sdk[all]==0.9.5
+psycopg2-binary==2.9.1
