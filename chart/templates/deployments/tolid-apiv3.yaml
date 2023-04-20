@@ -30,9 +30,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: '{{ include "tol-core.api.fullname" .Subcharts.tolcore }}'
-#          env:
-#            - name: "JOB_ENABLE"
-#              value: "Enable"
           securityContext:
             {{- toYaml .Values.tolcore.securityContext | nindent 12 }}
           command: ['python3']
