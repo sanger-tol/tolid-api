@@ -5,18 +5,29 @@
 include:
   - project: 'tol/tol-core'
     ref: v1.3.4
-    file: '/gitlab/app.yml'
+    #file: '/gitlab/app.yml'
+    file: '/gitlab/main.yml'
 
 variables:
   APP_NAME: "tolid"
   SERVICE_NAME: "id"
+  # REEMOVE!!!
+  CI_COMMIT_SHA: "21680eab5e287bfae1e3dbca39397345a9aef6c3"
 
-# Want a better way of doing this, but this works for now
-build-apiv3:
-  extends: build-api
-  variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
-    PART: "${APP_NAME}-apiv3"
-    DOCKERFILE: "${APP_NAME}-apiv3/Dockerfile"
-    NAME: "${APP_NAME}-apiv3"
+# # Want a better way of doing this, but this works for now
+# build-apiv3:
+#   extends: build-api
+#   variables:
+#     DOCKER_HOST: "tcp://docker:2375"
+#     DOCKER_TLS_CERTDIR: ''
+#     PART: "${APP_NAME}-apiv3"
+#     DOCKERFILE: "${APP_NAME}-apiv3/Dockerfile"
+#     NAME: "${APP_NAME}-apiv3"
+
+
+# REEMOVE from here!!
+review_app:
+  extends: .review_app
+
+stop_review:
+  extends: .stop_review
