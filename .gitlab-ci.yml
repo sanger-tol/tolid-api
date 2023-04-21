@@ -41,3 +41,4 @@ review_app:
 
 stop_review:
   extends: .stop_review
+  when: manual
