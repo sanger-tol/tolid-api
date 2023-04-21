@@ -68,5 +68,5 @@ Create the name of the service account to use
 Build the APIv3 image string from its constiuent parts
 */}}
 {{- define "tol-core.apiv3.image" -}}
-{{- .Values.image.repository }}/tolid-apiv3:{{ .Values.image.tag | default .Chart.AppVersion }}
+{{- .Values.tolcore.image.repository }}/tolid-apiv3:{{ .Values.tolcore.image.tag | default .Chart.AppVersion }}
 {{- end }}
