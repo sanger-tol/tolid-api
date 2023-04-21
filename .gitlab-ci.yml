@@ -14,6 +14,16 @@ variables:
   # REEMOVE!!!
   CI_COMMIT_SHA: "21680eab5e287bfae1e3dbca39397345a9aef6c3"
 
+#### REEEMPVE
+stages:
+  - lint
+  - build
+  - unit test
+  - system test
+  - review
+  - cleanup
+  - deploy
+
 # # Want a better way of doing this, but this works for now
 # build-apiv3:
 #   extends: build-api
