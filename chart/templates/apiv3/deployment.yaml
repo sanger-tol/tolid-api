@@ -34,7 +34,7 @@ spec:
             {{- toYaml .Values.tolcore.securityContext | nindent 12 }}
           command: ['python3']
           args: ["run.py"]
-          image: '{{ include "tol-core.api.image" .Subcharts.tolcore }}'
+          image: '{{ include "tol-core.apiv3.image" . }}'
           imagePullPolicy: {{ .Values.tolcore.image.pullPolicy }}
           resources:
             {{- toYaml .Values.tolcore.resources | nindent 12 }}

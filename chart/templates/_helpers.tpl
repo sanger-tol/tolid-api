@@ -61,3 +61,12 @@ Create the name of the service account to use
 {{- default "default" .Values.tolcore.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+
+{{/*
+Build the APIv3 image string from its constiuent parts
+*/}}
+{{- define "tol-core.apiv3.image" -}}
+{{- .Values.image.repository }}/tolid-apiv3:{{ .Values.image.tag | default .Chart.AppVersion }}
+{{- end }}

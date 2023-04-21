@@ -61,6 +61,8 @@ tolcore:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+    extra_prefixes:
+      '/api/v3': 'tolid-apiv3'
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
