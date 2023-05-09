@@ -17,10 +17,6 @@ from main.model import TolidPrimaryPrefix, TolidRequest, TolidRole, \
 
 class BaseTestCase(TestCase):
 
-    api_key = 'AnyThingBecAuseThIsIsATEST123456'
-    api_key2 = 'AnyThingBecAuseThIsIsATEST567890'
-    api_key3 = 'AnyThingBecAuseThIsIsATEST24680'
-
     def setUp(self):
         self.maxDiff = None
         db.create_all()
