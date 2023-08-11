@@ -4,7 +4,7 @@
 
 include:
   - project: 'tol/tol-core'
-    ref: v1.3.6
+    ref: TOLP-6220
     file: '/gitlab/app.yml'
 
 variables:
