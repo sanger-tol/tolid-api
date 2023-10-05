@@ -7,6 +7,16 @@ include:
     ref: v1.3.6
     file: '/gitlab/main.yml'
 
+stages:
+  - lint
+  - scan
+  - build
+  - unit test
+  - system test
+  - review
+  - cleanup
+  - deploy
+
 variables:
   APP_NAME: "tolid"
   SERVICE_NAME: "id"
