@@ -13,4 +13,5 @@ variables:
   GIT_COMMIT_SHA: "2c0919d4aa08d4a8ef78ab1466dfccfc89e58c96"
 
 review:
-  extends: .reivew_app
+  extends:
+    - .reivew_app
