@@ -5,7 +5,13 @@
 include:
   - project: 'tol/tol-core'
     ref: v1.3.6
+    file: '/gitlab/lint.yml'
+  - project: 'tol/tol-core'
+    ref: v1.3.6
     file: '/gitlab/main.yml'
+  - project: 'tol/tol-core'
+    ref: v1.3.6
+    file: '/gitlab/review.yml'
 
 variables:
   APP_NAME: "tolid"
