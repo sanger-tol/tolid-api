@@ -188,7 +188,7 @@ def requests_pending(api_key=None):
         return jsonify({'detail': 'User does not have permission to use this function'}), 403
     requests = db.session.query(TolidRequest) \
         .filter(TolidRequest.status == 'Pending') \
-        .order_by(TolidRequest.created_at.desc()) \
+        .order_by(TolidRequest.request_id.asc()) \
         .all()
     return jsonify(requests)
 

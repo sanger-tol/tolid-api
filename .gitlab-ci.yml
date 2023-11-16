@@ -10,13 +10,3 @@ include:
 variables:
   APP_NAME: "tolid"
   SERVICE_NAME: "id"
-
-# Want a better way of doing this, but this works for now
-build-apiv3:
-  extends: build-api
-  variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
-    PART: "${APP_NAME}-apiv3"
-    DOCKERFILE: "${APP_NAME}-apiv3/Dockerfile"
-    NAME: "${APP_NAME}-apiv3"

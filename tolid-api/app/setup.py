@@ -24,7 +24,7 @@ setup(
     author_email='tolid-help@sanger.ac.uk',
     url='',
     keywords=['Swagger', 'Tree of Life public name API'],
-    install_requires=REQUIRES,
+    # install_requires=REQUIRES,
     packages=find_packages(),
     package_data={'': ['swagger/swagger.yaml']},
     include_package_data=True,
