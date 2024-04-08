@@ -4,8 +4,6 @@
 
 import tempfile
 
-import connexion
-
 from flask import jsonify, send_from_directory
 
 from main.db_utils import create_new_specimen, \

@@ -10,8 +10,6 @@ import urllib.parse
 from datetime import datetime, timedelta, timezone
 from test.system import BaseTestCase
 
-from connexion.exceptions import OAuthProblem
-
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
 

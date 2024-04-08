@@ -4,10 +4,7 @@
 
 import logging
 import os
-
-import connexion
-
-from flask_testing import TestCase
+from unittest import TestCase
 
 from main.encoder import JSONEncoder
 from main.model import TolidPrimaryPrefix, TolidRequest, TolidRole, \

@@ -8,8 +8,6 @@ import urllib.parse
 import uuid
 from datetime import datetime, timedelta
 
-from connexion.exceptions import OAuthProblem
-
 from flask import jsonify
 
 from jwt import (

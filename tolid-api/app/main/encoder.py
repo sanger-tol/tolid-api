@@ -2,15 +2,15 @@
 #
 # SPDX-License-Identifier: MIT
 
-from connexion.apps.flask_app import FlaskJSONEncoder
+from json import JSONEncoder
 
 from main.model import Base
 
 
-class JSONEncoder(FlaskJSONEncoder):
+class JSONEncoder(JSONEncoder):
     include_nulls = False
 
     def default(self, o):
         if isinstance(o, Base):
             return o.to_dict()
-        return FlaskJSONEncoder.default(self, o)
+        return JSONEncoder.default(self, o)

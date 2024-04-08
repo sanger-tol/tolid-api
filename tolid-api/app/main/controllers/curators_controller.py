@@ -6,8 +6,6 @@ import os
 
 from Bio import Entrez
 
-import connexion
-
 from flask import jsonify
 
 from main.db_utils import accept_request, reject_request

@@ -5,8 +5,6 @@
 import logging
 import os
 
-import connexion
-
 from flask import jsonify
 
 from main.db_utils import create_request, \
