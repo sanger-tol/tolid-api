@@ -178,11 +178,15 @@ def session_factory(db_uri: str) -> SessionFactory:
 def session(session_factory: SessionFactory) -> Session:
     with session_factory() as sess:
         yield sess
-        sess.execute(delete(models.TolidSpecimen))
-        sess.execute(delete(models.TolidSpecies))
-        sess.execute(delete(models.TolidRole))
-        sess.execute(delete(models.TolidUser))
-        sess.commit()
+        sess.rollback()
+        sess.close()
+
+    with session_factory() as sess2:
+        sess2.execute(delete(models.TolidSpecimen))
+        sess2.execute(delete(models.TolidSpecies))
+        sess2.execute(delete(models.TolidRole))
+        sess2.execute(delete(models.TolidUser))
+        sess2.commit()
 
 
 @pytest.fixture(scope='session')
