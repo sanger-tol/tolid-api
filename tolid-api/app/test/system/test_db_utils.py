@@ -4,9 +4,13 @@
 
 from __future__ import absolute_import
 
+import pytest
+
 from main.db_utils import accept_request, create_new_specimen, \
     create_request, reject_request
 from main.model import TolidRequest
+
+from test.system.asserts import assertEqual
 
 
 class TestDbUtils:
@@ -26,11 +30,8 @@ class TestDbUtils:
         request1.user = self.user_requester
         session.add(request1)
 
-        try:
+        with pytest.raises(Exception):
             accept_request(request1)
-            assertTrue(False)
-        except Exception:
-            pass
 
         request1.species_id = 6344
         tol_id = accept_request(request1)
@@ -38,7 +39,7 @@ class TestDbUtils:
         assertEqual(tol_id.tolid, 'wuAreMari3')
         # Check the original request has been deleted
         request = session.query(TolidRequest).filter(TolidRequest.request_id == 1).one_or_none()
-        assertIsNone(request)
+        assert request is None
 
     def test_reject_request(self, session):
         request1 = TolidRequest(specimen_id='SAN0000100xxxxx',
