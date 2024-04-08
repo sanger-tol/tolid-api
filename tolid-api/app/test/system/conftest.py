@@ -184,6 +184,9 @@ def session(session_factory: SessionFactory) -> Session:
     with session_factory() as sess2:
         sess2.execute(delete(models.TolidSpecimen))
         sess2.execute(delete(models.TolidSpecies))
+        sess2.execute(delete(models.TolidSecondaryPrefix))
+        sess2.execute(delete(models.TolidPrimaryPrefix))
+        sess2.execute(delete(models.TolidRequest))
         sess2.execute(delete(models.TolidRole))
         sess2.execute(delete(models.TolidUser))
         sess2.commit()

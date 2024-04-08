@@ -19,7 +19,7 @@ class TolidRequest(Base):
     species_id: Mapped[int] = mapped_column()
     status: Mapped[str] = mapped_column()
     reason: Mapped[str] = mapped_column(nullable=True)
-    created_at: Mapped[datetime] = mapped_column(nullable=False, default=func.now)
+    created_at: Mapped[datetime] = mapped_column(nullable=False, default=func.now())
     created_by: Mapped[int] = mapped_column(ForeignKey('user.user_id'))
     user = relationship('TolidUser', uselist=False, foreign_keys=[created_by])
     confirmation_name: Mapped[str] = mapped_column(nullable=True)
