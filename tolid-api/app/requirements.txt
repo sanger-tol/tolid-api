@@ -15,3 +15,4 @@ jwt
 biopython==1.73
 alembic==1.8.0
 SQLAlchemy==1.4.1  # Pin to <2.0
+connexion[swagger-ui]

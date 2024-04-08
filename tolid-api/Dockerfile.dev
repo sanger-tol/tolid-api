@@ -21,15 +21,13 @@ RUN wget --no-check-certificate https://github.com/jwilder/dockerize/releases/do
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-COPY ./app/setup.py .
+COPY tolid/tolid-api/app/setup.py .
 RUN python3 setup.py install
 
-COPY ./app/requirements.txt .
+COPY tolid/tolid-api/app/requirements.txt .
 RUN pip3 --no-cache-dir install -r requirements.txt
 
-RUN pip3 --no-cache-dir install 'connexion[swagger-ui]'
+COPY tolid/tolid-api/app /app
+COPY tolid/tolid-api/migrations /migrations
 
-COPY ./app /app
-COPY ./migrations /migrations
-
-CMD [ "python", "run.py" ]
+CMD flask --app run run --debugger --port 80 --host 0.0.0.0

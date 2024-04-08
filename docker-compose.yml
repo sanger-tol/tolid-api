@@ -17,8 +17,8 @@ services:
 
   tolid-api:
     build: 
-      context: tolid-api/.
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: tolid/tolid-api/Dockerfile.dev
     image: tolid-api
     # force amd64 on M1 MacOS
     platform: linux/amd64
