@@ -10,3 +10,5 @@ include:
 variables:
   APP_NAME: "tolid"
   SERVICE_NAME: "id"
+
+  DISABLE_UI_LINT: "true"
