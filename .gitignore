@@ -19,3 +19,4 @@ chart/charts
 .dccache
 .virtualenv/
 inject.js
+.vscode/

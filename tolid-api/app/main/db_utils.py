@@ -4,11 +4,13 @@
 
 import os
 
+from sqlalchemy.orm import Session
+
 from main.email_utils import MailUtils
-from main.model import TolidRequest, TolidSpecies, TolidSpecimen, TolidUser, db
+from main.model import TolidRequest, TolidSpecies, TolidSpecimen, TolidUser
 
 
-def create_new_specimen(species, specimen_id, user):
+def create_new_specimen(species: TolidSpecies, specimen_id, user):
     highest = species.current_highest_tolid_number()
     number = highest + 1
     specimen = TolidSpecimen(specimen_id=specimen_id, number=number,
@@ -18,8 +20,8 @@ def create_new_specimen(species, specimen_id, user):
     return specimen
 
 
-def create_request(taxonomy_id, specimen_id, user, confirmation_name=None):
-    request = db.session.query(TolidRequest) \
+def create_request(sess: Session, taxonomy_id, specimen_id, user, confirmation_name=None):
+    request = sess.query(TolidRequest) \
         .filter(TolidRequest.specimen_id == specimen_id) \
         .filter(TolidRequest.species_id == taxonomy_id) \
         .one_or_none()
@@ -36,35 +38,35 @@ def create_request(taxonomy_id, specimen_id, user, confirmation_name=None):
     return request
 
 
-def accept_request(request):
-    species = db.session.query(TolidSpecies) \
+def accept_request(request, sess: Session):
+    species = sess.query(TolidSpecies) \
         .filter(TolidSpecies.taxonomy_id == request.species_id) \
         .one_or_none()
     if species is None:
         raise Exception('Species not in database')
     specimen = create_new_specimen(species, request.specimen_id, request.user)
-    db.session.add(specimen)
-    db.session.delete(request)
-    db.session.commit()
+    sess.add(specimen)
+    sess.delete(request)
+    sess.commit()
 
     if specimen.user.email is not None and specimen.user.email.strip() != '':
         try:
             tolid_created_mail_template, subject = MailUtils.get_tolid_created(specimen)
             MailUtils.send(tolid_created_mail_template, subject,
-                           specimen.user.email)
+                        specimen.user.email)
         except Exception:
             pass
 
-    return specimen
+    return specimen.to_dict()
 
 
-def reject_request(request, reason):
+def reject_request(request, reason, sess: Session):
     request.status = 'Rejected'
     if reason is not None:
         request.reason = reason
-    db.session.commit()
+    sess.commit()
 
-    user = db.session.query(TolidUser) \
+    user = sess.query(TolidUser) \
         .filter(request.created_by == TolidUser.user_id) \
         .one_or_none()
 
@@ -79,8 +81,8 @@ def reject_request(request, reason):
     return request
 
 
-def notify_requests_pending():
-    requests = db.session.query(TolidRequest) \
+def notify_requests_pending(sess: Session):
+    requests = sess.query(TolidRequest) \
         .filter(TolidRequest.status == 'Pre-pending') \
         .all()
     if len(requests) > 0:

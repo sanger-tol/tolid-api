@@ -3,25 +3,31 @@
 # SPDX-License-Identifier: MIT
 
 from sqlalchemy import func
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 
-from .base import Base, db
+from .base import Base
 from .tolid_specimen import TolidSpecimen
 
 
 class TolidSpecies(Base):
     __tablename__ = 'species'
-    taxonomy_id = db.Column(db.Integer, primary_key=True)
-    prefix = db.Column(db.String())
-    name = db.Column(db.String())
-    common_name = db.Column(db.String())
-    genus = db.Column(db.String())
-    family = db.Column(db.String())
-    tax_order = db.Column(db.String())
-    tax_class = db.Column(db.String())
-    phylum = db.Column(db.String())
-    kingdom = db.Column(db.String())
-    specimens = db.relationship('TolidSpecimen', back_populates='species',
-                                lazy=False, order_by='TolidSpecimen.number')
+
+    taxonomy_id: Mapped[int] = mapped_column(primary_key=True)
+    prefix: Mapped[str] = mapped_column()
+    name: Mapped[str] = mapped_column()
+    common_name: Mapped[str] = mapped_column()
+    genus: Mapped[str] = mapped_column()
+    family: Mapped[str] = mapped_column()
+    tax_order: Mapped[str] = mapped_column()
+    tax_class: Mapped[str] = mapped_column()
+    phylum: Mapped[str] = mapped_column()
+    kingdom: Mapped[str] = mapped_column()
+    specimens = relationship(
+        'TolidSpecimen',
+        back_populates='species',
+        lazy=False,
+        order_by='TolidSpecimen.number'
+    )
 
     def to_basic_dict(self):
         return {'prefix': self.prefix,
@@ -50,9 +56,9 @@ class TolidSpecies(Base):
         additional = {'tolIds': tolids}
         return {**short, **additional}  # Merge the two together
 
-    def current_highest_tolid_number(self):
+    def current_highest_tolid_number(self, session: Session):
         # What is the current highest specimen number?
-        highest = db.session.query(func.max(TolidSpecimen.number)) \
+        highest = session.query(func.max(TolidSpecimen.number)) \
             .filter(TolidSpecimen.species_id == self.taxonomy_id) \
             .scalar()
         if not highest:

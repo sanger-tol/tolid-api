@@ -2,18 +2,21 @@
 #
 # SPDX-License-Identifier: MIT
 
-from .base import Base, db
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from .base import Base
 
 
 class TolidUser(Base):
     __tablename__ = 'user'
-    user_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(), nullable=False)
-    email = db.Column(db.String(), nullable=False, unique=True)
-    organisation = db.Column(db.String(), nullable=True)
-    api_key = db.Column(db.String(), nullable=True, unique=True)
-    token = db.Column(db.String(), nullable=True, unique=True)
-    roles = db.relationship('TolidRole', lazy=False, back_populates='user')
+
+    user_id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    email: Mapped[str] = mapped_column(nullable=False, unique=True)
+    organisation: Mapped[str] = mapped_column(nullable=True)
+    api_key: Mapped[str] = mapped_column(nullable=True, unique=True)
+    token: Mapped[str] = mapped_column(nullable=True, unique=True)
+    roles = relationship('TolidRole', lazy=False, back_populates='user')
 
     def to_dict(self):
         return {'name': self.name,

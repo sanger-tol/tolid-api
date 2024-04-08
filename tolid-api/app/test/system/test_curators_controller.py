@@ -2,35 +2,32 @@
 #
 # SPDX-License-Identifier: MIT
 
-# coding: utf-8
-# ToDo not implemented yet!
-from __future__ import absolute_import
-
-from test.system import BaseTestCase
 from unittest.mock import patch
 
-from main.model import TolidRequest, TolidSpecimen, db
+from main.model import TolidRequest, TolidSpecimen
+
+from test.system.asserts import assert200, assert400, assert401, assert403, assert404, assertEqual
 
 
-class TestCuratorsController(BaseTestCase):
+class TestCuratorsController:
 
-    def test_add_species(self):
+    def test_add_species(self, client, data):
         # No authorisation token given
         query_string = []
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species',
             method='POST',
             query_string=query_string)
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Invalid authorisation token given
         query_string = []
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species',
             method='POST',
             headers={'api-key': '12345678'},
             query_string=query_string)
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Not admin
@@ -44,12 +41,12 @@ class TestCuratorsController(BaseTestCase):
                 'taxaClass': 'Class',
                 'phylum': 'Phylum',
                 'kingdom': 'Kingdom'}
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': data.user_requester.api_key},
             json=body)
-        self.assert403(response,
+        assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Taxonomy ID already in database
@@ -63,12 +60,12 @@ class TestCuratorsController(BaseTestCase):
                 'taxaClass': 'Class',
                 'phylum': 'Phylum',
                 'kingdom': 'Kingdom'}
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species',
             method='POST',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': data.user_admin.api_key},
             json=body)
-        self.assert400(response,
+        assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Taxonomy ID not in database - should create it
@@ -82,10 +79,10 @@ class TestCuratorsController(BaseTestCase):
                 'taxaClass': 'Class',
                 'phylum': 'Phylum',
                 'kingdom': 'Kingdom'}
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species',
             method='POST',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': data.user_admin.api_key},
             json=body)
         expect = [{
             'commonName': 'Common name',
@@ -101,35 +98,35 @@ class TestCuratorsController(BaseTestCase):
             'taxonomyId': 999999,
             'tolIds': []
         }]
-        self.assert200(response,
+        assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEqual(expect, response.json)
+        assertEqual(expect, response.json)
 
         # Has it been added?
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/999999',
             method='GET')
-        self.assert200(response,
+        assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEqual(expect, response.json)
+        assertEqual(expect, response.json)
 
-    def test_edit_species(self):
+    def test_edit_species(self, client, data):
         # No authorisation token given
         query_string = []
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/6344',
             method='PUT',
             query_string=query_string)
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Invalid authorisation token given
         query_string = []
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/6344',
             method='PUT',
             headers={'api-key': '12345678'},
             query_string=query_string)
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Not admin
         body = {'taxonomyId': 6344,
@@ -142,12 +139,12 @@ class TestCuratorsController(BaseTestCase):
                 'taxaClass': 'Class',
                 'phylum': 'Phylum',
                 'kingdom': 'Kingdom'}
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/6344',
             method='PUT',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': data.user_requester.api_key},
             json=body)
-        self.assert403(response,
+        assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Taxonomy ID not in database
@@ -161,12 +158,12 @@ class TestCuratorsController(BaseTestCase):
                 'taxaClass': 'Class',
                 'phylum': 'Phylum',
                 'kingdom': 'Kingdom'}
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/999999',
             method='PUT',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': data.user_admin.api_key},
             json=body)
-        self.assert404(response,
+        assert404(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Taxonomy ID not in database
@@ -180,12 +177,12 @@ class TestCuratorsController(BaseTestCase):
                 'taxaClass': 'Class',
                 'phylum': 'Phylum',
                 'kingdom': 'Kingdom'}
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/abcd',
             method='PUT',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': data.user_admin.api_key},
             json=body)
-        self.assert404(response,
+        assert404(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Taxonomy ID in database - should edit it
@@ -199,10 +196,10 @@ class TestCuratorsController(BaseTestCase):
                 'taxaClass': 'Class',
                 'phylum': 'Phylum',
                 'kingdom': 'Kingdom'}
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/6344',
             method='PUT',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': data.user_admin.api_key},
             json=body)
         expect = [{
             'commonName': 'Common name',
@@ -231,139 +228,140 @@ class TestCuratorsController(BaseTestCase):
                 }
             ]
         }]
-        self.assert200(response,
+        assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEqual(expect, response.json)
+        assertEqual(expect, response.json)
 
         # Has it changed?
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/6344',
             method='GET')
-        self.assert200(response,
+        assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEqual(expect, response.json)
+        assertEqual(expect, response.json)
 
-    def test_list_specimens(self):
+    def test_list_specimens(self, session, client, data):
         # Add a couple more specimens
         specimen2 = TolidSpecimen(specimen_id='SAN0000102', number=3, tolid='wuAreMari3')
         specimen2.species = self.species1
-        specimen2.user = self.user1
+        specimen2.user = data.user_requester
         specimen3 = TolidSpecimen(specimen_id='SAN0000103', number=1, tolid='mHomSap1')
         specimen3.species = self.species2
-        specimen3.user = self.user1
-        db.session.add(specimen2)
-        db.session.add(specimen3)
-        db.session.commit()
+        specimen3.user = data.user_requester
+
+        session.add(specimen2)
+        session.add(specimen3)
+        session.commit()
 
         # No authorisation token given
-        response = self.client.open(
+        response = client.open(
             '/api/v2/tol-ids/all',
             method='GET',
         )
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Invalid authorisation token given
-        response = self.client.open(
+        response = client.open(
             '/api/v2/tol-ids/all',
             method='GET',
             headers={'api-key': '12345678'},
         )
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Not admin
-        response = self.client.open(
+        response = client.open(
             '/api/v2/tol-ids/all',
             method='GET',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': data.user_requester.api_key},
         )
-        self.assert403(response,
+        assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # No taxonomyId given
         query_string = []
-        response = self.client.open(
+        response = client.open(
             '/api/v2/tol-ids/all',
             method='GET',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': data.user_admin.api_key},
             query_string=query_string)
         expect = 'wuAreMari1\tArenicola marina\tSAN0000100\t1\nwuAreMari2\tArenicola marina\t' \
             + 'SAN0000101\t2\nwuAreMari3\tArenicola marina\tSAN0000102\t3\nwpPerVanc1\t' \
             + 'Perinereis vancaurica\tSAN0000101\t1\nmHomSap1\tHomo sapiens\tSAN0000103\t1'
-        self.assert200(response,
+        assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEqual('text/plain; charset=utf-8', response.content_type)
-        self.assertEqual(expect, response.data.decode('utf-8'))
+        assertEqual('text/plain; charset=utf-8', response.content_type)
+        assertEqual(expect, response.data.decode('utf-8'))
 
         # Taxonomy ID not in database
         query_string = [('taxonomyId', '999999999')]
-        response = self.client.open(
+        response = client.open(
             '/api/v2/tol-ids/all',
             method='GET',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': data.user_admin.api_key},
             query_string=query_string)
-        self.assert400(response,
+        assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Taxonomy ID given
         query_string = [('taxonomyId', '6344')]
-        response = self.client.open(
+        response = client.open(
             '/api/v2/tol-ids/all',
             method='GET',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': data.user_admin.api_key},
             query_string=query_string)
         expect = 'wuAreMari1\tArenicola marina\tSAN0000100\t1\nwuAreMari2\tArenicola marina\t' \
             + 'SAN0000101\t2\nwuAreMari3\tArenicola marina\tSAN0000102\t3'
-        self.assert200(response,
+        assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEqual('text/plain; charset=utf-8', response.content_type)
-        self.assertEqual(expect, response.data.decode('utf-8'))
+        assertEqual('text/plain; charset=utf-8', response.content_type)
+        assertEqual(expect, response.data.decode('utf-8'))
 
-    def test_list_species(self):
+    def test_list_species(self, client, data):
         # No authorisation token given
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/all',
             method='GET',
             headers={'accept': 'text/plain'},
         )
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Invalid authorisation token given
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/all',
             method='GET',
             headers={'api-key': '12345678', 'accept': 'text/plain'},
         )
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Not admin
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/all',
             method='GET',
-            headers={'api-key': self.user1.api_key, 'accept': 'text/plain'},
+            headers={'api-key': data.user_requester.api_key, 'accept': 'text/plain'},
         )
-        self.assert403(response,
+        assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # All correct - text/plain
         query_string = []
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/all',
             method='GET',
-            headers={'api-key': self.user2.api_key, 'accept': 'text/plain'},
+            headers={'api-key': data.user_admin.api_key, 'accept': 'text/plain'},
             query_string=query_string)
         expect = 'wuAreMari\tArenicola marina\t6344\tlugworm\tArenicola\tArenicolidae\tNone\t' \
             + 'Polychaeta\tAnnelida\nwpPerVanc\tPerinereis vancaurica\t6355\tNone\tPerinereis\t' \
             + 'Nereididae\tPhyllodocida\tPolychaeta\tAnnelida\nmHomSap\tHomo sapiens\t9606\t' \
             + 'human\tHomo\tHominidae\tPrimates\tMammalia\tChordata'
-        self.assert200(response,
+        assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEqual('text/plain; charset=utf-8', response.content_type)
-        self.assertEqual(expect, response.data.decode('utf-8'))
+        assertEqual('text/plain; charset=utf-8', response.content_type)
+        assertEqual(expect, response.data.decode('utf-8'))
 
         # All correct - application/json
         query_string = []
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/all',
             method='GET',
-            headers={'api-key': self.user2.api_key, 'accept': 'application/json'},
+            headers={'api-key': data.user_admin.api_key, 'accept': 'application/json'},
             query_string=query_string)
         expect = [{
             'commonName': 'lugworm',
@@ -399,56 +397,56 @@ class TestCuratorsController(BaseTestCase):
             'taxaClass': 'Mammalia',
             'taxonomyId': 9606
         }]
-        self.assert200(response,
+        assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEqual('application/json', response.content_type)
-        self.assertEqual(expect, response.json)
+        assertEqual('application/json', response.content_type)
+        assertEqual(expect, response.json)
 
-    def test_search_pending_requests(self):
-        self.request1 = TolidRequest(specimen_id='SAN0000100', species_id=6344, status='Pending')
-        self.request1.user = self.user1
-        db.session.add(self.request1)
-        self.request2 = TolidRequest(specimen_id='SAN0000101', species_id=6344, status='Pending')
-        self.request2.user = self.user4
-        db.session.add(self.request2)
-        self.request3 = TolidRequest(specimen_id='SAN0000101', species_id=6355, status='Rejected')
-        self.request3.user = self.user1
-        db.session.add(self.request3)
-        db.session.commit()
+    def test_search_pending_requests(self, session, client, data):
+        request1 = TolidRequest(specimen_id='SAN0000100', species_id=6344, status='Pending')
+        request1.user = data.user_requester
+        session.add(request1)
+        request2 = TolidRequest(specimen_id='SAN0000101', species_id=6344, status='Pending')
+        request2.user = data.user_requester2
+        session.add(request2)
+        request3 = TolidRequest(specimen_id='SAN0000101', species_id=6355, status='Rejected')
+        request3.user = data.user_requester
+        session.add(request3)
+        session.commit()
 
         # No authorisation token given
         body = []
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/pending',
             method='GET',
             json=body)
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Invalid authorisation token given
         body = []
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/pending',
             method='GET',
             headers={'api-key': '12345678'},
             json=body)
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Not admin
         body = []
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/pending',
             method='GET',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': data.user_requester.api_key},
             json=body)
-        self.assert403(response,
+        assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Search for pending ToLID requests
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/pending',
             method='GET',
-            headers={'api-key': self.user2.api_key}
+            headers={'api-key': data.user_admin.api_key}
         )
         expect = [{
             'reason': None,
@@ -499,54 +497,54 @@ class TestCuratorsController(BaseTestCase):
             },
             'specimen': {'specimenId': 'SAN0000101'},
         }]
-        self.assert200(response,
+        assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEqual(expect, response.json)
+        assertEqual(expect, response.json)
 
-    def test_accept_request(self):
-        self.request1 = TolidRequest(specimen_id='SAN0000100', species_id=999999, status='Pending')
-        self.request1.user = self.user1
-        db.session.add(self.request1)
-        self.request2 = TolidRequest(specimen_id='SAN0000101', species_id=6344, status='Pending')
-        self.request2.user = self.user4
-        db.session.add(self.request2)
-        db.session.commit()
+    def test_accept_request(self, session, client, data):
+        request1 = TolidRequest(specimen_id='SAN0000100', species_id=999999, status='Pending')
+        request1.user = data.user_requester
+        session.add(request1)
+        request2 = TolidRequest(specimen_id='SAN0000101', species_id=6344, status='Pending')
+        request2.user = data.user_requester2
+        session.add(request2)
+        session.commit()
 
         # No authorisation token given
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/1/accept',
             method='PATCH')
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Invalid authorisation token given
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/1/accept',
             method='PATCH',
             headers={'api-key': '12345678'})
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Not admin
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/1/accept',
             method='PATCH',
-            headers={'api-key': self.user1.api_key})
-        self.assert403(response,
+            headers={'api-key': data.user_requester.api_key})
+        assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Invalid species
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/1/accept',
             method='PATCH',
-            headers={'api-key': self.user2.api_key}
+            headers={'api-key': data.user_admin.api_key}
         )
-        self.assert400(response,
+        assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Correct
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/2/accept',
             method='PATCH',
-            headers={'api-key': self.user2.api_key}
+            headers={'api-key': data.user_admin.api_key}
         )
         expect = [{
             'tolId': 'wuAreMari3',
@@ -564,51 +562,51 @@ class TestCuratorsController(BaseTestCase):
                 'taxonomyId': 6344
             },
             'specimen': {'specimenId': 'SAN0000101'},
-            'user': {'email': self.user4.email,
-                     'name': self.user4.name,
-                     'organisation': self.user4.organisation,
+            'user': {'email': data.user_requester2.email,
+                     'name': data.user_requester2.name,
+                     'organisation': data.user_requester2.organisation,
                      'roles': []}
         }]
-        self.assert200(response,
+        assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEqual(expect, response.json)
+        assertEqual(expect, response.json)
 
-    def test_reject_request(self):
-        self.request1 = TolidRequest(specimen_id='SAN0000100', species_id=999999, status='Pending')
-        self.request1.user = self.user1
-        db.session.add(self.request1)
-        self.request2 = TolidRequest(specimen_id='SAN0000101', species_id=6344, status='Pending')
-        self.request2.user = self.user4
-        db.session.add(self.request2)
-        db.session.commit()
+    def test_reject_request(self, session, client, data):
+        request1 = TolidRequest(specimen_id='SAN0000100', species_id=999999, status='Pending')
+        request1.user = data.user_requester
+        session.add(request1)
+        request2 = TolidRequest(specimen_id='SAN0000101', species_id=6344, status='Pending')
+        request2.user = data.user_requester2
+        session.add(request2)
+        session.commit()
 
         # No authorisation token given
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/1/reject',
             method='PATCH')
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Invalid authorisation token given
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/1/reject',
             method='PATCH',
             headers={'api-key': '12345678'})
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Not admin
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/1/reject',
             method='PATCH',
-            headers={'api-key': self.user1.api_key})
-        self.assert403(response,
+            headers={'api-key': data.user_requester.api_key})
+        assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Invalid species
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/1/reject',
             method='PATCH',
-            headers={'api-key': self.user2.api_key}
+            headers={'api-key': data.user_admin.api_key}
         )
         expect = [{
             'reason': None,
@@ -625,15 +623,15 @@ class TestCuratorsController(BaseTestCase):
             },
             'specimen': {'specimenId': 'SAN0000100'},
         }]
-        self.assert200(response,
+        assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEqual(expect, response.json)
+        assertEqual(expect, response.json)
 
         # Valid species
-        response = self.client.open(
+        response = client.open(
             '/api/v2/requests/2/reject?reason=Taxonomy+ID+is+not+species-level',
             method='PATCH',
-            headers={'api-key': self.user2.api_key}
+            headers={'api-key': data.user_admin.api_key}
         )
         expect = [{
             'reason': 'Taxonomy ID is not species-level',
@@ -660,33 +658,33 @@ class TestCuratorsController(BaseTestCase):
             },
             'specimen': {'specimenId': 'SAN0000101'},
         }]
-        self.assert200(response,
+        assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        self.assertEqual(expect, response.json)
+        assertEqual(expect, response.json)
 
     @patch('Bio.Entrez.efetch')
     @patch('Bio.Entrez.read')
-    def test_get_ncbi_data(self, read, efetch):
+    def test_get_ncbi_data(self, read, efetch, client, data):
         # No authorisation token given
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/270330/ncbi',
             method='GET')
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         # Invalid authorisation token given
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/270330/ncbi',
             method='GET',
             headers={'api-key': '12345678'})
-        self.assert401(response,
+        assert401(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Not admin
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/270330/ncbi',
             method='GET',
-            headers={'api-key': self.user1.api_key})
-        self.assert403(response,
+            headers={'api-key': data.user_requester.api_key})
+        assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
         # Admin, correct
@@ -703,11 +701,11 @@ class TestCuratorsController(BaseTestCase):
         }]
         efetch.return_value = None
         read.return_value = mock_ncbi_data
-        response = self.client.open(
+        response = client.open(
             '/api/v2/species/270330/ncbi',
             method='GET',
-            headers={'api-key': self.user2.api_key})
-        self.assert200(response,
+            headers={'api-key': data.user_admin.api_key})
+        assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         expected = {
             'scientificName': 'Lepomis megalotis',
@@ -716,7 +714,7 @@ class TestCuratorsController(BaseTestCase):
                 'syn2'
             ]
         }
-        self.assertEqual(expected, response.json)
+        assertEqual(expected, response.json)
 
 
 if __name__ == '__main__':

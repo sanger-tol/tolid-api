@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-from .base import db, Base  # noqa
+from .base import Base, session_factory  # noqa
 
 from .tolid_primary_prefix import TolidPrimaryPrefix  # noqa
 from .tolid_request import TolidRequest  # noqa

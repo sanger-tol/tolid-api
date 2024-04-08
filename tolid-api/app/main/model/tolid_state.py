@@ -2,13 +2,19 @@
 #
 # SPDX-License-Identifier: MIT
 
-from .base import Base, db
+from datetime import datetime
+
+from sqlalchemy import func
+from sqlalchemy.orm import Mapped, mapped_column
+
+from .base import Base
 
 
 class TolidState(Base):
-    __tablename__ = 'state'
-    state = db.Column(db.String(), primary_key=True)
-    created_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
+    __tablename__ = 'oidc_state'
+
+    state: Mapped[str] = mapped_column(primary_key=True)
+    created_at: Mapped[datetime] = mapped_column(nullable=False, default=func.now())
 
     def to_dict(self):
         return {'state': self.state}

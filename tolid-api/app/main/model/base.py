@@ -2,7 +2,15 @@
 #
 # SPDX-License-Identifier: MIT
 
-from tol.sql import model_base
+import os
+
+from tol.sql import create_session_factory, model_base
 
 
 Base = model_base()
+
+
+session_factory = create_session_factory(
+    os.environ['DB_URI']
+)
+
