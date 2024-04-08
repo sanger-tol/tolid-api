@@ -16,6 +16,13 @@ RUN apt-get install -y python3-pip
 COPY tolid/tolid-api/app/requirements.txt .
 RUN pip3 --no-cache-dir install -r requirements.txt
 
+# We install the tol-sdk here in editable mode
+VOLUME ["/packages"]
+
+# only copy tol-sdk into /packages if an exact match is found. Only upgrade to local if copied
+COPY tol-sd[k]/ /packages/tol-sdk/
+RUN if [ -d /packages/tol-sdk/src ] ; then pip3 install --editable /packages/tol-sdk[api_base2,postgresql]; fi;
+
 COPY tolid/tolid-api/app /app
 COPY tolid/tolid-api/migrations /migrations
 

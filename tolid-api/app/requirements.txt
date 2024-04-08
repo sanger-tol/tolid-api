@@ -7,3 +7,4 @@
 jwt
 biopython==1.73
 tol-sdk[api_base2,postgresql] == 1.0.7
+alembic
