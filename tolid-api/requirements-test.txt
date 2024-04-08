@@ -2,8 +2,6 @@
 #
 # SPDX-License-Identifier: MIT
 
--r ./requirements.txt
-
 coverage>=4.0.3
 pluggy>=0.3.1
 py>=1.4.31

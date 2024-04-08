@@ -13,8 +13,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 RUN apt-get update -y
 RUN apt-get install -y python3-pip
 
-COPY ./app/requirements.txt ./app/requirements-test.txt ./
-RUN pip3 --no-cache-dir install -r requirements-test.txt
+COPY ./app/requirements.txt ./requirements-test.txt ./
+RUN pip3 --no-cache-dir install -r requirements.txt -r requirements-test.txt
 
 COPY ./app /app
 COPY ./migrations /migrations
