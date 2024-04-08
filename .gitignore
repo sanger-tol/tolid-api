@@ -18,3 +18,4 @@ values-*.yaml
 chart/charts
 .dccache
 .virtualenv/
+inject.js

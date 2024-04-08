@@ -12,7 +12,6 @@ import { getTokenFromLocalStorage,
   tokenHasExpired} from './services/localStorage/localStorageService';
 import { AuthProvider } from './contexts/auth.context';
 import { Redirect } from 'react-router-dom';
-import { Footer } from '@tol/tol-ui'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './scss/one-page-wonder.scss';
@@ -43,7 +42,6 @@ function App() {
             <Route path="/login" exact><Login /></Route>
             <Route path="/callback" exact><Callback /></Route>
           </Switch>
-          <Footer />
         </Router>
       </AuthProvider>
     </div>
