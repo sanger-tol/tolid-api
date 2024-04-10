@@ -91,7 +91,7 @@ def create_user_profile(body=None):
         token = TolidToken(
             token=body['token'],
             oidc=True,
-            expires_at= datetime.now() + timedelta(days=7),
+            expires_at=datetime.now() + timedelta(days=7),
             user_id=user.id
         )
         db.session.add(token)
