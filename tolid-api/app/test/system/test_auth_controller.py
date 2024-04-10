@@ -4,24 +4,10 @@
 
 from __future__ import absolute_import
 
-import json
 import os
 import urllib.parse
-from datetime import datetime, timedelta, timezone
+
 from test.system import BaseTestCase
-
-from connexion.exceptions import OAuthProblem
-
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.asymmetric import rsa
-
-from jwt import (
-    JWT
-)
-from jwt.jwk import RSAJWK
-from jwt.utils import get_int_from_datetime
-
-from main.controllers.auth_controller import apikey_auth
 from main.model import TolidState, db
 
 import responses
