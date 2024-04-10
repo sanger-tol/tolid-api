@@ -39,7 +39,8 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
         return jsonify({'detail': f'Species with taxonomyId {taxonomy_id}'
                         ' cannot be found'}), 400
 
-    check_creator()
+    if error := check_creator():
+        return error.response
 
     specimen = db.session.query(TolidSpecimen) \
         .filter(TolidSpecimen.specimen_id == specimen_id) \
@@ -55,7 +56,8 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
 
 
 def bulk_search_specimens(body=None, api_key=None):
-    check_creator()
+    if error := check_creator():
+        return error.response
 
     user = db.session.query(TolidUser) \
         .filter(TolidUser.id == connexion.context['user']) \
@@ -100,7 +102,8 @@ def bulk_search_specimens(body=None, api_key=None):
 
 
 def validate_manifest(excel_file=None, species_column_heading='scientific_name'):  # noqa: E501
-    check_creator()
+    if error := check_creator():
+        return error.response
 
     user = db.session.query(TolidUser) \
         .filter(TolidUser.id == connexion.context['user']) \

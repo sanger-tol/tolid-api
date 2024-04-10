@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
+from typing import Optional
 import connexion
 
 from flask import jsonify
@@ -10,6 +11,7 @@ from main.model import TolidUser, db
 
 
 class ForbiddenError(Exception):
+    # TODO - work out connexion error handling - and `raise` this properly
 
     @property
     def response(self):
@@ -18,7 +20,7 @@ class ForbiddenError(Exception):
         ), 403
 
 
-def check_role(role_names: list[str]) -> None:
+def check_role(role_names: list[str]) -> Optional[ForbiddenError]:
     user = db.session.query(TolidUser) \
         .filter(TolidUser.id == connexion.context['user']) \
         .one_or_none()
@@ -29,12 +31,12 @@ def check_role(role_names: list[str]) -> None:
         if name in user_role_names:
             return
 
-    raise ForbiddenError()
+    return ForbiddenError()
 
 
-def check_admin() -> None:
-    check_role(['admin'])
+def check_admin() -> Optional[ForbiddenError]:
+    return check_role(['admin'])
 
 
-def check_creator() -> None:
-    check_role(['admin', 'creator'])
+def check_creator() -> Optional[ForbiddenError]:
+    return check_role(['admin', 'creator'])
