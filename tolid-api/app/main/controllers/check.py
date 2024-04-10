@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 from typing import Optional
+
 import connexion
 
 from flask import jsonify

@@ -7,8 +7,9 @@ from __future__ import absolute_import
 import os
 import urllib.parse
 
-from test.system import BaseTestCase
 from main.model import TolidState, db
+
+from test.system import BaseTestCase
 
 import responses
 
