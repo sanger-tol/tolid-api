@@ -7,7 +7,7 @@ from __future__ import absolute_import
 import os
 import urllib.parse
 
-from test.system import BaseTestCase
+from test.system import BaseTestCase  # noqa
 
 from main.model import TolidState, db
 
