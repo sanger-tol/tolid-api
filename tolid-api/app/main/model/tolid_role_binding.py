@@ -8,8 +8,8 @@ from .base import Base, db
 class TolidRoleBinding(Base):
     __tablename__ = 'role_binding'
 
-    id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
-    
+    id = db.Column(db.Integer(), primary_key=True, autoincrement=True)  # noqa
+
     user_id = db.Column(
         db.Integer(),
         db.ForeignKey('user.id'),

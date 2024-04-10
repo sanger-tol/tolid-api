@@ -12,7 +12,7 @@ from flask import jsonify
 
 from main.controllers.check import check_admin
 from main.db_utils import accept_request, reject_request
-from main.model import TolidRequest, TolidRole, TolidSpecies, TolidSpecimen, db
+from main.model import TolidRequest, TolidSpecies, TolidSpecimen, db
 
 
 def add_species(body=None, api_key=None):

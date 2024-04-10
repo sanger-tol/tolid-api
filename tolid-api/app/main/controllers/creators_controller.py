@@ -12,10 +12,8 @@ from main.controllers.check import check_creator
 from main.db_utils import create_new_specimen, \
     create_request, notify_requests_pending
 from main.excel_utils import validate_excel
-from main.model import TolidRequest, TolidRole, TolidSpecies, \
+from main.model import TolidRequest, TolidSpecies, \
     TolidSpecimen, TolidUser, db
-
-from sqlalchemy import or_
 
 
 def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):

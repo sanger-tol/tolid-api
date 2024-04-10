@@ -18,7 +18,6 @@ class ForbiddenError(Exception):
         ), 403
 
 
-
 def check_role(role_names: list[str]) -> None:
     user = db.session.query(TolidUser) \
         .filter(TolidUser.user_id == connexion.context['user']) \
