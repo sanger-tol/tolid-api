@@ -8,6 +8,7 @@ import connexion
 
 from flask import jsonify, send_from_directory
 
+from main.controllers.check import check_creator
 from main.db_utils import create_new_specimen, \
     create_request, notify_requests_pending
 from main.excel_utils import validate_excel
@@ -40,12 +41,7 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
         return jsonify({'detail': f'Species with taxonomyId {taxonomy_id}'
                         ' cannot be found'}), 400
 
-    role = db.session.query(TolidRole) \
-        .filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')) \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
+    check_creator()
 
     specimen = db.session.query(TolidSpecimen) \
         .filter(TolidSpecimen.specimen_id == specimen_id) \
@@ -61,12 +57,7 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
 
 
 def bulk_search_specimens(body=None, api_key=None):
-    role = db.session.query(TolidRole) \
-        .filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')) \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
+    check_creator()
 
     user = db.session.query(TolidUser) \
         .filter(TolidUser.user_id == connexion.context['user']) \
@@ -111,12 +102,7 @@ def bulk_search_specimens(body=None, api_key=None):
 
 
 def validate_manifest(excel_file=None, species_column_heading='scientific_name'):  # noqa: E501
-    role = db.session.query(TolidRole) \
-        .filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')) \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
+    check_creator()
 
     user = db.session.query(TolidUser) \
         .filter(TolidUser.user_id == connexion.context['user']) \
