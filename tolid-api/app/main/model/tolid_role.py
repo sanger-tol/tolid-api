@@ -18,4 +18,4 @@ class TolidRole(Base):
     )
 
     def to_dict(self):
-        return {'role': self.role}
+        return {'role': self.name}

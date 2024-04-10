@@ -18,12 +18,21 @@ class TolidUser(Base):
         back_populates='user',
         lazy=False
     )
+    _tokens = db.relationship(
+        'TolidToken',
+        back_populates='user',
+        lazy=False
+    )
 
     def to_dict(self):
-        return {'name': self.name,
-                'email': self.email,
-                'organisation': ('' if self.organisation is None else self.organisation),
-                'roles': self.roles}
+        return {
+            'name': self.name,
+            'email': self.email,
+            'organisation': ('' if self.organisation is None else self.organisation),
+            'roles': [
+                {'role': r} for r in self.role_names
+            ]
+        }
 
     @property
     def user_id(self) -> int:

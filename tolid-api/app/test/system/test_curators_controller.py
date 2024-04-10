@@ -47,7 +47,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             json=body)
         self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -66,7 +66,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species',
             method='POST',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': self.user2._tokens[0].token},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -85,7 +85,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species',
             method='POST',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': self.user2._tokens[0].token},
             json=body)
         expect = [{
             'commonName': 'Common name',
@@ -145,7 +145,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/6344',
             method='PUT',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             json=body)
         self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -164,7 +164,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/999999',
             method='PUT',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': self.user2._tokens[0].token},
             json=body)
         self.assert404(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -183,7 +183,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/abcd',
             method='PUT',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': self.user2._tokens[0].token},
             json=body)
         self.assert404(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -202,7 +202,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/6344',
             method='PUT',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': self.user2._tokens[0].token},
             json=body)
         expect = [{
             'commonName': 'Common name',
@@ -274,7 +274,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids/all',
             method='GET',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
         )
         self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -283,7 +283,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids/all',
             method='GET',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': self.user2._tokens[0].token},
             query_string=query_string)
         expect = 'wuAreMari1\tArenicola marina\tSAN0000100\t1\nwuAreMari2\tArenicola marina\t' \
             + 'SAN0000101\t2\nwuAreMari3\tArenicola marina\tSAN0000102\t3\nwpPerVanc1\t' \
@@ -298,7 +298,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids/all',
             method='GET',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': self.user2._tokens[0].token},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -308,7 +308,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids/all',
             method='GET',
-            headers={'api-key': self.user2.api_key},
+            headers={'api-key': self.user2._tokens[0].token},
             query_string=query_string)
         expect = 'wuAreMari1\tArenicola marina\tSAN0000100\t1\nwuAreMari2\tArenicola marina\t' \
             + 'SAN0000101\t2\nwuAreMari3\tArenicola marina\tSAN0000102\t3'
@@ -338,7 +338,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/all',
             method='GET',
-            headers={'api-key': self.user1.api_key, 'accept': 'text/plain'},
+            headers={'api-key': self.user1._tokens[0].token, 'accept': 'text/plain'},
         )
         self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -347,7 +347,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/all',
             method='GET',
-            headers={'api-key': self.user2.api_key, 'accept': 'text/plain'},
+            headers={'api-key': self.user2._tokens[0].token, 'accept': 'text/plain'},
             query_string=query_string)
         expect = 'wuAreMari\tArenicola marina\t6344\tlugworm\tArenicola\tArenicolidae\tNone\t' \
             + 'Polychaeta\tAnnelida\nwpPerVanc\tPerinereis vancaurica\t6355\tNone\tPerinereis\t' \
@@ -363,7 +363,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/all',
             method='GET',
-            headers={'api-key': self.user2.api_key, 'accept': 'application/json'},
+            headers={'api-key': self.user2._tokens[0].token, 'accept': 'application/json'},
             query_string=query_string)
         expect = [{
             'commonName': 'lugworm',
@@ -439,7 +439,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests/pending',
             method='GET',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             json=body)
         self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -448,7 +448,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests/pending',
             method='GET',
-            headers={'api-key': self.user2.api_key}
+            headers={'api-key': self.user2._tokens[0].token}
         )
         expect = [{
             'reason': None,
@@ -530,7 +530,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests/1/accept',
             method='PATCH',
-            headers={'api-key': self.user1.api_key})
+            headers={'api-key': self.user1._tokens[0].token})
         self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -538,7 +538,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests/1/accept',
             method='PATCH',
-            headers={'api-key': self.user2.api_key}
+            headers={'api-key': self.user2._tokens[0].token}
         )
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -546,7 +546,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests/2/accept',
             method='PATCH',
-            headers={'api-key': self.user2.api_key}
+            headers={'api-key': self.user2._tokens[0].token}
         )
         expect = [{
             'tolId': 'wuAreMari3',
@@ -600,7 +600,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests/1/reject',
             method='PATCH',
-            headers={'api-key': self.user1.api_key})
+            headers={'api-key': self.user1._tokens[0].token})
         self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -608,7 +608,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests/1/reject',
             method='PATCH',
-            headers={'api-key': self.user2.api_key}
+            headers={'api-key': self.user2._tokens[0].token}
         )
         expect = [{
             'reason': None,
@@ -633,7 +633,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests/2/reject?reason=Taxonomy+ID+is+not+species-level',
             method='PATCH',
-            headers={'api-key': self.user2.api_key}
+            headers={'api-key': self.user2._tokens[0].token}
         )
         expect = [{
             'reason': 'Taxonomy ID is not species-level',
@@ -685,7 +685,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/270330/ncbi',
             method='GET',
-            headers={'api-key': self.user1.api_key})
+            headers={'api-key': self.user1._tokens[0].token})
         self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -706,7 +706,7 @@ class TestCuratorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/species/270330/ncbi',
             method='GET',
-            headers={'api-key': self.user2.api_key})
+            headers={'api-key': self.user2._tokens[0].token})
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         expected = {

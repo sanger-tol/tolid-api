@@ -20,10 +20,11 @@ class TolidToken(Base):
 
     user_id = db.Column(
         db.Integer(),
-        db.ForeignKey('user.id')
+        db.ForeignKey('user.id'),
+        nullable=False
     )
     user = db.relationship(
-        'User',
+        'TolidUser',
         back_populates='_tokens',
         foreign_keys=[user_id]
     )

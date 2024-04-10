@@ -37,7 +37,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -47,7 +47,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -58,7 +58,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             query_string=query_string)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -69,7 +69,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             query_string=query_string)
         self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -80,7 +80,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             query_string=query_string)
         expect = [{
             'species': {
@@ -113,7 +113,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             query_string=query_string)
         expect = [{
             'species': {
@@ -146,7 +146,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             query_string=query_string)
         expect = [{
             'species': {
@@ -179,7 +179,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='PUT',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             query_string=query_string)
         expect = [{
             'species': {
@@ -230,7 +230,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -240,7 +240,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -251,7 +251,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             json=body)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -272,7 +272,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             json=body)
         self.assert403(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -285,7 +285,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             json=body)
         expect = [{
             'species': {
@@ -338,7 +338,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             json=body)
         expect = [{
             'species': {
@@ -373,7 +373,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             json=body)
         expect = [{
             'species': {
@@ -430,7 +430,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             json=body)
         expect = [{
             'species': {
@@ -509,7 +509,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             json=body)
         expect = [{
             'species': {
@@ -605,7 +605,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids',
             method='POST',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             json=body)
 
         self.assert200(response,
@@ -711,7 +711,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             data=data)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -727,7 +727,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             data=data)
         file.close()
         self.assert400(response,
@@ -746,7 +746,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             data=data)
         file.close()
         self.assert400(response,
@@ -761,7 +761,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             data=data)
         file.close()
         self.assert403(response, 'Not received a 403 response')
@@ -774,7 +774,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             data=data)
         file.close()
         self.assert200(response, 'Not received a 200 response')
@@ -802,7 +802,7 @@ class TestCreatorsController(BaseTestCase):
         response = self.client.open(
             '/api/v2/validate-manifest',
             method='POST',
-            headers={'api-key': self.user3.api_key},
+            headers={'api-key': self.user3._tokens[0].token},
             query_string=query_string,
             data=data)
         file.close()

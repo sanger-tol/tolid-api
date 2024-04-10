@@ -29,7 +29,7 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
     :return: JSON with complete ToLID and taxa structure
     """
     user = db.session.query(TolidUser) \
-        .filter(TolidUser.user_id == connexion.context['user']) \
+        .filter(TolidUser.id == connexion.context['user']) \
         .one_or_none()
     species = db.session.query(TolidSpecies) \
         .filter(TolidSpecies.taxonomy_id == taxonomy_id) \
@@ -58,7 +58,7 @@ def bulk_search_specimens(body=None, api_key=None):
     check_creator()
 
     user = db.session.query(TolidUser) \
-        .filter(TolidUser.user_id == connexion.context['user']) \
+        .filter(TolidUser.id == connexion.context['user']) \
         .one_or_none()
     results = []
     # body contains the rows of data
@@ -103,7 +103,7 @@ def validate_manifest(excel_file=None, species_column_heading='scientific_name')
     check_creator()
 
     user = db.session.query(TolidUser) \
-        .filter(TolidUser.user_id == connexion.context['user']) \
+        .filter(TolidUser.id == connexion.context['user']) \
         .one_or_none()
     uploaded_file = connexion.request.files['excelFile']
 

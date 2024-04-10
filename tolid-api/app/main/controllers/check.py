@@ -20,7 +20,7 @@ class ForbiddenError(Exception):
 
 def check_role(role_names: list[str]) -> None:
     user = db.session.query(TolidUser) \
-        .filter(TolidUser.user_id == connexion.context['user']) \
+        .filter(TolidUser.id == connexion.context['user']) \
         .one_or_none()
 
     user_role_names = user.role_names

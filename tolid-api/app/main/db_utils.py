@@ -65,7 +65,7 @@ def reject_request(request, reason):
     db.session.commit()
 
     user = db.session.query(TolidUser) \
-        .filter(request.created_by == TolidUser.user_id) \
+        .filter(request.created_by == TolidUser.id) \
         .one_or_none()
 
     if user.email is not None and user.email.strip() != '':

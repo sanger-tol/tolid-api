@@ -38,8 +38,8 @@ class TestAuthController(BaseTestCase):
             pass
 
         # Auth using API key
-        ret = apikey_auth(self.user3.api_key, None)
-        expect = {'user': self.user3.name, 'uid': self.user3.user_id}
+        ret = apikey_auth(self.user3._tokens[0].token, None)
+        expect = {'user': self.user3.name, 'uid': self.user3.id}
         self.assertEqual(expect, ret)
 
         # Mock Elixir key
@@ -95,7 +95,7 @@ class TestAuthController(BaseTestCase):
         self.user3.token = jwt
         db.session.commit()
         ret = apikey_auth(self.user3.token, None)
-        expect = {'user': self.user3.name, 'uid': self.user3.user_id}
+        expect = {'user': self.user3.name, 'uid': self.user3.id}
         self.assertEqual(expect, ret)
 
     def test_login(self):
