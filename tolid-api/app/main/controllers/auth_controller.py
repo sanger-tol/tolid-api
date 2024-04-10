@@ -86,13 +86,12 @@ def create_user_profile(body=None):
             user.email = user_info_from_elixir['email']
             user.name = user_info_from_elixir['name']
             db.session.add(user)
-            db.session.commit()
         # Save the token so that we can authenticate against it in future
         token = TolidToken(
             token=body['token'],
             oidc=True,
             expires_at=datetime.now() + timedelta(days=7),
-            user_id=user.id
+            user=user
         )
         db.session.add(token)
         db.session.commit()
