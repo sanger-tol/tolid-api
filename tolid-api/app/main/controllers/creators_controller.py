@@ -8,13 +8,12 @@ import connexion
 
 from flask import jsonify, send_from_directory
 
+from main.controllers.check import check_creator
 from main.db_utils import create_new_specimen, \
     create_request, notify_requests_pending
 from main.excel_utils import validate_excel
-from main.model import TolidRequest, TolidRole, TolidSpecies, \
+from main.model import TolidRequest, TolidSpecies, \
     TolidSpecimen, TolidUser, db
-
-from sqlalchemy import or_
 
 
 def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
@@ -30,7 +29,7 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
     :return: JSON with complete ToLID and taxa structure
     """
     user = db.session.query(TolidUser) \
-        .filter(TolidUser.user_id == connexion.context['user']) \
+        .filter(TolidUser.id == connexion.context['user']) \
         .one_or_none()
     species = db.session.query(TolidSpecies) \
         .filter(TolidSpecies.taxonomy_id == taxonomy_id) \
@@ -40,12 +39,8 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
         return jsonify({'detail': f'Species with taxonomyId {taxonomy_id}'
                         ' cannot be found'}), 400
 
-    role = db.session.query(TolidRole) \
-        .filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')) \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
+    if error := check_creator():
+        return error.response
 
     specimen = db.session.query(TolidSpecimen) \
         .filter(TolidSpecimen.specimen_id == specimen_id) \
@@ -61,15 +56,11 @@ def add_specimen(taxonomy_id=None, specimen_id=None, api_key=None):
 
 
 def bulk_search_specimens(body=None, api_key=None):
-    role = db.session.query(TolidRole) \
-        .filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')) \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
+    if error := check_creator():
+        return error.response
 
     user = db.session.query(TolidUser) \
-        .filter(TolidUser.user_id == connexion.context['user']) \
+        .filter(TolidUser.id == connexion.context['user']) \
         .one_or_none()
     results = []
     # body contains the rows of data
@@ -111,15 +102,11 @@ def bulk_search_specimens(body=None, api_key=None):
 
 
 def validate_manifest(excel_file=None, species_column_heading='scientific_name'):  # noqa: E501
-    role = db.session.query(TolidRole) \
-        .filter(or_(TolidRole.role == 'creator', TolidRole.role == 'admin')) \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
+    if error := check_creator():
+        return error.response
 
     user = db.session.query(TolidUser) \
-        .filter(TolidUser.user_id == connexion.context['user']) \
+        .filter(TolidUser.id == connexion.context['user']) \
         .one_or_none()
     uploaded_file = connexion.request.files['excelFile']
 

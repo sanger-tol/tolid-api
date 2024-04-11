@@ -20,8 +20,6 @@ services:
       context: tolid-api/.
       dockerfile: Dockerfile.dev
     image: tolid-api
-    # force amd64 on M1 MacOS
-    platform: linux/amd64
     environment:
       - DB_URI
       - TOLID_URL
@@ -48,8 +46,6 @@ services:
       context: tolid-ui/.
       dockerfile: Dockerfile.dev
     image: tolid-ui
-    # force amd64 on M1 MacOS
-    platform: linux/amd64
     stdin_open: true
     environment:
       - NODE_ENV=development

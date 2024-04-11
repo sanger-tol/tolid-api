@@ -2,7 +2,6 @@
 #
 # SPDX-License-Identifier: MIT
 
-import json
 import os
 import urllib.parse
 import uuid
@@ -12,15 +11,7 @@ from connexion.exceptions import OAuthProblem
 
 from flask import jsonify
 
-from jwt import (
-    JWT,
-    jwk_from_dict,
-)
-from jwt.exceptions import (
-    JWTDecodeError,
-)
-
-from main.model import TolidState, TolidUser, db
+from main.model import TolidState, TolidToken, TolidUser, db
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -28,28 +19,15 @@ from requests.auth import HTTPBasicAuth
 
 def apikey_auth(token, required_scopes):
     # Direct from api-key (i.e. not Elixir)
-    user = db.session.query(TolidUser) \
-        .filter(TolidUser.api_key == token) \
+    token_row = db.session.query(TolidToken) \
+        .filter(TolidToken.token == token) \
         .one_or_none()
 
-    if user is None:
-        user = db.session.query(TolidUser) \
-            .filter(TolidUser.token == token) \
-            .one_or_none()
-        if user is None:
-            raise OAuthProblem('Invalid api-key and Elixir token')
-        # Is the Elixir token valid and in date
-        instance = JWT()
-        # This is the Elixir public key as found at https://login.elixir-czech.org/oidc/jwk
-        signing_key = jwk_from_dict(json.loads(os.getenv('ELIXIR_JWK')))
-        try:
-            payload = instance.decode(token, signing_key,
-                                      do_verify=True, do_time_check=True,
-                                      algorithms=['RS256'])
-        except JWTDecodeError as e:
-            raise OAuthProblem('Invalid Elixir token: ' + e.args[0])
-        print(payload)
-    return {'user': user.name, 'uid': user.user_id}
+    if token_row is None:
+        raise OAuthProblem('Invalid api-key and Elixir token')
+
+    user = token_row.user
+    return {'user': user.name, 'uid': user.id}
 
 
 def login():
@@ -109,7 +87,13 @@ def create_user_profile(body=None):
             user.name = user_info_from_elixir['name']
             db.session.add(user)
         # Save the token so that we can authenticate against it in future
-        user.token = body['token']
+        token = TolidToken(
+            token=body['token'],
+            oidc=True,
+            expires_at=datetime.now() + timedelta(days=7),
+            user=user
+        )
+        db.session.add(token)
         db.session.commit()
         return jsonify(user)
     else:

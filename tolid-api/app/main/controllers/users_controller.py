@@ -140,7 +140,7 @@ def requests_for_user(api_key=None):
 
 def bulk_add_requests(body=None, api_key=None):
     user = db.session.query(TolidUser) \
-        .filter(TolidUser.user_id == connexion.context['user']) \
+        .filter(TolidUser.id == connexion.context['user']) \
         .one_or_none()
     requests = []
     # body contains the rows of data

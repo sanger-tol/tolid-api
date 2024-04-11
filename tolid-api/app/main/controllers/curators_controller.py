@@ -10,18 +10,14 @@ import connexion
 
 from flask import jsonify
 
+from main.controllers.check import check_admin
 from main.db_utils import accept_request, reject_request
-from main.model import TolidRequest, TolidRole, TolidSpecies, TolidSpecimen, db
+from main.model import TolidRequest, TolidSpecies, TolidSpecimen, db
 
 
 def add_species(body=None, api_key=None):
-    role = db.session.query(TolidRole) \
-        .filter(TolidRole.role == 'admin') \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
-
+    if error := check_admin():
+        return error.response
     species = db.session.query(TolidSpecies) \
         .filter(TolidSpecies.taxonomy_id == body['taxonomyId']) \
         .one_or_none()
@@ -49,13 +45,8 @@ def add_species(body=None, api_key=None):
 
 
 def edit_species(taxonomy_id=None, body=None, api_key=None):
-    role = db.session.query(TolidRole) \
-        .filter(TolidRole.role == 'admin') \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
-
+    if error := check_admin():
+        return error.response
     if not taxonomy_id.isnumeric():
         return 'taxonomyId should be numeric', 404
 
@@ -85,13 +76,8 @@ def edit_species(taxonomy_id=None, body=None, api_key=None):
 
 
 def list_specimens(taxonomy_id=None, skip=None, limit=None):
-    role = db.session.query(TolidRole) \
-        .filter(TolidRole.role == 'admin') \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
-
+    if error := check_admin():
+        return error.response
     if taxonomy_id is None:
         specimens = db.session.query(TolidSpecimen) \
             .order_by(TolidSpecimen.species_id) \
@@ -121,13 +107,8 @@ def list_specimens(taxonomy_id=None, skip=None, limit=None):
 
 
 def list_species():
-    role = db.session.query(TolidRole) \
-        .filter(TolidRole.role == 'admin') \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
-
+    if error := check_admin():
+        return error.response
     speciess = db.session.query(TolidSpecies).order_by(TolidSpecies.taxonomy_id).all()
 
     if 'accept' in connexion.request.headers \
@@ -149,12 +130,8 @@ def list_species():
 
 
 def get_ncbi_data(taxonomy_id):
-    role = db.session.query(TolidRole) \
-        .filter(TolidRole.role == 'admin') \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
+    if error := check_admin():
+        return error.response
     Entrez.api_key = os.getenv('NIH_API_KEY')
     handle = Entrez.efetch(db='Taxonomy', id=str(taxonomy_id), retmode='xml')
     records = Entrez.read(handle)
@@ -180,12 +157,8 @@ def get_ncbi_data(taxonomy_id):
 
 
 def requests_pending(api_key=None):
-    role = db.session.query(TolidRole) \
-        .filter(TolidRole.role == 'admin') \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
+    if error := check_admin():
+        return error.response
     requests = db.session.query(TolidRequest) \
         .filter(TolidRequest.status == 'Pending') \
         .order_by(TolidRequest.request_id.asc()) \
@@ -194,13 +167,8 @@ def requests_pending(api_key=None):
 
 
 def accept_tol_id_request(request_id=None):
-    role = db.session.query(TolidRole) \
-        .filter(TolidRole.role == 'admin') \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
-
+    if error := check_admin():
+        return error.response
     request = db.session.query(TolidRequest) \
         .filter(TolidRequest.request_id == request_id) \
         .one_or_none()
@@ -220,13 +188,8 @@ def accept_tol_id_request(request_id=None):
 
 
 def reject_tol_id_request(request_id=None, reason=None):
-    role = db.session.query(TolidRole) \
-        .filter(TolidRole.role == 'admin') \
-        .filter(TolidRole.user_id == connexion.context['user']) \
-        .one_or_none()
-    if role is None:
-        return jsonify({'detail': 'User does not have permission to use this function'}), 403
-
+    if error := check_admin():
+        return error.response
     request = db.session.query(TolidRequest) \
         .filter(TolidRequest.request_id == request_id) \
         .one_or_none()

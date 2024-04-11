@@ -300,7 +300,7 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids/mine',
             method='GET',
-            headers={'api-key': self.user1.api_key}
+            headers={'api-key': self.user1._tokens[0].token}
         )
         expect = [{
             'species': {
@@ -351,7 +351,7 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/tol-ids/mine',
             method='GET',
-            headers={'api-key': self.user2.api_key}
+            headers={'api-key': self.user2._tokens[0].token}
         )
         expect = [{
             'species': {
@@ -549,7 +549,7 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests/mine',
             method='GET',
-            headers={'api-key': self.user1.api_key}
+            headers={'api-key': self.user1._tokens[0].token}
         )
         expect = [{
             'reason': None,
@@ -608,7 +608,7 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests/mine',
             method='GET',
-            headers={'api-key': self.user4.api_key}
+            headers={'api-key': self.user4._tokens[0].token}
         )
         expect = [{
             'reason': None,
@@ -663,7 +663,7 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -673,7 +673,7 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -684,7 +684,7 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             json=body)
         expect = [{
             'reason': None,
@@ -713,7 +713,7 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             json=body)
         expect = [{
             'reason': None,
@@ -774,7 +774,7 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -787,7 +787,7 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             json=body)
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -804,7 +804,7 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             json=body)
         expect = [{
             'reason': None,
@@ -916,7 +916,7 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             json=body)
 
         self.assert400(response,
@@ -938,7 +938,7 @@ class TestUsersController(BaseTestCase):
         response = self.client.open(
             '/api/v2/requests',
             method='POST',
-            headers={'api-key': self.user1.api_key},
+            headers={'api-key': self.user1._tokens[0].token},
             json=body)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))

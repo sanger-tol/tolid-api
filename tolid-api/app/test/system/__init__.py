@@ -4,6 +4,7 @@
 
 import logging
 import os
+from datetime import datetime, timedelta
 
 import connexion
 
@@ -11,47 +12,86 @@ from flask_testing import TestCase
 
 from main.encoder import JSONEncoder
 from main.model import TolidPrimaryPrefix, TolidRequest, TolidRole, \
+    TolidRoleBinding, \
     TolidSecondaryPrefix, TolidSpecies, TolidSpecimen, TolidState, \
-    TolidUser, db
+    TolidToken, TolidUser, db
 
 
 class BaseTestCase(TestCase):
 
     def setUp(self):
+        far_future = datetime.now() + timedelta(days=2000)
+
         self.maxDiff = None
         db.create_all()
-        self.user1 = TolidUser(user_id=100,
+        self.user1 = TolidUser(id=100,
                                name='test_user_requester',
                                email='test_user_requester@sanger.ac.uk',
-                               organisation='Sanger Institute',
-                               api_key='AnyThingBecAuseThIsIsATEST123456')
+                               organisation='Sanger Institute')
+        self.token1 = TolidToken(
+            id=100,
+            token='AnyThingBecAuseThIsIsATEST123456',
+            expires_at=far_future,
+            user_id=100
+        )
         db.session.add(self.user1)
-        self.user2 = TolidUser(user_id=200,
+        db.session.add(self.token1)
+
+        self.user2 = TolidUser(id=200,
                                name='test_user_admin',
                                email='test_user_admin@sanger.ac.uk',
-                               organisation='Sanger Institute',
-                               api_key='AnyThingBecAuseThIsIsATEST567890')
+                               organisation='Sanger Institute')
+        self.token2 = TolidToken(
+            id=200,
+            token='AnyThingBecAuseThIsIsATEST567890',
+            expires_at=far_future,
+            user_id=200
+        )
         db.session.add(self.user2)
-        self.user3 = TolidUser(user_id=300,
+        db.session.add(self.token2)
+
+        self.user3 = TolidUser(id=300,
                                name='test_user_creator',
                                email='test_user_creator@sanger.ac.uk',
-                               organisation='Sanger Institute',
-                               api_key='AnyThingBecAuseThIsIsATEST24680')
-        self.user4 = TolidUser(user_id=400,
+                               organisation='Sanger Institute')
+        self.token3 = TolidToken(
+            id=300,
+            token='AnyThingBecAuseThIsIsATEST24680',
+            expires_at=far_future,
+            user_id=300
+        )
+        db.session.add(self.user3)
+        db.session.add(self.token3)
+
+        self.user4 = TolidUser(id=400,
                                name='test_user_requester2',
                                email='test_user_requester2@sanger.ac.uk',
-                               organisation='Sanger Institute',
-                               api_key='AnyThingBecAuseThIsIsATEST13579')
-        db.session.add(self.user1)
-        db.session.add(self.user2)
-        db.session.add(self.user3)
+                               organisation='Sanger Institute')
+        self.token4 = TolidToken(
+            id=400,
+            token='AnyThingBecAuseThIsIsATEST13579',
+            expires_at=far_future,
+            user_id=400
+        )
         db.session.add(self.user4)
-        self.role = TolidRole(role='admin')
-        self.role.user = self.user2
-        db.session.add(self.role)
-        self.role = TolidRole(role='creator')
-        self.role.user = self.user3
-        db.session.add(self.role)
+        db.session.add(self.token4)
+
+        self.role1 = TolidRole(id=1, name='admin')
+        db.session.add(self.role1)
+        self.role2 = TolidRole(id=2, name='creator')
+        db.session.add(self.role2)
+
+        self.role_binding1 = TolidRoleBinding(
+            user_id=200,
+            role_id=1
+        )
+        db.session.add(self.role_binding1)
+        self.role_binding2 = TolidRoleBinding(
+            user_id=300,
+            role_id=2
+        )
+        db.session.add(self.role_binding2)
+
         self.species1 = TolidSpecies(common_name='lugworm',
                                      family='Arenicolidae',
                                      genus='Arenicola',
@@ -108,6 +148,8 @@ class BaseTestCase(TestCase):
         db.session.query(TolidRequest).delete()
         db.session.query(TolidSpecimen).delete()
         db.session.query(TolidSpecies).delete()
+        db.session.query(TolidToken).delete()
+        db.session.query(TolidRoleBinding).delete()
         db.session.query(TolidRole).delete()
         db.session.query(TolidUser).delete()
         db.session.query(TolidState).delete()

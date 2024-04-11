@@ -14,7 +14,7 @@ class TolidRequest(Base):
     status = db.Column(db.String())
     reason = db.Column(db.String(), nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
-    created_by = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('TolidUser', uselist=False, foreign_keys=[created_by])
     confirmation_name = db.Column(db.String(), nullable=True)
 
