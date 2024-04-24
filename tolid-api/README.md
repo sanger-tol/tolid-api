@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2024 Genome Research Ltd.
+SPDX-FileCopyrightText: 2021 Genome Research Ltd.
 
 SPDX-License-Identifier: MIT
 -->
@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 # Tree of Life Swagger OpenAPI 3 server
 
 ## Overview
-This Swagger API returns ToLIDs, taken from [ToL sample naming](https://gitlab.com/wtsi-grit/darwin-tree-of-life-sample-naming) project. Requests for new ToLIDs and prefixes can also be made.
+This Swagger API returns Tree of Life ToLIDs, taken from [ToL sample naming](https://gitlab.com/wtsi-grit/darwin-tree-of-life-sample-naming) project. Requests for new ToLIDs and prefixes can also be made.
 
 This application uses the [Connexion](https://github.com/zalando/connexion) library on top of Flask.
 

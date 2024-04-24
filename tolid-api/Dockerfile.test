@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 Genome Research Ltd.
+# SPDX-FileCopyrightText: 2022 Genome Research Ltd.
 #
 # SPDX-License-Identifier: MIT
 
@@ -26,7 +26,7 @@ RUN pip3 --no-cache-dir install 'connexion[swagger-ui]'
 COPY ./requirements-test.txt .
 RUN pip3 --no-cache-dir install -r requirements-test.txt
 
-COPY ./app /apptol
+COPY ./app /app
 COPY ./migrations /migrations
 
 WORKDIR /app/test
