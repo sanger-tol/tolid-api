@@ -7,6 +7,7 @@ import os
 from flask import Flask
 
 from tol.api_base2 import data_blueprint
+from tol.core import core_data_object
 from tol.sql import create_sql_datasource
 from tol.sql.auth import db_auth_blueprint
 
@@ -37,6 +38,7 @@ def application() -> Flask:
         DB_URI,
         behind_api=True  # TODO is this right?
     )
+    core_data_object(sql_ds)
 
     data_bp = data_blueprint(
         sql_ds,
