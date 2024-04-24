@@ -14,8 +14,6 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: tolid-v3-api-ingress
-  labels:
-    {{- include "tol-core.labels" . | nindent 4 }}
   annotations:
   {{- with .Values.tolcore.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
