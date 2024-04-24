@@ -4,8 +4,8 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-function Profile() {
+function AddSpecies() {
   return <></>;
 }
 
-export default Profile;
+export default AddSpecies;

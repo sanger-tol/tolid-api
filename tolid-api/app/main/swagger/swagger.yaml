@@ -33,7 +33,7 @@ paths:
       parameters:
       - name: tolId
         in: path
-        description: a Tree of Life ToLID
+        description: Tree of Life Identifiers
         required: true
         style: simple
         explode: true

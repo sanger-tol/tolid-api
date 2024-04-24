@@ -1,19 +1,70 @@
 /*
-SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 
 SPDX-License-Identifier: MIT
 */
 
-import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import {
+  Home,
+  AddSpecies,
+  PendingRequests,
+  CreateRequest,
+  Profile,
+  Search
+} from "./pages";
+import reportWebVitals from "./reportWebVitals";
+import { TolApp, Page, Dropdown } from '@tol/tol-ui';
+import "./scss/styling.scss";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+
+const createRequest: Page = {
+  name: 'Create',
+  element: <CreateRequest />
+};
+
+const profile: Page = {
+  name: 'Profile',
+  element: <Profile />
+};
+
+const search: Page = {
+  name: 'Search',
+  element: <Search />
+};
+
+const addSpecies: Page = {
+  name: 'Add Species',
+  element: <AddSpecies />,
+  hidden: true
+};
+
+const pendingRequests: Page = {
+  name: 'Requests',
+  element: <PendingRequests />,
+  hidden: true
+};
+
+const admin: Dropdown = {
+  name: 'Admin',
+  pages: [pendingRequests, addSpecies]
+};
+
+ReactDOM.render( // eslint-disable-line
+  <TolApp
+    brand="ToLID"
+    homePage={ <Home /> }
+    pages={[
+      search,
+      createRequest,
+      profile,
+
+      // dropdown
+      admin,
+      pendingRequests,
+      addSpecies
+    ]}
+  />,
   document.getElementById('root')
 );
 
