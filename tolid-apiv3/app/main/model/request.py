@@ -26,7 +26,6 @@ class Request(Base):
     created_by: Mapped[int] = mapped_column(ForeignKey('user.id'))
     user: Mapped['User'] = relationship(back_populates='requests')  # noqa F821
 
-
     @classmethod
     def get_id_column_name(cls) -> str:
         return 'request_id'

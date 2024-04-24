@@ -128,11 +128,16 @@ tolcore:
   apiv3:
     fullname: "tolid-apiv3"
     probe_url: '/api/v3/ui'
+    path: '/api/v3'
   flask:
     env: ""
   ui:
     fullname: "tolid-ui"
     probe_url: '/'
+    extra_env:
+      REACT_APP_API_PATH: apiv3.path
+      REACT_APP_PORTAL_URL: portal.url
+      REACT_APP_PORTAL_API_PATH: portal.api_path
   backup:
     uri: ""
     access_key: ""
@@ -163,3 +168,16 @@ tolcore:
     url:
       redirect: ""
     jwk: ""
+  portal:
+    url: https://portal.tol.sanger.ac.uk
+    api_path: /api/v1
+  oidc:
+    enabled: true
+    client:
+      id: ""
+      secret: ""
+    url:
+      auth: https://login.elixir-czech.org/oidc/authorize
+      token: https://login.elixir-czech.org/oidc/token
+      revoke: https://login.elixir-czech.org/oidc/revoke
+      userinfo: https://login.elixir-czech.org/oidc/userinfo

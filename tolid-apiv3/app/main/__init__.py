@@ -6,25 +6,25 @@ import os
 
 from flask import Flask
 
+from main.model import Base, UserMixin, main_models
+
 from tol.api_base2 import data_blueprint
 from tol.core import core_data_object
 from tol.sql import create_sql_datasource
 from tol.sql.auth import db_auth_blueprint
 
-from main.model import Base, UserMixin, main_models
-
 
 def application() -> Flask:
     app = Flask(__name__)
 
-    DB_URI = os.environ['DB_URI']
-    API_PATH = os.environ['API_PATH']
+    db_uri = os.environ['DB_URI']
+    api_path = os.environ['API_PATH']
 
     auth_bp = db_auth_blueprint(
         Base,
-        DB_URI,
+        db_uri,
         user_mixin_class=UserMixin,
-        url_prefix=f'{API_PATH}/auth'
+        url_prefix=f'{api_path}/auth'
     )
     auth_bp.register_authenticator(app)
     app.register_blueprint(auth_bp)
@@ -35,14 +35,14 @@ def application() -> Flask:
             User,
             *main_models
         ],
-        DB_URI,
+        db_uri,
         behind_api=True  # TODO is this right?
     )
     core_data_object(sql_ds)
 
     data_bp = data_blueprint(
         sql_ds,
-        url_prefix=f'{API_PATH}/data'
+        url_prefix=f'{api_path}/data'
     )
     app.register_blueprint(data_bp)
 
