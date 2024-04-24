@@ -20,3 +20,5 @@ values-*.yaml
 chart/charts/
 .DS_Store
 inject.js
+.virtualenv/
+.vscode/
