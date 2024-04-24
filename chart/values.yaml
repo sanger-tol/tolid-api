@@ -127,7 +127,7 @@ tolcore:
       ELIXIR_JWK: elixir.jwk
   apiv3:
     fullname: "tolid-apiv3"
-    probe_url: '/api/v3/ui'
+    probe_url: '/api/v3/system/healthz'
     path: '/api/v3'
   flask:
     env: ""
