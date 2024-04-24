@@ -12,3 +12,28 @@ variables:
   SERVICE_NAME: "id"
 
   DISABLE_UI_LINT: "true"
+
+build-apiv3:
+  extends: .build
+  needs:
+    - job: lint-license
+      optional: true
+    - job: lint-python
+      optional: true
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    PART: "tolid-apiv3"
+    DOCKERFILE: "tolid-apiv3/Dockerfile"
+    NAME: "apiv3"
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "dev"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "qa"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "staging"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "production"
+      when: never
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: never
