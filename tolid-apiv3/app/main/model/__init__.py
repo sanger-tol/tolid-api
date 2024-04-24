@@ -2,5 +2,5 @@
 #
 # SPDX-License-Identifier: MIT
 
-from .species import TolidSpecies  # noqa
+from .species import Species  # noqa
 from .specimen import Tolid  # noqa

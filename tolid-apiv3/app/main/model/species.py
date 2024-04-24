@@ -9,7 +9,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 
 
-class TolidSpecies(Base):
+class Species(Base):
     __tablename__ = 'species'
 
     taxonomy_id: Mapped[int] = mapped_column(primary_key=True)
