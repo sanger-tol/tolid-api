@@ -99,7 +99,7 @@ tolcore:
     name: ""
     host: ""
     port: "" # specify as a string
-    create_local: ""
+    enabled: true
   dbutils:
     image:
       repository: ""
