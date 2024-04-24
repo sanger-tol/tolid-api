@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2023 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
+from sqlalchemy.orm import (
+    Mapped,
+    declared_attr,
+    relationship
+)
+
+
+class UserMixin:
+
+    @declared_attr
+    def requests(self) -> Mapped[list['Request']]:
+        return relationship(
+            back_populates='user'
+        )

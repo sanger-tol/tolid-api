@@ -25,5 +25,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: '{{ include "tol-core.api.fullname" .Subcharts.tolcore }}'
+          env:
+            - name: API_PATH
+              value: "/api/v3"
           image: "{{- .Values.tolcore.image.repository }}/apiv3:{{ .Values.tolcore.image.tag }}"
           imagePullPolicy: {{ .Values.tolcore.image.pullPolicy }}
