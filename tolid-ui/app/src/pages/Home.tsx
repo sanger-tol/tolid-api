@@ -17,7 +17,7 @@ function Home() {
     <div className="home">
       <Header
         title="ToLID"
-        subTitle="Tree of Life UI"
+        subTitle="Tree of Life Identifiers"
         buttons={[docs]}
         pageEmpty
       />

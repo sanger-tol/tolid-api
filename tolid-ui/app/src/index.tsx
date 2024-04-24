@@ -5,31 +5,65 @@ SPDX-License-Identifier: MIT
 */
 
 import ReactDOM from 'react-dom';
-import { Home } from "./pages";
+import {
+  Home,
+  AddSpecies,
+  PendingRequests,
+  CreateRequest,
+  Profile,
+  Search
+} from "./pages";
 import reportWebVitals from "./reportWebVitals";
 import { TolApp, Page, Dropdown } from '@tol/tol-ui';
 import "./scss/styling.scss";
 
 
-/*
-const timelines: Page = {
-  name: 'Timelines',
-  element: <Timelines />
+const createRequest: Page = {
+  name: 'Create',
+  element: <CreateRequest />
 };
 
-const dropdown: Dropdown = {
-  name: 'Dropdown',
-  pages: [widgets, sunbursts],
-  //auth: true,
-  //admin: true
+const profile: Page = {
+  name: 'Profile',
+  element: <Profile />
 };
-*/
+
+const search: Page = {
+  name: 'Search',
+  element: <Search />
+};
+
+const addSpecies: Page = {
+  name: 'Add Species',
+  element: <AddSpecies />,
+  hidden: true
+};
+
+const pendingRequests: Page = {
+  name: 'Requests',
+  element: <PendingRequests />,
+  hidden: true
+};
+
+const admin: Dropdown = {
+  name: 'Admin',
+  pages: [pendingRequests, addSpecies]
+};
 
 ReactDOM.render( // eslint-disable-line
   <TolApp
     brand="ToLID"
     homePage={ <Home /> }
-    pages={[]}
+    pages={[
+      search,
+      createRequest,
+      profile,
+
+      // dropdown
+      admin,
+      pendingRequests,
+      addSpecies
+    ]}
   />,
   document.getElementById('root')
 );
