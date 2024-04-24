@@ -20,12 +20,14 @@ import "./scss/styling.scss";
 
 const createRequest: Page = {
   name: 'Create',
-  element: <CreateRequest />
+  element: <CreateRequest />,
+  // auth: true
 };
 
 const profile: Page = {
   name: 'Profile',
-  element: <Profile />
+  element: <Profile />,
+  // auth: true
 };
 
 const search: Page = {
@@ -36,18 +38,24 @@ const search: Page = {
 const addSpecies: Page = {
   name: 'Add Species',
   element: <AddSpecies />,
+  // auth: true,
+  // admin: true,
   hidden: true
 };
 
 const pendingRequests: Page = {
   name: 'Requests',
   element: <PendingRequests />,
+  // auth: true,
+  // admin: true,
   hidden: true
 };
 
 const admin: Dropdown = {
   name: 'Admin',
   pages: [pendingRequests, addSpecies]
+  // auth: true,
+  // admin: true
 };
 
 ReactDOM.render( // eslint-disable-line

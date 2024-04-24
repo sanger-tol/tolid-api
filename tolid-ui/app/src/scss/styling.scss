@@ -7,3 +7,18 @@
 @import "variables.scss";
 
 @import '~@tol/tol-ui/src/scss/tol-styling.scss';
+
+.home {
+  .sub-heading {
+    margin-bottom: 12px;
+  }
+
+  p {
+    margin-bottom: 12px
+  }
+}
+
+// temporary fix for the nav dropdown box
+.nav-dropdown-box .nav-link {
+  color: var(--bs-heading-color);
+}
