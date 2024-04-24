@@ -4,7 +4,7 @@
 
 openapi: 3.0.0
 info:
-  title: Tree of Life ID API
+  title: ToLID API
   description: API for ToLID registry
   contact:
     email: tolid-help@sanger.ac.uk
@@ -33,7 +33,7 @@ paths:
       parameters:
       - name: tolId
         in: path
-        description: Tree of Life ID
+        description: Tree of Life Identifiers
         required: true
         style: simple
         explode: true
