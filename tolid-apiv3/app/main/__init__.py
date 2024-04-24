@@ -8,7 +8,7 @@ from flask import Flask
 
 from main.model import Base, UserMixin, main_models
 
-from tol.api_base2 import data_blueprint
+from tol.api_base2 import data_blueprint, system_blueprint
 from tol.core import core_data_object
 from tol.sql import create_sql_datasource
 from tol.sql.auth import db_auth_blueprint
@@ -28,6 +28,11 @@ def application() -> Flask:
     )
     auth_bp.register_authenticator(app)
     app.register_blueprint(auth_bp)
+
+    system_bp = system_blueprint(
+        url_prefix=f'{api_path}/system'
+    )
+    app.register_blueprint(system_bp)
 
     User = auth_bp.models.user_class  # noqa
     sql_ds = create_sql_datasource(
