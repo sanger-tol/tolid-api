@@ -20,7 +20,7 @@ class Tolid(Base):
     legacy_name: Mapped[str] = mapped_column()
 
     species_id: Mapped[int] = mapped_column(ForeignKey('species.taxonomy_id'))
-    species: Mapped['TolidSpecies'] = relationship(back_populates='tolids')  # noqa F821
+    species: Mapped['Species'] = relationship(back_populates='tolids')  # noqa F821
 
     @classmethod
     def get_id_column_name(cls) -> str:

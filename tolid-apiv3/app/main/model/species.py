@@ -25,6 +25,8 @@ class Species(Base):
 
     tolids: Mapped[List['Tolid']] = relationship(back_populates='species')  # noqa F821
 
+    requests: Mapped[List['Request']] = relationship(back_populates='species')  # noqa F821
+
     @classmethod
     def get_id_column_name(cls) -> str:
         return 'taxonomy_id'
