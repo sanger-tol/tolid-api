@@ -26,3 +26,4 @@ spec:
             - configMapRef:
                 name: '{{ include "tol-core.api.fullname" .Subcharts.tolcore }}'
           image: nginx
+          imagePullPolicy: {{ .Values.tolcore.image.pullPolicy }}
