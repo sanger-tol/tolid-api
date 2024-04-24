@@ -30,3 +30,12 @@ spec:
               value: {{ .Values.tolcore.apiv3.path | quote }}
           image: "{{- .Values.tolcore.image.repository }}/apiv3:{{ .Values.tolcore.image.tag }}"
           imagePullPolicy: {{ .Values.tolcore.image.pullPolicy }}
+          livenessProbe:
+            httpGet:
+              path: '{{ .Values.tolcore.apiv3.probe_url }}'
+              port: http
+          readinessProbe:
+            httpGet:
+              path: '{{ .Values.tolcore.apiv3.probe_url }}'
+              port: http
+            initialDelaySeconds: 10
