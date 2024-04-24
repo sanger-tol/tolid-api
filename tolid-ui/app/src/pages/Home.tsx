@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { Header, Widgets } from '@tol/tol-ui';
+import { Header, RemoteTable, Widgets } from '@tol/tol-ui';
 
 
 function Home() {
@@ -59,11 +59,41 @@ function Home() {
     </div>
   );
   
+
+  const prefixTable = (
+    <RemoteTable
+    id="tolid-prefix-table-v1"
+    height={500}
+    endpoint="secondary_prefix"
+    noConfigModal
+    noDownload
+    defaultSort="primary_prefix_letter"
+    fields={{
+      "primary_prefix.id": {
+        rename: "First Prefix",
+        cellRenderer: null
+      },
+      "letter": {
+        rename: "Second Prefix"
+      },
+      "primary_prefix.name": {
+        rename: "Covers",
+        cellRenderer: null
+      },
+      "name": {
+        rename: "Covers in detail",
+        cellRenderer: null
+      }
+    }}
+  />
+  );
+
   const howToMake = (
     <div>
       <h2 className="sub-heading">How did you make the ToLIDs?</h2>
       <p>The list of unique prefixes assigned to species in the ToLID API is maintained in <a href="https://gitlab.com/wtsi-grit/darwin-tree-of-life-sample-naming">GitLab repository</a>.</p>
       <p>In order to assign two-letter prefixes (the first part of a ToLID) to all life, we proposed a pragmatic hierarchical grouping with the first letter based on higher level groups and the second letter defining sub groups within them. For legacy reasons, vertebrates are prefixed with one letter only. Although standard high level names are used for many groups, these are at a variety of taxonomic ranks, and others designations involve clearly non-monophyletic groupings, including catch-all clusters such as for example "other-animal-phyla". This assignment achieves a practical and manageable grouping that has proven robust to working through large lists of species from multiple sources with often contradicting taxonomic data. The groups explicitly do not represent assertions about taxonomy in general or taxonomic assignment of individual species.</p>
+      {prefixTable}
     </div>
   );
 

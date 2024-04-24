@@ -42,7 +42,7 @@ def application() -> Flask:
 
     data_bp = data_blueprint(
         sql_ds,
-        url_prefix=f'{api_path}/data'
+        url_prefix=f'{api_path}'
     )
     app.register_blueprint(data_bp)
 
