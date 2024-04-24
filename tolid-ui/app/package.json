@@ -2,7 +2,7 @@
   "name": "tolid-ui",
   "version": "3.0.0",
   "private": true,
-  "proxy": "http://tolid-api:80",
+  "proxy": "http://tolid-apiv3:80",
   "dependencies": {
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
@@ -21,38 +21,7 @@
     "react-scripts": "5.0.1",
     "typescript": "^4.0.3",
     "web-vitals": "^0.2.4",
-    "@tol/tol-ui": "1.0.16",
-
-
-    
-    "react-dropzone": "14.2.3",
-    "styled-components": "5.3.8",
-    "@types/styled-components": "5.1.26",
-    "@fortawesome/fontawesome-svg-core": "6.2.1",
-    "@fortawesome/free-solid-svg-icons": "6.2.1",
-    "@fortawesome/free-regular-svg-icons": "6.2.1",
-    "@fortawesome/react-fontawesome": "0.2.0",
-    "babel-plugin-macros": "3.1.0",
-    "chart.js": "4.4.1",
-    "react-chartjs-2": "5.2.0",
-    "uuid": "9.0.0",
-    "babel-runtime": "6.26.0",
-    "react-leaflet": "4.2.1",
-    "@types/leaflet": "1.9.3",
-    "leaflet": "1.9.4",
-    "react-leaflet-cluster": "2.1.0",
-    "react-leaflet-enhanced-marker": "1.0.21",
-    "react-beautiful-dnd": "13.1.1",
-    "@types/react-beautiful-dnd": "13.1.3",
-    "@testing-library/jest-dom": "6.4.1",
-    "@testing-library/react": "14.2.0",
-    "@testing-library/user-event": "14.5.2",
-    "@types/jest": "29.5.12",
-    "ts-jest": "29.1.2",
-    "@jest/globals": "29.7.0"
-
-
-
+    "@tol/tol-ui": "1.0.16"
   },
   "scripts": {
     "start": "react-scripts start",
