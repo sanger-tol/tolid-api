@@ -1,0 +1,22 @@
+# SPDX-FileCopyrightText: 2022 Genome Research Ltd.
+#
+# SPDX-License-Identifier: MIT
+
+FROM python:3.10
+
+WORKDIR /app
+
+ENV FLASK_ENV=development
+ENV PYTHONPATH=/app
+ENV PYTHONDONTWRITEBYTECODE 1
+
+RUN apt-get update -y && apt-get upgrade -y
+RUN apt-get install -y python3-pip
+
+COPY ./app/requirements.txt .
+RUN pip3 --no-cache-dir install -r requirements.txt
+
+COPY ./app /app
+
+CMD if [ -d /packages/tol-sdk/src ] ; then pip3 install --editable /packages/tol-sdk[api_base2,postgresql]; fi; \
+    flask --app run run --debugger --port 80 --host 0.0.0.0

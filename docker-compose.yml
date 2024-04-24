@@ -40,13 +40,48 @@ services:
     volumes:
       - './tolid-api/app/main:/app/main'
       - '../tol-sdk:/packages/tol-sdk:rw'
+    depends_on:
+      - tolid-apiv3
+
+  tolid-apiv3:
+    build: 
+      context: tolid-apiv3
+      dockerfile: Dockerfile.dev
+    image: tolid-apiv3
+    environment:
+      - DB_URI
+      - TOLID_URL
+      - ELIXIR_CLIENT_ID
+      - ELIXIR_CLIENT_SECRET
+      - ELIXIR_REDIRECT_URI
+      - ELIXIR_JWK
+      - MAIL_SENDER
+      - MAIL_SENDER_NAME
+      - MAIL_USERNAME_SMTP
+      - MAIL_PASSWORD_SMTP
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_RECEIVER_REQUESTS_PENDING
+      - ENVIRONMENT
+      - OIDC_CLIENT_ID
+      - OIDC_CLIENT_SECRET
+      - OIDC_REDIRECT_URI
+      - OIDC_AUTH_URL
+      - OIDC_USER_INFO_URL
+      - OIDC_TOKEN_URL
+      - OIDC_REVOKE_TOKEN_URL
+      - API_PATH
+    ports:
+      - 9090:80
+    volumes:
+      - './tolid-apiv3/app/main:/app/main'
+      - '../tol-sdk:/packages/tol-sdk:rw'
 
   tolid-ui:
     build:
       context: tolid-ui/.
       dockerfile: Dockerfile.dev
     image: tolid-ui
-    stdin_open: true
     environment:
       - NODE_ENV=development
     ports:
