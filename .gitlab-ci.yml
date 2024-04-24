@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+# SPDX-FileCopyrightText: 2022 Genome Research Ltd.
 #
 # SPDX-License-Identifier: MIT
 
@@ -8,7 +8,20 @@ include:
     file: '/gitlab/app.yml'
 
 variables:
-  APP_NAME: "tolid"
-  SERVICE_NAME: "id"
-
+  APP_NAME: tolid
   DISABLE_UI_LINT: "true"
+
+deploy-package:
+  stage: deploy
+  image: node:14-alpine
+  script:
+    - |
+      {
+        echo "@${CI_PROJECT_ROOT_NAMESPACE}:registry=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/"
+        echo "${CI_API_V4_URL#https?}/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=\${CI_JOB_TOKEN}"
+      } | tee -a .npmrc
+    - cd tolid-ui/app/src/tol-ui
+    - yarn install
+    - yarn build
+    - yarn publish
+  when: manual

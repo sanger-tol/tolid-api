@@ -1,19 +1,36 @@
 /*
-SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+SPDX-FileCopyrightText: 2023 Genome Research Ltd.
 
 SPDX-License-Identifier: MIT
 */
 
-import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { Home } from "./pages";
+import reportWebVitals from "./reportWebVitals";
+import { TolApp, Page, Dropdown } from '@tol/tol-ui';
+import "./scss/styling.scss";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+
+/*
+const timelines: Page = {
+  name: 'Timelines',
+  element: <Timelines />
+};
+
+const dropdown: Dropdown = {
+  name: 'Dropdown',
+  pages: [widgets, sunbursts],
+  //auth: true,
+  //admin: true
+};
+*/
+
+ReactDOM.render( // eslint-disable-line
+  <TolApp
+    brand="ToLID"
+    homePage={ <Home /> }
+    pages={[]}
+  />,
   document.getElementById('root')
 );
 
