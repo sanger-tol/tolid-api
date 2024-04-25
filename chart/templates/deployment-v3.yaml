@@ -30,6 +30,10 @@ spec:
               value: {{ .Values.tolcore.apiv3.path | quote }}
           image: "{{- .Values.tolcore.image.repository }}/apiv3:{{ .Values.tolcore.image.tag }}"
           imagePullPolicy: {{ .Values.tolcore.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
           livenessProbe:
             httpGet:
               path: '{{ .Values.tolcore.apiv3.probe_url }}'
