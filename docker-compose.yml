@@ -51,10 +51,8 @@ services:
     environment:
       - DB_URI
       - TOLID_URL
-      - ELIXIR_CLIENT_ID
-      - ELIXIR_CLIENT_SECRET
-      - ELIXIR_REDIRECT_URI
-      - ELIXIR_JWK
+      - GOAT_URL
+      - GOAT_API_PATH
       - MAIL_SENDER
       - MAIL_SENDER_NAME
       - MAIL_USERNAME_SMTP

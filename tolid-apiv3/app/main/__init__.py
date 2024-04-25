@@ -10,6 +10,7 @@ from main.model import Base, UserMixin, main_models
 
 from tol.api_base2 import data_blueprint, system_blueprint
 from tol.core import core_data_object
+from tol.sources.goat import goat
 from tol.sql import create_sql_datasource
 from tol.sql.auth import db_auth_blueprint
 
@@ -47,6 +48,7 @@ def application() -> Flask:
 
     data_bp = data_blueprint(
         sql_ds,
+        goat(),
         url_prefix=f'{api_path}'
     )
     app.register_blueprint(data_bp)
