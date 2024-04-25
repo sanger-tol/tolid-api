@@ -26,7 +26,7 @@ function Search() {
         "uid": {
           rename: "ToLID"
         },
-        "tolid_species.tolid_scientific_name": {
+        "tolid_species.tolid_name": {
           rename: "Species Name"
         },
         "tolid_species.id": {

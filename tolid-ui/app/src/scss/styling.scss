@@ -8,14 +8,22 @@
 
 @import '~@tol/tol-ui/src/scss/tol-styling.scss';
 
-.home {
-  .sub-heading {
-    margin-bottom: 12px;
-  }
+.sub-heading {
+  margin-bottom: 12px !important;
+}
 
-  p {
-    margin-bottom: 12px
-  }
+p {
+  margin-bottom: 12px !important;
+}
+
+.form-info {
+  margin: 6px 0 12px 3px !important;
+  color: var(--bs-secondary-color) !important;
+  font-size: 12px !important;
+}
+
+.request-value {
+  color: var(--primary) !important;
 }
 
 // temporary fix for the nav dropdown box

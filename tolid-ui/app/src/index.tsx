@@ -9,7 +9,6 @@ import {
   Home,
   AddSpecies,
   PendingRequests,
-  CreateRequest,
   Profile,
   Search
 } from "./pages";
@@ -17,12 +16,6 @@ import reportWebVitals from "./reportWebVitals";
 import { TolApp, Page, Dropdown } from '@tol/tol-ui';
 import "./scss/styling.scss";
 
-
-const createRequest: Page = {
-  name: 'Create',
-  element: <CreateRequest />,
-  // auth: true
-};
 
 const profile: Page = {
   name: 'Profile',
@@ -44,7 +37,7 @@ const addSpecies: Page = {
 };
 
 const pendingRequests: Page = {
-  name: 'Requests',
+  name: 'Pending Requests',
   element: <PendingRequests />,
   // auth: true,
   // admin: true,
@@ -53,7 +46,7 @@ const pendingRequests: Page = {
 
 const admin: Dropdown = {
   name: 'Admin',
-  pages: [pendingRequests, addSpecies]
+  pages: [addSpecies, pendingRequests]
   // auth: true,
   // admin: true
 };
@@ -64,13 +57,12 @@ ReactDOM.render( // eslint-disable-line
     homePage={ <Home /> }
     pages={[
       search,
-      createRequest,
       profile,
 
-      // dropdown
+      // admin dropdown
       admin,
-      pendingRequests,
-      addSpecies
+      addSpecies,
+      pendingRequests
     ]}
   />,
   document.getElementById('root')
