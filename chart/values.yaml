@@ -121,10 +121,8 @@ tolcore:
       MAIL_RECEIVER_REQUESTS_PENDING: mail.receiver.requests_pending
       TOLID_URL: public_url.tolid
       NIH_API_KEY: keys.nih
-      ELIXIR_CLIENT_ID: elixir.client.id
-      ELIXIR_CLIENT_SECRET: elixir.client.secret
-      ELIXIR_REDIRECT_URI: elixir.url.redirect
-      ELIXIR_JWK: elixir.jwk
+      GOAT_URL: goat.url
+      GOAT_API_PATH: goat.api_path
   apiv3:
     fullname: "tolid-apiv3"
     probe_url: '/api/v3/system/healthz'
@@ -171,6 +169,9 @@ tolcore:
   portal:
     url: https://portal.tol.sanger.ac.uk
     api_path: /api/v1
+  goat:
+    url: https://goat.genomehubs.org
+    api_path: /api/v2
   oidc:
     enabled: true
     client:
