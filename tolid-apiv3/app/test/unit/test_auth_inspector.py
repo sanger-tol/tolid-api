@@ -11,8 +11,6 @@ from tol.api_base2.misc import (
     CtxGetter
 )
 
-from main.auth import create_auth_inspector
-
 
 @pytest.fixture(scope='function')
 def auth_context() -> AuthContext:
