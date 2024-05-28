@@ -10,6 +10,7 @@ include:
 variables:
   APP_NAME: tolid
   DISABLE_UI_LINT: "true"
+  APIV3_IMAGE: $CI_REGISTRY_IMAGE/tolid-apiv3:$CI_COMMIT_SHA
 
 deploy-package:
   stage: deploy
@@ -51,3 +52,15 @@ build-apiv3:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       when: never
     - when: always
+
+
+unit-test-apiv3:
+  extends: .unit-test-python
+  image: $APIV3_IMAGE
+  variables:
+    TEST_BASE_DIR: tolid-apiv3/
+  needs:
+    - job: build-api
+      optional: true
+    - job: build-api-dev
+      optional: true
