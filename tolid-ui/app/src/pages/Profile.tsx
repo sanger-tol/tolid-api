@@ -118,12 +118,12 @@ function Profile() {
         actionButton={requestButton}
       >
         <h2>Confirm ToLID Request</h2>
-        {requestedTaxonomyId !== speciesTaxonomyId &&
+        <>{requestedTaxonomyId !== speciesTaxonomyId &&
           <Status
             status="warning"
             text={"The requested Taxonomy ID is not species level. The generated ToLID will be for the species: " + speciesName}
           />
-        }
+        }</>
         <h5 style={{marginTop: 12, marginBottom: 10}}>Are you sure you want to request a ToLID for the following species?</h5>
         <p><strong>Requested Taxonomy ID: </strong><span className='request-value'>{requestedTaxonomyId}</span></p>
         <p><strong>Species Level Taxonomy ID: </strong><span className="request-value">{speciesTaxonomyId}</span></p>
