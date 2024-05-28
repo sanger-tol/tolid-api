@@ -39,7 +39,7 @@ build-apiv3:
     DOCKER_TLS_CERTDIR: ''
     PART: "tolid-apiv3"
     DOCKERFILE: "tolid-apiv3/Dockerfile"
-    NAME: "apiv3"
+    NAME: "tolid-apiv3"
   rules:
     - if: $CI_COMMIT_REF_NAME == "dev"
       when: never
@@ -65,7 +65,7 @@ build-apiv3-dev:
     DOCKER_TLS_CERTDIR: ''
     PART: "tolid-apiv3"
     DOCKERFILE: "tolid-apiv3/Dockerfile"
-    NAME: "apiv3"
+    NAME: "tolid-apiv3"
   rules:
     - if: $CI_COMMIT_REF_NAME != "dev"
       when: never
