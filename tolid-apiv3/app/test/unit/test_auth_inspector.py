@@ -25,7 +25,7 @@ def ctx_getter(
     auth_context: AuthContext
 ) -> CtxGetter:
 
-    mock_ctx_getter = Mock()
+    mock_ctx_getter = Mock(spec_set=True)
     mock_ctx_getter.return_value = auth_context
 
     return mock_ctx_getter
