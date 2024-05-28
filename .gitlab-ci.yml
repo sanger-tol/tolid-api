@@ -53,6 +53,23 @@ build-apiv3:
       when: never
     - when: always
 
+build-apiv3-dev:
+  extends: .build-dev
+  needs:
+    - job: lint-license
+      optional: true
+    - job: lint-python
+      optional: true
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    PART: "tolid-apiv3"
+    DOCKERFILE: "tolid-apiv3/Dockerfile"
+    NAME: "apiv3"
+  rules:
+    - if: $CI_COMMIT_REF_NAME != "dev"
+      when: never
+    - when: always
 
 unit-test-apiv3:
   extends: .unit-test-python
@@ -60,7 +77,7 @@ unit-test-apiv3:
   variables:
     TEST_BASE_DIR: tolid-apiv3/
   needs:
-    - job: build-api
+    - job: build-apiv3
       optional: true
-    - job: build-api-dev
+    - job: build-apiv3-dev
       optional: true
