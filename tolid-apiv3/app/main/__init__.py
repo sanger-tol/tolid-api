@@ -14,6 +14,8 @@ from tol.sources.goat import goat
 from tol.sql import create_sql_datasource
 from tol.sql.auth import db_auth_blueprint
 
+from .auth import create_auth_inspector
+
 
 def application() -> Flask:
     app = Flask(__name__)
@@ -49,7 +51,8 @@ def application() -> Flask:
     data_bp = data_blueprint(
         sql_ds,
         goat(),
-        url_prefix=f'{api_path}'
+        url_prefix=f'{api_path}',
+        auth_inspector=create_auth_inspector()
     )
     app.register_blueprint(data_bp)
 
