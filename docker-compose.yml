@@ -75,6 +75,17 @@ services:
       - './tolid-apiv3/app/main:/app/main'
       - '../tol-sdk:/packages/tol-sdk:rw'
 
+  tolid-apiv3-test:
+    build: 
+      context: tolid-apiv3
+      dockerfile: Dockerfile.dev
+    image: tolid-apiv3
+    command: |
+      sh -c 'pip3 install pytest && pytest -vvvx test'
+    volumes:
+      - './tolid-apiv3/app/main:/app/main'
+      - '../tol-sdk:/packages/tol-sdk:rw'
+
   tolid-ui:
     build:
       context: tolid-ui/.
