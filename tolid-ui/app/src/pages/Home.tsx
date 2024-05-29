@@ -24,7 +24,8 @@ function Home() {
       </ul>
       <p>e.g. <strong>aRanTem1</strong> for the first registered individual of Rana temporaria, <strong>xgPerPere3</strong> for the third registered individual of Peregriana peregra</p>
 
-      <p>For naming genome assemblies of samples, we recommend to use the full ToLID and add .&lt;version&gt;
+      <p>For naming genome assemblies of samples, we recommend to use the full ToLID and add .&lt;version&gt;.
+      If multiple specimen were used to generate the assembly, name it after the specimen the long reads were derived from.
       Examples:</p>
       <ul>
         <li>fCotGob3.1 (first assembly version of the 3rd registered individual of Cottoperca gobio)</li>
