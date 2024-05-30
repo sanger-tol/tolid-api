@@ -14,7 +14,12 @@ from tol.core.operator import OperatorMethod
 __WRITE_METHODS = [
     OperatorMethod.DELETE,
     OperatorMethod.UPDATE,
-    OperatorMethod.UPSERT
+    OperatorMethod.UPSERT,
+]
+
+
+__FORBIDDEN_TYPES = [
+    'user',
 ]
 
 
@@ -34,11 +39,15 @@ def create_auth_inspector(
         if admin_role in roles:
             return
 
+        if object_type in __FORBIDDEN_TYPES:
+            raise ForbiddenError()
+
         if not roles:
             if method in __WRITE_METHODS:
                 raise ForbiddenError()
             if object_type == 'specimen':
                 raise ForbiddenError()
+            return
 
         if method == OperatorMethod.DETAIL:
             raise ForbiddenError()
