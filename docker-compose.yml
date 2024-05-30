@@ -76,11 +76,10 @@ services:
   tolid-apiv3-test:
     build: 
       context: tolid-apiv3
-      dockerfile: Dockerfile.dev
-    command: |
-      sh -c 'pip3 install -r requirements-test.txt && pytest -vvvx test'
+      dockerfile: Dockerfile.test
+    command: pytest -vvvx test
     volumes:
-      - './tolid-apiv3/:/'
+      - './tolid-apiv3/app/main:/app/main'
       - '../tol-sdk:/packages/tol-sdk:rw'
 
   tolid-ui:
