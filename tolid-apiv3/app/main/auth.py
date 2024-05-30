@@ -63,5 +63,8 @@ def create_auth_inspector(
                 }
             else:
                 raise ForbiddenError()
+        else:
+            if method in __WRITE_METHODS:
+                raise ForbiddenError()
 
     return __inspector
