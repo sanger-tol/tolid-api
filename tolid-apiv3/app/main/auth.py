@@ -48,12 +48,15 @@ def create_auth_inspector(
             raise ForbiddenError()
 
         if object_type == 'specimen':
-            return {
-                'user.id': {
-                    'eq': {
-                        'value': auth_ctx.user_id
+            if method == OperatorMethod.PAGE:
+                return {
+                    'user.id': {
+                        'eq': {
+                            'value': auth_ctx.user_id
+                        }
                     }
                 }
-            }
+            else:
+                raise ForbiddenError()
 
     return __inspector
