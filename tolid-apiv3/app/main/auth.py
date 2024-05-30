@@ -18,12 +18,6 @@ __WRITE_METHODS = [
 ]
 
 
-__ADMIN_ONLY_METHODS = [
-    OperatorMethod.DETAIL,
-    
-]
-
-
 def create_auth_inspector(
     admin_role: str = 'admin',
     ctx_getter: CtxGetter = default_ctx_getter
@@ -42,6 +36,8 @@ def create_auth_inspector(
 
         if not roles:
             if method in __WRITE_METHODS:
+                raise ForbiddenError()
+            if object_type == 'specimen':
                 raise ForbiddenError()
 
         if method == OperatorMethod.DETAIL:
