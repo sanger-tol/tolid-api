@@ -127,7 +127,7 @@ class TestAuthInspector:
 
 
         auth_context.user_id = '200'
-        auth_context.roles = ['BASIC']
+        auth_context.roles = []
 
         inspector = create_auth_inspector(
             ctx_getter=ctx_getter
