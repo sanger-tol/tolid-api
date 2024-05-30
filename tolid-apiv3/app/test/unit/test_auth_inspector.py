@@ -6,6 +6,7 @@ from unittest.mock import Mock, create_autospec
 
 import pytest
 
+from tol.api_base2.auth.error import ForbiddenError
 from tol.api_base2.misc import (
     AuthContext,
     CtxGetter
@@ -69,7 +70,11 @@ class TestAuthInspector:
             )
             assert not and_term
 
-    def test_basic_page_get(self):
+    def test_basic_page_get(
+        self,
+        auth_context: AuthContext,
+        ctx_getter: CtxGetter
+    ):
         """
         a user with a `basic` role:
 
@@ -78,6 +83,36 @@ class TestAuthInspector:
           by `user.id`
         - can't do any other operation
         """
+
+        auth_context.user_id = '200'
+        auth_context.roles = ['BASIC']
+
+        inspector = create_auth_inspector(
+            ctx_getter=ctx_getter
+        )
+
+        and_term = inspector(
+            'specimen',
+            OperatorMethod.PAGE
+        )
+        assert and_term == {
+            'user.id': {
+                'eq': {
+                    'value': '200'
+                }
+            }
+        }
+
+        disallowed_methods = set(
+            OperatorMethod
+        ) - {OperatorMethod.PAGE}
+
+        for op in disallowed_methods:
+            with pytest.raises(ForbiddenError):
+                inspector(
+                    'specimen',
+                    op
+                )
 
     def test_no_roles_none(self):
         """
