@@ -42,15 +42,15 @@ def create_auth_inspector(
         if object_type in __FORBIDDEN_TYPES:
             raise ForbiddenError()
 
+        if method == OperatorMethod.DETAIL:
+            raise ForbiddenError()
+
         if not roles:
             if method in __WRITE_METHODS:
                 raise ForbiddenError()
             if object_type == 'specimen':
                 raise ForbiddenError()
             return
-
-        if method == OperatorMethod.DETAIL:
-            raise ForbiddenError()
 
         if object_type == 'specimen':
             if method == OperatorMethod.PAGE:
