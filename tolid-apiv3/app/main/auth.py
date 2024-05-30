@@ -16,7 +16,6 @@ def create_auth_inspector(
 ) -> AuthInspector:
 
     def __inspector(
-        self,
         object_type: str,
         method: OperatorMethod
     ) -> Optional[AndFilter]:

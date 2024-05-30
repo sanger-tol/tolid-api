@@ -27,7 +27,8 @@ def application() -> Flask:
         Base,
         db_uri,
         user_mixin_class=UserMixin,
-        url_prefix=f'{api_path}/auth'
+        url_prefix=f'{api_path}/auth',
+        oidc_id_column_name='email'
     )
     auth_bp.register_authenticator(app)
     app.register_blueprint(auth_bp)
@@ -51,7 +52,7 @@ def application() -> Flask:
     data_bp = data_blueprint(
         sql_ds,
         goat(),
-        url_prefix=f'{api_path}',
+        url_prefix=api_path,
         auth_inspector=create_auth_inspector()
     )
     app.register_blueprint(data_bp)
