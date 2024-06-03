@@ -30,4 +30,13 @@ def create_auth_inspector(
         ctx_getter=ctx_getter
     )
 
+    @composite.handle
+    def __no_forbidden_types(
+        object_type: str,
+        op: OperatorMethod,
+        **kwargs
+    ):
+        if object_type in __FORBIDDEN_TYPES:
+            raise ForbiddenError()
+
     return composite
