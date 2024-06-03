@@ -84,6 +84,7 @@ class TestAuthInspector:
         - can't do any other operation
         """
 
+        auth_context.authenticated = True
         auth_context.user_id = '200'
         auth_context.roles = ['BASIC']
 
@@ -124,8 +125,7 @@ class TestAuthInspector:
         any operation -> raise 403 always
         """
 
-
-
+        auth_context.authenticated = True
         auth_context.user_id = '200'
         auth_context.roles = []
 
