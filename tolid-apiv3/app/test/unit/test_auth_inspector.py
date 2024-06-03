@@ -139,3 +139,13 @@ class TestAuthInspector:
                     'specimen',
                     op
                 )
+
+    def test_no_detail_get(
+        self,
+        auth_context: AuthContext,
+        ctx_getter: CtxGetter
+    ):
+        """
+        No non-admin user can use
+        `OperatorMethod.DETAIL`.
+        """
