@@ -162,7 +162,7 @@ class TestAuthInspector:
 
         auth_context.authenticated = True
         auth_context.user_id = '200'
-        auth_context.roles = []
+        auth_context.roles = ['BASIC']
 
         self.__assert_no_detail_get(inspector)
 
