@@ -14,11 +14,6 @@ from tol.api_base2.misc import (
 from tol.core.operator import OperatorMethod
 
 
-__FORBIDDEN_TYPES = [
-    'user',
-]
-
-
 def create_auth_inspector(
     admin_role: str = 'admin',
     ctx_getter: CtxGetter = default_ctx_getter
@@ -29,12 +24,32 @@ def create_auth_inspector(
         ctx_getter=ctx_getter
     )
 
-    @composite.handle
-    def __no_forbidden_types(
-        object_type: str,
+    @composite.handle_noauth
+    def __no_write_without_auth(
+        __object_type: str,
         op: OperatorMethod,
         **kwargs
     ):
+
+        __WRITE_METHODS = (  # noqa N806
+            OperatorMethod.DELETE,
+            OperatorMethod.UPDATE,
+            OperatorMethod.UPSERT,
+        )
+
+        if op in __WRITE_METHODS:
+            raise ForbiddenError()
+
+    @composite.handle
+    def __no_forbidden_types(
+        object_type: str,
+        __op: OperatorMethod,
+        **kwargs
+    ):
+
+        __FORBIDDEN_TYPES = (  # noqa N806
+            'user',
+        )
 
         if object_type in __FORBIDDEN_TYPES:
             raise ForbiddenError()
