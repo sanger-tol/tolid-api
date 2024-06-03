@@ -42,6 +42,7 @@ def create_auth_inspector(
         op: OperatorMethod,
         **kwargs
     ):
+
         if object_type in __FORBIDDEN_TYPES:
             raise ForbiddenError()
 
@@ -51,6 +52,9 @@ def create_auth_inspector(
         op: OperatorMethod,
         auth_context: Optional[AuthContext] = None
     ):
+
+        if admin_role in auth_context.roles:
+            return
 
         __ALLOWED_METHODS = (
             OperatorMethod.PAGE,
