@@ -40,6 +40,7 @@ def create_auth_inspector(
         if op in __WRITE_METHODS:
             raise ForbiddenError()
 
+    @composite.handle_noauth
     @composite.handle
     def __no_forbidden_types(
         object_type: str,
