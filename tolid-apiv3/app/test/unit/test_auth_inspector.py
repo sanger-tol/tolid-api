@@ -115,7 +115,7 @@ class TestAuthInspector:
                     op
                 )
 
-    def test_no_roles_none(
+    def test_no_roles_none_specimen(
         self,
         auth_context: AuthContext,
         ctx_getter: CtxGetter
