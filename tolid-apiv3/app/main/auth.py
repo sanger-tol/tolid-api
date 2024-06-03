@@ -46,15 +46,23 @@ def create_auth_inspector(
         if object_type in __FORBIDDEN_TYPES:
             raise ForbiddenError()
 
+    @composite.handle
+    @composite.handle_noauth
+    def __no_detail_get(
+        __object_type: str,
+        op: OperatorMethod,
+        **kwargs
+    ):
+
+        if op == OperatorMethod.DETAIL:
+            raise ForbiddenError()
+
     @composite.handle_type('specimen')
     def __specimen(
         __object_type: str,
         op: OperatorMethod,
         auth_context: Optional[AuthContext] = None
     ):
-
-        if admin_role in auth_context.roles:
-            return
 
         __ALLOWED_METHODS = (
             OperatorMethod.PAGE,

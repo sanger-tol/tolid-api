@@ -53,6 +53,7 @@ class TestAuthInspector:
         - has no additional filter terms
         """
 
+        auth_context.authenticated = True
         auth_context.user_id = '100'
         auth_context.roles = [
             'le_admin',
