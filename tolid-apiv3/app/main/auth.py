@@ -57,7 +57,7 @@ def create_auth_inspector(
         auth_context: Optional[AuthContext] = None
     ):
 
-        __ALLOWED_METHODS = (
+        __ALLOWED_METHODS = (  # noqa N806
             OperatorMethod.PAGE,
         )
 

@@ -4,9 +4,9 @@
 
 from unittest.mock import Mock, create_autospec
 
-import pytest
-
 from main.auth import create_auth_inspector
+
+import pytest
 
 from tol.api_base2.auth import AuthInspector
 from tol.api_base2.auth.error import ForbiddenError
