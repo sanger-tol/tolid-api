@@ -6,6 +6,7 @@ from unittest.mock import Mock, create_autospec
 
 import pytest
 
+from tol.api_base2.auth import AuthInspector
 from tol.api_base2.auth.error import ForbiddenError
 from tol.api_base2.misc import (
     AuthContext,
@@ -149,3 +150,32 @@ class TestAuthInspector:
         No non-admin user can use
         `OperatorMethod.DETAIL`.
         """
+
+        inspector = create_auth_inspector(
+            ctx_getter=ctx_getter
+        )
+
+        auth_context.authenticated = False
+
+        self.__assert_no_detail_get(inspector)
+
+        auth_context.authenticated = True
+        auth_context.user_id = '200'
+        auth_context.roles = []
+
+        self.__assert_no_detail_get(inspector)
+
+    def __assert_no_detail_get(
+        self,
+        inspector: AuthInspector
+    ) -> None:
+
+        __TEST_TYPES = (
+            'species',
+            'specimen',
+            'request'
+        )
+
+        for t in __TEST_TYPES:
+            with pytest.raises(ForbiddenError):
+                inspector(t, OperatorMethod.DETAIL)
