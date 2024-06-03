@@ -23,7 +23,7 @@ class Tolid(Base):
     species: Mapped['Species'] = relationship(back_populates='tolids')  # noqa F821
 
     created_by: Mapped[int] = mapped_column(ForeignKey('user.id'))
-    user: Mapped['User'] = relationship(
+    user: Mapped['User'] = relationship(  # noqa F821
         back_populates='specimens'
     )
 
