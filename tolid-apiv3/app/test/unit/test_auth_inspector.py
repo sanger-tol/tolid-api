@@ -6,6 +6,8 @@ from unittest.mock import Mock, create_autospec
 
 import pytest
 
+from main.auth import create_auth_inspector
+
 from tol.api_base2.auth import AuthInspector
 from tol.api_base2.auth.error import ForbiddenError
 from tol.api_base2.misc import (
@@ -13,8 +15,6 @@ from tol.api_base2.misc import (
     CtxGetter
 )
 from tol.core.operator import OperatorMethod
-
-from main.auth import create_auth_inspector
 
 
 @pytest.fixture(scope='function')
@@ -171,7 +171,7 @@ class TestAuthInspector:
         inspector: AuthInspector
     ) -> None:
 
-        __TEST_TYPES = (
+        __TEST_TYPES = (  # noqa N806
             'species',
             'specimen',
             'request'

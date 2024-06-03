@@ -14,13 +14,6 @@ from tol.api_base2.misc import (
 from tol.core.operator import OperatorMethod
 
 
-__WRITE_METHODS = [
-    OperatorMethod.DELETE,
-    OperatorMethod.UPDATE,
-    OperatorMethod.UPSERT,
-]
-
-
 __FORBIDDEN_TYPES = [
     'user',
 ]
