@@ -16,3 +16,9 @@ class UserMixin:
         return relationship(
             back_populates='user'
         )
+
+    @declared_attr
+    def specimens(self) -> Mapped[list['Tolid']]:
+        return relationship(
+            back_populates='user'
+        )

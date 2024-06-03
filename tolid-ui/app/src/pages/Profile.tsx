@@ -9,11 +9,12 @@ import {
   Form,
   Modal,
   PopUpMessage,
+  RemoteTable,
   Status,
   Widgets,
   httpClient
 } from '@tol/tol-ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
@@ -28,6 +29,15 @@ function Profile() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
+
+  const [userId, setUserId] = useState('');
+  useEffect(
+    () => {
+      httpClient().get('/auth/roles', {})
+      .then((res: any) => setUserId(res.user_id))
+    },
+    []
+  );
 
   const clearAll = () => {
     setRequestedTaxonomyId("");
@@ -136,6 +146,20 @@ function Profile() {
   const myTolids = (
     <div>
       <h2 className="sub-heading">My ToLIDs</h2>
+      <RemoteTable
+        id="my-tolids"
+        endpoint="specimen"
+        noConfigModal
+        filter={{
+          "and_": {
+            "user.id": {
+              "eq": {
+                "value": userId
+              }
+            }
+          }
+        }}
+      />
     </div>
   );
 
