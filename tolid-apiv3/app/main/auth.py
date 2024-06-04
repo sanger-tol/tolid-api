@@ -71,7 +71,7 @@ def create_auth_inspector(
             OperatorMethod.PAGE,
         )
 
-        if not auth_context.roles:
+        if auth_context is None or not auth_context.roles:
             raise ForbiddenError()
 
         if op not in __ALLOWED_METHODS:
