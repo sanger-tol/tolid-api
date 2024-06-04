@@ -24,7 +24,7 @@ def create_auth_inspector(
         ctx_getter=ctx_getter
     )
 
-    @composite.handle_noauth
+    @composite.noauth
     def __no_write_without_auth(
         __object_type: str,
         op: OperatorMethod,
@@ -40,23 +40,15 @@ def create_auth_inspector(
         if op in __WRITE_METHODS:
             raise ForbiddenError()
 
-    @composite.handle
-    @composite.handle_noauth
-    def __no_forbidden_types(
-        object_type: str,
-        __op: OperatorMethod,
-        **kwargs
-    ):
+    @composite.forbid(
+        object_type=['user']
+    )
 
-        __FORBIDDEN_TYPES = (  # noqa N806
-            'user',
-        )
+    @composite.forbid_noauth(
+        object_type=['specimen']
+    )
 
-        if object_type in __FORBIDDEN_TYPES:
-            raise ForbiddenError()
-
-    @composite.handle
-    @composite.handle_noauth
+    @composite.always
     def __no_detail_get(
         __object_type: str,
         op: OperatorMethod,
@@ -66,8 +58,10 @@ def create_auth_inspector(
         if op == OperatorMethod.DETAIL:
             raise ForbiddenError()
 
-    @composite.handle_type('specimen')
-    def __specimen(
+    @composite.auth(
+        object_type='specimen'
+    )
+    def __specimen_auth(
         __object_type: str,
         op: OperatorMethod,
         auth_context: Optional[AuthContext] = None
