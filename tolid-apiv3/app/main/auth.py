@@ -24,13 +24,9 @@ def create_auth_inspector(
         ctx_getter=ctx_getter
     )
 
-    @composite.forbid(
-        object_type=['user']
-    )
+    @composite.forbid(['user'])
 
-    @composite.forbid_noauth(
-        object_type=['specimen']
-    )
+    @composite.forbid_noauth(['specimen'])
 
     @composite.noauth
     def __no_write_without_auth(
