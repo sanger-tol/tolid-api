@@ -24,6 +24,14 @@ def create_auth_inspector(
         ctx_getter=ctx_getter
     )
 
+    @composite.forbid(
+        object_type=['user']
+    )
+
+    @composite.forbid_noauth(
+        object_type=['specimen']
+    )
+
     @composite.noauth
     def __no_write_without_auth(
         __object_type: str,
@@ -39,14 +47,6 @@ def create_auth_inspector(
 
         if op in __WRITE_METHODS:
             raise ForbiddenError()
-
-    @composite.forbid(
-        object_type=['user']
-    )
-
-    @composite.forbid_noauth(
-        object_type=['specimen']
-    )
 
     @composite.always
     def __no_detail_get(
