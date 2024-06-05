@@ -24,7 +24,7 @@ def create_auth_inspector(
         ctx_getter=ctx_getter
     )
 
-    composite.forbid(['user'])
+    composite.forbid('user')
 
     composite.forbid_noauth(['specimen'])
 
@@ -37,6 +37,7 @@ def create_auth_inspector(
 
         __WRITE_METHODS = (  # noqa N806
             OperatorMethod.DELETE,
+            OperatorMethod.INSERT,
             OperatorMethod.UPDATE,
             OperatorMethod.UPSERT,
         )

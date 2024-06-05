@@ -12,7 +12,8 @@ import {
   RemoteTable,
   Status,
   Widgets,
-  httpClient
+  httpClient,
+  useZone
 } from '@tol/tol-ui';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -34,7 +35,8 @@ function Profile() {
   useEffect(
     () => {
       httpClient().get('/auth/roles', {})
-      .then((res: any) => setUserId(res.user_id))
+      .then((res: any) => setUserId(res.data.id))
+      .catch()
     },
     []
   );
@@ -143,23 +145,26 @@ function Profile() {
     </div>
   );
 
-  const myTolids = (
+  const specimenZone = useZone({
+    endpoint: 'specimen',
+    components: [
+      {'id': 'my-tolids'}
+    ]
+  });
+
+  const myTolids = userId !== '' ? (
     <div>
       <h2 className="sub-heading">My ToLIDs</h2>
       <RemoteTable
         id="my-tolids"
-        endpoint="specimen"
         noConfigModal
-        filter={{
-          "and_": {
-            "user.id": {
-              "eq": {
-                "value": userId
-              }
-            }
-          }
-        }}
+        height={500}
+        {...specimenZone}
       />
+    </div>
+  ) : (
+    <div>
+      <h2 className="sub-heading">My ToLIDs</h2>
     </div>
   );
 
