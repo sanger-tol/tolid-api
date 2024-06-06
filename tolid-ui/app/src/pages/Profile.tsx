@@ -9,11 +9,13 @@ import {
   Form,
   Modal,
   PopUpMessage,
+  RemoteTable,
   Status,
   Widgets,
-  httpClient
+  httpClient,
+  useZone
 } from '@tol/tol-ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
@@ -28,6 +30,16 @@ function Profile() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
+
+  const [userId, setUserId] = useState('');
+  useEffect(
+    () => {
+      httpClient().get('/auth/roles', {})
+      .then((res: any) => setUserId(res.data.id))
+      .catch()
+    },
+    []
+  );
 
   const clearAll = () => {
     setRequestedTaxonomyId("");
@@ -118,12 +130,12 @@ function Profile() {
         actionButton={requestButton}
       >
         <h2>Confirm ToLID Request</h2>
-        {requestedTaxonomyId !== speciesTaxonomyId &&
+        <>{requestedTaxonomyId !== speciesTaxonomyId &&
           <Status
             status="warning"
             text={"The requested Taxonomy ID is not species level. The generated ToLID will be for the species: " + speciesName}
           />
-        }
+        }</>
         <h5 style={{marginTop: 12, marginBottom: 10}}>Are you sure you want to request a ToLID for the following species?</h5>
         <p><strong>Requested Taxonomy ID: </strong><span className='request-value'>{requestedTaxonomyId}</span></p>
         <p><strong>Species Level Taxonomy ID: </strong><span className="request-value">{speciesTaxonomyId}</span></p>
@@ -133,7 +145,35 @@ function Profile() {
     </div>
   );
 
-  const myTolids = (
+  const specimenZone = useZone({
+    endpoint: 'specimen',
+    components: [
+      {
+        id: 'my-tolids',
+        filter: {
+          and_: {
+            'user.id': {
+              eq: {
+                value: userId
+              }
+            }
+          }
+        }
+      }
+    ],
+  });
+
+  const myTolids = userId !== '' ? (
+    <div>
+      <h2 className="sub-heading">My ToLIDs</h2>
+      <RemoteTable
+        id="my-tolids"
+        noConfigModal
+        height={300}
+        {...specimenZone}
+      />
+    </div>
+  ) : (
     <div>
       <h2 className="sub-heading">My ToLIDs</h2>
     </div>

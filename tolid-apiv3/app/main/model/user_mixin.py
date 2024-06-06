@@ -5,6 +5,7 @@
 from sqlalchemy.orm import (
     Mapped,
     declared_attr,
+    mapped_column,
     relationship
 )
 
@@ -12,7 +13,21 @@ from sqlalchemy.orm import (
 class UserMixin:
 
     @declared_attr
+    def name(self) -> Mapped[str]:
+        return mapped_column()
+
+    @declared_attr
+    def organisation(self) -> Mapped[str]:
+        return mapped_column()
+
+    @declared_attr
     def requests(self) -> Mapped[list['Request']]:  # noqa F821
+        return relationship(
+            back_populates='user'
+        )
+
+    @declared_attr
+    def specimens(self) -> Mapped[list['Tolid']]:  # noqa F821
         return relationship(
             back_populates='user'
         )

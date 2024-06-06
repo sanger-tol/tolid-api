@@ -28,7 +28,7 @@ spec:
           env:
             - name: API_PATH
               value: {{ .Values.tolcore.apiv3.path | quote }}
-          image: "{{- .Values.tolcore.image.repository }}/apiv3:{{ .Values.tolcore.image.tag }}"
+          image: "{{- .Values.tolcore.image.repository }}/tolid-apiv3:{{ .Values.tolcore.image.tag }}"
           imagePullPolicy: {{ .Values.tolcore.image.pullPolicy }}
           ports:
             - name: http

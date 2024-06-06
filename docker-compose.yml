@@ -13,41 +13,12 @@ services:
       - POSTGRES_PASSWORD
       - POSTGRES_DB
     ports:
-      - 5433:5432
-
-  tolid-api:
-    build: 
-      context: tolid-api/.
-      dockerfile: Dockerfile.dev
-    image: tolid-api
-    environment:
-      - DB_URI
-      - TOLID_URL
-      - ELIXIR_CLIENT_ID
-      - ELIXIR_CLIENT_SECRET
-      - ELIXIR_REDIRECT_URI
-      - ELIXIR_JWK
-      - MAIL_SENDER
-      - MAIL_SENDER_NAME
-      - MAIL_USERNAME_SMTP
-      - MAIL_PASSWORD_SMTP
-      - MAIL_HOST
-      - MAIL_PORT
-      - MAIL_RECEIVER_REQUESTS_PENDING
-      - ENVIRONMENT
-    ports:
-      - 8080:80
-    volumes:
-      - './tolid-api/app/main:/app/main'
-      - '../tol-sdk:/packages/tol-sdk:rw'
-    depends_on:
-      - tolid-apiv3
+      - "5433:5432"
 
   tolid-apiv3:
     build: 
       context: tolid-apiv3
       dockerfile: Dockerfile.dev
-    image: tolid-apiv3
     environment:
       - DB_URI
       - TOLID_URL
@@ -70,7 +41,43 @@ services:
       - OIDC_REVOKE_TOKEN_URL
       - API_PATH
     ports:
-      - 9090:80
+      - "9090:80"
+    volumes:
+      - './tolid-apiv3/app/main:/app/main'
+      - '../tol-sdk:/packages/tol-sdk:rw'
+
+  tolid-api:
+    build: 
+      context: tolid-api/.
+      dockerfile: Dockerfile.dev
+    environment:
+      - DB_URI
+      - TOLID_URL
+      - ELIXIR_CLIENT_ID
+      - ELIXIR_CLIENT_SECRET
+      - ELIXIR_REDIRECT_URI
+      - ELIXIR_JWK
+      - MAIL_SENDER
+      - MAIL_SENDER_NAME
+      - MAIL_USERNAME_SMTP
+      - MAIL_PASSWORD_SMTP
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_RECEIVER_REQUESTS_PENDING
+      - ENVIRONMENT
+    ports:
+      - "8080:80"
+    volumes:
+      - './tolid-api/app/main:/app/main'
+      - '../tol-sdk:/packages/tol-sdk:rw'
+    depends_on:
+      - tolid-apiv3
+
+  tolid-apiv3-test:
+    build: 
+      context: tolid-apiv3
+      dockerfile: Dockerfile.test
+    command: pytest -vvvx test
     volumes:
       - './tolid-apiv3/app/main:/app/main'
       - '../tol-sdk:/packages/tol-sdk:rw'
@@ -79,7 +86,6 @@ services:
     build:
       context: tolid-ui/.
       dockerfile: Dockerfile.dev
-    image: tolid-ui
     environment:
       - NODE_ENV=development
       - REACT_APP_API_PATH=${API_PATH}
@@ -87,13 +93,15 @@ services:
       - REACT_APP_PORTAL_API_PATH=${PORTAL_API_PATH}
       - REACT_APP_MATOMO_SITE_ID=${MATOMO_SITE_ID}
     ports:
-      - 3002:3000
+      - "3002:3000"
     volumes:
       - './tolid-ui/app:/usr/src/app'
       - '/usr/src/app/node_modules'
     
   tolid-api-test:
-    image: tolid-api
+    build: 
+      context: tolid-api/.
+      dockerfile: Dockerfile.dev
     command: dockerize
         -wait tcp://tolid-db:5432 -timeout 10s
         bash -c "pytest -v"
@@ -116,7 +124,9 @@ services:
       - tolid-api
 
   tolid-ui-test:
-    image: tolid-ui
+    build: 
+      context: tolid-ui
+      dockerfile: Dockerfile.dev
     command: yarn test
     stdin_open: true
     environment:
@@ -126,7 +136,9 @@ services:
       - '/usr/src/app/node_modules'
 
   tolid-alembic:
-    image: tolid-api
+    build: 
+      context: tolid-api/.
+      dockerfile: Dockerfile.dev
     working_dir: /migrations
     environment:
       - DB_URI

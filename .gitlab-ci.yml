@@ -10,6 +10,7 @@ include:
 variables:
   APP_NAME: tolid
   DISABLE_UI_LINT: "true"
+  APIV3_IMAGE: $CI_REGISTRY_IMAGE/tolid-apiv3:$CI_COMMIT_SHA
 
 deploy-package:
   stage: deploy
@@ -38,7 +39,7 @@ build-apiv3:
     DOCKER_TLS_CERTDIR: ''
     PART: "tolid-apiv3"
     DOCKERFILE: "tolid-apiv3/Dockerfile"
-    NAME: "apiv3"
+    NAME: "tolid-apiv3"
   rules:
     - if: $CI_COMMIT_REF_NAME == "dev"
       when: never
@@ -51,3 +52,32 @@ build-apiv3:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       when: never
     - when: always
+
+build-apiv3-dev:
+  extends: .build-dev
+  needs:
+    - job: lint-license
+      optional: true
+    - job: lint-python
+      optional: true
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    PART: "tolid-apiv3"
+    DOCKERFILE: "tolid-apiv3/Dockerfile"
+    NAME: "tolid-apiv3"
+  rules:
+    - if: $CI_COMMIT_REF_NAME != "dev"
+      when: never
+    - when: always
+
+unit-test-apiv3:
+  extends: .unit-test-python
+  image: $APIV3_IMAGE
+  variables:
+    TEST_BASE_DIR: tolid-apiv3/
+  needs:
+    - job: build-apiv3
+      optional: true
+    - job: build-apiv3-dev
+      optional: true
