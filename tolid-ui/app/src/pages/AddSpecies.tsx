@@ -161,7 +161,8 @@ function AddSpecies() {
 
   const title = (
     <div>
-      <h2>Add Species</h2>
+      <h2 className="sub-heading">Add Species</h2>
+      <p>Add species data below to be added to the database</p>
     </div>
   );
 
