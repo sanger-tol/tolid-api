@@ -59,9 +59,9 @@ ReactDOM.render( // eslint-disable-line
         src={Logo}
         alt="ToLID Logo"
         style={{
-          height: 40,
-          marginTop: -6,
-          marginBottom: -8
+          height: 50,
+          marginTop: -15,
+          marginBottom: -15
         }}
       />
     }
