@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { Header, RemoteTable, Widgets } from '@tol/tol-ui';
+import { Header, RemoteTable, Widgets, useZone } from '@tol/tol-ui';
 
 
 function Home() {
@@ -60,12 +60,20 @@ function Home() {
     </div>
   );
   
+  const secondaryPrefixZone = useZone({
+    endpoint: 'secondary_prefix',
+    components: [
+      {
+        id: 'tolid-prefix-table-v1',
+      }
+    ],
+  });
+
 
   const prefixTable = (
     <RemoteTable
     id="tolid-prefix-table-v1"
     height={500}
-    endpoint="secondary_prefix"
     noConfigModal
     noDownload
     defaultSort="primary_prefix_letter"
@@ -86,6 +94,7 @@ function Home() {
         cellRenderer: null
       }
     }}
+    {...secondaryPrefixZone}
   />
   );
 

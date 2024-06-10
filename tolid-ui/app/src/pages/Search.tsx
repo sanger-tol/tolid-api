@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { RemoteTable, Widgets, env } from "@tol/tol-ui";
+import { RemoteTable, Widgets, env, useZone } from "@tol/tol-ui";
 
 function Search() {
   const filter = {
@@ -15,13 +15,23 @@ function Search() {
     }
   };
 
+  const tolidZone = useZone({
+    endpoint: 'tolid',
+    components: [
+      {
+        id: 'tolid-table-v1',
+        filter: filter
+      }
+    ],
+    baseUrl: env.TOL_DATA
+  });
+
+
   const table = (
     <RemoteTable
       id="tolid-table-v1"
-      endpoint="tolid"
       noConfigModal
       noDownload
-      filter={filter}
       fields={{
         "uid": {
           rename: "ToLID"
@@ -38,7 +48,7 @@ function Search() {
           cellRenderer: null
         }
       }}
-      baseUrl={env.TOL_DATA}
+      {...tolidZone}
     />
   );
 

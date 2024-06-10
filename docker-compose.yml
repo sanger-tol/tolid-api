@@ -7,7 +7,7 @@ version: '3.1'
 
 services:
   tolid-db:
-    image: postgres:12
+    image: postgres:14
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
