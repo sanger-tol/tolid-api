@@ -30,3 +30,33 @@ p {
 .nav-dropdown-box .nav-link {
   color: var(--bs-heading-color);
 }
+
+.add-species-error-wrapper {
+  .alert {
+    padding: 0px;
+    margin-bottom: 0px;
+  }
+}
+
+.add-species-wrapper {
+  padding: 12px;
+
+  p {
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+.add-species-textarea {
+  width: 100%;
+  min-height: 125px;
+  font-size: 18px;
+  padding: 12px;
+}
+
+.add-species-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
