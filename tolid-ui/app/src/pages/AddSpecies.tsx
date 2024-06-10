@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 */
 
 import { useState } from 'react';
-import { Alert, Button, httpClient, PopUpMessage, Widgets } from '@tol/tol-ui';
+import { Button, httpClient, PopUpMessage, Widgets, Status } from '@tol/tol-ui';
 
 const EMPTY_SPECIES_DATA_ERROR = "Species data cannot be an empty line.";
 const WRONG_NUMBER_OF_ENTRIES_ERROR = "9 entries must be provided.";
@@ -93,7 +93,7 @@ function AddSpecies() {
       }).catch((e) => {
         setErrorMessagesAvailable(true);
         setErrorMessages(previousErrorMessages => [
-         ...previousErrorMessages, `${e}, please check your data and try again.`
+          ...previousErrorMessages, `${e}, please check your data and try again.`
         ]);
         setFailure(REQUEST_UNSUCCESSFUL);
       });
@@ -169,9 +169,9 @@ function AddSpecies() {
   const errors = errorMessages.map((message) => {
     return (
       <div className="add-species-alert-wrapper">
-        <Alert
-          type='error'
-          message={message}
+        <Status
+          text={message}
+          status="danger"
         />
       </div>
     );
@@ -199,7 +199,7 @@ function AddSpecies() {
         <div>
           <Button
             disabled={speciesData === "" || errorMessagesAvailable === true}
-            variant={(speciesData === "" || errorMessagesAvailable === true) ? "" : "success"}
+            variant={"success"}
             onClick={() => {
               postNewSpecies(convertInputToJSONPayload());
             }}>
