@@ -26,7 +26,7 @@ def create_auth_inspector(
 
     composite.forbid('user')
 
-    composite.forbid_noauth(['specimen'])
+    composite.forbid_noauth(['specimen', 'request'])
 
     @composite.noauth
     def __no_write_without_auth(
