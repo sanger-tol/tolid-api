@@ -5,16 +5,19 @@ SPDX-License-Identifier: MIT
 */
 
 import { useState } from 'react';
-import { Alert, Button, httpClient, Widgets } from '@tol/tol-ui';
+import { Alert, Button, httpClient, PopUpMessage, Widgets } from '@tol/tol-ui';
 
 const EMPTY_SPECIES_DATA_ERROR = "Species data cannot be an empty line.";
 const WRONG_NUMBER_OF_ENTRIES_ERROR = "9 entries must be provided.";
 const TAXONOMY_ID_INTEGER_ERROR = "Taxonomy ID (3rd entry) must be a number.";
+const REQUEST_UNSUCCESSFUL = "Request unsuccessful, errors have been highlighted below.";
+const REQUEST_SUCCESSFUL = "Request successful, species has been added.";
 
 function AddSpecies() {
   const [speciesData, setSpeciesData] = useState("");
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [success, setSuccess] = useState<string>("");
+  const [failure, setFailure] = useState<string>("");
   const [errorMessagesAvailable, setErrorMessagesAvailable] = useState<boolean>(false);
 
   const speciesTitleArray = [
@@ -38,8 +41,8 @@ function AddSpecies() {
     }
 
     const splitData = speciesValuesArray.map(line => splitLineToValues(line));
+    const isValid = validateAllLines(splitData);
 
-    const isValid: boolean = validateAllLines(splitData);
     if (!isValid) {
       setErrorMessagesAvailable(true);
       return null;
@@ -85,10 +88,14 @@ function AddSpecies() {
   const postNewSpecies = (payload: any) => {
     httpClient().post('/species:upsert', payload)
       .then(() => {
-        setSuccess("Success!");
-      }).catch(() => {
+        setSuccess(REQUEST_SUCCESSFUL);
+        setSpeciesData("");
+      }).catch((e) => {
         setErrorMessagesAvailable(true);
-        setSuccess("Request unsuccessful, please check your data and try again.");
+        setErrorMessages(previousErrorMessages => [
+         ...previousErrorMessages, `${e}, please check your data and try again.`
+        ]);
+        setFailure(REQUEST_UNSUCCESSFUL);
       });
   }
 
@@ -96,6 +103,7 @@ function AddSpecies() {
     setErrorMessages([]);
     setErrorMessagesAvailable(false);
     setSuccess("");
+    setFailure("");
   }
 
   function validateNonEmptyTextArea(array: string[]): boolean {
@@ -159,7 +167,7 @@ function AddSpecies() {
 
   const errors = errorMessages.map((message) => {
     return (
-      <div className="add-species-error-wrapper">
+      <div className="add-species-alert-wrapper">
         <Alert
           type='error'
           message={message}
@@ -182,20 +190,22 @@ function AddSpecies() {
           placeholder='Enter species data here...'
         />
       </div>
-      <div>
-        {success !== "" && (
-          <p style={{ fontSize: "14px" }}>{success}</p>
-        )}
-      </div>
+
       <div className="add-species-button-wrapper">
-        <Button disabled={speciesData === "" || errorMessagesAvailable === true} variant={(speciesData === "" || errorMessagesAvailable === true) ? "" : "success"}
-          onClick={() => {
-            postNewSpecies(convertInputToJSONPayload());
-          }}>
-          Submit
-        </Button>
+        <div className="errors-wrapper">
+          {errors}
+        </div>
+        <div>
+          <Button
+            disabled={speciesData === "" || errorMessagesAvailable === true}
+            variant={(speciesData === "" || errorMessagesAvailable === true) ? "" : "success"}
+            onClick={() => {
+              postNewSpecies(convertInputToJSONPayload());
+            }}>
+            Submit
+          </Button>
+        </div>
       </div>
-      {errors}
     </div>
   );
 
@@ -212,6 +222,16 @@ function AddSpecies() {
 
   return (
     <>
+      <PopUpMessage
+        type='success'
+        message={success}
+        setMessage={setSuccess}
+      />
+      <PopUpMessage
+        type='danger'
+        message={failure}
+        setMessage={setFailure}
+      />
       <Widgets
         components={components}
       />

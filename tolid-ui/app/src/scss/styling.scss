@@ -31,7 +31,9 @@ p {
   color: var(--bs-heading-color);
 }
 
-.add-species-error-wrapper {
+.add-species-alert-wrapper {
+  font-size: 14px;
+  
   .alert {
     padding: 0px;
     margin-bottom: 0px;
@@ -57,6 +59,10 @@ p {
 
 .add-species-button-wrapper {
   display: flex;
-  justify-content: flex-end;
+  justify-content:space-between;
   margin-top: 10px;
+
+  // .errors-wrapper {
+  //   align-items: flex-start !important;
+  // }
 }
