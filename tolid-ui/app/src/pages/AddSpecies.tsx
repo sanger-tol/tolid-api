@@ -33,7 +33,7 @@ function AddSpecies() {
     "kingdom"
   ]
 
-  function convertInputToJSONPayload() {
+  const convertInputToJSONPayload = () => {
     const speciesValuesArray = splitLines(speciesData);
 
     if (speciesValuesArray[speciesValuesArray.length - 1] === "") {
@@ -68,16 +68,16 @@ function AddSpecies() {
     return payload;
   }
 
-  function splitLineToValues(line: string): string[] {
+  const splitLineToValues = (line: string): string[] => {
     const regEx = /\s+/;
     return [...line.split(regEx).filter(value => value !== ""), ""];
   }
 
-  function splitLines(text: string): string[] {
+  const splitLines = (text: string): string[] => {
     return text.split("\n");
   }
 
-  function convertLineToJSON(line: string[]) {
+  const convertLineToJSON = (line: string[]) => {
     const JSONLine = speciesTitleArray.reduce((obj, key, index) => {
       obj[key] = line[index];
       return obj;
@@ -99,14 +99,14 @@ function AddSpecies() {
       });
   }
 
-  function resetErrors() {
+  const resetErrors = () => {
     setErrorMessages([]);
     setErrorMessagesAvailable(false);
     setSuccess("");
     setFailure("");
   }
 
-  function validateNonEmptyTextArea(array: string[]): boolean {
+  const validateNonEmptyTextArea = (array: string[]): boolean => {
     if (array[0].trim().length === 0 || array === undefined) {
       setErrorMessages(previousErrorMessages => [
         ...previousErrorMessages, `${EMPTY_SPECIES_DATA_ERROR}`
@@ -116,7 +116,7 @@ function AddSpecies() {
     return true;
   }
 
-  function validateIndividualLines(array: string[], lineNumber: number): boolean {
+  const validateIndividualLines = (array: string[], lineNumber: number): boolean => {
     if (array.length != 10) {
       setErrorMessages(previousErrorMessages => [
         ...previousErrorMessages, `Line ${lineNumber}: ${WRONG_NUMBER_OF_ENTRIES_ERROR}`
@@ -126,7 +126,7 @@ function AddSpecies() {
     return true;
   }
 
-  function validateTaxonomyId(array: string[], lineNumber: number): boolean {
+  const validateTaxonomyId = (array: string[], lineNumber: number): boolean => {
     if (array[2] !== undefined && !Number.isInteger(parseInt(array[2].trim()))) {
       setErrorMessages(previousErrorMessages => [
         ...previousErrorMessages, `Line ${lineNumber}: ${TAXONOMY_ID_INTEGER_ERROR}`
@@ -136,7 +136,7 @@ function AddSpecies() {
     return true;
   }
 
-  function validateAllLines(data: string[][]) {
+  const validateAllLines = (data: string[][]) => {
     resetErrors();
 
     let allValid = true;
