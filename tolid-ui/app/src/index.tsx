@@ -14,6 +14,7 @@ import {
 } from "./pages";
 import reportWebVitals from "./reportWebVitals";
 import { TolApp, Page, Dropdown } from '@tol/tol-ui';
+import Logo from './assets/logo.png';
 import "./scss/styling.scss";
 
 
@@ -53,7 +54,17 @@ const admin: Dropdown = {
 
 ReactDOM.render( // eslint-disable-line
   <TolApp
-    brand="ToLID"
+    brand={
+      <img
+        src={Logo}
+        alt="ToLID Logo"
+        style={{
+          height: 40,
+          marginTop: -6,
+          marginBottom: -8
+        }}
+      />
+    }
     homePage={ <Home /> }
     pages={[
       search,
