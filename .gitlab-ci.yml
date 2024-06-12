@@ -4,7 +4,7 @@
 
 include:
   - project: 'tol/tol-core'
-    ref: v1.3.17
+    ref: v1.3.18
     file: '/gitlab/app.yml'
 
 variables:
@@ -27,7 +27,7 @@ deploy-package:
     - yarn publish
   when: manual
 
-build-apiv3:
+build-apiv2:
   extends: .build
   needs:
     - job: lint-license
@@ -37,9 +37,9 @@ build-apiv3:
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ''
-    PART: "tolid-apiv3"
-    DOCKERFILE: "tolid-apiv3/Dockerfile"
-    NAME: "tolid-apiv3"
+    PART: "tolid-apiv2"
+    DOCKERFILE: "tolid-apiv2/Dockerfile"
+    NAME: "tolid-apiv2"
   rules:
     - if: $CI_COMMIT_REF_NAME == "dev"
       when: never
@@ -63,9 +63,9 @@ build-apiv3-dev:
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ''
-    PART: "tolid-apiv3"
-    DOCKERFILE: "tolid-apiv3/Dockerfile"
-    NAME: "tolid-apiv3"
+    PART: "tolid-apiv2"
+    DOCKERFILE: "tolid-apiv2/Dockerfile"
+    NAME: "tolid-apiv2"
   rules:
     - if: $CI_COMMIT_REF_NAME != "dev"
       when: never
@@ -75,9 +75,9 @@ unit-test-apiv3:
   extends: .unit-test-python
   image: $APIV3_IMAGE
   variables:
-    TEST_BASE_DIR: tolid-apiv3/
+    TEST_BASE_DIR: tolid-apiv2/
   needs:
-    - job: build-apiv3
+    - job: build-apiv2
       optional: true
-    - job: build-apiv3-dev
+    - job: build-apiv2-dev
       optional: true

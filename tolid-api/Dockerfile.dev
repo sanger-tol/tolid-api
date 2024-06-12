@@ -10,26 +10,14 @@ ENV FLASK_ENV=development
 ENV PYTHONPATH=/app
 ENV PYTHONDONTWRITEBYTECODE 1
 
-RUN apt-get update -y
-RUN apt-get install -y python3-pip python3-setuptools
-
-RUN pip3 install --upgrade setuptools
-
-# Dockerize is needed to sync containers startup
-ENV DOCKERIZE_VERSION v0.6.0
-RUN wget --no-check-certificate https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-
-COPY ./app/setup.py .
-RUN python3 setup.py install
+RUN apt-get update -y && apt-get upgrade -y
+RUN apt-get install -y python3-pip
 
 COPY ./app/requirements.txt .
 RUN pip3 --no-cache-dir install -r requirements.txt
 
-RUN pip3 --no-cache-dir install 'connexion[swagger-ui]'
-
 COPY ./app /app
 COPY ./migrations /migrations
 
-CMD [ "python", "run.py" ]
+CMD if [ -d /packages/tol-sdk/src ] ; then pip3 install --editable /packages/tol-sdk[api_base2,postgresql]; fi; \
+    flask --app run run --debugger --port 80 --host 0.0.0.0

@@ -18,6 +18,7 @@ class Request(Base):
     status: Mapped[str] = mapped_column()
     reason: Mapped[str] = mapped_column()
     created_at: Mapped[datetime.datetime] = mapped_column()
+    requested_taxonomy_id: Mapped[int] = mapped_column()
     confirmation_name: Mapped[str] = mapped_column()
 
     # We don't make this a relationship because we may have species_ids that

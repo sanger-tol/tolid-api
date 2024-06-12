@@ -5,4 +5,4 @@
 [flake8]
 max-line-length = 99
 extend-ignore = D
-extend-exclude = tolid-api
+extend-exclude = tolid-apiv2

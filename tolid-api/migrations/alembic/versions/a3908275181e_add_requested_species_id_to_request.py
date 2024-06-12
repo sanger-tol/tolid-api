@@ -17,7 +17,7 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column('request', sa.Column('requested_species_id', sa.Integer(), nullable=True))
+    op.add_column('request', sa.Column('requested_taxonomy_id', sa.Integer(), nullable=True))
 
 def downgrade():
-    op.drop_column('request', 'requested_species_id')
+    op.drop_column('request', 'requested_taxonomy_id')
