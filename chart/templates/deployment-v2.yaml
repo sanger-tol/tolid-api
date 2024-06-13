@@ -1,34 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tolid-apiv3
+  name: tolid-apiv2
   labels:
     {{- include "tolid-app.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      app: tolid-apiv3
+      app: tolid-apiv2
   template:
     metadata:
       annotations:
         checksum/config: {{ include (print $.Subcharts.tolcore.Template.BasePath "/configmaps/api.yaml") .Subcharts.tolcore | sha256sum }}
         image: {{ .Values.tolcore.image.tag }}
       labels:
-        app: tolid-apiv3
+        app: tolid-apiv2
     spec:
       {{- with .Values.tolcore.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: tolid-apiv3
+        - name: tolid-apiv2
           envFrom:
             - configMapRef:
                 name: '{{ include "tol-core.api.fullname" .Subcharts.tolcore }}'
           env:
             - name: API_PATH
-              value: {{ .Values.tolcore.apiv3.path | quote }}
-          image: "{{- .Values.tolcore.image.repository }}/tolid-apiv3:{{ .Values.tolcore.image.tag }}"
+              value: {{ .Values.tolcore.apiv2.path | quote }}
+          image: "{{- .Values.tolcore.image.repository }}/tolid-api2:{{ .Values.tolcore.image.tag }}"
           imagePullPolicy: {{ .Values.tolcore.image.pullPolicy }}
           ports:
             - name: http
@@ -36,10 +36,10 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: '{{ .Values.tolcore.apiv3.probe_url }}'
+              path: '{{ .Values.tolcore.apiv2.probe_url }}'
               port: http
           readinessProbe:
             httpGet:
-              path: '{{ .Values.tolcore.apiv3.probe_url }}'
+              path: '{{ .Values.tolcore.apiv2.probe_url }}'
               port: http
             initialDelaySeconds: 10

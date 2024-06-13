@@ -10,7 +10,7 @@ include:
 variables:
   APP_NAME: tolid
   DISABLE_UI_LINT: "true"
-  APIV3_IMAGE: $CI_REGISTRY_IMAGE/tolid-apiv3:$CI_COMMIT_SHA
+  APIV2_IMAGE: $CI_REGISTRY_IMAGE/tolid-apiv2:$CI_COMMIT_SHA
 
 deploy-package:
   stage: deploy
@@ -53,7 +53,7 @@ build-apiv2:
       when: never
     - when: always
 
-build-apiv3-dev:
+build-apiv2-dev:
   extends: .build-dev
   needs:
     - job: lint-license
@@ -71,9 +71,9 @@ build-apiv3-dev:
       when: never
     - when: always
 
-unit-test-apiv3:
+unit-test-apiv2:
   extends: .unit-test-python
-  image: $APIV3_IMAGE
+  image: $APIV2_IMAGE
   variables:
     TEST_BASE_DIR: tolid-apiv2/
   needs:
