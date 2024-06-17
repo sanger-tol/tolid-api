@@ -71,13 +71,21 @@ build-apiv2-dev:
       when: never
     - when: always
 
-unit-test-apiv2:
-  extends: .unit-test-python
-  image: $APIV2_IMAGE
-  variables:
-    TEST_BASE_DIR: tolid-apiv2/
+system-test-apiv2:
+  extends: .system-test-python
   needs:
     - job: build-apiv2
       optional: true
     - job: build-apiv2-dev
       optional: true
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "qa"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "staging"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "production"
+      when: never
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: never
+    - exists:
+      - "${APP_NAME}-apiv2/app/test/system/**/*"
