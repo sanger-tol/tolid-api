@@ -73,6 +73,9 @@ build-apiv2-dev:
 
 system-test-apiv2:
   extends: .system-test-python
+  variables:
+    TEST_BASE_DIR: ${CI_PROJECT_NAME}-apiv2/
+    TEST_DIR: app/test
   needs:
     - job: build-apiv2
       optional: true
