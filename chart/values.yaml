@@ -108,9 +108,10 @@ tolcore:
     image:
       repository: ""
       tag: ""
-  apv2:
+  apiv2:
     fullname: "tolid-api"
     probe_url: '/api/v2/ui'
+    path: '/api/v2'
     extra_env:
       MAIL_USERNAME_SMTP: mail.username
       MAIL_PASSWORD_SMTP: mail.password
