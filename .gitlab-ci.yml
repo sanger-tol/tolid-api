@@ -10,7 +10,6 @@ include:
 variables:
   APP_NAME: tolid
   DISABLE_UI_LINT: "true"
-  APIV2_IMAGE: $CI_REGISTRY_IMAGE/tolid-apiv2:$CI_COMMIT_SHA
 
 build-apiv2:
   extends: .build
@@ -58,6 +57,7 @@ build-apiv2-dev:
 
 system-test-apiv2:
   extends: .system-test-python
+  image: $CI_REGISTRY_IMAGE/${CI_PROJECT_NAME}-apiv2:$CI_COMMIT_SHA
   variables:
     TEST_BASE_DIR: ${CI_PROJECT_NAME}-apiv2/
     TEST_DIR: app/test
