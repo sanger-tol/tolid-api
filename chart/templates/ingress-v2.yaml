@@ -13,7 +13,7 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: tolid-v3-api-ingress
+  name: tolid-v2-api-ingress
   annotations:
   {{- with .Values.tolcore.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
@@ -31,11 +31,11 @@ spec:
     - host: {{ (urlParse .Values.tolcore.deployment.environment_url).host | quote }}
       http:
         paths:
-          - path: {{ .Values.tolcore.apiv3.path | quote }}
+          - path: {{ .Values.tolcore.apiv2.path | quote }}
             pathType: Prefix
             backend:
               service:
-                name: tolid-apiv3-svc
+                name: tolid-apiv2-svc
                 port:
                   number: 80
 {{- end }}

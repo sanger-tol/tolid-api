@@ -108,7 +108,7 @@ tolcore:
     image:
       repository: ""
       tag: ""
-  api:
+  apv2:
     fullname: "tolid-api"
     probe_url: '/api/v2/ui'
     extra_env:
@@ -123,17 +123,28 @@ tolcore:
       NIH_API_KEY: keys.nih
       GOAT_URL: goat.url
       GOAT_API_PATH: goat.api_path
-  apiv3:
+  api:
     fullname: "tolid-apiv3"
     probe_url: '/api/v3/system/healthz'
     path: '/api/v3'
+    extra_env:
+      MAIL_USERNAME_SMTP: mail.username
+      MAIL_PASSWORD_SMTP: mail.password
+      MAIL_HOST: mail.host
+      MAIL_PORT: mail.port
+      MAIL_SENDER: mail.sender.address
+      MAIL_SENDER_NAME: mail.sender.name
+      MAIL_RECEIVER_REQUESTS_PENDING: mail.receiver.requests_pending
+      TOLID_URL: public_url.tolid
+      GOAT_URL: goat.url
+      GOAT_API_PATH: goat.api_path
   flask:
     env: ""
   ui:
     fullname: "tolid-ui"
     probe_url: '/'
     extra_env:
-      REACT_APP_API_PATH: apiv3.path
+      REACT_APP_API_PATH: api.path
       REACT_APP_PORTAL_URL: portal.url
       REACT_APP_PORTAL_API_PATH: portal.api_path
   backup:

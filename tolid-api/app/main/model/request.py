@@ -18,10 +18,12 @@ class Request(Base):
     status: Mapped[str] = mapped_column()
     reason: Mapped[str] = mapped_column()
     created_at: Mapped[datetime.datetime] = mapped_column()
+    requested_taxonomy_id: Mapped[int] = mapped_column()
     confirmation_name: Mapped[str] = mapped_column()
 
-    species_id: Mapped[int] = mapped_column(ForeignKey('species.taxonomy_id'))
-    species: Mapped['Species'] = relationship(back_populates='requests')  # noqa F821
+    # We don't make this a relationship because we may have species_ids that
+    # don't exist in the species table
+    species_id: Mapped[int] = mapped_column()
 
     created_by: Mapped[int] = mapped_column(ForeignKey('user.id'))
     user: Mapped['User'] = relationship(back_populates='requests')  # noqa F821
