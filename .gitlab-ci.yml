@@ -12,21 +12,6 @@ variables:
   DISABLE_UI_LINT: "true"
   APIV2_IMAGE: $CI_REGISTRY_IMAGE/tolid-apiv2:$CI_COMMIT_SHA
 
-deploy-package:
-  stage: deploy
-  image: node:14-alpine
-  script:
-    - |
-      {
-        echo "@${CI_PROJECT_ROOT_NAMESPACE}:registry=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/"
-        echo "${CI_API_V4_URL#https?}/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=\${CI_JOB_TOKEN}"
-      } | tee -a .npmrc
-    - cd tolid-ui/app/src/tol-ui
-    - yarn install
-    - yarn build
-    - yarn publish
-  when: manual
-
 build-apiv2:
   extends: .build
   needs:
