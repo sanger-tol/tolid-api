@@ -21,7 +21,7 @@ import "./scss/styling.scss";
 const profile: Page = {
   name: 'Profile',
   element: <Profile />,
-  // auth: true
+  auth: true
 };
 
 const search: Page = {
@@ -32,24 +32,24 @@ const search: Page = {
 const addSpecies: Page = {
   name: 'Add Species',
   element: <AddSpecies />,
-  // auth: true,
-  // admin: true,
+  auth: true,
+  admin: true,
   hidden: true
 };
 
 const pendingRequests: Page = {
   name: 'Pending Requests',
   element: <PendingRequests />,
-  // auth: true,
-  // admin: true,
+  auth: true,
+  admin: true,
   hidden: true
 };
 
 const admin: Dropdown = {
   name: 'Admin',
-  pages: [addSpecies, pendingRequests]
-  // auth: true,
-  // admin: true
+  pages: [addSpecies, pendingRequests],
+  auth: true,
+  admin: true
 };
 
 ReactDOM.render( // eslint-disable-line

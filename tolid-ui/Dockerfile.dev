@@ -5,7 +5,7 @@
 # This is used for local development only.
 
 # TODO - put this back to 1.0.6, when https://localhost:3002/callaback is set on elixir
-FROM gitlab-registry.internal.sanger.ac.uk/tol/tol-core/web-base-dev:1.0.3
+FROM gitlab-registry.internal.sanger.ac.uk/tol/tol-core/web-base-dev:1.0.6
 
 COPY ./app/package.json ./
 
