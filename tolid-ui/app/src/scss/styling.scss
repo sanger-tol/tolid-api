@@ -8,6 +8,8 @@
 
 @import '~@tol/tol-ui/src/scss/tol-styling.scss';
 
+
+
 .sub-heading {
   margin-bottom: 12px !important;
 }
@@ -56,4 +58,16 @@ p.text {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
+}
+
+.pending-button-styling {
+  min-width: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+}
+
+.generic-button-wrapper {
+  padding: 5px 8px;
 }

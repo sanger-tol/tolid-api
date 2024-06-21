@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT
 */
 
 import { RemoteTable, Widgets, useZone } from "@tol/tol-ui";
+import { AcceptRequestBtn, AddSpeciesBtn, RejectRequestBtn } from "../components";
 
 function PendingRequests() {
   const tolidZone = useZone({
