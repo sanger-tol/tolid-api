@@ -18,37 +18,30 @@ import Logo from './assets/logo.png';
 import "./scss/styling.scss";
 
 
+const search: Page = {
+  name: 'Search',
+  element: <Search />
+};
+
 const profile: Page = {
   name: 'Profile',
   element: <Profile />,
   auth: true
 };
 
-const search: Page = {
-  name: 'Search',
-  element: <Search />
-};
-
 const addSpecies: Page = {
   name: 'Add Species',
   element: <AddSpecies />,
-  auth: true,
-  admin: true,
-  hidden: true
 };
 
 const pendingRequests: Page = {
   name: 'Pending Requests',
   element: <PendingRequests />,
-  auth: true,
-  admin: true,
-  hidden: true
 };
 
 const admin: Dropdown = {
   name: 'Admin',
   pages: [addSpecies, pendingRequests],
-  auth: true,
   admin: true
 };
 
@@ -69,11 +62,7 @@ ReactDOM.render( // eslint-disable-line
     pages={[
       search,
       profile,
-
-      // admin dropdown
-      admin,
-      addSpecies,
-      pendingRequests
+      admin
     ]}
   />,
   document.getElementById('root')

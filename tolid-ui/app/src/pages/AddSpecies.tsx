@@ -117,7 +117,7 @@ function AddSpecies() {
   }
 
   const validateIndividualLines = (array: string[], lineNumber: number): boolean => {
-    if (array.length != 10) {
+    if (array.length !== 10) {
       setErrorMessages(previousErrorMessages => [
         ...previousErrorMessages, `Line ${lineNumber}: ${WRONG_NUMBER_OF_ENTRIES_ERROR}`
       ]);
