@@ -12,7 +12,6 @@ function AddSpeciesBtn() {
         <>
             <Link to="/add-species">
                 <GenericRequestBtn
-                    onClick={() => void (0)}
                     variant="add"
                     text="Add"
                 />

@@ -11,7 +11,7 @@ import { Button } from '@tol/tol-ui'
 type Variant = 'add' | 'accept' | 'reject'
 
 interface Props {
-    onClick: () => void | undefined;
+    onClick?: Function;
     disabled?: boolean;
     variant: Variant;
     text?: string;

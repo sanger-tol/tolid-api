@@ -9,7 +9,7 @@ import GenericRequestBtn from "./GenericRequestBtn";
 function AcceptRequestBtn() {
   return <>
     <GenericRequestBtn
-      onClick={() => void (0)}
+      //onClick={}
       variant="accept"
       text="Accept"
     />
