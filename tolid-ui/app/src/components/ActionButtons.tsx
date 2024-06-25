@@ -42,11 +42,15 @@ function ActionButtons(props: Props) {
       :
         <div className="action-buttons">
           {canAccept ? (
-            <AcceptRequestBtn />
+            <AcceptRequestBtn
+              id={requestId}
+            />
           ) : (
             <AddSpeciesBtn />
           )}
-          <RejectRequestBtn />
+          <RejectRequestBtn
+            id={requestId}
+          />
         </div>
       }
     </div>

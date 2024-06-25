@@ -39,7 +39,6 @@ export async function fetchDetail(id: string, endpoint: string, baseUrl?: string
     data[endpoint][id] = retrievedData;
     return retrievedData;
   });
-
   return pendingPromises[endpoint];
 }
 
@@ -63,7 +62,7 @@ export function DetailAttribute(props: Props) {
     if ('data' in res
       && 'data' in res.data
       && 'attributes' in res.data.data
-    ){
+    ) {
       if (attribute === 'id') {
         setText(res.data.data.id);
       } else {

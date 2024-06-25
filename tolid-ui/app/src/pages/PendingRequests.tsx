@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 */
 
 import { RemoteTable, Widgets, useZone } from "@tol/tol-ui";
-import { ActionButtons, DetailAttribute, SpeciesName, SpeciesTaxon } from "../components";
+import { ActionButtons, SpeciesName, SpeciesTaxon } from "../components";
 
 function PendingRequests() {
   const tolidZone = useZone({
@@ -31,14 +31,14 @@ function PendingRequests() {
   const table = (
     <RemoteTable
       id="requests-table-v1"
-      noConfigModal
+      //noConfigModal
       noFilter
       noDownload
       fields={{
         id: {
           rename: "Request ID",
-          filterType: 'str',
-          sort: false
+          sort: false,
+          width: 100
         },
         custom_taxon: {
           rename: "Taxon ID",
@@ -48,7 +48,8 @@ function PendingRequests() {
               id: 'species_id'
             }
           },
-          sort: false
+          sort: false,
+          width: 100
         },
         custom_scientific_name: {
           rename: "Scientific Name",
