@@ -28,6 +28,7 @@ p.text {
   color: var(--primary) !important;
 }
 
+// add species
 .add-species-alert-wrapper {
   font-size: 14xp;
 
@@ -38,11 +39,8 @@ p.text {
 }
 
 .add-species-wrapper {
-  padding: 8px;
-
   p {
     font-size: 14px;
-    margin-top: 5px;
     margin-bottom: 5px;
   }
 }
@@ -60,14 +58,32 @@ p.text {
   margin-top: 10px;
 }
 
-.pending-button-styling {
-  min-width: 70px;
+// action buttons
+.generic-button-styling {
+  width: 65px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   color: #fff;
 }
 
-.generic-button-wrapper {
-  padding: 5px 8px;
+.action-buttons {
+  display: flex;
+  .btn {
+    font-size: 14px;
+    margin-right: 5px;
+    padding: 4px 6px;
+  }
+  svg {
+    margin-right: 5px;
+  }
+}
+
+// cell loader
+.loading-cell {
+  height: 32px;
+
+  .spinner-border.spinner-border-sm {
+    margin: 8px;
+  }
 }

@@ -5,42 +5,87 @@ SPDX-License-Identifier: MIT
 */
 
 import { RemoteTable, Widgets, useZone } from "@tol/tol-ui";
-import { AcceptRequestBtn, AddSpeciesBtn, RejectRequestBtn } from "../components";
+import { ActionButtons, DetailAttribute, SpeciesName, SpeciesTaxon } from "../components";
 
 function PendingRequests() {
   const tolidZone = useZone({
     endpoint: 'request',
     baseUrl: '/api/v3',
-    components: [{id: 'requests-table-v1'}]
+    components: [{
+      id: 'requests-table-v1',
+      /*
+      filter: {
+        and_: {
+          'status': {
+            in_list: {
+              value: ['Accepted', 'Rejected'],
+              negate: true
+            }
+          }
+        }
+      }
+      */
+    }]
   });
-
 
   const table = (
     <RemoteTable
       id="requests-table-v1"
       noConfigModal
+      noFilter
       noDownload
       fields={{
         id: {
           rename: "Request ID",
-          filterType: 'str'
+          filterType: 'str',
+          sort: false
         },
-        // taxon_id
-        // scientific_name
+        custom_taxon: {
+          rename: "Taxon ID",
+          cellRenderer: {
+            element: SpeciesTaxon,
+            propPointers: {
+              id: 'species_id'
+            }
+          },
+          sort: false
+        },
+        custom_scientific_name: {
+          rename: "Scientific Name",
+          cellRenderer: {
+            element: SpeciesName,
+            propPointers: {
+              id: 'species_id'
+            }
+          },
+          sort: false
+        },
         confirmation_name: {
           rename: "Name Confirmation",
-          filterType: 'str'
+          sort: false
         },
         specimen_id: {
           rename: "Specimen ID",
-          filterType: 'str'
+          sort: false
+
         },
         "user.name": {
           rename: "Requester",
-          filterType: 'str'
-        }
+          sort: false
+        },
         // next tolid
-        // action
+        custom_action: {
+          rename: "Action",
+          width: 184,
+          cellRenderer: {
+            element: ActionButtons,
+            propPointers: {
+              requestId: 'id',
+              speciesId: 'species_id'
+            }
+          },
+          sort: false
+        }
       }}
       {...tolidZone}
     />
@@ -49,9 +94,6 @@ function PendingRequests() {
   const title = (
     <div>
       <h2>Pending Requests</h2>
-      <p style={{marginTop: 4}}>
-        Text here...
-      </p>
     </div>
   );
 

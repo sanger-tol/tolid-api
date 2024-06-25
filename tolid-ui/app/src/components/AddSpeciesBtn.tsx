@@ -5,19 +5,16 @@ SPDX-License-Identifier: MIT
 */
 
 import GenericRequestBtn from "./GenericRequestBtn";
-import { Link } from "react-router-dom";
 
 function AddSpeciesBtn() {
-    return (
-        <>
-            <Link to="/add-species">
-                <GenericRequestBtn
-                    variant="add"
-                    text="Add"
-                />
-            </Link>
-        </>
-    )
+  return (
+    <a href="/admin/add-species">
+      <GenericRequestBtn
+        variant="add"
+        text="Add"
+      />
+    </a>
+  )
 }
 
 export default AddSpeciesBtn;

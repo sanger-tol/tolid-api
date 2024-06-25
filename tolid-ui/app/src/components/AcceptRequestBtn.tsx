@@ -7,13 +7,13 @@ SPDX-License-Identifier: MIT
 import GenericRequestBtn from "./GenericRequestBtn";
 
 function AcceptRequestBtn() {
-  return <>
+  return (
     <GenericRequestBtn
       //onClick={}
       variant="accept"
       text="Accept"
     />
-  </>;
+  );
 }
 
 export default AcceptRequestBtn;
