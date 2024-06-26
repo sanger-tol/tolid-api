@@ -16,11 +16,13 @@ import { Loader } from "@tol/tol-ui";
 
 interface Props {
   requestId: any,
-  speciesId: any
+  speciesId: any,
+  forceUpdate: boolean,
+  setForceUpdate: any
 }
 
 function ActionButtons(props: Props) {
-  const { requestId, speciesId } = props;
+  const { requestId, speciesId, forceUpdate, setForceUpdate } = props;
   const [loading, setLoading] = useState(true);
   const [canAccept, setCanAccept] = useState(false);
 
@@ -50,6 +52,8 @@ function ActionButtons(props: Props) {
           )}
           <RejectRequestBtn
             id={requestId}
+            forceUpdate={forceUpdate}
+            setForceUpdate={setForceUpdate}
           />
         </div>
       }

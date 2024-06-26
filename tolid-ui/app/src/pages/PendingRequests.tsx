@@ -5,58 +5,71 @@ SPDX-License-Identifier: MIT
 */
 
 import { RemoteTable, Widgets, useZone } from "@tol/tol-ui";
-import { ActionButtons, SpeciesName, SpeciesTaxon } from "../components";
+import { ActionButtons, DetailAttribute } from "../components";
+import { useState } from "react";
 
 function PendingRequests() {
+  const [forceUpdate, setForceUpdate] = useState(false);
+
   const tolidZone = useZone({
     endpoint: 'request',
     baseUrl: '/api/v3',
     components: [{
       id: 'requests-table-v1',
-      /*
       filter: {
         and_: {
           'status': {
             in_list: {
-              value: ['Accepted', 'Rejected'],
-              negate: true
+              value: ['Pending'],
             }
           }
         }
       }
-      */
     }]
   });
 
   const table = (
     <RemoteTable
       id="requests-table-v1"
-      //noConfigModal
       noFilter
       noDownload
+      noConfigModal
+      forceUpdate={forceUpdate}
+      defaultSort="created_at"
       fields={{
-        id: {
-          rename: "Request ID",
+        species_id: {
+          rename: "Taxon ID",
           sort: false,
           width: 100
         },
-        custom_taxon: {
-          rename: "Taxon ID",
-          cellRenderer: {
-            element: SpeciesTaxon,
-            propPointers: {
-              id: 'species_id'
-            }
-          },
-          sort: false,
-          width: 100
+        requested_taxonomy_id: {
+          rename: "Requested Taxon ID",
+          sort: false
         },
         custom_scientific_name: {
           rename: "Scientific Name",
           cellRenderer: {
-            element: SpeciesName,
+            element: DetailAttribute,
             propPointers: {
               id: 'species_id'
+            },
+            props: {
+              endpoint: 'species',
+              attribute: 'name'
+            }
+          },
+          sort: false
+        },
+        custom_scientific_name_goat: {
+          rename: "Scientific Name (GOAT)",
+          cellRenderer: {
+            element: DetailAttribute,
+            propPointers: {
+              id: 'species_id'
+            },
+            props: {
+              endpoint: 'taxon',
+              attribute: 'scientific_name'
             }
           },
           sort: false
@@ -83,6 +96,10 @@ function PendingRequests() {
             propPointers: {
               requestId: 'id',
               speciesId: 'species_id'
+            },
+            props: {
+              forceUpdate: forceUpdate,
+              setForceUpdate: setForceUpdate
             }
           },
           sort: false

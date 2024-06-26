@@ -67,10 +67,6 @@ p.text {
   color: #fff;
 }
 
-button.btn {
-  font-size: 14px;
-}
-
 .action-buttons {
   display: flex;
   .btn {
@@ -90,18 +86,4 @@ button.btn {
   .spinner-border.spinner-border-sm {
     margin: 8px;
   }
-}
-
-// radio buttons - to go in tolui
-.rs-radio.rs-radio-checked .rs-radio-inner::before {
-  background-color: var(--primary) !important;
-  border-color: var(--primary) !important;
-}
-
-.rs-radio-wrapper::before {
-  border-color: var(--primary) !important;
-}
-
-.rs-radio:hover .rs-radio-inner::before {
-  border-color: var(--primary) !important;
 }

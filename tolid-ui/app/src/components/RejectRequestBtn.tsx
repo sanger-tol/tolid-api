@@ -5,30 +5,52 @@ SPDX-License-Identifier: MIT
 */
 
 import { useState } from 'react';
-import { Modal, Button } from '@tol/tol-ui';
+import { Modal, Button, PopUpMessage, httpClient } from '@tol/tol-ui';
 import { Form, Radio, RadioGroup, Input } from 'rsuite';
 import GenericRequestBtn from './GenericRequestBtn';
 
 
 interface Props {
   id: string
+  forceUpdate: boolean,
+  setForceUpdate: any
 }
 
 function RejectRequestBtn(props: Props) {
-  const { id } = props;
+  const { id, forceUpdate, setForceUpdate } = props;
   const [open, setOpen] = useState(false);
   const [rejectionChoice, setRejectionChoice] = useState("");
   const [rejectionReason, setRejectionReason] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const TAXON_NOT_SPECIES_LEVEL = "Taxonomy ID is not species-level";
 
-  const openModal = () => {
-    setOpen(!open);
-  };
+  const setRemoteRejection = () => {
+    const upsertData = {
+      data: [{
+        id: id,
+        type: "request",
+        attributes: {
+          status: "Rejected",
+          reason: rejectionReason ? rejectionReason : null
+        }
+      }]
+    }
+    httpClient().post("/request:upsert", upsertData)
+    .then(() => {
+      setSuccessMessage("Request rejected successfully.");
+    })
+    .catch((error: any) => {
+      setErrorMessage("Failed to reject request: " + error.message);
+    });
+  }
 
   const rejectModalButton = (
     <Button
       onClick={() => {
-        openModal();
+        setOpen(false);
+        setRemoteRejection();
+        setForceUpdate(!forceUpdate);
       }}
       variant="danger"
       style={{height: 30, padding: "0 10px"}}
@@ -39,9 +61,19 @@ function RejectRequestBtn(props: Props) {
 
   return (
     <>
+      <PopUpMessage
+        type='success'
+        message={successMessage}
+        setMessage={setSuccessMessage}
+      />
+      <PopUpMessage
+        type='danger'
+        message={errorMessage}
+        setMessage={setErrorMessage}
+      />
       <GenericRequestBtn
         onClick={() => {
-          openModal();
+          setOpen(true);
           setRejectionReason("");
           setRejectionChoice("");
         }}

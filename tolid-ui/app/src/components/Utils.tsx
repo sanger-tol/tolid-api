@@ -88,23 +88,3 @@ export function DetailAttribute(props: Props) {
     </div>
   );
 }
-
-export function SpeciesTaxon(props: {id: string}) {
-  return (
-    <DetailAttribute
-      id={props.id}
-      endpoint='species'
-      attribute='id'
-    />
-  );
-}
-
-export function SpeciesName(props: {id: string}) {
-  return (
-    <DetailAttribute
-      id={props.id}
-      endpoint='species'
-      attribute='name'
-    />
-  );
-}
