@@ -15,7 +15,7 @@ import {
   httpClient,
   useZone
 } from '@tol/tol-ui';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
@@ -30,16 +30,6 @@ function Profile() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
-
-  const [userId, setUserId] = useState('');
-  useEffect(
-    () => {
-      httpClient().get('/auth/roles', {})
-      .then((res: any) => setUserId(res.data.id))
-      .catch()
-    },
-    []
-  );
 
   const clearAll = () => {
     setRequestedTaxonomyId("");
@@ -163,6 +153,8 @@ function Profile() {
     </div>
   );
 
+  console.log(userId)
+
   const specimenZone = useZone({
     endpoint: 'specimen',
     components: [
@@ -172,7 +164,7 @@ function Profile() {
           and_: {
             'user.id': {
               eq: {
-                value: userId
+                value: Number(userId)
               }
             }
           }
@@ -187,6 +179,7 @@ function Profile() {
       <RemoteTable
         id="my-tolids"
         noConfigModal
+        noDownload
         height={300}
         {...specimenZone}
       />

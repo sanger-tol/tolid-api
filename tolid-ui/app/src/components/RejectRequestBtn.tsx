@@ -39,6 +39,7 @@ function RejectRequestBtn(props: Props) {
     httpClient().post("/request:upsert", upsertData)
     .then(() => {
       setSuccessMessage("Request rejected successfully.");
+      setForceUpdate(!forceUpdate);
     })
     .catch((error: any) => {
       setErrorMessage("Failed to reject request: " + error.message);
@@ -50,7 +51,6 @@ function RejectRequestBtn(props: Props) {
       onClick={() => {
         setOpen(false);
         setRemoteRejection();
-        setForceUpdate(!forceUpdate);
       }}
       variant="danger"
       style={{height: 30, padding: "0 10px"}}

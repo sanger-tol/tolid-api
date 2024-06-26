@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 */
 
 import GenericRequestBtn from "./GenericRequestBtn";
-import { httpClient } from "@tol/tol-ui";
+// import { httpClient } from "@tol/tol-ui";
 
 
 interface Props {
