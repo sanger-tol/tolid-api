@@ -153,13 +153,13 @@ function Profile() {
     </div>
   );
 
-  console.log(userId)
 
   const specimenZone = useZone({
     endpoint: 'specimen',
     components: [
       {
         id: 'my-tolids',
+        /*
         filter: {
           and_: {
             'user.id': {
@@ -169,11 +169,12 @@ function Profile() {
             }
           }
         }
+        */
       }
     ],
   });
 
-  const myTolids = userId !== '' ? (
+  const myTolids = (
     <div>
       <h2 className="sub-heading">My ToLIDs</h2>
       <RemoteTable
@@ -183,10 +184,6 @@ function Profile() {
         height={300}
         {...specimenZone}
       />
-    </div>
-  ) : (
-    <div>
-      <h2 className="sub-heading">My ToLIDs</h2>
     </div>
   );
 
