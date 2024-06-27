@@ -41,7 +41,7 @@ services:
       - OIDC_REVOKE_TOKEN_URL
       - API_PATH
     ports:
-      - "9090:80"
+      - "8080:80"
     volumes:
       - './tolid-api/app/main:/app/main'
       - '../tol-sdk:/packages/tol-sdk:rw'
@@ -68,7 +68,7 @@ services:
       - MAIL_RECEIVER_REQUESTS_PENDING
       - ENVIRONMENT
     ports:
-      - "8080:80"
+      - "8081:80"
     volumes:
       - './tolid-apiv2/app/main:/app/main'
       - '../tol-sdk:/packages/tol-sdk:rw'

@@ -5,15 +5,27 @@ SPDX-License-Identifier: MIT
 */
 
 import GenericRequestBtn from "./GenericRequestBtn";
+// import { httpClient } from "@tol/tol-ui";
 
-function AcceptRequestBtn() {
-  return <>
+
+interface Props {
+  id: string
+}
+
+function AcceptRequestBtn(props: Props) {
+  const { id } = props;
+
+  const acceptRequest = () => {
+    console.log(id);
+  }
+
+  return (
     <GenericRequestBtn
-      //onClick={}
+      onClick={acceptRequest}
       variant="accept"
       text="Accept"
     />
-  </>;
+  );
 }
 
 export default AcceptRequestBtn;

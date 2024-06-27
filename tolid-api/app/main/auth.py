@@ -56,9 +56,9 @@ def create_auth_inspector(
             raise ForbiddenError()
 
     @composite.auth(
-        object_type='specimen'
+        object_type=['specimen', 'request'],
     )
-    def __specimen_auth(
+    def __specimen_request_auth(
         __object_type: str,
         op: OperatorMethod,
         auth_context: Optional[AuthContext] = None

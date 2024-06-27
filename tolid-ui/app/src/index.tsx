@@ -14,55 +14,55 @@ import {
 } from "./pages";
 import reportWebVitals from "./reportWebVitals";
 import { TolApp, Page, Dropdown } from '@tol/tol-ui';
+import Logo from './assets/logo.png';
 import "./scss/styling.scss";
 
-
-const profile: Page = {
-  name: 'Profile',
-  element: <Profile />,
-  // auth: true
-};
 
 const search: Page = {
   name: 'Search',
   element: <Search />
 };
 
+const profile: Page = {
+  name: 'Profile',
+  element: <Profile />,
+  auth: true
+};
+
 const addSpecies: Page = {
   name: 'Add Species',
   element: <AddSpecies />,
-  // auth: true,
-  // admin: true,
-  hidden: true
 };
 
 const pendingRequests: Page = {
   name: 'Pending Requests',
   element: <PendingRequests />,
-  // auth: true,
-  // admin: true,
-  hidden: true
 };
 
 const admin: Dropdown = {
   name: 'Admin',
-  pages: [addSpecies, pendingRequests]
-  // auth: true,
-  // admin: true
+  pages: [addSpecies, pendingRequests],
+  admin: true
 };
 
 ReactDOM.render( // eslint-disable-line
   <TolApp
-    brand="ToLID"
+    brand={
+      <img
+        src={Logo}
+        alt="ToLID Logo"
+        style={{
+          height: 50,
+          marginTop: -15,
+          marginBottom: -15
+        }}
+      />
+    }
     homePage={ <Home /> }
     pages={[
       search,
       profile,
-
-      // admin dropdown
-      admin,
-      addSpecies,
-      pendingRequests
+      admin
     ]}
   />,
   document.getElementById('root')

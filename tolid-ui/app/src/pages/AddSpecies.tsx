@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT
 
 import { useState } from 'react';
 import { Button, httpClient, PopUpMessage, Widgets, Status } from '@tol/tol-ui';
+import { Input } from 'rsuite';
 
 const EMPTY_SPECIES_DATA_ERROR = "Species data cannot be an empty line.";
 const WRONG_NUMBER_OF_ENTRIES_ERROR = "9 entries must be provided.";
@@ -117,7 +118,7 @@ function AddSpecies() {
   }
 
   const validateIndividualLines = (array: string[], lineNumber: number): boolean => {
-    if (array.length != 10) {
+    if (array.length !== 10) {
       setErrorMessages(previousErrorMessages => [
         ...previousErrorMessages, `Line ${lineNumber}: ${WRONG_NUMBER_OF_ENTRIES_ERROR}`
       ]);
@@ -181,11 +182,12 @@ function AddSpecies() {
     <div className="add-species-wrapper">
       <div>
         <p>Add species data below:</p>
-        <textarea
+        <Input
+          as="textarea"
           className="add-species-textarea"
           value={speciesData}
-          onChange={(e) => {
-            setSpeciesData(e.target.value);
+          onChange={(value: any) => {
+            setSpeciesData(value);
             resetErrors();
           }}
           placeholder='Enter species data here...'

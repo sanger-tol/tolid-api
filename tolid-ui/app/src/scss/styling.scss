@@ -14,8 +14,8 @@
   margin-bottom: 12px !important;
 }
 
-p {
-  margin-bottom: 12px !important;
+p.text {
+  margin-bottom: 12px;
 }
 
 .form-info {
@@ -28,13 +28,9 @@ p {
   color: var(--primary) !important;
 }
 
-// temporary fix for the nav dropdown box
-.nav-dropdown-box .nav-link {
-  color: var(--bs-heading-color);
-}
-
+// add species
 .add-species-alert-wrapper {
-  font-size: 14xp;
+  font-size: 14px;
 
   .alert {
     padding: 4px;
@@ -43,11 +39,8 @@ p {
 }
 
 .add-species-wrapper {
-  padding: 8px;
-
   p {
     font-size: 14px;
-    margin-top: 5px;
     margin-bottom: 5px;
   }
 }
@@ -65,14 +58,32 @@ p {
   margin-top: 10px;
 }
 
-.pending-button-styling {
-  min-width: 70px;
+// action buttons
+.generic-button-styling {
+  width: 65px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   color: #fff;
 }
 
-.generic-button-wrapper {
-  padding: 5px 8px;
+.action-buttons {
+  display: flex;
+  .btn {
+    font-size: 14px;
+    margin-right: 5px;
+    padding: 4px 6px;
+  }
+  svg {
+    margin-right: 5px;
+  }
+}
+
+// cell loader
+.loading-cell {
+  height: 32px;
+
+  .spinner-border.spinner-border-sm {
+    margin: 8px;
+  }
 }

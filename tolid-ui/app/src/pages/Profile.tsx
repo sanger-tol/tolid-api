@@ -15,7 +15,7 @@ import {
   httpClient,
   useZone
 } from '@tol/tol-ui';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
@@ -30,16 +30,6 @@ function Profile() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
-
-  const [userId, setUserId] = useState('');
-  useEffect(
-    () => {
-      httpClient().get('/auth/roles', {})
-      .then((res: any) => setUserId(res.data.id))
-      .catch()
-    },
-    []
-  );
 
   const clearAll = () => {
     setRequestedTaxonomyId("");
@@ -90,7 +80,25 @@ function Profile() {
   const saveRequest = () => {
     setOpen(false);
     clearAll();
-    setSuccess("ToLID request submitted successfully");
+    /*
+    PLACEHOLDER REQEUST
+
+    const json = {
+      species_id: speciesTaxonomyId,
+      requested_species_id: requestedTaxonomyId,
+      speciesName: speciesName,
+      specimenId: specimenId,
+    }
+    httpClient().post('/custom/create/request', json, {
+      baseURL: '/api/v3',
+    }).then((res: any) => {
+      const data = res.data;
+      setSuccess("ToLID request submitted successfully");
+    }).catch((error: any) => {
+      console.error(error.message);
+      setError("An error occurred while submitting the request. Please try again later.");
+    });
+    */
   }
 
   const requestButton = (
@@ -145,11 +153,13 @@ function Profile() {
     </div>
   );
 
+
   const specimenZone = useZone({
     endpoint: 'specimen',
     components: [
       {
         id: 'my-tolids',
+        /*
         filter: {
           and_: {
             'user.id': {
@@ -159,23 +169,21 @@ function Profile() {
             }
           }
         }
+        */
       }
     ],
   });
 
-  const myTolids = userId !== '' ? (
+  const myTolids = (
     <div>
       <h2 className="sub-heading">My ToLIDs</h2>
       <RemoteTable
         id="my-tolids"
         noConfigModal
+        noDownload
         height={300}
         {...specimenZone}
       />
-    </div>
-  ) : (
-    <div>
-      <h2 className="sub-heading">My ToLIDs</h2>
     </div>
   );
 
