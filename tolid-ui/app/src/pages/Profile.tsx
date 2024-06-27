@@ -164,7 +164,7 @@ function Profile() {
           and_: {
             'user.id': {
               eq: {
-                value: Number(userId)
+                value: userId
               }
             }
           }

@@ -93,6 +93,7 @@ function RejectRequestBtn(props: Props) {
             <RadioGroup
               name="radioList"
               inline
+              // @ts-ignore
               onChange={setRejectionChoice}
             >
               <Radio

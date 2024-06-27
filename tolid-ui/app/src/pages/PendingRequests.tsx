@@ -13,7 +13,6 @@ function PendingRequests() {
 
   const tolidZone = useZone({
     endpoint: 'request',
-    baseUrl: '/api/v3',
     components: [{
       id: 'requests-table-v1',
       filter: {
@@ -98,7 +97,9 @@ function PendingRequests() {
               speciesId: 'species_id'
             },
             props: {
+              // @ts-ignore
               forceUpdate: forceUpdate,
+              // @ts-ignore
               setForceUpdate: setForceUpdate
             }
           },
