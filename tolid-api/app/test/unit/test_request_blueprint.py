@@ -189,3 +189,65 @@ class TestRequestBlueprint:
 
         assert mock_session_context.data_object_factory.call_count == 0
         assert mock_session_context.insert.call_count == 0
+
+    def test_reject_request(
+        self,
+        client: FlaskClient,
+        auth_context: AuthContext,
+        mock_ds: DataSource,
+        mock_obj: DataObject
+    ):
+        auth_context.authenticated = True
+        auth_context.user_id = '100'
+        auth_context.roles = ['admin']
+
+        mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
+        mock_session_context.upsert.return_value = [mock_obj]
+
+        response = client.patch(
+            '/custom/request/reject',
+            json=[{
+                'request_id': 999999,
+                'reason': 'Not nice'
+            }]
+        )
+        assert response.status_code == 200
+        assert response.json == {'data': [{'id': '999999', 'type': 'request'}]}
+
+        assert mock_session_context.data_object_factory.call_count == 1
+        assert mock_session_context.upsert.call_count == 1
+        assert mock_session_context.upsert.call_args[0][0] == 'request'
+        mock_data_object_list = mock_session_context.upsert.call_args[0][1]
+        assert len(mock_data_object_list) == 1
+
+        args, kwargs = mock_session_context.data_object_factory.call_args_list[0]
+        assert args[0] == 'request'
+        assert args[1] == 999999
+        assert kwargs['attributes']['reason'] == 'Not nice'
+        assert kwargs['attributes']['status'] == 'Rejected'
+
+    def test_reject_request_not_found(
+        self,
+        client: FlaskClient,
+        auth_context: AuthContext,
+        mock_ds: DataSource,
+        mock_obj: DataObject
+    ):
+        auth_context.authenticated = True
+        auth_context.user_id = '100'
+        auth_context.roles = ['admin']
+
+        mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
+        mock_session_context.get_one.return_value = []
+
+        response = client.patch(
+            '/custom/request/reject',
+            json=[{
+                'request_id': 999999,
+                'reason': 'Not nice'
+            }]
+        )
+        assert response.status_code == 400
+
+        assert mock_session_context.data_object_factory.call_count == 0
+        assert mock_session_context.upsert.call_count == 0

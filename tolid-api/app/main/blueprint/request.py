@@ -9,6 +9,9 @@ from flask import Blueprint, request
 from tol.api_base2 import (
     custom_blueprint
 )
+from tol.api_base2.auth import (
+    require_auth
+)
 from tol.api_base2.misc import (
     CtxGetter,
     default_ctx_getter
@@ -31,8 +34,10 @@ def request_blueprint(
     ctx_getter: CtxGetter = default_ctx_getter
 ) -> Blueprint:
 
-    request_blueprint = custom_blueprint(name='create',
-                                             url_prefix=url_prefix)
+    request_blueprint = custom_blueprint(
+        name='create',
+        url_prefix=url_prefix
+    )
 
     data_source_dict = DataSourceDict(*data_sources)
     view = DefaultView(
@@ -42,6 +47,7 @@ def request_blueprint(
     )
 
     @request_blueprint.route('/create', methods=['POST'])
+    @require_auth
     def create_request():
         data_source = data_source_dict['request']
         ctx = ctx_getter()
@@ -115,5 +121,39 @@ def request_blueprint(
                 )
             requests_inserted = session.insert('request', requests_to_insert)
         return view.dump_bulk(requests_inserted), 200
+
+    @request_blueprint.route('/reject', methods=['PATCH'])
+    @require_auth(role='admin')
+    def reject_request():
+        data_source = data_source_dict['request']
+
+        with data_source.get_session() as session:
+            requests_to_upsert = []
+            for row in request.json:
+                request_id = row.get('request_id')
+                reason = row.get('reason')
+
+                tolid_request = session.get_one('request', request_id)
+                if tolid_request is None:
+                    return {
+                        'errors': [
+                            {
+                                'detail': f'Request {request_id} does not exist'
+                            }
+                        ]
+                    }, 400
+
+                requests_to_upsert.append(
+                    session.data_object_factory(
+                        'request',
+                        request_id,
+                        attributes={
+                            'status': 'Rejected',
+                            'reason': reason,
+                        }
+                    )
+                )
+            requests_upserted = session.upsert('request', requests_to_upsert)
+        return view.dump_bulk(requests_upserted), 200
 
     return request_blueprint
