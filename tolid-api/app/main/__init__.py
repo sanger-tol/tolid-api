@@ -6,7 +6,7 @@ import os
 
 from flask import Flask
 
-from main.blueprint import create_blueprint
+from main.blueprint import request_blueprint
 from main.model import Base, UserMixin, main_models
 
 from tol.api_base2 import data_blueprint, system_blueprint
@@ -58,10 +58,10 @@ def application() -> Flask:
     )
     app.register_blueprint(data_bp)
 
-    create_bp = create_blueprint(
+    request_bp = request_blueprint(
         sql_ds,
-        url_prefix=f'{api_path}/custom/create'
+        url_prefix=f'{api_path}/custom/request'
     )
-    app.register_blueprint(create_bp)
+    app.register_blueprint(request_bp)
 
     return app

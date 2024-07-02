@@ -86,7 +86,7 @@ function Profile() {
       species_name: speciesName,
       specimen_id: specimenId,
     }
-    httpClient().post('/custom/create/request', json, {
+    httpClient().post('/custom/request/create', json, {
       baseURL: '/api/v3',
     }).then((res: any) => {
       const data = res.data;

@@ -24,8 +24,8 @@ from tol.core.operator import (
     PageGetter
 )
 
-from ...main.blueprint.create import (
-    create_blueprint
+from ...main.blueprint.request import (
+    request_blueprint
 )
 
 
@@ -82,11 +82,11 @@ def mock_ds(mock_obj: DataObject) -> DataSource:
 @pytest.fixture
 def app(mock_ds: DataSource, ctx_getter: CtxGetter) -> Flask:
     app_fixture = Flask(__name__)
-    create_bp = create_blueprint(
+    request_bp = request_blueprint(
         mock_ds,
-        url_prefix='/custom/create',
+        url_prefix='/custom/request',
         ctx_getter=ctx_getter)
-    app_fixture.register_blueprint(create_bp)
+    app_fixture.register_blueprint(request_bp)
     return app_fixture
 
 
@@ -95,7 +95,7 @@ def client(app: Flask) -> FlaskClient:
     return app.test_client()
 
 
-class TestCreateBlueprint:
+class TestRequestBlueprint:
 
     def test_create_request(
         self,
@@ -112,7 +112,7 @@ class TestCreateBlueprint:
         mock_session_context.insert.return_value = [mock_obj]
 
         response = client.post(
-            '/custom/create/request',
+            '/custom/request/create',
             json=[{
                 'species_id': 1234,
                 'specimen_id': 'ABC123',
@@ -151,7 +151,7 @@ class TestCreateBlueprint:
         mock_session_context.get_count.return_value = 1
 
         response = client.post(
-            '/custom/create/request',
+            '/custom/request/create',
             json=[{
                 'species_id': 1234,
                 'specimen_id': 'ABC123',
@@ -177,7 +177,7 @@ class TestCreateBlueprint:
         mock_session_context.get_count.side_effect = [0, 1]
 
         response = client.post(
-            '/custom/create/request',
+            '/custom/request/create',
             json=[{
                 'species_id': 1234,
                 'specimen_id': 'ABC123',

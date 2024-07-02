@@ -2,4 +2,4 @@
 #
 # SPDX-License-Identifier: MIT
 
-from .create import create_blueprint  # noqa F401
+from .request import request_blueprint  # noqa F401

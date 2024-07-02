@@ -25,13 +25,13 @@ from tol.core.data_source_dict import (
 )
 
 
-def create_blueprint(
+def request_blueprint(
     *data_sources: DataSource,
-    url_prefix: str = '/custom/create',
+    url_prefix: str = '/custom/request',
     ctx_getter: CtxGetter = default_ctx_getter
 ) -> Blueprint:
 
-    create_blueprint = custom_blueprint(name='create',
+    request_blueprint = custom_blueprint(name='create',
                                              url_prefix=url_prefix)
 
     data_source_dict = DataSourceDict(*data_sources)
@@ -41,7 +41,7 @@ def create_blueprint(
         hop_limit=1
     )
 
-    @create_blueprint.route('/request', methods=['POST'])
+    @request_blueprint.route('/create', methods=['POST'])
     def create_request():
         data_source = data_source_dict['request']
         ctx = ctx_getter()
@@ -116,4 +116,4 @@ def create_blueprint(
             requests_inserted = session.insert('request', requests_to_insert)
         return view.dump_bulk(requests_inserted), 200
 
-    return create_blueprint
+    return request_blueprint
