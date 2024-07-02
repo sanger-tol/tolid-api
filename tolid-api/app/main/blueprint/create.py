@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+from datetime import datetime
+
 from flask import Blueprint, request
 
 from tol.api_base2 import (
@@ -10,6 +12,9 @@ from tol.api_base2 import (
 from tol.api_base2.misc import (
     CtxGetter,
     default_ctx_getter
+)
+from tol.api_client2.view import (
+    DefaultView
 )
 from tol.core import (
     DataSource,
@@ -30,6 +35,11 @@ def create_blueprint(
                                              url_prefix=url_prefix)
 
     data_source_dict = DataSourceDict(*data_sources)
+    view = DefaultView(
+        prefix='',
+        include_all_to_ones=True,
+        hop_limit=1
+    )
 
     @create_blueprint.route('/request', methods=['POST'])
     def create_request():
@@ -38,10 +48,13 @@ def create_blueprint(
         user_id = ctx.user_id
 
         with data_source.get_session() as session:
-            requests_to_upsert = []
+            requests_to_insert = []
             for row in request.json:
-                species_id = row.get('species_taxonomy_id')
+                species_id = row.get('species_id')
+                requested_taxonomy_id = row.get('requested_taxonomy_id')
                 specimen_id = row.get('specimen_id')
+                species_name = row.get('species_name')
+
                 # Does the request already exist?
                 f = DataSourceFilter()
                 f.and_ = {
@@ -80,26 +93,27 @@ def create_blueprint(
                         ]
                     }, 400
 
-                requests_to_upsert.append(
+                requests_to_insert.append(
                     session.data_object_factory(
                         'request',
                         None,
                         attributes={
                             'species_id': species_id,
-                            'requested_taxonomy_id': row.get('requested_taxonomy_id'),
+                            'requested_taxonomy_id': requested_taxonomy_id,
                             'specimen_id': specimen_id,
-                            'confirmation_name': row.get('species_name'),
-                            'status': 'Pre-pending'
+                            'confirmation_name': species_name,
+                            'status': 'Pre-pending',
+                            'created_at': datetime.now(),
                         },
                         to_one={
-                            'user': session.data_object_factory(
+                            'user': session.get_one(
                                 'user',
                                 user_id
                             )
                         }
                     )
                 )
-            session.upsert('request', requests_to_upsert)
-        return {}, 200
+            requests_inserted = session.insert('request', requests_to_insert)
+        return view.dump_bulk(requests_inserted), 200
 
     return create_blueprint

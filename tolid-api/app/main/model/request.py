@@ -13,7 +13,7 @@ from .base import Base
 class Request(Base):
     __tablename__ = 'request'
 
-    request_id: Mapped[str] = mapped_column(primary_key=True)
+    request_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     specimen_id: Mapped[str] = mapped_column()
     status: Mapped[str] = mapped_column()
     reason: Mapped[str] = mapped_column()

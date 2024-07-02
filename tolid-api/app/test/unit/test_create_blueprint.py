@@ -101,45 +101,42 @@ class TestCreateBlueprint:
         self,
         client: FlaskClient,
         auth_context: AuthContext,
-        mock_ds: DataSource
+        mock_ds: DataSource,
+        mock_obj: DataObject
     ):
         auth_context.authenticated = True
         auth_context.user_id = '100'
         auth_context.roles = []
 
+        mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
+        mock_session_context.insert.return_value = [mock_obj]
+
         response = client.post(
             '/custom/create/request',
             json=[{
-                'species_taxonomy_id': '1234',
+                'species_id': 1234,
                 'specimen_id': 'ABC123',
                 'species_name': 'Grubby grommitulus',
-                'requested_taxonomy_id': '5678'
+                'requested_taxonomy_id': 5678
             }]
         )
         assert response.status_code == 200
+        assert response.json == {'data': [{'id': '999999', 'type': 'request'}]}
 
-        mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
-        assert mock_session_context.data_object_factory.call_count == 2
-        assert mock_session_context.upsert.call_count == 1
-        assert mock_session_context.upsert.call_args[0][0] == 'request'
-        mock_data_object_list = mock_session_context.upsert.call_args[0][1]
+        assert mock_session_context.data_object_factory.call_count == 1
+        assert mock_session_context.insert.call_count == 1
+        assert mock_session_context.insert.call_args[0][0] == 'request'
+        mock_data_object_list = mock_session_context.insert.call_args[0][1]
         assert len(mock_data_object_list) == 1
 
         args, kwargs = mock_session_context.data_object_factory.call_args_list[0]
-        assert args[0] == 'user'
-        assert args[1] == '100'
-        assert 'attributes' not in kwargs
-
-        args, kwargs = mock_session_context.data_object_factory.call_args_list[1]
         assert args[0] == 'request'
         assert args[1] is None
-        assert kwargs['attributes'] == {
-            'species_id': '1234',
-            'requested_taxonomy_id': '5678',
-            'specimen_id': 'ABC123',
-            'confirmation_name': 'Grubby grommitulus',
-            'status': 'Pre-pending'
-        }
+        assert kwargs['attributes']['species_id'] == 1234
+        assert kwargs['attributes']['requested_taxonomy_id'] == 5678
+        assert kwargs['attributes']['specimen_id'] == 'ABC123'
+        assert kwargs['attributes']['confirmation_name'] == 'Grubby grommitulus'
+        assert kwargs['attributes']['status'] == 'Pre-pending'
 
     def test_create_request_exists(
         self,
@@ -156,13 +153,39 @@ class TestCreateBlueprint:
         response = client.post(
             '/custom/create/request',
             json=[{
-                'species_taxonomy_id': '1234',
+                'species_id': 1234,
                 'specimen_id': 'ABC123',
                 'species_name': 'Grubby grommitulus',
-                'requested_taxonomy_id': '5678'
+                'requested_taxonomy_id': 5678
             }]
         )
         assert response.status_code == 400
 
         assert mock_session_context.data_object_factory.call_count == 0
-        assert mock_session_context.upsert.call_count == 0
+        assert mock_session_context.insert.call_count == 0
+
+    def test_create_tolid_exists(
+        self,
+        client: FlaskClient,
+        auth_context: AuthContext,
+        mock_ds: DataSource
+    ):
+        auth_context.authenticated = True
+        auth_context.user_id = '100'
+        auth_context.roles = []
+        mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
+        mock_session_context.get_count.side_effect = [0, 1]
+
+        response = client.post(
+            '/custom/create/request',
+            json=[{
+                'species_id': 1234,
+                'specimen_id': 'ABC123',
+                'species_name': 'Grubby grommitulus',
+                'requested_taxonomy_id': 5678
+            }]
+        )
+        assert response.status_code == 400
+
+        assert mock_session_context.data_object_factory.call_count == 0
+        assert mock_session_context.insert.call_count == 0

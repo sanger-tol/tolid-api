@@ -80,14 +80,11 @@ function Profile() {
   const saveRequest = () => {
     setOpen(false);
     clearAll();
-    /*
-    PLACEHOLDER REQEUST
-
     const json = {
       species_id: speciesTaxonomyId,
-      requested_species_id: requestedTaxonomyId,
-      speciesName: speciesName,
-      specimenId: specimenId,
+      requested_taxonomy_id: requestedTaxonomyId,
+      species_name: speciesName,
+      specimen_id: specimenId,
     }
     httpClient().post('/custom/create/request', json, {
       baseURL: '/api/v3',
@@ -98,7 +95,6 @@ function Profile() {
       console.error(error.message);
       setError("An error occurred while submitting the request. Please try again later.");
     });
-    */
   }
 
   const requestButton = (
