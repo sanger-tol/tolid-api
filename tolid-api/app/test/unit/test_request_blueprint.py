@@ -238,7 +238,7 @@ class TestRequestBlueprint:
         auth_context.roles = ['admin']
 
         mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
-        mock_session_context.get_one.return_value = []
+        mock_session_context.get_one.return_value = None
 
         response = client.patch(
             '/custom/request/reject',
