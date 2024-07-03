@@ -89,7 +89,8 @@ function Profile() {
     httpClient().post('/custom/request/create', json, {
       baseURL: '/api/v3',
     }).then((res: any) => {
-      // const data = res.data;
+      const data = res.data;
+      console.log(data)
       setSuccess("ToLID request submitted successfully");
     }).catch((error: any) => {
       console.error(error.message);
