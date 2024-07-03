@@ -47,7 +47,7 @@ def request_blueprint(
     )
 
     @request_blueprint.route('/create', methods=['POST'])
-    @require_auth
+    @require_auth(ctx_getter=ctx_getter)
     def create_request():
         data_source = data_source_dict['request']
         ctx = ctx_getter()
@@ -123,7 +123,7 @@ def request_blueprint(
         return view.dump_bulk(requests_inserted), 200
 
     @request_blueprint.route('/reject', methods=['PATCH'])
-    @require_auth(role='admin')
+    @require_auth(role='admin', ctx_getter=ctx_getter)
     def reject_request():
         data_source = data_source_dict['request']
 
