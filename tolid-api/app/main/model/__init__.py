@@ -7,7 +7,7 @@ from .primary_prefix import PrimaryPrefix
 from .request import Request
 from .secondary_prefix import SecondaryPrefix
 from .species import Species
-from .specimen import Tolid
+from .specimen import Specimen
 from .user_mixin import UserMixin  # noqa
 
 
@@ -16,5 +16,5 @@ main_models = (
     Request,
     SecondaryPrefix,
     Species,
-    Tolid,
+    Specimen,
 )

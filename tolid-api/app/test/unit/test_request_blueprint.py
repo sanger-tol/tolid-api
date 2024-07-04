@@ -50,10 +50,13 @@ def ctx_getter(
 
 @pytest.fixture
 def mock_obj() -> DataObject:
-    mock_obj = create_autospec(DataObject, spec_set=True)
+    mock_obj = create_autospec(DataObject)
     mock_obj.attributes = {}
     mock_obj.type = 'request'
     mock_obj.id = '999999'
+    mock_obj.specimen_id = 'ABC123'
+    mock_obj.requested_taxonomy_id = 5678
+    mock_obj.species_id = 1234
 
     return mock_obj
 
@@ -245,6 +248,123 @@ class TestRequestBlueprint:
             json=[{
                 'request_id': 999999,
                 'reason': 'Not nice'
+            }]
+        )
+        assert response.status_code == 400
+
+        assert mock_session_context.data_object_factory.call_count == 0
+        assert mock_session_context.upsert.call_count == 0
+
+    def test_accept_request(
+        self,
+        client: FlaskClient,
+        auth_context: AuthContext,
+        mock_ds: DataSource,
+        mock_obj: DataObject
+    ):
+        auth_context.authenticated = True
+        auth_context.user_id = '100'
+        auth_context.roles = ['admin']
+
+        mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
+
+        mock_user = create_autospec(DataObject)
+        mock_user.id = 1
+        mock_obj.user = mock_user
+
+        mock_specimen1 = create_autospec(DataObject)
+        mock_specimen1.number = 1
+        mock_specimen2 = create_autospec(DataObject)
+        mock_specimen2.number = 3
+
+        mock_species = create_autospec(DataObject)
+        mock_species.attributes = {}
+        mock_species.type = 'species'
+        mock_species.id = 1234
+        mock_species.prefix = 'abCdeFghi'
+        mock_species.specimens = [mock_specimen1, mock_specimen2]
+        mock_session_context.get_one.side_effect = [mock_obj, mock_species]
+
+        mock_specimen3 = create_autospec(DataObject)
+        mock_specimen3.number = 4
+        mock_specimen3.id = 'abCdeFghi4'
+        mock_specimen3.type = 'specimen'
+        mock_specimen3.species = mock_species
+        mock_specimen3.specimen_id = 'ABC123'
+
+        mock_session_context.insert.return_value = [mock_specimen3]
+
+        response = client.patch(
+            '/custom/request/accept',
+            json=[{
+                'request_id': 999999
+            }]
+        )
+        assert response.status_code == 200
+        assert response.json == {'data': [{
+            'id': 'abCdeFghi4',
+            'type': 'specimen',
+            'attributes': {}
+        }]}
+
+        assert mock_session_context.data_object_factory.call_count == 1
+        assert mock_session_context.insert.call_count == 1
+        assert mock_session_context.insert.call_args[0][0] == 'specimen'
+        mock_data_object_list = mock_session_context.insert.call_args[0][1]
+        assert len(mock_data_object_list) == 1
+
+        args, kwargs = mock_session_context.data_object_factory.call_args_list[0]
+        assert args[0] == 'specimen'
+        assert args[1] == 'abCdeFghi4'
+        assert kwargs['attributes']['specimen_id'] == 'ABC123'
+        assert kwargs['attributes']['number'] == 4
+        assert kwargs['attributes']['requested_taxonomy_id'] == 5678
+        assert kwargs['to_one']['species'] == mock_species
+        assert kwargs['to_one']['user'] == mock_user
+
+    def test_accept_request_not_found(
+        self,
+        client: FlaskClient,
+        auth_context: AuthContext,
+        mock_ds: DataSource,
+        mock_obj: DataObject
+    ):
+        auth_context.authenticated = True
+        auth_context.user_id = '100'
+        auth_context.roles = ['admin']
+
+        mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
+        mock_session_context.get_one.return_value = None
+
+        response = client.patch(
+            '/custom/request/accept',
+            json=[{
+                'request_id': 999999
+            }]
+        )
+        assert response.status_code == 400
+
+        assert mock_session_context.data_object_factory.call_count == 0
+        assert mock_session_context.upsert.call_count == 0
+
+    def test_accept_species_not_found(
+        self,
+        client: FlaskClient,
+        auth_context: AuthContext,
+        mock_ds: DataSource,
+        mock_obj: DataObject
+    ):
+        auth_context.authenticated = True
+        auth_context.user_id = '100'
+        auth_context.roles = ['admin']
+
+        mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
+        mock_session_context.get_one.side_effect = [mock_obj, None]
+
+        response = client.patch(
+            '/custom/request/accept',
+            json=[{
+                'request_id': 999999
             }]
         )
         assert response.status_code == 400

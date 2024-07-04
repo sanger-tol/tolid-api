@@ -23,7 +23,7 @@ class Species(Base):
     phylum: Mapped[str] = mapped_column()
     kingdom: Mapped[str] = mapped_column()
 
-    tolids: Mapped[List['Tolid']] = relationship(back_populates='species')  # noqa F821
+    specimens: Mapped[List['Specimen']] = relationship(back_populates='species')  # noqa F821
 
     @classmethod
     def get_id_column_name(cls) -> str:

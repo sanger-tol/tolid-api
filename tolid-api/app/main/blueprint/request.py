@@ -27,6 +27,8 @@ from tol.core.data_source_dict import (
     DataSourceDict
 )
 
+from ..util import current_highest_tolid_number
+
 
 def request_blueprint(
     *data_sources: DataSource,
@@ -155,5 +157,57 @@ def request_blueprint(
                 )
             requests_upserted = session.upsert('request', requests_to_upsert)
         return view.dump_bulk(requests_upserted), 200
+
+    @request_blueprint.route('/accept', methods=['PATCH'])
+    @require_auth(role='admin', ctx_getter=ctx_getter)
+    def accept_request():
+        data_source = data_source_dict['request']
+
+        with data_source.get_session() as session:
+            tolids_inserted = []
+            for row in request.json:
+                request_id = row.get('request_id')
+
+                tolid_request = session.get_one('request', request_id)
+                if tolid_request is None:
+                    return {
+                        'errors': [
+                            {
+                                'detail': f'Request {request_id} does not exist'
+                            }
+                        ]
+                    }, 400
+
+                species = session.get_one('species', tolid_request.species_id)
+                if species is None:
+                    return {
+                        'errors': [
+                            {
+                                'detail': f'Species {tolid_request.species_id} does not exist'
+                            }
+                        ]
+                    }, 400
+
+                number = current_highest_tolid_number(species)
+                tolids_inserted.extend(
+                    session.insert('specimen', [
+                        session.data_object_factory(
+                            'specimen',
+                            f'{species.prefix}{number + 1}',
+                            attributes={
+                                'specimen_id': tolid_request.specimen_id,
+                                'number': number + 1,
+                                'requested_taxonomy_id': tolid_request.requested_taxonomy_id,
+                                'created_at': datetime.now(),
+                            },
+                            to_one={
+                                'species': species,
+                                'user': tolid_request.user
+                            }
+                        )
+                    ])
+                )
+                session.delete('request', [tolid_request.id])
+        return view.dump_bulk(tolids_inserted), 200
 
     return request_blueprint

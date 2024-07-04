@@ -10,7 +10,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 
 
-class Tolid(Base):
+class Specimen(Base):
     __tablename__ = 'specimen'
 
     tolid: Mapped[str] = mapped_column(primary_key=True)
@@ -18,9 +18,10 @@ class Tolid(Base):
     number: Mapped[int] = mapped_column()
     created_at: Mapped[datetime.datetime] = mapped_column()
     legacy_name: Mapped[str] = mapped_column()
+    requested_taxonomy_id: Mapped[int] = mapped_column()
 
     species_id: Mapped[int] = mapped_column(ForeignKey('species.taxonomy_id'))
-    species: Mapped['Species'] = relationship(back_populates='tolids')  # noqa F821
+    species: Mapped['Species'] = relationship(back_populates='specimens')  # noqa F821
 
     created_by: Mapped[int] = mapped_column(ForeignKey('user.id'))
     user: Mapped['User'] = relationship(  # noqa F821
