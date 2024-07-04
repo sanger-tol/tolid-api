@@ -31,10 +31,12 @@ def upgrade():
     session = orm.Session(bind=bind)
 
     user_roles_raw = session.execute(
-        '''
-        SELECT user_id, role
-        FROM role
-        '''
+        sa.text(
+            '''
+            SELECT user_id, role
+            FROM role
+            '''
+        )
     ).fetchall()
     user_roles = (
         (user_id, role_name)
@@ -55,10 +57,12 @@ def upgrade():
     )
 
     user_tokens_raw = session.execute(
-        '''
-        SELECT id, token, api_key
-        FROM "user"
-        '''
+        sa.text(
+            '''
+            SELECT id, token, api_key
+            FROM "user"
+            '''
+        )
     ).fetchall()
 
     user_tokens = {
@@ -123,10 +127,12 @@ def upgrade():
 
     for role_name, i in role_ids.items():
         session.execute(
-            f'''
-            INSERT INTO role(id, name)
-            VALUES ({i}, '{role_name}')
-            '''
+            sa.text(
+                f'''
+                INSERT INTO role(id, name)
+                VALUES ({i}, '{role_name}')
+                '''
+            )
         )
 
 
@@ -136,10 +142,12 @@ def upgrade():
         role_id = role_ids[role_name]
         for user_id in user_ids:
             session.execute(
-                f'''
-                INSERT INTO role_binding(user_id, role_id)
-                VALUES ({user_id}, {role_id})
-                '''
+                sa.text(
+                    f'''
+                    INSERT INTO role_binding(user_id, role_id)
+                    VALUES ({user_id}, {role_id})
+                    '''
+                )
             )
 
 
@@ -149,15 +157,17 @@ def upgrade():
 
     for user_id, oidc_token in user_tokens.items():
         session.execute(
-            f'''
-            INSERT into token(token, expires_at, oidc, user_id)
-            VALUES (
-                '{oidc_token}',
-                TIMESTAMP '{oidc_expiry_date.strftime("%Y-%m-%d %H:%M:%S")}',
-                true,
-                {user_id}
+            sa.text(
+                f'''
+                INSERT into token(token, expires_at, oidc, user_id)
+                VALUES (
+                    '{oidc_token}',
+                    TIMESTAMP '{oidc_expiry_date.strftime("%Y-%m-%d %H:%M:%S")}',
+                    true,
+                    {user_id}
+                )
+                '''
             )
-            '''
         )
 
 
@@ -167,15 +177,17 @@ def upgrade():
 
     for user_id, api_key in user_api_keys.items():
         session.execute(
-            f'''
-            INSERT into token(token, expires_at, oidc, user_id)
-            VALUES (
-                '{api_key}',
-                TIMESTAMP '{api_key_expiry_date.strftime("%Y-%m-%d %H:%M:%S")}',
-                false,
-                {user_id}
+            sa.text(
+                f'''
+                INSERT into token(token, expires_at, oidc, user_id)
+                VALUES (
+                    '{api_key}',
+                    TIMESTAMP '{api_key_expiry_date.strftime("%Y-%m-%d %H:%M:%S")}',
+                    false,
+                    {user_id}
+                )
+                '''
             )
-            '''
         )
 
 
