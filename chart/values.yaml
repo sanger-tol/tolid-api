@@ -109,7 +109,7 @@ tolcore:
       repository: ""
       tag: ""
   apiv2:
-    fullname: "tolid-api"
+    fullname: "tolid-apiv2"
     probe_url: '/api/v2/ui'
     path: '/api/v2'
     extra_env:
@@ -125,7 +125,7 @@ tolcore:
       GOAT_URL: goat.url
       GOAT_API_PATH: goat.api_path
   api:
-    fullname: "tolid-apiv3"
+    fullname: "tolid-api"
     probe_url: '/api/v3/system/healthz'
     path: '/api/v3'
     extra_env:
@@ -137,6 +137,7 @@ tolcore:
       MAIL_SENDER_NAME: mail.sender.name
       MAIL_RECEIVER_REQUESTS_PENDING: mail.receiver.requests_pending
       TOLID_URL: public_url.tolid
+      API_PATH: api.path
       GOAT_URL: goat.url
       GOAT_API_PATH: goat.api_path
   flask:
