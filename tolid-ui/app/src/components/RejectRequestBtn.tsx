@@ -11,7 +11,7 @@ import GenericRequestBtn from './GenericRequestBtn';
 
 
 interface Props {
-  id: string
+  id: string,
   forceUpdate: boolean,
   setForceUpdate: any
 }

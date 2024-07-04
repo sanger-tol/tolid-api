@@ -16,11 +16,14 @@ import {
   useZone
 } from '@tol/tol-ui';
 import { useState } from 'react';
+import { DetailAttribute, TolidStatus } from "../components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 
 function Profile() {
+  const user = localStorage.getItem('user') || '{}';
+  const userId = JSON.parse(user).id;
   const [requestedTaxonomyId, setRequestedTaxonomyId] = useState("");
   const [specimenId, setSpecimenId] = useState("");
 
@@ -30,6 +33,7 @@ function Profile() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
+  const [forceUpdate, setForceUpdate] = useState(false);
 
   const clearAll = () => {
     setRequestedTaxonomyId("");
@@ -86,12 +90,12 @@ function Profile() {
       species_name: speciesName,
       specimen_id: specimenId,
     }
-    httpClient().post('/custom/request/create', json, {
-      baseURL: '/api/v3',
+    httpClient().post('/custom/request/create', [json], {
     }).then((res: any) => {
-      const data = res.data;
-      console.log(data)
-      setSuccess("ToLID request submitted successfully");
+      if (res.status === 200) {
+        setSuccess("ToLID request submitted successfully");
+        setForceUpdate(!forceUpdate);
+      }
     }).catch((error: any) => {
       console.error(error.message);
       setError("An error occurred while submitting the request. Please try again later.");
@@ -100,7 +104,6 @@ function Profile() {
 
   const requestButton = (
     <Button variant="success" onClick={saveRequest}>
-      <strong style={{marginRight: 4}}>Request</strong>
       <FontAwesomeIcon icon={faArrowRight} size="sm" />
     </Button>
   );
@@ -150,13 +153,11 @@ function Profile() {
     </div>
   );
 
-
   const specimenZone = useZone({
     endpoint: 'specimen',
     components: [
       {
         id: 'my-tolids',
-        /*
         filter: {
           and_: {
             'user.id': {
@@ -166,7 +167,6 @@ function Profile() {
             }
           }
         }
-        */
       }
     ],
   });
@@ -179,14 +179,107 @@ function Profile() {
         noConfigModal
         noDownload
         height={300}
+        fields={{
+          'id': {
+            rename: 'ToLID'
+          },
+          'specimen_id': {},
+          'species.name': {
+            rename: 'Species',
+            cellRenderer: 'relationship'
+          },
+          created_at: {}
+        }}
         {...specimenZone}
       />
     </div>
   );
 
-  const listRequests = (
+  const requestsZone = useZone({
+    endpoint: 'request',
+    components: [
+      {
+        id: 'my-requests',
+        filter: {
+          and_: {
+            'user.id': {
+              eq: {
+                value: userId
+              }
+            }
+          }
+        }
+      }
+    ],
+  });
+
+  const myRequests = (
     <div>
       <h2 className="sub-heading">My Requests</h2>
+      <RemoteTable
+        id="my-requests"
+        noDownload
+        height={300}
+        defaultSort="created_at"
+        forceUpdate={forceUpdate}
+        fields={{
+          status: {
+            cellRenderer: {
+              element: TolidStatus,
+              propPointers: {
+                status: 'status',
+                reason: 'reason'
+              }
+            },
+          },
+          species_id: {
+            rename: "Taxon ID"
+          },
+          custom_scientific_name: {
+            rename: "Scientific Name",
+            custom: true,
+            cellRenderer: {
+              element: DetailAttribute,
+              propPointers: {
+                id: 'species_id'
+              },
+              props: {
+                endpoint: 'taxon',
+                attribute: 'scientific_name'
+              }
+            },
+            sort: false
+          },
+          requested_taxonomy_id: {
+            rename: "Requested Taxon ID"
+          },
+          custom_requested_name: {
+            rename: "Requested Scientific Name",
+            custom: true,
+            cellRenderer: {
+              element: DetailAttribute,
+              propPointers: {
+                id: 'requested_taxonomy_id'
+              },
+              props: {
+                endpoint: 'taxon',
+                attribute: 'scientific_name'
+              }
+            },
+            sort: false
+          },
+          confirmation_name: {
+            rename: "Name Confirmation",
+            sort: false
+          },
+          specimen_id: {
+            rename: "Specimen ID",
+            sort: false
+          },
+          created_at: {}
+        }}
+        {...requestsZone}
+      />
     </div>
   );
 
@@ -200,7 +293,7 @@ function Profile() {
       type: 'full'
     },
     {
-      component: listRequests,
+      component: myRequests,
       type: 'full'
     }
   ];

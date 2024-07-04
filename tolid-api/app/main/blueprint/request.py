@@ -110,7 +110,7 @@ def request_blueprint(
                             'requested_taxonomy_id': requested_taxonomy_id,
                             'specimen_id': specimen_id,
                             'confirmation_name': species_name,
-                            'status': 'Pre-pending',
+                            'status': 'Pending',
                             'created_at': datetime.now(),
                         },
                         to_one={

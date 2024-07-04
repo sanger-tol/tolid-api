@@ -47,6 +47,7 @@ function PendingRequests() {
         },
         custom_scientific_name: {
           rename: "Scientific Name",
+          custom: true,
           cellRenderer: {
             element: DetailAttribute,
             propPointers: {
@@ -61,6 +62,7 @@ function PendingRequests() {
         },
         custom_scientific_name_goat: {
           rename: "Scientific Name (GOAT)",
+          custom: true,
           cellRenderer: {
             element: DetailAttribute,
             propPointers: {
@@ -90,6 +92,7 @@ function PendingRequests() {
         custom_action: {
           rename: "Action",
           width: 184,
+          custom: true,
           cellRenderer: {
             element: ActionButtons,
             propPointers: {
