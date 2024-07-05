@@ -178,7 +178,7 @@ function Profile() {
         id="my-tolids"
         noConfigModal
         noDownload
-        height={300}
+        height={400}
         fields={{
           'id': {
             rename: 'ToLID'
@@ -219,7 +219,7 @@ function Profile() {
       <RemoteTable
         id="my-requests"
         noDownload
-        height={300}
+        height={400}
         defaultSort="created_at"
         forceUpdate={forceUpdate}
         fields={{

@@ -9,8 +9,6 @@ import { Status } from '@tol/tol-ui';
 
 function statusType(status: string) {
   switch(status) {
-  case 'Accepted':
-    return 'success';
   case 'Rejected':
     return 'danger';
   default:
@@ -32,7 +30,9 @@ function StatusExample(props: Props) {
         text={status}
         status={statusType(status)}
       />
-      <p style={{fontSize: 12, marginTop: 8}}>Reason: {reason}</p>
+      {status === 'Rejected' &&
+        <p style={{fontSize: 12, marginTop: 8}}>Reason: {reason}</p>
+      }
     </div>
   );
 }

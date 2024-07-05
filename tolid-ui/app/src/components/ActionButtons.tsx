@@ -22,7 +22,7 @@ interface Props {
 }
 
 function ActionButtons(props: Props) {
-  const { requestId, speciesId, forceUpdate, setForceUpdate } = props;
+  const { requestId, speciesId } = props;
   const [loading, setLoading] = useState(true);
   const [canAccept, setCanAccept] = useState(false);
 
