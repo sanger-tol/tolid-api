@@ -139,7 +139,7 @@ class TestRequestBlueprint:
         assert kwargs['attributes']['requested_taxonomy_id'] == 5678
         assert kwargs['attributes']['specimen_id'] == 'ABC123'
         assert kwargs['attributes']['confirmation_name'] == 'Grubby grommitulus'
-        assert kwargs['attributes']['status'] == 'Pre-pending'
+        assert kwargs['attributes']['status'] == 'Pending'
 
     def test_create_request_exists(
         self,
