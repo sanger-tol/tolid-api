@@ -10,6 +10,7 @@ include:
 variables:
   APP_NAME: tolid
   DISABLE_UI_LINT: "true"
+  SERVICE_NAME: id
 
 build-apiv2:
   extends: .build
