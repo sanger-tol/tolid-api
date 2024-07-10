@@ -54,7 +54,7 @@ def create_auth_inspector(
 
         if object_type == 'taxon':
             return
-        
+
         if op == OperatorMethod.DETAIL:
             raise ForbiddenError()
 
