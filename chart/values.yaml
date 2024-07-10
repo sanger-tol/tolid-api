@@ -99,7 +99,7 @@ tolcore:
     name: ""
     host: ""
     port: "" # specify as a string
-    create_local: ""
+    enabled: true
   dbutils:
     image:
       repository: ""
@@ -108,9 +108,10 @@ tolcore:
     image:
       repository: ""
       tag: ""
-  api:
-    fullname: "tolid-api"
+  apiv2:
+    fullname: "tolid-apiv2"
     probe_url: '/api/v2/ui'
+    path: '/api/v2'
     extra_env:
       MAIL_USERNAME_SMTP: mail.username
       MAIL_PASSWORD_SMTP: mail.password
@@ -121,18 +122,33 @@ tolcore:
       MAIL_RECEIVER_REQUESTS_PENDING: mail.receiver.requests_pending
       TOLID_URL: public_url.tolid
       NIH_API_KEY: keys.nih
-      ELIXIR_CLIENT_ID: elixir.client.id
-      ELIXIR_CLIENT_SECRET: elixir.client.secret
-      ELIXIR_REDIRECT_URI: elixir.url.redirect
-      ELIXIR_JWK: elixir.jwk
-  apiv3:
-    fullname: "tolid-apiv3"
-    probe_url: '/api/v3/ui'
+      GOAT_URL: goat.url
+      GOAT_API_PATH: goat.api_path
+  api:
+    fullname: "tolid-api"
+    probe_url: '/api/v3/system/healthz'
+    path: '/api/v3'
+    extra_env:
+      MAIL_USERNAME_SMTP: mail.username
+      MAIL_PASSWORD_SMTP: mail.password
+      MAIL_HOST: mail.host
+      MAIL_PORT: mail.port
+      MAIL_SENDER: mail.sender.address
+      MAIL_SENDER_NAME: mail.sender.name
+      MAIL_RECEIVER_REQUESTS_PENDING: mail.receiver.requests_pending
+      TOLID_URL: public_url.tolid
+      API_PATH: api.path
+      GOAT_URL: goat.url
+      GOAT_API_PATH: goat.api_path
   flask:
     env: ""
   ui:
     fullname: "tolid-ui"
     probe_url: '/'
+    extra_env:
+      REACT_APP_API_PATH: api.path
+      REACT_APP_PORTAL_URL: portal.url
+      REACT_APP_PORTAL_API_PATH: portal.api_path
   backup:
     uri: ""
     access_key: ""
@@ -163,3 +179,19 @@ tolcore:
     url:
       redirect: ""
     jwk: ""
+  portal:
+    url: https://portal.tol.sanger.ac.uk
+    api_path: /api/v1
+  goat:
+    url: https://goat.genomehubs.org
+    api_path: /api/v2
+  oidc:
+    enabled: true
+    client:
+      id: ""
+      secret: ""
+    url:
+      auth: https://login.elixir-czech.org/oidc/authorize
+      token: https://login.elixir-czech.org/oidc/token
+      revoke: https://login.elixir-czech.org/oidc/revoke
+      userinfo: https://login.elixir-czech.org/oidc/userinfo

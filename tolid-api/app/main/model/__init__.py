@@ -1,16 +1,20 @@
-# SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+# SPDX-FileCopyrightText: 2023 Genome Research Ltd.
 #
 # SPDX-License-Identifier: MIT
 
-from .base import db, Base  # noqa
+from .base import Base  # noqa
+from .primary_prefix import PrimaryPrefix
+from .request import Request
+from .secondary_prefix import SecondaryPrefix
+from .species import Species
+from .specimen import Specimen
+from .user_mixin import UserMixin  # noqa
 
-from .tolid_primary_prefix import TolidPrimaryPrefix  # noqa
-from .tolid_request import TolidRequest  # noqa
-from .tolid_role import TolidRole  # noqa
-from .tolid_role_binding import TolidRoleBinding  # noqa
-from .tolid_secondary_prefix import TolidSecondaryPrefix  # noqa
-from .tolid_specimen import TolidSpecimen  # noqa
-from .tolid_species import TolidSpecies  # noqa
-from .tolid_state import TolidState  # noqa
-from .tolid_token import TolidToken  # noqa
-from .tolid_user import TolidUser  # noqa
+
+main_models = (
+    PrimaryPrefix,
+    Request,
+    SecondaryPrefix,
+    Species,
+    Specimen,
+)

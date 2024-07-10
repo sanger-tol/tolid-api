@@ -4,6 +4,7 @@
 
 from main import application
 
+
 app = application()
 
 
@@ -11,9 +12,6 @@ def main():
     app.run(
         host='0.0.0.0',
         port=80,
-        extra_files=(
-            'main/swagger/swagger.yaml',
-        ),
     )
 
 

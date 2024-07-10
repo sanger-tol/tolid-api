@@ -1,19 +1,70 @@
 /*
-SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 
 SPDX-License-Identifier: MIT
 */
 
-import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import {
+  Home,
+  AddSpecies,
+  PendingRequests,
+  Profile,
+  Search
+} from "./pages";
+import reportWebVitals from "./reportWebVitals";
+import { TolApp, Page, Dropdown } from '@tol/tol-ui';
+import Logo from './assets/logo.png';
+import "./scss/styling.scss";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+
+const search: Page = {
+  name: 'Search',
+  element: <Search />
+};
+
+const profile: Page = {
+  name: 'Profile',
+  element: <Profile />,
+  auth: true
+};
+
+const addSpecies: Page = {
+  name: 'Add Species',
+  element: <AddSpecies />,
+};
+
+const pendingRequests: Page = {
+  name: 'Pending Requests',
+  element: <PendingRequests />,
+};
+
+const admin: Dropdown = {
+  name: 'Admin',
+  pages: [addSpecies, pendingRequests],
+  admin: true
+};
+
+ReactDOM.render( // eslint-disable-line
+  <TolApp
+    brand={
+      <img
+        src={Logo}
+        alt="ToLID Logo"
+        style={{
+          height: 50,
+          marginTop: -15,
+          marginBottom: -15
+        }}
+      />
+    }
+    homePage={ <Home /> }
+    pages={[
+      search,
+      profile,
+      admin
+    ]}
+  />,
   document.getElementById('root')
 );
 

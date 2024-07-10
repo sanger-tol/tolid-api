@@ -1,36 +1,82 @@
-/*
-SPDX-FileCopyrightText: 2021 Genome Research Ltd.
+ /*
+SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 
 SPDX-License-Identifier: MIT
 */
 
-import React from "react";
-import { Container, Col, Row } from "react-bootstrap";
-import SearchResults from "../components/search/SearchResults"
+import { RemoteTable, Widgets, env, useZone } from "@tol/tol-ui";
 
 function Search() {
+  const filter = {
+    in_list: {},
+    and_: {
+      "tolid_specimen.id": {exists:{}},
+      "tolid_species.id": {gt: {value: 0}}
+    }
+  };
+
+  const tolidZone = useZone({
+    endpoint: 'tolid',
+    components: [
+      {
+        id: 'tolid-table-v1',
+        filter: filter
+      }
+    ],
+    baseUrl: env.TOL_DATA
+  });
+
+
+  const table = (
+    <RemoteTable
+      id="tolid-table-v1"
+      noConfigModal
+      noDownload
+      fields={{
+        "uid": {
+          rename: "ToLID"
+        },
+        "tolid_species.tolid_name": {
+          rename: "Species Name"
+        },
+        "tolid_species.id": {
+          rename: "Taxonomy ID",
+          cellRenderer: null
+        },
+        "tolid_specimen.id": {
+          rename: "Specimen",
+          cellRenderer: null
+        }
+      }}
+      {...tolidZone}
+    />
+  );
+
+  const title = (
+    <div>
+      <h2>Search</h2>
+      <p style={{marginTop: 4}}>
+        Search on a ToLID prefix, taxonomy ID, species name or ToLID.
+      </p>
+    </div>
+  );
+
+  const components = [
+    {
+      component: title,
+      type: 'full'
+    },
+    {
+      component: table,
+      type: 'xl'
+    }
+  ];
+
   return (
     <div className="search">
-      <header className="masthead text-center text-white">
-        <div className="masthead-content">
-          <div className="container">
-            <h1 className="masthead-heading mb-0">Search</h1>
-          </div>
-        </div>
-        <div className="bg-circle-1 bg-circle"></div>
-        <div className="bg-circle-2 bg-circle"></div>
-        <div className="bg-circle-3 bg-circle"></div>
-        <div className="bg-circle-4 bg-circle"></div>
-      </header>
-      <section>
-        <Container>
-          <Row className="align-items-center">
-            <Col lg="12" className="order-lg-1">
-              <SearchResults/>
-            </Col>
-          </Row>
-        </Container>
-      </section>
+      <Widgets
+        components={components}
+      />
     </div>
   );
 }

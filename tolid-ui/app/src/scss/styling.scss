@@ -1,0 +1,89 @@
+/*
+ * SPDX-FileCopyrightText: 2024 Genome Research Ltd.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+@import "variables.scss";
+
+@import '~@tol/tol-ui/src/scss/tol-styling.scss';
+
+
+
+.sub-heading {
+  margin-bottom: 12px !important;
+}
+
+p.text {
+  margin-bottom: 12px;
+}
+
+.form-info {
+  margin: 6px 0 12px 3px !important;
+  color: var(--bs-secondary-color) !important;
+  font-size: 12px !important;
+}
+
+.request-value {
+  color: var(--primary) !important;
+}
+
+// add species
+.add-species-alert-wrapper {
+  font-size: 14px;
+
+  .alert {
+    padding: 4px;
+    margin-bottom: 5px;
+  }
+}
+
+.add-species-wrapper {
+  p {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+}
+
+.add-species-textarea {
+  width: 100%;
+  min-height: 125px;
+  font-size: 18px;
+  padding: 12px;
+}
+
+.add-species-button-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+// action buttons
+.generic-button-styling {
+  width: 65px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.action-buttons {
+  display: flex;
+  .btn {
+    font-size: 14px;
+    margin-right: 5px;
+    padding: 4px 6px;
+  }
+  svg {
+    margin-right: 5px;
+  }
+}
+
+// cell loader
+.loading-cell {
+  height: 32px;
+
+  .spinner-border.spinner-border-sm {
+    margin: 8px;
+  }
+}

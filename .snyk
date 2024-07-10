@@ -8,4 +8,4 @@ ignore: {}
 patch: {}
 exclude:
   global:
-    - tolid-ui/app/src/services/http/config.ts
+    - src/services/http/config.ts

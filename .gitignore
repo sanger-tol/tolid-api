@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+node_modules
+.dccache
 .tox/
 venv/
 build/
@@ -15,8 +17,8 @@ launch.json
 .env.prod
 values-*.yaml
 *.tgz
-chart/charts
-.dccache
-.virtualenv/
+chart/charts/
+.DS_Store
 inject.js
+.virtualenv/
 .vscode/

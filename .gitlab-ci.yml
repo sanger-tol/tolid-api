@@ -4,11 +4,76 @@
 
 include:
   - project: 'tol/tol-core'
-    ref: v1.3.17
+    ref: v1.3.18
     file: '/gitlab/app.yml'
 
 variables:
-  APP_NAME: "tolid"
-  SERVICE_NAME: "id"
-
+  APP_NAME: tolid
   DISABLE_UI_LINT: "true"
+
+build-apiv2:
+  extends: .build
+  needs:
+    - job: lint-license
+      optional: true
+    - job: lint-python
+      optional: true
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    PART: "tolid-apiv2"
+    DOCKERFILE: "tolid-apiv2/Dockerfile"
+    NAME: "tolid-apiv2"
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "dev"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "qa"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "staging"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "production"
+      when: never
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: never
+    - when: always
+
+build-apiv2-dev:
+  extends: .build-dev
+  needs:
+    - job: lint-license
+      optional: true
+    - job: lint-python
+      optional: true
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    PART: "tolid-apiv2"
+    DOCKERFILE: "tolid-apiv2/Dockerfile"
+    NAME: "tolid-apiv2"
+  rules:
+    - if: $CI_COMMIT_REF_NAME != "dev"
+      when: never
+    - when: always
+
+system-test-apiv2:
+  extends: .system-test-python
+  image: $CI_REGISTRY_IMAGE/${CI_PROJECT_NAME}-apiv2:$CI_COMMIT_SHA
+  variables:
+    TEST_BASE_DIR: ${CI_PROJECT_NAME}-apiv2/
+    TEST_DIR: app/test
+  needs:
+    - job: build-apiv2
+      optional: true
+    - job: build-apiv2-dev
+      optional: true
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "qa"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "staging"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "production"
+      when: never
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: never
+    - exists:
+      - "${APP_NAME}-apiv2/app/test/system/**/*"
