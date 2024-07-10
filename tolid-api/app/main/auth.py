@@ -47,11 +47,14 @@ def create_auth_inspector(
 
     @composite.always
     def __no_detail_get(
-        __object_type: str,
+        object_type: str,
         op: OperatorMethod,
         **kwargs
     ):
 
+        if object_type == 'taxon':
+            return
+        
         if op == OperatorMethod.DETAIL:
             raise ForbiddenError()
 
