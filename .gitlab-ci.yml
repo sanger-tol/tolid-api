@@ -21,8 +21,6 @@ build-apiv2:
     - job: lint-python
       optional: true
   variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
     PART: "tolid-apiv2"
     DOCKERFILE: "tolid-apiv2/Dockerfile"
     NAME: "tolid-apiv2"
@@ -47,8 +45,6 @@ build-apiv2-dev:
     - job: lint-python
       optional: true
   variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
     PART: "tolid-apiv2"
     DOCKERFILE: "tolid-apiv2/Dockerfile"
     NAME: "tolid-apiv2"
