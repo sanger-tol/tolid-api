@@ -5,7 +5,7 @@
 include:
   - project: 'tol/tol-core'
     #ref: v1.3.18
-    ref: TOLP-7729  # reeemove - change back!
+    ref: TOLP-7810  # reeemove - change back!
     file: '/gitlab/app.yml'
 
 variables:
@@ -26,8 +26,6 @@ build-apiv2:
     PART: "tolid-apiv2"
     DOCKERFILE: "tolid-apiv2/Dockerfile"
     NAME: "tolid-apiv2"
-    # disable buildkit here (TOLP-7810)
-    DOCKER_BUILDKIT: "0"
   rules:
     - if: $CI_COMMIT_REF_NAME == "dev"
       when: never
@@ -54,8 +52,6 @@ build-apiv2-dev:
     PART: "tolid-apiv2"
     DOCKERFILE: "tolid-apiv2/Dockerfile"
     NAME: "tolid-apiv2"
-    # disable buildkit here (TOLP-7810)
-    DOCKER_BUILDKIT: "0"
   rules:
     - if: $CI_COMMIT_REF_NAME != "dev"
       when: never
