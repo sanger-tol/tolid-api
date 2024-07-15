@@ -4,7 +4,7 @@
 
 include:
   - project: 'tol/tol-core'
-    ref: v1.3.18
+    ref: v1.4.0
     file: '/gitlab/app.yml'
 
 variables:
@@ -20,8 +20,6 @@ build-apiv2:
     - job: lint-python
       optional: true
   variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
     PART: "tolid-apiv2"
     DOCKERFILE: "tolid-apiv2/Dockerfile"
     NAME: "tolid-apiv2"
@@ -46,8 +44,6 @@ build-apiv2-dev:
     - job: lint-python
       optional: true
   variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ''
     PART: "tolid-apiv2"
     DOCKERFILE: "tolid-apiv2/Dockerfile"
     NAME: "tolid-apiv2"
