@@ -25,6 +25,7 @@ build-apiv2:
     PART: "tolid-apiv2"
     DOCKERFILE: "tolid-apiv2/Dockerfile"
     NAME: "tolid-apiv2"
+    DOCKER_BUILDKIT: "1"
   rules:
     - if: $CI_COMMIT_REF_NAME == "dev"
       when: never
@@ -51,6 +52,7 @@ build-apiv2-dev:
     PART: "tolid-apiv2"
     DOCKERFILE: "tolid-apiv2/Dockerfile"
     NAME: "tolid-apiv2"
+    DOCKER_BUILDKIT: "1"
   rules:
     - if: $CI_COMMIT_REF_NAME != "dev"
       when: never
