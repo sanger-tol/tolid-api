@@ -42,7 +42,6 @@ function AddSpecies() {
     }
 
     const splitData = speciesValuesArray.map(line => splitLineToValues(line));
-    console.log(splitData);
     const isValid = validateAllLines(splitData);
 
     if (!isValid) {
