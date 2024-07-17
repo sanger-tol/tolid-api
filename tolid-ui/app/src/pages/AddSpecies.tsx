@@ -42,6 +42,7 @@ function AddSpecies() {
     }
 
     const splitData = speciesValuesArray.map(line => splitLineToValues(line));
+    console.log(splitData);
     const isValid = validateAllLines(splitData);
 
     if (!isValid) {
@@ -65,12 +66,11 @@ function AddSpecies() {
     const payload = {
       "data": dataArray
     };
-
     return payload;
   }
 
   const splitLineToValues = (line: string): string[] => {
-    const regEx = /\s+/;
+    const regEx = /[\t]/;
     return [...line.split(regEx).filter(value => value !== ""), ""];
   }
 
@@ -91,10 +91,10 @@ function AddSpecies() {
       .then(() => {
         setSuccess(REQUEST_SUCCESSFUL);
         setSpeciesData("");
-      }).catch((e) => {
+      }).catch(() => {
         setErrorMessagesAvailable(true);
         setErrorMessages(previousErrorMessages => [
-          ...previousErrorMessages, `${e}, please check your data and try again.`
+          ...previousErrorMessages, `Could not submit, please check your data and try again.`
         ]);
         setFailure(REQUEST_UNSUCCESSFUL);
       });
