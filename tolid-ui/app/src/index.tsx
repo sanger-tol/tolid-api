@@ -42,7 +42,7 @@ const pendingRequests: Page = {
 const admin: Dropdown = {
   name: 'Admin',
   pages: [addSpecies, pendingRequests],
-  admin: true
+  auth: ['admin']
 };
 
 ReactDOM.render( // eslint-disable-line
