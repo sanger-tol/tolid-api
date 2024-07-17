@@ -70,7 +70,7 @@ function AddSpecies() {
   }
 
   const splitLineToValues = (line: string): string[] => {
-    const regEx = /[\t]/;
+    const regEx = /[\t]+/;
     return [...line.split(regEx).filter(value => value !== ""), ""];
   }
 
