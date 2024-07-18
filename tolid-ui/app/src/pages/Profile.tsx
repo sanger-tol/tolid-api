@@ -188,6 +188,22 @@ function Profile() {
             rename: 'Species',
             cellRenderer: 'relationship'
           },
+          'species.id': {
+            rename: 'Species ID',
+            //cellRenderer: {
+            //  element: DetailAttribute,
+            //  propPointers: {
+            //    id: 'species.id'
+            //  },
+            //  props: {
+            //    endpoint: 'species',
+            //    attribute: 'requested_taxonomy_id'
+            //  }
+            //},
+          },
+          'requested_taxonomy_id': {
+            rename: 'Requested Taxonomy ID'
+          },
           created_at: {}
         }}
         {...specimenZone}
