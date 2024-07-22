@@ -1,3 +1,5 @@
+
+
 /*
 SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 
@@ -19,6 +21,7 @@ import { useState } from 'react';
 import { DetailAttribute, TolidStatus } from "../components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { SubspeciesCellRenderer } from '../components'
 
 
 function Profile() {
@@ -187,6 +190,16 @@ function Profile() {
           'species.name': {
             rename: 'Species',
             cellRenderer: 'relationship'
+          },
+          'species.id': {
+            rename: 'Taxon ID',
+            cellRenderer: {
+              element: SubspeciesCellRenderer,
+              propPointers: {
+                taxonId: 'species.id',
+                requestedTaxonId: 'requested_taxonomy_id'
+              }
+            }
           },
           created_at: {}
         }}
