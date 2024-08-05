@@ -128,6 +128,8 @@ tolcore:
     fullname: "tolid-api"
     probe_url: '/api/v3/system/healthz'
     path: '/api/v3'
+    data_path: '/data'
+    custom_path: ''
     extra_env:
       MAIL_USERNAME_SMTP: mail.username
       MAIL_PASSWORD_SMTP: mail.password
@@ -138,6 +140,8 @@ tolcore:
       MAIL_RECEIVER_REQUESTS_PENDING: mail.receiver.requests_pending
       TOLID_URL: public_url.tolid
       API_PATH: api.path
+      API_DATA_PATH: api.data_path
+      API_CUSTOM_PATH: api.custom_path
       GOAT_URL: goat.url
       GOAT_API_PATH: goat.api_path
   flask:
@@ -147,6 +151,8 @@ tolcore:
     probe_url: '/'
     extra_env:
       REACT_APP_API_PATH: api.path
+      REACT_APP_API_DATA_PATH: api.data_path
+      REACT_APP_API_CUSTOM_PATH: api.custom_path
       REACT_APP_PORTAL_URL: portal.url
       REACT_APP_PORTAL_API_PATH: portal.api_path
   backup:

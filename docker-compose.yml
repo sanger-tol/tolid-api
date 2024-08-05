@@ -40,6 +40,8 @@ services:
       - OIDC_TOKEN_URL
       - OIDC_REVOKE_TOKEN_URL
       - API_PATH
+      - API_DATA_PATH
+      - API_CUSTOM_PATH
     ports:
       - "8080:80"
     volumes:
@@ -89,6 +91,8 @@ services:
     environment:
       - NODE_ENV=development
       - REACT_APP_API_PATH=${API_PATH}
+      - REACT_APP_API_DATA_PATH=${API_DATA_PATH}
+      - REACT_APP_API_CUSTOM_PATH=${API_CUSTOM_PATH}
       - REACT_APP_PORTAL_URL=${PORTAL_URL}
       - REACT_APP_PORTAL_API_PATH=${PORTAL_API_PATH}
       - REACT_APP_MATOMO_SITE_ID=${MATOMO_SITE_ID}

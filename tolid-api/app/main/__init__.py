@@ -23,6 +23,8 @@ def application() -> Flask:
 
     db_uri = os.environ['DB_URI']
     api_path = os.environ['API_PATH']
+    api_data_path = os.environ['API_DATA_PATH']
+    api_custom_path = os.environ['API_CUSTOM_PATH']
 
     auth_bp = db_auth_blueprint(
         Base,
@@ -53,14 +55,14 @@ def application() -> Flask:
     data_bp = data_blueprint(
         sql_ds,
         goat(),
-        url_prefix=api_path,
+        url_prefix=f'{api_path}{api_data_path}',
         auth_inspector=create_auth_inspector()
     )
     app.register_blueprint(data_bp)
 
     request_bp = request_blueprint(
         sql_ds,
-        url_prefix=f'{api_path}/custom/request'
+        url_prefix=f'{api_path}{api_custom_path}/request'
     )
     app.register_blueprint(request_bp)
 

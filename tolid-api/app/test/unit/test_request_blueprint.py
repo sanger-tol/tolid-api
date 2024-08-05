@@ -100,7 +100,7 @@ def client(app: Flask) -> FlaskClient:
 
 class TestRequestBlueprint:
 
-    def test_create_request(
+    def test_create_request_user(
         self,
         client: FlaskClient,
         auth_context: AuthContext,
@@ -141,7 +141,7 @@ class TestRequestBlueprint:
         assert kwargs['attributes']['confirmation_name'] == 'Grubby grommitulus'
         assert kwargs['attributes']['status'] == 'Pending'
 
-    def test_create_request_exists(
+    def test_create_request_user_request_exists(
         self,
         client: FlaskClient,
         auth_context: AuthContext,
@@ -167,7 +167,7 @@ class TestRequestBlueprint:
         assert mock_session_context.data_object_factory.call_count == 0
         assert mock_session_context.insert.call_count == 0
 
-    def test_create_tolid_exists(
+    def test_create_request_user_tolid_exists(
         self,
         client: FlaskClient,
         auth_context: AuthContext,
@@ -371,3 +371,216 @@ class TestRequestBlueprint:
 
         assert mock_session_context.data_object_factory.call_count == 0
         assert mock_session_context.upsert.call_count == 0
+
+    def test_create_request_creator(
+        self,
+        client: FlaskClient,
+        auth_context: AuthContext,
+        mock_ds: DataSource,
+        mock_obj: DataObject
+    ):
+        auth_context.authenticated = True
+        auth_context.user_id = '100'
+        auth_context.roles = ['creator']
+
+        mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
+
+        mock_user = create_autospec(DataObject)
+        mock_user.id = 100
+        mock_obj.user = mock_user
+
+        mock_specimen1 = create_autospec(DataObject)
+        mock_specimen1.number = 1
+        mock_specimen2 = create_autospec(DataObject)
+        mock_specimen2.number = 3
+
+        mock_species = create_autospec(DataObject)
+        mock_species.attributes = {}
+        mock_species.type = 'species'
+        mock_species.id = 1234
+        mock_species.prefix = 'abCdeFghi'
+        mock_species.specimens = [mock_specimen1, mock_specimen2]
+        mock_session_context.get_one.side_effect = [mock_species, mock_user]
+
+        mock_specimen3 = create_autospec(DataObject)
+        mock_specimen3.number = 4
+        mock_specimen3.id = 'abCdeFghi4'
+        mock_specimen3.type = 'specimen'
+        mock_specimen3.species = mock_species
+        mock_specimen3.specimen_id = 'ABC123'
+
+        mock_session_context.insert.return_value = [mock_specimen3]
+
+        response = client.post(
+            '/custom/request/create',
+            json=[{
+                'species_id': 1234,
+                'specimen_id': 'ABC123',
+                'species_name': 'Grubby grommitulus',
+                'requested_taxonomy_id': 5678
+            }]
+        )
+        assert response.status_code == 200
+        assert response.json == {'data': [
+            {
+                'id': 'abCdeFghi4',
+                'type': 'specimen',
+                'attributes': {
+                    # Attributes don't work quite the same with mocks
+                }
+            }
+        ]}
+
+        assert mock_session_context.data_object_factory.call_count == 1
+        assert mock_session_context.insert.call_count == 1
+        assert mock_session_context.insert.call_args[0][0] == 'specimen'
+        mock_data_object_list = mock_session_context.insert.call_args[0][1]
+        assert len(mock_data_object_list) == 1
+
+        args, kwargs = mock_session_context.data_object_factory.call_args_list[0]
+        assert args[0] == 'specimen'
+        assert args[1] == 'abCdeFghi4'
+        assert kwargs['attributes']['requested_taxonomy_id'] == 5678
+        assert kwargs['attributes']['specimen_id'] == 'ABC123'
+        assert kwargs['attributes']['number'] == 4
+        assert kwargs['to_one']['species'] == mock_species
+        assert kwargs['to_one']['user'] == mock_user
+
+    def test_create_request_creator_tolid_exists(
+        self,
+        client: FlaskClient,
+        auth_context: AuthContext,
+        mock_ds: DataSource
+    ):
+        auth_context.authenticated = True
+        auth_context.user_id = '100'
+        auth_context.roles = ['creator']
+        mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
+
+        mock_specimen1 = create_autospec(DataObject)
+        mock_specimen1.id = 'abCdeFghi1'
+        mock_specimen1.type = 'specimen'
+        mock_specimen1.specimen_id = 'ABC123'
+        mock_specimen1.number = 1
+
+        mock_species = create_autospec(DataObject)
+        mock_species.attributes = {}
+        mock_species.type = 'species'
+        mock_species.id = 1234
+        mock_species.prefix = 'abCdeFghi'
+        mock_species.specimens = [mock_specimen1]
+        #mock_specimen1.species = mock_species
+
+        mock_session_context.get_one.side_effect = [mock_species]
+        mock_session_context.get_list.return_value = [mock_specimen1]
+
+
+        response = client.post(
+            '/custom/request/create',
+            json=[{
+                'species_id': 1234,
+                'specimen_id': 'ABC123',
+                'species_name': 'Grubby grommitulus',
+                'requested_taxonomy_id': 5678
+            }]
+        )
+        assert response.status_code == 200
+        assert response.json == {'data': [
+            {
+                'id': 'abCdeFghi1',
+                'type': 'specimen',
+                'attributes': {
+                    # Attributes don't work quite the same with mocks
+                }
+            }
+        ]}
+
+        assert mock_session_context.data_object_factory.call_count == 0
+        assert mock_session_context.insert.call_count == 0
+
+    def test_create_request_creator_no_species_request_exists(
+        self,
+        client: FlaskClient,
+        auth_context: AuthContext,
+        mock_ds: DataSource,
+        mock_obj: DataObject
+    ):
+        auth_context.authenticated = True
+        auth_context.user_id = '100'
+        auth_context.roles = ['creator']
+
+        mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
+
+        mock_session_context.get_one.side_effect = [None]
+        mock_session_context.get_list.return_value = [mock_obj]
+
+        response = client.post(
+            '/custom/request/create',
+            json=[{
+                'species_id': 1234,
+                'specimen_id': 'ABC123',
+                'species_name': 'Grubby grommitulus',
+                'requested_taxonomy_id': 5678
+            }]
+        )
+        assert response.status_code == 200
+        assert response.json == {'data': [
+            {
+                'id': '999999',
+                'type': 'request'
+            }
+        ]}
+        assert mock_session_context.data_object_factory.call_count == 0
+        assert mock_session_context.insert.call_count == 0
+
+    def test_create_request_creator_no_species_request_not_exists(
+        self,
+        client: FlaskClient,
+        auth_context: AuthContext,
+        mock_ds: DataSource,
+        mock_obj: DataObject
+    ):
+        auth_context.authenticated = True
+        auth_context.user_id = '100'
+        auth_context.roles = ['creator']
+        mock_user = create_autospec(DataObject)
+        mock_user.id = 100
+        mock_obj.user = mock_user
+        mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
+
+        mock_session_context.get_one.side_effect = [None, mock_user]
+        mock_session_context.get_list.return_value = []
+
+        mock_session_context.insert.return_value = [mock_obj]
+
+
+        response = client.post(
+            '/custom/request/create',
+            json=[{
+                'species_id': 1234,
+                'specimen_id': 'ABC123',
+                'species_name': 'Grubby grommitulus',
+                'requested_taxonomy_id': 5678
+            }]
+        )
+        assert response.status_code == 200
+        assert response.json == {'data': [
+            {
+                'id': '999999',
+                'type': 'request'
+            }
+        ]}
+        assert mock_session_context.data_object_factory.call_count == 1
+        assert mock_session_context.insert.call_count == 1
+        assert mock_session_context.insert.call_args[0][0] == 'request'
+        mock_data_object_list = mock_session_context.insert.call_args[0][1]
+        assert len(mock_data_object_list) == 1
+
+        args, kwargs = mock_session_context.data_object_factory.call_args_list[0]
+        assert args[0] == 'request'
+        assert args[1] is None
+        assert kwargs['attributes']['species_id'] == 1234
+        assert kwargs['attributes']['requested_taxonomy_id'] == 5678
+        assert kwargs['attributes']['specimen_id'] == 'ABC123'
+        assert kwargs['attributes']['confirmation_name'] == 'Grubby grommitulus'
+        assert kwargs['attributes']['status'] == 'Pending'

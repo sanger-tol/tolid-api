@@ -27,7 +27,7 @@ from tol.core.data_source_dict import (
     DataSourceDict
 )
 
-from ..util import current_highest_tolid_number
+from ..util import create_new_tolid
 
 
 def request_blueprint(
@@ -51,10 +51,16 @@ def request_blueprint(
     @request_blueprint.route('/create', methods=['POST'])
     @require_auth(ctx_getter=ctx_getter)
     def create_request():
-        data_source = data_source_dict['request']
         ctx = ctx_getter()
         user_id = ctx.user_id
+        roles = ctx.roles
+        if 'creator' in roles:
+            return __create_request_creator(user_id, request)
+        else:
+            return __create_request_user(user_id, request)
 
+    def __create_request_user(user_id, request):
+        data_source = data_source_dict['request']
         with data_source.get_session() as session:
             requests_to_insert = []
             for row in request.json:
@@ -124,6 +130,87 @@ def request_blueprint(
             requests_inserted = session.insert('request', requests_to_insert)
         return view.dump_bulk(requests_inserted), 200
 
+    def __create_request_creator(user_id, request):
+        data_source = data_source_dict['specimen']
+        with data_source.get_session() as session:
+            ret = []
+            for row in request.json:
+                species_id = row.get('species_id')
+                requested_taxonomy_id = row.get('requested_taxonomy_id', species_id)
+                specimen_id = row.get('specimen_id')
+                species_name = row.get('species_name')
+
+                # Does the species exist?
+                species = session.get_one('species', species_id)
+                if species is not None:
+                    # Does the tolid already exist?
+                    f = DataSourceFilter()
+                    f.and_ = {
+                        'species_id': {'eq': {'value': species_id}},
+                        'specimen_id': {'eq': {'value': specimen_id}}
+                    }
+                    existing_tolids = list(session.get_list(
+                        'specimen',
+                        object_filters=f
+                    ))
+                    if len(existing_tolids) > 0:
+                        ret.extend(existing_tolids)
+                        continue
+
+                    ret.extend(
+                        session.insert('specimen', [
+                            create_new_tolid(
+                                session,
+                                species,
+                                specimen_id,
+                                requested_taxonomy_id,
+                                session.get_one(
+                                    'user',
+                                    user_id
+                                )
+                            )
+                        ])
+                    )
+                else:
+                    # Species does not exist
+
+                    # Does the request already exist?
+                    f = DataSourceFilter()
+                    f.and_ = {
+                        'species_id': {'eq': {'value': species_id}},
+                        'specimen_id': {'eq': {'value': specimen_id}}
+                    }
+                    existing_requests = list(session.get_list(
+                        'request',
+                        object_filters=f
+                    ))
+                    if len(existing_requests) > 0:
+                        ret.extend(existing_requests)
+                        continue
+                    ret.extend(
+                        session.insert('request', [
+                            session.data_object_factory(
+                                'request',
+                                 None,
+                                attributes={
+                                    'species_id': species_id,
+                                    'requested_taxonomy_id': requested_taxonomy_id,
+                                    'specimen_id': specimen_id,
+                                    'confirmation_name': species_name,
+                                    'status': 'Pending',
+                                    'created_at': datetime.now(),
+                                },
+                                to_one={
+                                    'user': session.get_one(
+                                        'user',
+                                        user_id
+                                    )
+                                }
+                            )
+                        ])
+                    )
+        return view.dump_bulk(ret), 200
+
     @request_blueprint.route('/reject', methods=['PATCH'])
     @require_auth(role='admin', ctx_getter=ctx_getter)
     def reject_request():
@@ -188,22 +275,14 @@ def request_blueprint(
                         ]
                     }, 400
 
-                number = current_highest_tolid_number(species)
                 tolids_inserted.extend(
                     session.insert('specimen', [
-                        session.data_object_factory(
-                            'specimen',
-                            f'{species.prefix}{number + 1}',
-                            attributes={
-                                'specimen_id': tolid_request.specimen_id,
-                                'number': number + 1,
-                                'requested_taxonomy_id': tolid_request.requested_taxonomy_id,
-                                'created_at': datetime.now(),
-                            },
-                            to_one={
-                                'species': species,
-                                'user': tolid_request.user
-                            }
+                        create_new_tolid(
+                            session,
+                            species,
+                            tolid_request.specimen_id,
+                            tolid_request.requested_taxonomy_id,
+                            tolid_request.user
                         )
                     ])
                 )
