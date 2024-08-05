@@ -40,11 +40,13 @@ def mock_species() -> DataObject:
 
     return mock_obj
 
+
 @pytest.fixture
 def mock_user() -> DataObject:
     mock_user = create_autospec(DataObject)
     mock_user.id = 100
     return mock_user
+
 
 @pytest.fixture
 def mock_ds() -> DataSource:
@@ -62,19 +64,20 @@ def mock_ds() -> DataSource:
 
     return _mock
 
+
 class TestUtil:
 
     def test_current_highest_tolid_number(self, mock_species: DataObject, mock_user: DataObject):
         assert current_highest_tolid_number(mock_species) == 3
 
     def test_create_new_tolid(
-            self,
-            mock_species: DataObject,
-            mock_ds: DataSource,
-            mock_user: DataObject
-        ):
+        self,
+        mock_species: DataObject,
+        mock_ds: DataSource,
+        mock_user: DataObject
+    ):
         mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
-        new_tolid = create_new_tolid(
+        create_new_tolid(
             mock_session_context,
             mock_species,
             'ABC123',

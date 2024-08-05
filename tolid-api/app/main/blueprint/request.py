@@ -191,7 +191,7 @@ def request_blueprint(
                         session.insert('request', [
                             session.data_object_factory(
                                 'request',
-                                 None,
+                                None,
                                 attributes={
                                     'species_id': species_id,
                                     'requested_taxonomy_id': requested_taxonomy_id,

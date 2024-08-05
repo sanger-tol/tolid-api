@@ -469,11 +469,9 @@ class TestRequestBlueprint:
         mock_species.id = 1234
         mock_species.prefix = 'abCdeFghi'
         mock_species.specimens = [mock_specimen1]
-        #mock_specimen1.species = mock_species
 
         mock_session_context.get_one.side_effect = [mock_species]
         mock_session_context.get_list.return_value = [mock_specimen1]
-
 
         response = client.post(
             '/custom/request/create',
@@ -552,7 +550,6 @@ class TestRequestBlueprint:
         mock_session_context.get_list.return_value = []
 
         mock_session_context.insert.return_value = [mock_obj]
-
 
         response = client.post(
             '/custom/request/create',
