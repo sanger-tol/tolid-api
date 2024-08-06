@@ -12,8 +12,8 @@ from ...main.model import (
     PrimaryPrefix,
     Request,
     SecondaryPrefix,
-    Specimen,
-    Species
+    Species,
+    Specimen
 )
 
 
@@ -140,9 +140,8 @@ def create_test_data(ds: DataSource, token: str):
 
 
 def delete_test_data(engine, auth_models):
-    Session = sessionmaker(engine)
 
-    with Session() as session:
+    with sessionmaker(engine)() as session:
         session.query(Request).delete()
         session.query(Specimen).delete()
         session.query(Species).delete()

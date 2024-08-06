@@ -45,7 +45,6 @@ def test_request_user(client, api_path, sql_datasource):
     errors = response.json['errors']
     assert len(errors) == 2
 
-
     obj1 = response.json['data'][0]
     assert obj1['type'] == 'request'
     assert obj1['attributes']['species_id'] == 1234
@@ -120,7 +119,7 @@ def test_request_creator(client, api_path):
     assert obj1['type'] == 'specimen'
     assert obj1['attributes']['number'] == 2
     assert obj1['attributes']['specimen_id'] == 'SPECIMEN1'
-    assert obj1['attributes']['legacy_name'] == None
+    assert obj1['attributes']['legacy_name'] is None
     assert obj1['relationships']['species']['data']['id'] == '1234'
     assert obj1['relationships']['user']['data']['id'] == '100'
 
@@ -129,7 +128,7 @@ def test_request_creator(client, api_path):
     assert obj2['type'] == 'specimen'
     assert obj2['attributes']['number'] == 3
     assert obj2['attributes']['specimen_id'] == 'SPECIMEN2'
-    assert obj2['attributes']['legacy_name'] == None
+    assert obj2['attributes']['legacy_name'] is None
     assert obj2['attributes']['requested_taxonomy_id'] == 5678
     assert obj2['relationships']['species']['data']['id'] == '1234'
     assert obj2['relationships']['user']['data']['id'] == '100'

@@ -471,7 +471,6 @@ class TestRequestBlueprint:
         assert kwargs['to_one']['species'] == mock_species
         assert kwargs['to_one']['user'] == mock_user
 
-
     def test_create_request_creator_tolid_exists(
         self,
         client: FlaskClient,

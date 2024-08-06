@@ -2,7 +2,6 @@
 #
 # SPDX-License-Identifier: MIT
 
-import logging
 import os
 import pathlib
 from datetime import timedelta
@@ -17,15 +16,14 @@ from tol.core import DataSource, core_data_object
 from tol.sql import create_sql_datasource
 from tol.sql.auth.models import create_models
 
-from ...main import application
-from ...main.model import main_models, Base, UserMixin
-
 from werkzeug.datastructures import Headers
 
 from .data_objects import (
     create_test_data,
     delete_test_data
 )
+from ...main import application
+from ...main.model import Base, UserMixin, main_models
 
 
 @pytest.fixture(scope='session')
@@ -56,12 +54,14 @@ def auth_models():
         token_expiry_delta=timedelta(days=1)
     )
 
+
 @pytest.fixture(scope='module')
 def sqla_engine():
     db_uri = os.getenv('DB_URI')
     assert db_uri
     engine = create_engine(db_uri)
     yield engine
+
 
 @pytest.fixture(scope='module')
 def sqla_connection(sqla_engine, auth_models):
@@ -70,6 +70,7 @@ def sqla_connection(sqla_engine, auth_models):
     connection.commit()
     yield connection
     connection.close()
+
 
 @pytest.fixture(scope='function')
 def sql_datasource(token: str, sqla_engine, sqla_connection: Connection, auth_models):
