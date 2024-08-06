@@ -22,9 +22,9 @@ def application() -> Flask:
     app = Flask(__name__)
 
     db_uri = os.environ['DB_URI']
-    api_path = os.environ['API_PATH']
-    api_data_path = os.environ['API_DATA_PATH']
-    api_custom_path = os.environ['API_CUSTOM_PATH']
+    api_path = os.getenv('API_PATH', '/api/v3')
+    api_data_path = os.getenv('API_DATA_PATH', '/data')
+    api_custom_path = os.getenv('API_CUSTOM_PATH', '/')
 
     auth_bp = db_auth_blueprint(
         Base,
@@ -42,13 +42,14 @@ def application() -> Flask:
     app.register_blueprint(system_bp)
 
     User = auth_bp.models.user_class  # noqa
+
     sql_ds = create_sql_datasource(
         [
             User,
             *main_models
         ],
         db_uri,
-        behind_api=True  # TODO is this right?
+        behind_api=True,  # TODO is this right?
     )
     core_data_object(sql_ds)
 

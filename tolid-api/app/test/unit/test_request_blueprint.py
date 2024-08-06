@@ -400,7 +400,8 @@ class TestRequestBlueprint:
         mock_species.id = 1234
         mock_species.prefix = 'abCdeFghi'
         mock_species.specimens = [mock_specimen1, mock_specimen2]
-        mock_session_context.get_one.side_effect = [mock_species, mock_user]
+        mock_session_context.get_one.side_effect = [mock_species, mock_user,
+                                                    mock_species, mock_user]
 
         mock_specimen3 = create_autospec(DataObject)
         mock_specimen3.number = 4
@@ -408,8 +409,14 @@ class TestRequestBlueprint:
         mock_specimen3.type = 'specimen'
         mock_specimen3.species = mock_species
         mock_specimen3.specimen_id = 'ABC123'
+        mock_specimen4 = create_autospec(DataObject)
+        mock_specimen4.number = 5
+        mock_specimen4.id = 'abCdeFghi5'
+        mock_specimen4.type = 'specimen'
+        mock_specimen4.species = mock_species
+        mock_specimen4.specimen_id = 'ABC456'
 
-        mock_session_context.insert.return_value = [mock_specimen3]
+        mock_session_context.insert.side_effect = [[mock_specimen3], [mock_specimen4]]
 
         response = client.post(
             '/custom/request/create',
@@ -418,6 +425,9 @@ class TestRequestBlueprint:
                 'specimen_id': 'ABC123',
                 'species_name': 'Grubby grommitulus',
                 'requested_taxonomy_id': 5678
+            }, {
+                'species_id': 1234,
+                'specimen_id': 'ABC456'
             }]
         )
         assert response.status_code == 200
@@ -428,11 +438,17 @@ class TestRequestBlueprint:
                 'attributes': {
                     # Attributes don't work quite the same with mocks
                 }
+            }, {
+                'id': 'abCdeFghi5',
+                'type': 'specimen',
+                'attributes': {
+                    # Attributes don't work quite the same with mocks
+                }
             }
         ]}
 
-        assert mock_session_context.data_object_factory.call_count == 1
-        assert mock_session_context.insert.call_count == 1
+        assert mock_session_context.data_object_factory.call_count == 2
+        assert mock_session_context.insert.call_count == 2
         assert mock_session_context.insert.call_args[0][0] == 'specimen'
         mock_data_object_list = mock_session_context.insert.call_args[0][1]
         assert len(mock_data_object_list) == 1
@@ -445,6 +461,16 @@ class TestRequestBlueprint:
         assert kwargs['attributes']['number'] == 4
         assert kwargs['to_one']['species'] == mock_species
         assert kwargs['to_one']['user'] == mock_user
+
+        args, kwargs = mock_session_context.data_object_factory.call_args_list[1]
+        assert args[0] == 'specimen'
+        assert args[1] == 'abCdeFghi4'  # Would have incremented
+        assert kwargs['attributes']['requested_taxonomy_id'] == 1234
+        assert kwargs['attributes']['specimen_id'] == 'ABC456'
+        assert kwargs['attributes']['number'] == 4  # Would have incremented
+        assert kwargs['to_one']['species'] == mock_species
+        assert kwargs['to_one']['user'] == mock_user
+
 
     def test_create_request_creator_tolid_exists(
         self,

@@ -63,6 +63,7 @@ def request_blueprint(
         data_source = data_source_dict['request']
         with data_source.get_session() as session:
             requests_to_insert = []
+            errors = []
             for row in request.json:
                 species_id = row.get('species_id')
                 requested_taxonomy_id = row.get('requested_taxonomy_id')
@@ -80,13 +81,12 @@ def request_blueprint(
                     object_filters=f
                 )
                 if existing_requests_count > 0:
-                    return {
-                        'errors': [
-                            {
-                                'detail': f'Request already exists for {species_id}-{specimen_id}'
-                            }
-                        ]
-                    }, 400
+                    errors.append(
+                        {
+                            'detail': f'Request already exists for {species_id}-{specimen_id}'
+                        }
+                    )
+                    continue
 
                 # Does the ToLID already exist?
                 f = DataSourceFilter()
@@ -99,14 +99,12 @@ def request_blueprint(
                     object_filters=f
                 )
                 if existing_tolids_count > 0:
-                    return {
-                        'errors': [
-                            {
-                                'detail': f'ToLID already exists for {species_id}-{specimen_id}'
-                            }
-                        ]
-                    }, 400
-
+                    errors.append(
+                        {
+                            'detail': f'ToLID already exists for {species_id}-{specimen_id}'
+                        }
+                    )
+                    continue
                 requests_to_insert.append(
                     session.data_object_factory(
                         'request',
@@ -127,6 +125,10 @@ def request_blueprint(
                         }
                     )
                 )
+            if len(errors) > 0:
+                return {
+                    'errors': errors
+                }, 400
             requests_inserted = session.insert('request', requests_to_insert)
         return view.dump_bulk(requests_inserted), 200
 

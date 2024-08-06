@@ -16,10 +16,10 @@ class Request(Base):
     request_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     specimen_id: Mapped[str] = mapped_column()
     status: Mapped[str] = mapped_column()
-    reason: Mapped[str] = mapped_column()
+    reason: Mapped[str] = mapped_column(nullable=True)
     created_at: Mapped[datetime.datetime] = mapped_column()
     requested_taxonomy_id: Mapped[int] = mapped_column()
-    confirmation_name: Mapped[str] = mapped_column()
+    confirmation_name: Mapped[str] = mapped_column(nullable=True)
 
     # We don't make this a relationship because we may have species_ids that
     # don't exist in the species table
