@@ -16,6 +16,10 @@ from ...main.model import (
     Specimen
 )
 
+SUBSPECIES_ID = 3102645
+SPECIES_ID = 4039
+SPECIES_NOT_EXISTS_ID = 37657
+
 
 def create_test_data(ds: DataSource, token: str):
     user1s = ds.insert(
@@ -84,7 +88,7 @@ def create_test_data(ds: DataSource, token: str):
         'species', [
             ds.data_object_factory(
                 'species',
-                1234,
+                SPECIES_ID,
                 attributes={
                     'name': 'Test Species',
                     'prefix': 'abCdeFghi',
@@ -108,7 +112,7 @@ def create_test_data(ds: DataSource, token: str):
                 attributes={
                     'specimen_id': 'TEST_SPECIMEN1',
                     'number': 1,
-                    'requested_taxonomy_id': 5678,
+                    'requested_taxonomy_id': SUBSPECIES_ID,
                     'created_at': datetime.now()
                 },
                 to_one={
@@ -126,7 +130,7 @@ def create_test_data(ds: DataSource, token: str):
                 None,
                 attributes={
                     'specimen_id': 'TEST_SPECIMEN2',
-                    'species_id': 1235,
+                    'species_id': SPECIES_NOT_EXISTS_ID,
                     'status': 'Pending',
                     'requested_taxonomy_id': 5678,
                     'created_at': datetime.now()

@@ -18,9 +18,8 @@ function Api() {
         <p><pre><code>
           {`[
   {
-    "species_id": 6344,  // The NCBI taxonomy ID (must be species-level)
     "specimen_id": "ABC123",  // Your internal specimen ID
-    "requested_taxonomy_id": 123456,  // optional (sub-species taxonomy ID, if applicable)
+    "requested_taxonomy_id": 123456,  // species or sub-species taxonomy ID
     "confirmation_name": "Arenicola marina"  // optional
   }
 ]`}

@@ -73,7 +73,12 @@ def sqla_connection(sqla_engine, auth_models):
 
 
 @pytest.fixture(scope='function')
-def sql_datasource(token: str, sqla_engine, sqla_connection: Connection, auth_models):
+def sql_datasource(
+    token: str,
+    sqla_engine,
+    sqla_connection: Connection,
+    auth_models
+) -> DataSource:
     sql_datasource = create_sql_datasource(
         [
             auth_models.user_class,
@@ -92,8 +97,8 @@ def sql_datasource(token: str, sqla_engine, sqla_connection: Connection, auth_mo
     delete_test_data(sqla_engine, auth_models)
 
 
-@pytest.fixture
-def flask_app(sql_datasource: DataSource):
+@pytest.fixture(scope='module')
+def flask_app():
     app = application()
     app.testing = True
     yield app
