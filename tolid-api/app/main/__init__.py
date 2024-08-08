@@ -53,9 +53,11 @@ def application() -> Flask:
     )
     core_data_object(sql_ds)
 
+    goat_ds = goat()
+
     data_bp = data_blueprint(
         sql_ds,
-        goat(),
+        goat_ds,
         url_prefix=f'{api_path}{api_data_path}',
         auth_inspector=create_auth_inspector()
     )
@@ -63,6 +65,7 @@ def application() -> Flask:
 
     request_bp = request_blueprint(
         sql_ds,
+        goat_ds,
         url_prefix=f'{api_path}{api_custom_path}/request'
     )
     app.register_blueprint(request_bp)

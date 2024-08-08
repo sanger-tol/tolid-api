@@ -54,19 +54,83 @@ def request_blueprint(
         ctx = ctx_getter()
         user_id = ctx.user_id
         roles = ctx.roles
+        errors = __validate_taxonomy_ids(request)
+        if len(errors) > 0:
+            return {
+                'errors': errors
+            }, 400
         if 'creator' in roles:
             return __create_request_creator(user_id, request)
         else:
             return __create_request_user(user_id, request)
 
+    def __validate_taxonomy_ids(request):
+        errors = []
+        data_source_species = data_source_dict['species']
+        data_source_taxon = data_source_dict['taxon']
+        for row in request.json:
+            requested_taxonomy_id = row.get('requested_taxonomy_id')
+            specimen_id = row.get('specimen_id')
+
+            if requested_taxonomy_id is None:
+                errors.append(
+                    {
+                        'detail': 'requested_taxonomy_id is required'
+                    }
+                )
+            if specimen_id is None:
+                errors.append(
+                    {
+                        'detail': 'specimen_id is required'
+                    }
+                )
+
+            # Is the requested_species in the ToLID database? If so, validation complete
+            species_in_db = data_source_species.get_one('species', requested_taxonomy_id)
+            print(f'GetOne {species_in_db}')
+            if species_in_db is not None:
+                print(f'Found in ToLID {requested_taxonomy_id} {species_in_db.id}')
+                continue
+
+            # If we are here, we need to check this species with GoaT
+            requested_species = data_source_taxon.get_one('taxon', requested_taxonomy_id)
+            if requested_species is None:
+                errors.append(
+                    {
+                        'detail': f'Requested taxonomy {requested_taxonomy_id} does not exist'
+                    }
+                )
+            if requested_species.rank not in ['species', 'subspecies']:
+                errors.append(
+                    {
+                        'detail': f'{requested_taxonomy_id} is not of rank species or subspecies'
+                    }
+                )
+
+        return errors
+
+    def __get_species_id(requested_taxonomy_id, data_source_taxon, session):
+        species_in_db = session.get_one('species', requested_taxonomy_id)
+        print(f'GetOne {requested_taxonomy_id} {species_in_db}')
+        if species_in_db is None:
+            taxon = data_source_taxon.get_one('taxon', requested_taxonomy_id)
+            species_id = int(taxon.species.id)
+            print('FROM GOAT')
+        else:
+            species_id = species_in_db.id
+            print('FROM TOLID')
+        print(species_id)
+        return species_id
+
     def __create_request_user(user_id, request):
         data_source = data_source_dict['request']
+        data_source_taxon = data_source_dict['taxon']
         with data_source.get_session() as session:
             requests_to_insert = []
             errors = []
             for row in request.json:
-                species_id = row.get('species_id')
                 requested_taxonomy_id = row.get('requested_taxonomy_id')
+                species_id = __get_species_id(requested_taxonomy_id, data_source_taxon, session)
                 specimen_id = row.get('specimen_id')
                 species_name = row.get('species_name')
 
@@ -125,6 +189,7 @@ def request_blueprint(
                         }
                     )
                 )
+                print(f'GetOneUser {user_id}')
             if len(errors) > 0:
                 return {
                     'errors': errors
@@ -134,17 +199,20 @@ def request_blueprint(
 
     def __create_request_creator(user_id, request):
         data_source = data_source_dict['specimen']
+        data_source_taxon = data_source_dict['taxon']
         with data_source.get_session() as session:
             ret = []
             for row in request.json:
-                species_id = row.get('species_id')
-                requested_taxonomy_id = row.get('requested_taxonomy_id', species_id)
+                requested_taxonomy_id = row.get('requested_taxonomy_id')
+                species_id = __get_species_id(requested_taxonomy_id, data_source_taxon, session)
                 specimen_id = row.get('specimen_id')
                 species_name = row.get('species_name')
-
-                # Does the species exist?
+                print(f'{species_id} {specimen_id} {species_name}')
+                # Does the species exist in the ToLID database?
                 species = session.get_one('species', species_id)
+                print(f'GetOne {species_id} {species}')
                 if species is not None:
+                    print('Found in ToLID')
                     # Does the tolid already exist?
                     f = DataSourceFilter()
                     f.and_ = {
