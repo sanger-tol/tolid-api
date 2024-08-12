@@ -128,7 +128,7 @@ tolcore:
     fullname: "tolid-api"
     probe_url: '/api/v3/system/healthz'
     path: '/api/v3'
-    data_path: '/data'
+    data_path: ''
     custom_path: ''
     system_path: '/system'
     auth_path: '/auth'
