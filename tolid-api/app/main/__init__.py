@@ -24,20 +24,22 @@ def application() -> Flask:
     db_uri = os.environ['DB_URI']
     api_path = os.getenv('API_PATH', '/api/v3')
     api_data_path = os.getenv('API_DATA_PATH', '/data')
+    api_system_path = os.getenv('API_SYSTEM_PATH', '/system')
+    api_auth_path = os.getenv('API_AUTH_PATH', '/auth')
     api_custom_path = os.getenv('API_CUSTOM_PATH', '/')
 
     auth_bp = db_auth_blueprint(
         Base,
         db_uri,
         user_mixin_class=UserMixin,
-        url_prefix=f'{api_path}/auth',
+        url_prefix=f'{api_path}{api_auth_path}',
         oidc_id_column_name='email'
     )
     auth_bp.register_authenticator(app)
     app.register_blueprint(auth_bp)
 
     system_bp = system_blueprint(
-        url_prefix=f'{api_path}/system'
+        url_prefix=f'{api_path}{api_system_path}'
     )
     app.register_blueprint(system_bp)
 

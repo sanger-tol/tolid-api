@@ -130,6 +130,8 @@ tolcore:
     path: '/api/v3'
     data_path: '/data'
     custom_path: ''
+    system_path: '/system'
+    auth_path: '/auth'
     extra_env:
       MAIL_USERNAME_SMTP: mail.username
       MAIL_PASSWORD_SMTP: mail.password
@@ -142,6 +144,8 @@ tolcore:
       API_PATH: api.path
       API_DATA_PATH: api.data_path
       API_CUSTOM_PATH: api.custom_path
+      API_SYSTEM_PATH: api.system_path
+      API_AUTH_PATH: api.auth_path
       GOAT_URL: goat.url
       GOAT_API_PATH: goat.api_path
   flask:
