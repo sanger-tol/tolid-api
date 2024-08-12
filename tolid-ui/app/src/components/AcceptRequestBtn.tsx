@@ -22,7 +22,7 @@ function AcceptRequestBtn(props: Props) {
 
   const acceptRequest = () => {
     const json =[{'request_id': id}]
-    httpClient().patch("/custom/request/accept", json)
+    httpClient().patch("/request/accept", json)
     .then(() => {
       setSuccessMessage("Request accepted successfully.");
       setForceUpdate(!forceUpdate);

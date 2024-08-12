@@ -56,6 +56,13 @@ function Api() {
           a ToLID is requested for a species that is not in the database, this will need action by a curator
           so a <code>request</code> object will be returned on the endpoint. It is recommended to resend the request every
           24 hours until a <code>tolid</code> object is returned.</p>
+
+          <h5>Testing your integration</h5>
+          <p>We have a staging server on which you can test your integration before putting it into
+            production: <code>https://id-staging.tol.sanger.ac.uk/api/v3/request/create</code>. The API key is the same as the production server.
+            Please do not use any ToLIDs given out by the staging server as they may be different to what you get from the production
+            server!</p>
+
       </div>
   );
   
