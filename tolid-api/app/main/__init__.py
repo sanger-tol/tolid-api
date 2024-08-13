@@ -22,45 +22,53 @@ def application() -> Flask:
     app = Flask(__name__)
 
     db_uri = os.environ['DB_URI']
-    api_path = os.environ['API_PATH']
+    api_path = os.getenv('API_PATH', '/api/v3')
+    api_data_path = os.getenv('API_DATA_PATH', '/data')
+    api_system_path = os.getenv('API_SYSTEM_PATH', '/system')
+    api_auth_path = os.getenv('API_AUTH_PATH', '/auth')
+    api_custom_path = os.getenv('API_CUSTOM_PATH', '/')
 
     auth_bp = db_auth_blueprint(
         Base,
         db_uri,
         user_mixin_class=UserMixin,
-        url_prefix=f'{api_path}/auth',
+        url_prefix=f'{api_path}{api_auth_path}',
         oidc_id_column_name='email'
     )
     auth_bp.register_authenticator(app)
     app.register_blueprint(auth_bp)
 
     system_bp = system_blueprint(
-        url_prefix=f'{api_path}/system'
+        url_prefix=f'{api_path}{api_system_path}'
     )
     app.register_blueprint(system_bp)
 
     User = auth_bp.models.user_class  # noqa
+
     sql_ds = create_sql_datasource(
         [
             User,
             *main_models
         ],
         db_uri,
-        behind_api=True  # TODO is this right?
+        behind_api=True,  # TODO is this right?
     )
     core_data_object(sql_ds)
 
+    goat_ds = goat()
+
     data_bp = data_blueprint(
         sql_ds,
-        goat(),
-        url_prefix=api_path,
+        goat_ds,
+        url_prefix=f'{api_path}{api_data_path}',
         auth_inspector=create_auth_inspector()
     )
     app.register_blueprint(data_bp)
 
     request_bp = request_blueprint(
         sql_ds,
-        url_prefix=f'{api_path}/custom/request'
+        goat_ds,
+        url_prefix=f'{api_path}{api_custom_path}/request'
     )
     app.register_blueprint(request_bp)
 

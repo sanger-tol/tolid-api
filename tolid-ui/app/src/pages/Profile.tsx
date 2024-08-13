@@ -93,7 +93,7 @@ function Profile() {
       species_name: speciesName,
       specimen_id: specimenId,
     }
-    httpClient().post('/custom/request/create', [json], {
+    httpClient().post('/request/create', [json], {
     }).then((res: any) => {
       if (res.status === 200) {
         setSuccess("ToLID request submitted successfully");

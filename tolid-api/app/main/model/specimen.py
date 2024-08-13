@@ -17,7 +17,7 @@ class Specimen(Base):
     specimen_id: Mapped[str] = mapped_column()
     number: Mapped[int] = mapped_column()
     created_at: Mapped[datetime.datetime] = mapped_column()
-    legacy_name: Mapped[str] = mapped_column()
+    legacy_name: Mapped[str] = mapped_column(nullable=True)
     requested_taxonomy_id: Mapped[int] = mapped_column()
 
     species_id: Mapped[int] = mapped_column(ForeignKey('species.taxonomy_id'))

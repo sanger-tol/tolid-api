@@ -10,7 +10,8 @@ import {
   AddSpecies,
   PendingRequests,
   Profile,
-  Search
+  Search,
+  Api
 } from "./pages";
 import reportWebVitals from "./reportWebVitals";
 import { TolApp, Page, Dropdown } from '@tol/tol-ui';
@@ -21,6 +22,11 @@ import "./scss/styling.scss";
 const search: Page = {
   name: 'Search',
   element: <Search />
+};
+
+const api: Page = {
+  name: 'API',
+  element: <Api />
 };
 
 const profile: Page = {
@@ -61,6 +67,7 @@ ReactDOM.render( // eslint-disable-line
     homePage={ <Home /> }
     pages={[
       search,
+      api,
       profile,
       admin
     ]}
