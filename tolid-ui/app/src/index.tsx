@@ -25,7 +25,7 @@ const search: Page = {
 };
 
 const api: Page = {
-  name: 'API',
+  name: 'Developers',
   element: <Api />
 };
 

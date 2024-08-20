@@ -8,8 +8,24 @@ import { Header, RemoteTable, Widgets, useZone } from '@tol/tol-ui';
 
 
 function Home() {
+  const news = (
+    <div class="alert alert-info">
+      <p>
+        ToLIDs can now also be requested for infra-species ranks like subspecies or variants.
+        Please request as you usually would, stating the taxID of the e.g. subspecies you want to
+        register. The system will identify the respective species and the ToLID issued will be
+        issued at species level.
+      </p>
+      <p>
+        If you have been using the v2 API for your ToLID requests, please start using the new v3 API
+        (see documentation under "Developers" in the main menu).
+        The v2 API is still functional at species level, but will be removed in a few months.
+      </p>
+    </div>
+  );
   const whatAreTolids = (
     <div>
+      {news}
       <h2 className="sub-heading">What are ToLIDs?</h2>
       <p className="text">A complete ToLID is a unique identifier for an individuum of a species sampled for genome sequencing and consists of</p>
       <ul>
