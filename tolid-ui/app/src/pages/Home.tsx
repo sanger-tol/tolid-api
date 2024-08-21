@@ -9,7 +9,7 @@ import { Header, RemoteTable, Widgets, useZone } from '@tol/tol-ui';
 
 function Home() {
   const news = (
-    <div class="alert alert-info">
+    <div className="alert alert-info">
       <p>
         ToLIDs can now also be requested for infra-species ranks like subspecies or variants.
         Please request as you usually would, stating the taxID of the e.g. subspecies you want to
