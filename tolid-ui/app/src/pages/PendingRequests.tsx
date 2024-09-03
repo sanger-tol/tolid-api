@@ -30,7 +30,6 @@ function PendingRequests() {
   const table = (
     <RemoteTable
       id="requests-table-v1"
-      noFilter
       noDownload
       noConfigModal
       forceUpdate={forceUpdate}
@@ -38,12 +37,27 @@ function PendingRequests() {
       fields={{
         species_id: {
           rename: "Taxon ID",
-          sort: false,
+          sort: true,
           width: 100
+        },
+        custom_prefix: {
+          rename: "Prefix",
+          custom: true,
+          cellRenderer: {
+            element: DetailAttribute,
+            propPointers: {
+              id: 'species_id'
+            },
+            props: {
+              endpoint: 'species',
+              attribute: 'prefix'
+            }
+          },
+          sort: false
         },
         requested_taxonomy_id: {
           rename: "Requested Taxon ID",
-          sort: false
+          sort: true
         },
         custom_scientific_name: {
           rename: "Scientific Name",
@@ -77,16 +91,16 @@ function PendingRequests() {
         },
         confirmation_name: {
           rename: "Name Confirmation",
-          sort: false
+          sort: true
         },
         specimen_id: {
           rename: "Specimen ID",
-          sort: false
+          sort: true
 
         },
         "user.name": {
           rename: "Requester",
-          sort: false
+          sort: true
         },
         // next tolid
         custom_action: {

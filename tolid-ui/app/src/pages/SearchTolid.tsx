@@ -6,11 +6,10 @@ SPDX-License-Identifier: MIT
 
 import { RemoteTable, Widgets, env, useZone } from "@tol/tol-ui";
 
-function Search() {
+function SearchTolid() {
   const filter = {
     in_list: {},
     and_: {
-      "tolid_specimen.id": {exists:{}},
       "tolid_species.id": {gt: {value: 0}}
     }
   };
@@ -19,7 +18,7 @@ function Search() {
     endpoint: 'tolid',
     components: [
       {
-        id: 'tolid-table-v1',
+        id: 'tolid-table-v6',
         filter: filter
       }
     ],
@@ -29,7 +28,7 @@ function Search() {
 
   const table = (
     <RemoteTable
-      id="tolid-table-v1"
+      id="tolid-table-v6"
       noConfigModal
       noDownload
       fields={{
@@ -44,7 +43,7 @@ function Search() {
           cellRenderer: null
         },
         "tolid_specimen.id": {
-          rename: "Specimen",
+          rename: "Specimen ID",
           cellRenderer: null
         }
       }}
@@ -54,9 +53,9 @@ function Search() {
 
   const title = (
     <div>
-      <h2>Search</h2>
+      <h2>Search ToLIDs</h2>
       <p style={{marginTop: 4}}>
-        Search on a ToLID prefix, taxonomy ID, species name or ToLID.
+        Search for assigned ToLIDs. Results will only be shown here for species that have had ToLIDs assigned.
       </p>
     </div>
   );
@@ -81,4 +80,4 @@ function Search() {
   );
 }
 
-export default Search;
+export default SearchTolid;

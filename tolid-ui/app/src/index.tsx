@@ -10,7 +10,8 @@ import {
   AddSpecies,
   PendingRequests,
   Profile,
-  Search,
+  SearchSpecies,
+  SearchTolid,
   Api
 } from "./pages";
 import reportWebVitals from "./reportWebVitals";
@@ -19,9 +20,19 @@ import Logo from './assets/logo.png';
 import "./scss/styling.scss";
 
 
-const search: Page = {
+const searchSpecies: Page = {
+  name: 'Search By Species',
+  element: <SearchSpecies />
+};
+
+const searchTolid: Page = {
+  name: 'Search By ToLID',
+  element: <SearchTolid />
+};
+
+const search: Dropdown = {
   name: 'Search',
-  element: <Search />
+  pages: [searchSpecies, searchTolid]
 };
 
 const api: Page = {
@@ -30,7 +41,7 @@ const api: Page = {
 };
 
 const profile: Page = {
-  name: 'Profile',
+  name: 'My Requests',
   element: <Profile />,
   auth: true
 };
