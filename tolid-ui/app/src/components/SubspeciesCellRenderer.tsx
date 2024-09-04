@@ -16,7 +16,7 @@ interface Props {
       <div>
         {taxonId}
         {String(requestedTaxonId) !== taxonId && (
-          <p>Sub-speices: {requestedTaxonId}</p>
+          <p>Sub-species: {requestedTaxonId}</p>
         )}
       </div>
     );
