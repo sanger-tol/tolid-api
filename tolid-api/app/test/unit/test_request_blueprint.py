@@ -453,6 +453,12 @@ class TestRequestBlueprint:
         assert kwargs['to_one']['species'] == mock_species
         assert kwargs['to_one']['user'] == mock_user
 
+        assert mock_session_context.delete.call_count == 1
+        assert mock_session_context.delete.call_args[0][0] == 'request'
+        mock_object_id_list = mock_session_context.delete.call_args[0][1]
+        assert len(mock_object_id_list) == 1
+        assert mock_object_id_list[0] == '999999'
+
     def test_accept_request_not_found(
         self,
         client: FlaskClient,
