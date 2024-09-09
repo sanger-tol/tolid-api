@@ -14,7 +14,7 @@ function PendingRequests() {
   const tolidZone = useZone({
     endpoint: 'request',
     components: [{
-      id: 'requests-table-v1',
+      id: 'requests-table-v2',
       filter: {
         and_: {
           'status': {
@@ -29,7 +29,7 @@ function PendingRequests() {
 
   const table = (
     <RemoteTable
-      id="requests-table-v1"
+      id="requests-table-v2"
       noDownload
       noConfigModal
       forceUpdate={forceUpdate}
