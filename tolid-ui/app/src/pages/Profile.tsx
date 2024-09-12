@@ -160,7 +160,7 @@ function Profile() {
     endpoint: 'specimen',
     components: [
       {
-        id: 'my-tolids',
+        id: 'my-tolids-v2',
         filter: {
           and_: {
             'user.id': {
@@ -178,7 +178,7 @@ function Profile() {
     <div>
       <h2 className="sub-heading">My ToLIDs</h2>
       <RemoteTable
-        id="my-tolids"
+        id="my-tolids-v2"
         noConfigModal
         noDownload
         height={400}
@@ -212,7 +212,7 @@ function Profile() {
     endpoint: 'request',
     components: [
       {
-        id: 'my-requests',
+        id: 'my-requests-v2',
         filter: {
           and_: {
             'user.id': {
@@ -230,7 +230,7 @@ function Profile() {
     <div>
       <h2 className="sub-heading">My Requests</h2>
       <RemoteTable
-        id="my-requests"
+        id="my-request-v2"
         noDownload
         height={400}
         defaultSort="created_at"
