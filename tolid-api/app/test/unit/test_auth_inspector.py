@@ -88,7 +88,7 @@ class TestAuthInspector:
 
         auth_context.authenticated = True
         auth_context.user_id = '200'
-        auth_context.roles = ['BASIC']
+        auth_context.roles = []
 
         inspector = create_auth_inspector(
             ctx_getter=ctx_getter
@@ -117,31 +117,6 @@ class TestAuthInspector:
                     op
                 )
 
-    def test_no_roles_none_specimen(
-        self,
-        auth_context: AuthContext,
-        ctx_getter: CtxGetter
-    ):
-        """
-        a user with no roles can not perform
-        any operation -> raise 403 always
-        """
-
-        auth_context.authenticated = True
-        auth_context.user_id = '200'
-        auth_context.roles = []
-
-        inspector = create_auth_inspector(
-            ctx_getter=ctx_getter
-        )
-
-        for op in OperatorMethod:
-            with pytest.raises(ForbiddenError):
-                inspector(
-                    'specimen',
-                    op
-                )
-
     def test_no_detail_get(
         self,
         auth_context: AuthContext,
@@ -162,7 +137,7 @@ class TestAuthInspector:
 
         auth_context.authenticated = True
         auth_context.user_id = '200'
-        auth_context.roles = ['BASIC']
+        auth_context.roles = []
 
         self.__assert_no_detail_get(inspector)
 
