@@ -124,7 +124,8 @@ class TestAuthInspector:
     ):
         """
         No non-admin user can use
-        `OperatorMethod.DETAIL`.
+        `OperatorMethod.DETAIL`
+        on request or specimen.
         """
 
         inspector = create_auth_inspector(
@@ -147,7 +148,6 @@ class TestAuthInspector:
     ) -> None:
 
         __TEST_TYPES = (  # noqa N806
-            'species',
             'specimen',
             'request'
         )

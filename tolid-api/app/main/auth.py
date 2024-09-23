@@ -52,7 +52,7 @@ def create_auth_inspector(
         **kwargs
     ):
 
-        if object_type == 'taxon':
+        if object_type in ['species', 'taxon']:
             return
 
         if op == OperatorMethod.DETAIL:
