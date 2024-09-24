@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AcceptRequestBtn,
   AddSpeciesBtn,
@@ -22,16 +22,16 @@ interface Props {
 }
 
 function ActionButtons(props: Props) {
-  const { requestId, speciesId } = props;
+  const { requestId, speciesId, forceUpdate } = props;
   const [loading, setLoading] = useState(true);
   const [canAccept, setCanAccept] = useState(false);
 
-  fetchDetail(speciesId, 'species').then((res: any) => {
-    if ('data' in res && 'id' in res.data.data) {
-      setCanAccept(true);
-    }
-    setLoading(false);
-  });
+  useEffect (() => {
+    fetchDetail(speciesId, 'species').then((res: any) => {
+      setCanAccept('data' in res && 'id' in res.data.data);
+      setLoading(false);
+    });
+  }, [forceUpdate]);
 
   return (
     <div className="loading-cell">
