@@ -146,7 +146,6 @@ function PendingRequests() {
 
   return (
     <div className="search">
-      <button onClick={() => setForceUpdate(!forceUpdate)}>Refresh</button>
       <Widgets
         components={components}
       />
