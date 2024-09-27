@@ -101,7 +101,7 @@ function Profile() {
       }
     }).catch((error: any) => {
       console.error(error.message);
-      setError("An error occurred while submitting the request. Please try again later.");
+      setError(error.response?.data?.errors?.[0]?.detail ?? 'An error occured. Please try again later.');
     });
   }
 
