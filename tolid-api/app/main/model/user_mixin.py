@@ -31,3 +31,12 @@ class UserMixin:
         return relationship(
             back_populates='user'
         )
+
+    def get_userinfo_ext(self) -> dict[str, str]:
+        """
+        Augments the data on `/api/v2/auth/profile`
+        """
+
+        return {
+            'name': self.name
+        }

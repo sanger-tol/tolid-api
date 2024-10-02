@@ -33,7 +33,8 @@ def application() -> Flask:
         db_uri,
         user_mixin_class=UserMixin,
         url_prefix=f'{api_path}{api_auth_path}',
-        oidc_id_column_name='email'
+        oidc_id_column_name='email',
+        oidc_ext_mapping={'name': 'name'},
     )
     auth_bp.register_authenticator(app)
     app.register_blueprint(auth_bp)
