@@ -9,7 +9,7 @@ from flask import Flask
 from main.blueprint import request_blueprint
 from main.model import Base, UserMixin, main_models
 
-from tol.api_base2 import data_blueprint, system_blueprint
+from tol.api_base import data_blueprint, system_blueprint
 from tol.core import core_data_object
 from tol.sources.goat import goat
 from tol.sql import create_sql_datasource

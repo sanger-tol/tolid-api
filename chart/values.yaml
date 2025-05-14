@@ -201,7 +201,7 @@ tolcore:
       id: ""
       secret: ""
     url:
-      auth: https://login.elixir-czech.org/oidc/authorize
-      token: https://login.elixir-czech.org/oidc/token
-      revoke: https://login.elixir-czech.org/oidc/revoke
-      userinfo: https://login.elixir-czech.org/oidc/userinfo
+      auth: https://login.aai.lifescience-ri.eu/oidc/authorize
+      token: https://login.aai.lifescience-ri.eu/oidc/token
+      revoke: https://login.aai.lifescience-ri.eu/oidc/revoke
+      userinfo: https://login.aai.lifescience-ri.eu/oidc/userinfo

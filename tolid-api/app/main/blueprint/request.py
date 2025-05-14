@@ -6,17 +6,17 @@ from datetime import datetime
 
 from flask import Blueprint, request
 
-from tol.api_base2 import (
+from tol.api_base import (
     custom_blueprint
 )
-from tol.api_base2.auth import (
+from tol.api_base.auth import (
     require_auth
 )
-from tol.api_base2.misc import (
+from tol.api_base.misc import (
     CtxGetter,
     default_ctx_getter
 )
-from tol.api_client2.view import (
+from tol.api_client.view import (
     DefaultView
 )
 from tol.core import (

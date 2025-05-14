@@ -319,7 +319,7 @@ function Profile() {
         setMessage={setSuccess}
       />
       <PopUpMessage
-        type='danger'
+        type='error'
         message={error}
         setMessage={setError}
       />

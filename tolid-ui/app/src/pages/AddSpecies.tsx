@@ -171,7 +171,7 @@ function AddSpecies() {
       <div className="add-species-alert-wrapper">
         <Status
           text={message}
-          status="danger"
+          status="error"
         />
       </div>
     );
