@@ -57,7 +57,6 @@ function RejectRequestBtn(props: Props) {
         setRemoteRejection();
       }}
       type="danger"
-      style={{height: 30, padding: "0 10px"}}
       text="Reject Request"
     />
   );
