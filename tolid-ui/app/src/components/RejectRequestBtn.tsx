@@ -56,11 +56,10 @@ function RejectRequestBtn(props: Props) {
         setOpen(false);
         setRemoteRejection();
       }}
-      variant="danger"
+      type="danger"
       style={{height: 30, padding: "0 10px"}}
-    >
-      Reject Request
-    </Button>
+      text="Reject Request"
+    />
   );
 
   return (

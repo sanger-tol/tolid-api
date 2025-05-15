@@ -19,8 +19,6 @@ import {
 } from '@tol/tol-ui';
 import { useState } from 'react';
 import { DetailAttribute, TolidStatus } from "../components";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { SubspeciesCellRenderer } from '../components'
 
 
@@ -111,9 +109,7 @@ function Profile() {
   }
 
   const requestButton = (
-    <Button variant="success" onClick={saveRequest}>
-      <FontAwesomeIcon icon={faArrowRight} size="sm" />
-    </Button>
+    <Button type="success" onClick={saveRequest} icon="arrow-right"/>
   );
 
   const createRequest = (
@@ -135,9 +131,7 @@ function Profile() {
           />
           <p className="form-info">The internal ID of the specimen. This is only used in the ToLID system and should be how you refer to the specimen in your lab</p>
         </Form.Group>
-        <Button disabled={requestedTaxonomyId === "" || specimenId === ""} onClick={() => getTolidTaxonInfo()}>
-          Request
-        </Button>
+        <Button disabled={requestedTaxonomyId === "" || specimenId === ""} onClick={() => getTolidTaxonInfo()} text={'Request'}/>
       </Form>
       <Modal
         size='md'

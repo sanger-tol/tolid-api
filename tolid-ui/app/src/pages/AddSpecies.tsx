@@ -202,12 +202,12 @@ function AddSpecies() {
         <div>
           <Button
             disabled={speciesData === "" || errorMessagesAvailable === true}
-            variant={"success"}
+            type={"success"}
             onClick={() => {
               postNewSpecies(convertInputToJSONPayload());
-            }}>
-            Submit
-          </Button>
+            }}
+            text="Submit"
+          />
         </div>
       </div>
     </div>
