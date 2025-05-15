@@ -33,8 +33,6 @@ function Profile() {
   const [speciesTaxonomyId, setSpeciesTaxonomyId] = useState("");
   const [speciesName, setSpeciesName] = useState("");
 
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
   const [forceUpdate, setForceUpdate] = useState(false);
 
@@ -47,8 +45,6 @@ function Profile() {
 
   const openModal = () => {
     setOpen(true);
-    setSuccess("");
-    setError("");
   };
 
   const getTolidTaxonInfo = () => {
@@ -77,7 +73,10 @@ function Profile() {
     .catch(() => {})
     .finally(() => {
       if (newSpeciesTaxonomyId === "") {
-        setError("The Taxonomy ID cannot be found in GoaT or is above species level")
+        PopUpMessage({
+          type: "error",
+          message: "The Taxonomy ID cannot be found in GoaT or is above species level",
+        })
       } else {
         openModal();
       }
@@ -96,12 +95,18 @@ function Profile() {
     httpClient().post('/request/create', [json], {
     }).then((res: any) => {
       if (res.status === 200) {
-        setSuccess("ToLID request submitted successfully");
+        PopUpMessage({
+          type: "success",
+          message: "ToLID request submitted successfully",
+        })
         setForceUpdate(!forceUpdate);
       }
     }).catch((error: any) => {
       console.error(error.message);
-      setError(error.response?.data?.errors?.[0]?.detail ?? 'An error occured. Please try again later.');
+      PopUpMessage({
+        type: "error",
+        message: error.response?.data?.errors?.[0]?.detail ?? 'An error occured. Please try again later.',
+      })
     });
   }
 
@@ -313,16 +318,6 @@ function Profile() {
 
   return (
     <div className="profile">
-      <PopUpMessage
-        type='success'
-        message={success}
-        setMessage={setSuccess}
-      />
-      <PopUpMessage
-        type='error'
-        message={error}
-        setMessage={setError}
-      />
       <Widgets
         components={components}
       />

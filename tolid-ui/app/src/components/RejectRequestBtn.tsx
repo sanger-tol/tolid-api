@@ -21,8 +21,6 @@ function RejectRequestBtn(props: Props) {
   const [open, setOpen] = useState(false);
   const [rejectionChoice, setRejectionChoice] = useState("");
   const [rejectionReason, setRejectionReason] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const TAXON_NOT_SPECIES_LEVEL = "Taxonomy ID is not species-level";
 
   const setRemoteRejection = () => {
@@ -38,11 +36,17 @@ function RejectRequestBtn(props: Props) {
     }
     httpClient().post("/request:upsert", upsertData)
     .then(() => {
-      setSuccessMessage("Request rejected successfully.");
+      PopUpMessage({
+        type: "success",
+        message: "Request rejected successfully.",
+      })
       setForceUpdate(!forceUpdate);
     })
     .catch((error: any) => {
-      setErrorMessage("Failed to reject request: " + error.message);
+      PopUpMessage({
+        type: "error",
+        message: "Failed to reject request: " + error.message,
+      })
     });
   }
 
@@ -61,16 +65,6 @@ function RejectRequestBtn(props: Props) {
 
   return (
     <>
-      <PopUpMessage
-        type='success'
-        message={successMessage}
-        setMessage={setSuccessMessage}
-      />
-      <PopUpMessage
-        type='danger'
-        message={errorMessage}
-        setMessage={setErrorMessage}
-      />
       <GenericRequestBtn
         onClick={() => {
           setOpen(true);
