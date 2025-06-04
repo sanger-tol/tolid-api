@@ -8,9 +8,9 @@ from main.auth import create_auth_inspector
 
 import pytest
 
-from tol.api_base2.auth import AuthInspector
-from tol.api_base2.auth.error import ForbiddenError
-from tol.api_base2.misc import (
+from tol.api_base.auth import AuthInspector
+from tol.api_base.auth.error import ForbiddenError
+from tol.api_base.misc import (
     AuthContext,
     CtxGetter
 )
