@@ -27,7 +27,10 @@ from ...main import Base, application, get_auth_bp, main_models
 
 def __set_up(db_uri: str) -> None:
     engine = create_engine(db_uri)
-    Base.metadata.create_all(engine)
+    try:
+        Base.metadata.create_all(engine)
+    except:
+        pass
 
 
 
@@ -64,7 +67,7 @@ def url_prefix(
     return f'{api_path}{api_system_path}'
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def auth_bp(
     db_uri: str,
     url_prefix: str,
