@@ -5,17 +5,7 @@
 from datetime import datetime
 from typing import Iterator
 
-from sqlalchemy.orm import sessionmaker
-
 from tol.core import OperableDataSource
-
-from ...main.model import (
-    PrimaryPrefix,
-    Request,
-    SecondaryPrefix,
-    Species,
-    Specimen
-)
 
 SUBSPECIES_ID = 3102645
 SPECIES_ID = 4039

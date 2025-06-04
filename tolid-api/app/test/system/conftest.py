@@ -10,11 +10,11 @@ from flask import Flask, testing
 
 import pytest
 
-from sqlalchemy import Connection, create_engine
+from sqlalchemy import create_engine
 
 from tol.core import DataSource, core_data_object
 from tol.sql import create_sql_datasource
-from tol.sql.auth import DbAuthBlueprint, ModelTuple
+from tol.sql.auth import DbAuthBlueprint
 
 from werkzeug.datastructures import Headers
 
@@ -29,9 +29,8 @@ def __set_up(db_uri: str) -> None:
     engine = create_engine(db_uri)
     try:
         Base.metadata.create_all(engine)
-    except:
+    except:  # noqa
         pass
-
 
 
 @pytest.fixture(scope='session')
