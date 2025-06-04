@@ -3,10 +3,11 @@
 # SPDX-License-Identifier: MIT
 
 from datetime import datetime
+from typing import Iterator
 
 from sqlalchemy.orm import sessionmaker
 
-from tol.core import DataSource
+from tol.core import OperableDataSource
 
 from ...main.model import (
     PrimaryPrefix,
@@ -21,28 +22,30 @@ SPECIES_ID = 4039
 SPECIES_NOT_EXISTS_ID = 37657
 
 
-def create_test_data(ds: DataSource, token: str):
-    user1s = ds.insert(
-        'user', [
-            ds.data_object_factory(
-                'user',
-                '100',
-                attributes={
-                    'email': 'test@sanger.ac.uk',
-                    'name': 'Test Creator User',
-                    'organisation': 'Test Organisation'
-                }
-            ),
-            ds.data_object_factory(
-                'user',
-                '200',
-                attributes={
-                    'email': 'test2@sanger.ac.uk',
-                    'name': 'Test User',
-                    'organisation': 'Test Organisation'
-                }
-            )
-        ]
+def create_test_data(ds: OperableDataSource, token: str):
+    user1s = list(
+        ds.insert(
+            'user', [
+                ds.data_object_factory(
+                    'user',
+                    '100',
+                    attributes={
+                        'email': 'test@sanger.ac.uk',
+                        'name': 'Test Creator User',
+                        'organisation': 'Test Organisation'
+                    }
+                ),
+                ds.data_object_factory(
+                    'user',
+                    '200',
+                    attributes={
+                        'email': 'test2@sanger.ac.uk',
+                        'name': 'Test User',
+                        'organisation': 'Test Organisation'
+                    }
+                )
+            ]
+        )
     )
 
     ds.insert(
@@ -60,16 +63,18 @@ def create_test_data(ds: DataSource, token: str):
         ]
     )
 
-    roles1s = ds.insert(
-        'role', [
-            ds.data_object_factory(
-                'role',
-                None,
-                attributes={
-                    'name': 'creator'
-                }
-            )
-        ]
+    roles1s = list(
+        ds.insert(
+            'role', [
+                ds.data_object_factory(
+                    'role',
+                    None,
+                    attributes={
+                        'name': 'creator'
+                    }
+                )
+            ]
+        )
     )
 
     ds.insert(
@@ -84,24 +89,26 @@ def create_test_data(ds: DataSource, token: str):
             )
         ]
     )
-    species1s = ds.insert(
-        'species', [
-            ds.data_object_factory(
-                'species',
-                SPECIES_ID,
-                attributes={
-                    'name': 'Test Species',
-                    'prefix': 'abCdeFghi',
-                    'common_name': 'Test Common Name',
-                    'genus': 'Test Genus',
-                    'family': 'Test Family',
-                    'tax_order': 'Test Order',
-                    'tax_class': 'Test Class',
-                    'phylum': 'Test Phylum',
-                    'kingdom': 'Test Kingdom'
-                }
-            )
-        ]
+    species1s = list(
+        ds.insert(
+            'species', [
+                ds.data_object_factory(
+                    'species',
+                    SPECIES_ID,
+                    attributes={
+                        'name': 'Test Species',
+                        'prefix': 'abCdeFghi',
+                        'common_name': 'Test Common Name',
+                        'genus': 'Test Genus',
+                        'family': 'Test Family',
+                        'tax_order': 'Test Order',
+                        'tax_class': 'Test Class',
+                        'phylum': 'Test Phylum',
+                        'kingdom': 'Test Kingdom'
+                    }
+                )
+            ]
+        )
     )
 
     ds.insert(
@@ -143,17 +150,32 @@ def create_test_data(ds: DataSource, token: str):
     )
 
 
-def delete_test_data(engine, auth_models):
+def delete_test_data(sql_ds: OperableDataSource, auth_models):
 
-    with sessionmaker(engine)() as session:
-        session.query(Request).delete()
-        session.query(Specimen).delete()
-        session.query(Species).delete()
-        session.query(auth_models.token_class).delete()
-        session.query(auth_models.role_binding_class).delete()
-        session.query(auth_models.role_class).delete()
-        session.query(auth_models.user_class).delete()
-        session.query(auth_models.state_class).delete()
-        session.query(SecondaryPrefix).delete()
-        session.query(PrimaryPrefix).delete()
-        session.commit()
+    delete_order = [
+        'request',
+        'specimen',
+        'species',
+        'token',
+        'role_binding',
+        'role',
+        'user',
+        'oidc_state',
+        'secondary_prefix',
+        'primary_prefix',
+    ]
+
+    def __get_ids(object_type: str) -> Iterator[str]:
+        return (
+            o.id
+            for o
+            in sql_ds.get_list(object_type)
+        )
+
+    for object_type in delete_order:
+        ids = list(__get_ids(object_type))
+
+        sql_ds.delete(
+            object_type,
+            ids,
+        )

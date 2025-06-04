@@ -4,9 +4,9 @@
 
 import os
 import pathlib
-from datetime import timedelta
+from typing import Iterator
 
-from flask import testing
+from flask import Flask, testing
 
 import pytest
 
@@ -14,7 +14,7 @@ from sqlalchemy import Connection, create_engine
 
 from tol.core import DataSource, core_data_object
 from tol.sql import create_sql_datasource
-from tol.sql.auth.models import create_models
+from tol.sql.auth import DbAuthBlueprint, ModelTuple
 
 from werkzeug.datastructures import Headers
 
@@ -22,8 +22,13 @@ from .data_objects import (
     create_test_data,
     delete_test_data
 )
-from ...main import application
-from ...main.model import Base, UserMixin, main_models
+from ...main import Base, application, get_auth_bp, main_models
+
+
+def __set_up(db_uri: str) -> None:
+    engine = create_engine(db_uri)
+    Base.metadata.create_all(engine)
+
 
 
 @pytest.fixture(scope='session')
@@ -44,68 +49,84 @@ def token() -> str:
     return 'Random'
 
 
-@pytest.fixture(scope='module')
-def auth_models():
-    yield create_models(
-        model_base=Base,
-        user_table_name='user',
-        oidc_id_column_name='email',
-        user_mixin_class=UserMixin,
-        token_expiry_delta=timedelta(days=1)
+@pytest.fixture(scope='session')
+def db_uri() -> str:
+    return os.environ['DB_URI']
+
+
+@pytest.fixture(scope='session')
+def url_prefix(
+    api_path: str,
+) -> str:
+
+    api_system_path = os.getenv('API_SYSTEM_PATH', '/system')
+
+    return f'{api_path}{api_system_path}'
+
+
+@pytest.fixture
+def auth_bp(
+    db_uri: str,
+    url_prefix: str,
+) -> DbAuthBlueprint:
+
+    return get_auth_bp(
+        Base,
+        db_uri,
+        url_prefix,
     )
 
 
-@pytest.fixture(scope='module')
-def sqla_engine():
-    db_uri = os.getenv('DB_URI')
-    assert db_uri
-    engine = create_engine(db_uri)
-    yield engine
+@pytest.fixture(autouse=True)
+def full_models_list(
+    auth_bp: DbAuthBlueprint,
+    db_uri: str,
+):
+
+    __set_up(db_uri)
+
+    return [
+        *main_models,
+        *auth_bp.models,
+    ]
 
 
-@pytest.fixture(scope='module')
-def sqla_connection(sqla_engine, auth_models):
-    connection = sqla_engine.connect()
-    Base.metadata.create_all(connection)
-    connection.commit()
-    yield connection
-    connection.close()
-
-
-@pytest.fixture(scope='function')
+@pytest.fixture
 def sql_datasource(
+    db_uri: str,
     token: str,
-    sqla_engine,
-    sqla_connection: Connection,
-    auth_models
+    full_models_list: list,
 ) -> DataSource:
+
     sql_datasource = create_sql_datasource(
-        [
-            auth_models.user_class,
-            auth_models.token_class,
-            auth_models.role_class,
-            auth_models.role_binding_class,
-            *main_models
-        ],
-        os.getenv('DB_URI'),
+        full_models_list,
+        db_uri,
         behind_api=False,  # TODO is this right?
     )
     core_data_object(sql_datasource)
-    delete_test_data(sqla_connection, auth_models)
+    delete_test_data(sql_datasource, full_models_list)
     create_test_data(sql_datasource, token)
     yield sql_datasource
-    delete_test_data(sqla_engine, auth_models)
+    delete_test_data(sql_datasource, full_models_list)
 
 
-@pytest.fixture(scope='module')
-def flask_app():
-    app = application()
+@pytest.fixture
+def flask_app(
+    auth_bp: DbAuthBlueprint,
+) -> Iterator[Flask]:
+
+    app = application(
+        auth_bp=auth_bp,
+    )
     app.testing = True
     yield app
 
 
-@pytest.fixture()
-def client(flask_app, token):
+@pytest.fixture
+def client(
+    flask_app: Flask,
+    token: str,
+) -> testing.FlaskClient:
 
     class TestClient(testing.FlaskClient):
         def open(self, *args, **kwargs):  # noqa: A003
