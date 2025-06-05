@@ -4,9 +4,9 @@
 
 from typing import Optional
 
-from tol.api_base2.auth import CompositeAuthInspector
-from tol.api_base2.auth.error import ForbiddenError
-from tol.api_base2.misc import (
+from tol.api_base.auth import CompositeAuthInspector
+from tol.api_base.auth.error import ForbiddenError
+from tol.api_base.misc import (
     AuthContext,
     CtxGetter,
     default_ctx_getter

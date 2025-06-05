@@ -17,8 +17,6 @@ const REQUEST_SUCCESSFUL = "Request successful, species has been added.";
 function AddSpecies() {
   const [speciesData, setSpeciesData] = useState("");
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
-  const [success, setSuccess] = useState<string>("");
-  const [failure, setFailure] = useState<string>("");
   const [errorMessagesAvailable, setErrorMessagesAvailable] = useState<boolean>(false);
 
   const speciesTitleArray = [
@@ -88,22 +86,26 @@ function AddSpecies() {
   const postNewSpecies = (payload: any) => {
     httpClient().post('/species:upsert', payload)
       .then(() => {
-        setSuccess(REQUEST_SUCCESSFUL);
+        PopUpMessage({
+          type: "success",
+          message: REQUEST_SUCCESSFUL,
+        })
         setSpeciesData("");
       }).catch(() => {
         setErrorMessagesAvailable(true);
         setErrorMessages(previousErrorMessages => [
           ...previousErrorMessages, `Could not submit, please check your data and try again.`
         ]);
-        setFailure(REQUEST_UNSUCCESSFUL);
+        PopUpMessage({
+          type: "error",
+          message: REQUEST_UNSUCCESSFUL,
+        })
       });
   }
 
   const resetErrors = () => {
     setErrorMessages([]);
     setErrorMessagesAvailable(false);
-    setSuccess("");
-    setFailure("");
   }
 
   const validateNonEmptyTextArea = (array: string[]): boolean => {
@@ -171,7 +173,7 @@ function AddSpecies() {
       <div className="add-species-alert-wrapper">
         <Status
           text={message}
-          status="danger"
+          status="error"
         />
       </div>
     );
@@ -200,12 +202,12 @@ function AddSpecies() {
         <div>
           <Button
             disabled={speciesData === "" || errorMessagesAvailable === true}
-            variant={"success"}
+            type={"success"}
             onClick={() => {
               postNewSpecies(convertInputToJSONPayload());
-            }}>
-            Submit
-          </Button>
+            }}
+            text="Submit"
+          />
         </div>
       </div>
     </div>
@@ -224,16 +226,6 @@ function AddSpecies() {
 
   return (
     <>
-      <PopUpMessage
-        type='success'
-        message={success}
-        setMessage={setSuccess}
-      />
-      <PopUpMessage
-        type='danger'
-        message={failure}
-        setMessage={setFailure}
-      />
       <Widgets
         components={components}
       />

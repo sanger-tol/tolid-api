@@ -19,8 +19,6 @@ import {
 } from '@tol/tol-ui';
 import { useState } from 'react';
 import { DetailAttribute, TolidStatus } from "../components";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { SubspeciesCellRenderer } from '../components'
 
 
@@ -33,8 +31,6 @@ function Profile() {
   const [speciesTaxonomyId, setSpeciesTaxonomyId] = useState("");
   const [speciesName, setSpeciesName] = useState("");
 
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
   const [forceUpdate, setForceUpdate] = useState(false);
 
@@ -47,8 +43,6 @@ function Profile() {
 
   const openModal = () => {
     setOpen(true);
-    setSuccess("");
-    setError("");
   };
 
   const getTolidTaxonInfo = () => {
@@ -77,7 +71,10 @@ function Profile() {
     .catch(() => {})
     .finally(() => {
       if (newSpeciesTaxonomyId === "") {
-        setError("The Taxonomy ID cannot be found in GoaT or is above species level")
+        PopUpMessage({
+          type: "error",
+          message: "The Taxonomy ID cannot be found in GoaT or is above species level",
+        })
       } else {
         openModal();
       }
@@ -96,19 +93,23 @@ function Profile() {
     httpClient().post('/request/create', [json], {
     }).then((res: any) => {
       if (res.status === 200) {
-        setSuccess("ToLID request submitted successfully");
+        PopUpMessage({
+          type: "success",
+          message: "ToLID request submitted successfully",
+        })
         setForceUpdate(!forceUpdate);
       }
     }).catch((error: any) => {
       console.error(error.message);
-      setError(error.response?.data?.errors?.[0]?.detail ?? 'An error occured. Please try again later.');
+      PopUpMessage({
+        type: "error",
+        message: error.response?.data?.errors?.[0]?.detail ?? 'An error occured. Please try again later.',
+      })
     });
   }
 
   const requestButton = (
-    <Button variant="success" onClick={saveRequest}>
-      <FontAwesomeIcon icon={faArrowRight} size="sm" />
-    </Button>
+    <Button type="success" onClick={saveRequest} icon="arrow-right"/>
   );
 
   const createRequest = (
@@ -130,9 +131,7 @@ function Profile() {
           />
           <p className="form-info">The internal ID of the specimen. This is only used in the ToLID system and should be how you refer to the specimen in your lab</p>
         </Form.Group>
-        <Button disabled={requestedTaxonomyId === "" || specimenId === ""} onClick={() => getTolidTaxonInfo()}>
-          Request
-        </Button>
+        <Button disabled={requestedTaxonomyId === "" || specimenId === ""} onClick={() => getTolidTaxonInfo()} text={'Request'}/>
       </Form>
       <Modal
         size='md'
@@ -313,16 +312,6 @@ function Profile() {
 
   return (
     <div className="profile">
-      <PopUpMessage
-        type='success'
-        message={success}
-        setMessage={setSuccess}
-      />
-      <PopUpMessage
-        type='danger'
-        message={error}
-        setMessage={setError}
-      />
       <Widgets
         components={components}
       />

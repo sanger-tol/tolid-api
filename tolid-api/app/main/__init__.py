@@ -9,16 +9,35 @@ from flask import Flask
 from main.blueprint import request_blueprint
 from main.model import Base, UserMixin, main_models
 
-from tol.api_base2 import data_blueprint, system_blueprint
+from tol.api_base import data_blueprint, system_blueprint
 from tol.core import core_data_object
 from tol.sources.goat import goat
-from tol.sql import create_sql_datasource
-from tol.sql.auth import db_auth_blueprint
+from tol.sql import Model, create_sql_datasource
+from tol.sql.auth import DbAuthBlueprint, db_auth_blueprint
 
 from .auth import create_auth_inspector
 
 
-def application() -> Flask:
+def get_auth_bp(
+    base: Model,
+    db_uri: str,
+    url_prefix: str,
+) -> DbAuthBlueprint:
+
+    return db_auth_blueprint(
+        base,
+        db_uri,
+        user_mixin_class=UserMixin,
+        url_prefix=url_prefix,
+        oidc_id_column_name='email',
+        oidc_ext_mapping={'name': 'name'},
+    )
+
+
+def application(
+    auth_bp: DbAuthBlueprint | None = None,
+) -> Flask:
+
     app = Flask(__name__)
 
     db_uri = os.environ['DB_URI']
@@ -28,14 +47,12 @@ def application() -> Flask:
     api_auth_path = os.getenv('API_AUTH_PATH', '/auth')
     api_custom_path = os.getenv('API_CUSTOM_PATH', '/')
 
-    auth_bp = db_auth_blueprint(
-        Base,
-        db_uri,
-        user_mixin_class=UserMixin,
-        url_prefix=f'{api_path}{api_auth_path}',
-        oidc_id_column_name='email',
-        oidc_ext_mapping={'name': 'name'},
-    )
+    if auth_bp is None:
+        auth_bp = get_auth_bp(
+            Base,
+            db_uri,
+            f'{api_path}{api_auth_path}',
+        )
     auth_bp.register_authenticator(app)
     app.register_blueprint(auth_bp)
 
@@ -44,11 +61,9 @@ def application() -> Flask:
     )
     app.register_blueprint(system_bp)
 
-    User = auth_bp.models.user_class  # noqa
-
     sql_ds = create_sql_datasource(
         [
-            User,
+            auth_bp.models.user_class,
             *main_models
         ],
         db_uri,

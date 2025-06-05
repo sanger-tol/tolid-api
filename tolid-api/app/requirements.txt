@@ -4,5 +4,5 @@
 
 --extra-index-url=https://gitlab.internal.sanger.ac.uk/api/v4/projects/3429/packages/pypi/simple
 
-tol-sdk[api_base2,postgresql] == 1.2.2
+tol-sdk[api-base,postgresql,sheets] == 1.5.8
 alembic == 1.13.1

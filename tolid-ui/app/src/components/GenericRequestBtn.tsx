@@ -4,8 +4,6 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faPlus, faXmark, faInfo } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '@tol/tol-ui'
 
 type Variant = 'add' | 'accept' | 'reject'
@@ -20,13 +18,13 @@ interface Props {
 const variantToIcon = (variant: Variant | string) => {
   switch (variant) {
     case 'add':
-      return faPlus
+      return 'plus'
     case 'accept':
-      return faCheck
+      return 'check'
     case 'reject':
-      return faXmark
+      return 'xmark'
     default:
-      return faInfo
+      return 'info'
   }
 }
 
@@ -37,7 +35,7 @@ const variantToStyle = (variant: Variant | string) => {
     case 'accept':
       return 'success'
     case 'reject':
-      return 'danger'
+      return 'error'
     default:
       return 'primary'
   }
@@ -50,12 +48,7 @@ function GenericRequestBtn(props: Props) {
 
   return (
     <div className="generic-button-wrapper">
-      <Button onClick={onClick} disabled={disabled} type="button" className="generic-button-wrapper" variant={styling}>
-        <div className="generic-button-styling">
-          <FontAwesomeIcon icon={variantToIcon(variant)} />
-          {text}
-        </div>
-      </Button>
+      <Button onClick={onClick} disabled={disabled} className="generic-button-wrapper" type={styling} icon={variantToIcon(variant)} text={text}/>
     </div>
   )
 }
