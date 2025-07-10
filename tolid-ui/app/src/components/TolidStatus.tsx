@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2023 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { StatusMessage } from '@tol/tol-ui';
+import { StatusMessage, MessageType } from '@tol/tol-ui';
 
 
 function statusType(status: string) {
@@ -28,7 +28,7 @@ function StatusExample(props: Props) {
     <div>
       <StatusMessage
         message={status}
-        status={statusType(status)}
+        status={statusType(status) as MessageType}
       />
       {status === 'Rejected' &&
         <p style={{fontSize: 12, marginTop: 8}}>Reason: {reason}</p>
