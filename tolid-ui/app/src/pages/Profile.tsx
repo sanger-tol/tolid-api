@@ -12,10 +12,12 @@ import {
   Modal,
   PopUpMessage,
   RemoteTable,
-  Status,
+  StatusMessage,
   Widgets,
   httpClient,
-  useZone
+  useZone,
+  TsDataSource,
+  MessageType,
 } from '@tol/tol-ui';
 import { useState } from 'react';
 import { DetailAttribute, TolidStatus } from "../components";
@@ -141,9 +143,9 @@ function Profile() {
       >
         <h2>Confirm ToLID Request</h2>
         <>{requestedTaxonomyId !== speciesTaxonomyId &&
-          <Status
-            status="warning"
-            text={"The requested Taxonomy ID is not species level. The generated ToLID will be for the species: " + speciesName}
+          <StatusMessage
+            status={"warning" as MessageType}
+            message={"The requested Taxonomy ID is not species level. The generated ToLID will be for the species: " + speciesName}
           />
         }</>
         <h5 style={{marginTop: 12, marginBottom: 10}}>Are you sure you want to request a ToLID for the following species?</h5>
@@ -156,7 +158,8 @@ function Profile() {
   );
 
   const specimenZone = useZone({
-    endpoint: 'specimen',
+    objectType: 'specimen',
+    dataSource: new TsDataSource(),
     components: [
       {
         id: 'my-tolids-v2',
@@ -208,7 +211,8 @@ function Profile() {
   );
 
   const requestsZone = useZone({
-    endpoint: 'request',
+    objectType: 'request',
+    dataSource: new TsDataSource(),
     components: [
       {
         id: 'my-requests-v2',

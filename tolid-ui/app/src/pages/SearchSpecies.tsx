@@ -4,7 +4,13 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { RemoteTable, Widgets, env, useZone } from "@tol/tol-ui";
+import {
+  RemoteTable,
+  Widgets,
+  useZone,
+  TOL_DS
+} from "@tol/tol-ui";
+
 
 function SearchSpecies() {
   const filter = {
@@ -16,25 +22,25 @@ function SearchSpecies() {
   };
 
   const speciesZone = useZone({
-    endpoint: 'species',
+    objectType: 'species',
+    dataSource: TOL_DS,
     components: [
       {
-        id: 'species-table-v2',
+        id: 'species-table',
         filter: filter
       }
     ],
-    baseUrl: env.TOL_DATA
   });
 
 
   const table = (
     <RemoteTable
-      id="species-table-v2"
+      id="species-table"
       noConfigModal
       noDownload
       defaultSort="tolid_prefix"
       fields={{
-        "uid": {
+        "id": {
           rename: "Taxonomy ID"
         },
         "tolid_name": {

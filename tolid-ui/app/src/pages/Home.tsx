@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { Header, RemoteTable, Widgets, useZone } from '@tol/tol-ui';
+import { Header, RemoteTable, Widgets, TsDataSource, useZone } from '@tol/tol-ui';
 
 
 function Home() {
@@ -77,7 +77,8 @@ function Home() {
   );
   
   const secondaryPrefixZone = useZone({
-    endpoint: 'secondary_prefix',
+    objectType: 'secondary_prefix',
+    dataSource: new TsDataSource(),
     components: [
       {
         id: 'tolid-prefix-table-v1',
