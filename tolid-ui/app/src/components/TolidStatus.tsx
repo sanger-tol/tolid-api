@@ -27,8 +27,8 @@ function StatusExample(props: Props) {
   return (
     <div>
       <StatusMessage
-        text={status}
-        message={statusType(status)}
+        message={status}
+        status={statusType(status)}
       />
       {status === 'Rejected' &&
         <p style={{fontSize: 12, marginTop: 8}}>Reason: {reason}</p>
