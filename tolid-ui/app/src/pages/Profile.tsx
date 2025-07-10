@@ -12,7 +12,7 @@ import {
   Modal,
   PopUpMessage,
   RemoteTable,
-  Status,
+  StatusMessage,
   Widgets,
   httpClient,
   useZone
@@ -141,9 +141,9 @@ function Profile() {
       >
         <h2>Confirm ToLID Request</h2>
         <>{requestedTaxonomyId !== speciesTaxonomyId &&
-          <Status
+          <StatusMessage
             status="warning"
-            text={"The requested Taxonomy ID is not species level. The generated ToLID will be for the species: " + speciesName}
+            message={"The requested Taxonomy ID is not species level. The generated ToLID will be for the species: " + speciesName}
           />
         }</>
         <h5 style={{marginTop: 12, marginBottom: 10}}>Are you sure you want to request a ToLID for the following species?</h5>

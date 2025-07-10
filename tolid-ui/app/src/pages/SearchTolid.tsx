@@ -7,7 +7,6 @@ SPDX-License-Identifier: MIT
 import {
   RemoteTable,
   Widgets,
-  env,
   useZone,
   TOL_DS
 } from "@tol/tol-ui";
@@ -28,8 +27,7 @@ function SearchTolid() {
         id: 'tolid-table',
         filter: filter
       }
-    ],
-    baseUrl: env.TOL_DATA
+    ]
   });
 
 
