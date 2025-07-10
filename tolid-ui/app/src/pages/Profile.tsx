@@ -16,6 +16,7 @@ import {
   Widgets,
   httpClient,
   useZone,
+  TsDataSource,
   MessageType,
 } from '@tol/tol-ui';
 import { useState } from 'react';
@@ -157,7 +158,8 @@ function Profile() {
   );
 
   const specimenZone = useZone({
-    endpoint: 'specimen',
+    objectType: 'specimen',
+    dataSource: new TsDataSource(),
     components: [
       {
         id: 'my-tolids-v2',
@@ -209,7 +211,8 @@ function Profile() {
   );
 
   const requestsZone = useZone({
-    endpoint: 'request',
+    objectType: 'request',
+    dataSource: new TsDataSource(),
     components: [
       {
         id: 'my-requests-v2',
