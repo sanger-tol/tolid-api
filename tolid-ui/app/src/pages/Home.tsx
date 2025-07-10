@@ -77,7 +77,7 @@ function Home() {
   );
   
   const secondaryPrefixZone = useZone({
-    endpoint: 'secondary_prefix',
+    objectType: 'secondary_prefix',
     components: [
       {
         id: 'tolid-prefix-table-v1',
