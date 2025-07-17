@@ -31,7 +31,7 @@ function ActionButtons(props: Props) {
       setCanAccept('data' in res && 'id' in res.data.data);
       setLoading(false);
     });
-  }, [forceUpdate]);
+  }, [forceUpdate, speciesId]);
 
   return (
     <div className="loading-cell">

@@ -8,7 +8,7 @@ import GenericRequestBtn from "./GenericRequestBtn";
 
 function AddSpeciesBtn() {
   return (
-    <a href="/admin/add-species">
+    <a href="/add-species">
       <GenericRequestBtn
         variant="add"
         text="Add"

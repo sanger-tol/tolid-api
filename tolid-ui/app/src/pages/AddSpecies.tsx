@@ -5,7 +5,14 @@ SPDX-License-Identifier: MIT
 */
 
 import { useState } from 'react';
-import { Button, httpClient, PopUpMessage, Widgets, StatusMessage } from '@tol/tol-ui';
+import {
+  Button,
+  httpClient,
+  PopUpMessage,
+  Widgets,
+  StatusMessage,
+  MessageType
+} from '@tol/tol-ui';
 import { Input } from 'rsuite';
 
 const EMPTY_SPECIES_DATA_ERROR = "Species data cannot be an empty line.";
@@ -172,8 +179,8 @@ function AddSpecies() {
     return (
       <div className="add-species-alert-wrapper">
         <StatusMessage
-          text={message}
-          message="error"
+          message={message}
+          status={"error" as MessageType}
         />
       </div>
     );

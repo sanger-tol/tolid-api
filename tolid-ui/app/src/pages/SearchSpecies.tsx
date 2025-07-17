@@ -10,8 +10,14 @@ import {
   useZone,
   TOL_DS
 } from "@tol/tol-ui";
+import { SearchHeader } from "./SearchHeader";
 
 function SearchSpecies() {
+  const Header = (
+    <SearchHeader
+    />
+  );
+
   const filter = {
     in_list: {},
     and_: {
@@ -49,7 +55,7 @@ function SearchSpecies() {
             rename: "ToLID Prefix",
             cellRenderer: null
           },
-          "informatics_tolid_count": {
+          "tolid_tolid_count": {
             rename: "No. ToLIDs Assigned",
             cellRenderer: null
           }
@@ -68,6 +74,10 @@ function SearchSpecies() {
   );
 
   const components = [
+    {
+      component: Header,
+      type: 'full'
+    },
     {
       component: title,
       type: 'full'

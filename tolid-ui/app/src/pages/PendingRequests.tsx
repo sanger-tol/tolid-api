@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { RemoteTable, Widgets, useZone } from "@tol/tol-ui";
+import { RemoteTable, TsDataSource, Widgets, useZone } from "@tol/tol-ui";
 import { ActionButtons, DetailAttribute } from "../components";
 import { useState } from "react";
 
@@ -12,9 +12,10 @@ function PendingRequests() {
   const [forceUpdate, setForceUpdate] = useState(false);
 
   const tolidZone = useZone({
-    endpoint: 'request',
+    objectType: 'request',
+    dataSource: new TsDataSource(),
     components: [{
-      id: 'requests-table-v2',
+      id: 'requests-table',
       filter: {
         and_: {
           'status': {
@@ -29,7 +30,7 @@ function PendingRequests() {
 
   const table = (
     <RemoteTable
-      id="requests-table-v2"
+      id="requests-table"
       noDownload
       noConfigModal
       forceUpdate={forceUpdate}
