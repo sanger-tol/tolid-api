@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { Header, RemoteTable, TsDataSource, Widgets, useZone } from '@tol/tol-ui';
+import { Header, RemoteTable, Widgets, TsDataSource, useZone } from '@tol/tol-ui';
 
 
 function Home() {

@@ -13,10 +13,11 @@ import {
   PopUpMessage,
   RemoteTable,
   StatusMessage,
-  TsDataSource,
   Widgets,
   httpClient,
-  useZone
+  useZone,
+  TsDataSource,
+  MessageType,
 } from '@tol/tol-ui';
 import { useState } from 'react';
 import { DetailAttribute, TolidStatus } from "../components";
@@ -143,7 +144,7 @@ function Profile() {
         <h2>Confirm ToLID Request</h2>
         <>{requestedTaxonomyId !== speciesTaxonomyId &&
           <StatusMessage
-            status="warning"
+            status={"warning" as MessageType}
             message={"The requested Taxonomy ID is not species level. The generated ToLID will be for the species: " + speciesName}
           />
         }</>

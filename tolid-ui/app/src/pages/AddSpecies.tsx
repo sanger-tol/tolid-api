@@ -5,14 +5,7 @@ SPDX-License-Identifier: MIT
 */
 
 import { useState } from 'react';
-import {
-  Button,
-  httpClient,
-  PopUpMessage,
-  Widgets,
-  StatusMessage,
-  MessageType
-} from '@tol/tol-ui';
+import { Button, httpClient, PopUpMessage, Widgets, StatusMessage, MessageType } from '@tol/tol-ui';
 import { Input } from 'rsuite';
 
 const EMPTY_SPECIES_DATA_ERROR = "Species data cannot be an empty line.";

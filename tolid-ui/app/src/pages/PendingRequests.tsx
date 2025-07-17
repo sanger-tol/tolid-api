@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { RemoteTable, TsDataSource, Widgets, useZone } from "@tol/tol-ui";
+import { RemoteTable, Widgets, TsDataSource, useZone } from "@tol/tol-ui";
 import { ActionButtons, DetailAttribute } from "../components";
 import { useState } from "react";
 
