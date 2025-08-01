@@ -162,7 +162,7 @@ function Profile() {
     dataSource: new TsDataSource(),
     components: [
       {
-        id: 'my-tolids-v2',
+        id: 'my-tolids',
         filter: {
           and_: {
             'user.id': {
@@ -180,7 +180,7 @@ function Profile() {
     <div>
       <h2 className="sub-heading">My ToLIDs</h2>
       <RemoteTable
-        id="my-tolids-v2"
+        id="my-tolids"
         noConfigModal
         noDownload
         height={400}
@@ -215,7 +215,7 @@ function Profile() {
     dataSource: new TsDataSource(),
     components: [
       {
-        id: 'my-requests-v2',
+        id: 'my-requests',
         filter: {
           and_: {
             'user.id': {
@@ -233,7 +233,7 @@ function Profile() {
     <div>
       <h2 className="sub-heading">My Requests</h2>
       <RemoteTable
-        id="my-request-v2"
+        id="my-request"
         noDownload
         height={400}
         defaultSort="created_at"

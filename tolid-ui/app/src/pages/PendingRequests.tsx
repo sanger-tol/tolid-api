@@ -15,7 +15,7 @@ function PendingRequests() {
     objectType: 'request',
     dataSource: new TsDataSource(),
     components: [{
-      id: 'requests-table-v2',
+      id: 'requests-table',
       filter: {
         and_: {
           'status': {
@@ -30,7 +30,7 @@ function PendingRequests() {
 
   const table = (
     <RemoteTable
-      id="requests-table-v2"
+      id="requests-table"
       noDownload
       noConfigModal
       forceUpdate={forceUpdate}

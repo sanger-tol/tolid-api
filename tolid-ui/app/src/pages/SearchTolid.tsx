@@ -10,8 +10,13 @@ import {
   useZone,
   TOL_DS
 } from "@tol/tol-ui";
+import { SearchHeader } from "./SearchHeader";
 
 function SearchTolid() {
+  const Header = (
+    <SearchHeader />
+  );
+
   const filter = {
     in_list: {},
     and_: {
@@ -66,6 +71,10 @@ function SearchTolid() {
   );
 
   const components = [
+    {
+      component: Header,
+      type: 'full'
+    },
     {
       component: title,
       type: 'full'

@@ -81,7 +81,7 @@ function Home() {
     dataSource: new TsDataSource(),
     components: [
       {
-        id: 'tolid-prefix-table-v1',
+        id: 'tolid-prefix-table',
       }
     ],
   });
@@ -89,7 +89,7 @@ function Home() {
 
   const prefixTable = (
     <RemoteTable
-    id="tolid-prefix-table-v1"
+    id="tolid-prefix-table"
     height={500}
     noConfigModal
     noDownload
