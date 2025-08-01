@@ -14,8 +14,7 @@ import { SearchHeader } from "./SearchHeader";
 
 function SearchSpecies() {
   const Header = (
-    <SearchHeader
-    />
+    <SearchHeader />
   );
 
   const filter = {
