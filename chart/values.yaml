@@ -159,6 +159,7 @@ tolcore:
       REACT_APP_API_CUSTOM_PATH: api.custom_path
       REACT_APP_PORTAL_URL: portal.url
       REACT_APP_PORTAL_API_PATH: portal.api_path
+      REACT_APP_PORTAL_API_DATA_PATH: portal.api_data_path
   backup:
     uri: ""
     access_key: ""
@@ -192,6 +193,7 @@ tolcore:
   portal:
     url: https://portal.tol.sanger.ac.uk
     api_path: /api/v1
+    api_data_path: /data
   goat:
     url: https://goat.genomehubs.org
     api_path: /api/v2
