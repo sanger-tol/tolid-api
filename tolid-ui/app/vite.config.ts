@@ -1,14 +1,13 @@
-/*
-SPDX-FileCopyrightText: 2024 Genome Research Ltd.
-
-SPDX-License-Identifier: MIT
-*/
+// SPDX-FileCopyrightText: 2025 Genome Research Ltd.
+//
+// SPDX-License-Identifier: MIT
 
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import viteTsconfigPaths from "vite-tsconfig-paths";
+import svgr from "vite-plugin-svgr";
 import fs from "fs";
-import basicSsl from '@vitejs/plugin-basic-ssl'
+import path from 'path';
 
 // Paths to the key and certificate files
 const keyPath = "/localhost.key";
@@ -23,8 +22,22 @@ const httpsConfig =
       }
     : false;
 
+// Determine if the environment requires a local version of tol-ui
+const IS_TOLUI_LOCAL = process.env.LOCAL_TOLUI === 'true';
+
 export default defineConfig({
-  plugins: [react(), viteTsconfigPaths(),basicSsl()],
+  plugins: [react(), viteTsconfigPaths(), svgr()],
+  resolve: {
+    alias: {
+      '@tol/tol-ui': IS_TOLUI_LOCAL
+        ? path.resolve(__dirname, 'src/tol-ui/src')
+        : path.resolve(__dirname, 'node_modules/@tol/tol-ui'),
+
+      "@tol/tol-css": IS_TOLUI_LOCAL
+      ? path.resolve(__dirname, "src/tol-ui/src/scss")
+      : path.resolve(__dirname, "node_modules/@tol/tol-ui/src/scss"),
+    },
+  },
   build: {
     emptyOutDir: true,
     outDir: "build",
@@ -32,6 +45,14 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     port: 3000,
-    https: true
-  }
+    https: httpsConfig, // Apply the HTTPS configuration conditionally
+    proxy: {
+      "/api": {
+        target: "http://tolid-api:80",
+        secure: false,
+        changeOrigin: true,
+        ws: true,
+      },
+    },
+  },
 });

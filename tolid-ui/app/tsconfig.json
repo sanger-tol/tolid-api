@@ -15,6 +15,8 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "declaration": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -22,7 +24,8 @@
     "noImplicitThis": true,
     "noImplicitAny": false,
     "strictNullChecks": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "baseUrl": "."
   },
   "include": ["src", "vite-env.d.ts", "vite.config.ts"]
 }

@@ -44,7 +44,7 @@ def request_blueprint(
     data_source_dict = DataSourceDict(*data_sources)
     view = DefaultView(
         prefix='',
-        include_all_to_ones=True,
+        requested_tree={'include_all_to_ones': True},
         hop_limit=1
     )
 
