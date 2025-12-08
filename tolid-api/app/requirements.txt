@@ -6,3 +6,4 @@
 
 tol-sdk[api-base,postgresql,sheets] == 1.5.8
 alembic == 1.13.1
+minio

@@ -8,6 +8,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import viteTsconfigPaths from "vite-tsconfig-paths";
 import fs from "fs";
+import basicSsl from '@vitejs/plugin-basic-ssl'
 
 // Paths to the key and certificate files
 const keyPath = "/localhost.key";
@@ -23,7 +24,7 @@ const httpsConfig =
     : false;
 
 export default defineConfig({
-  plugins: [react(), viteTsconfigPaths()],
+  plugins: [react(), viteTsconfigPaths(),basicSsl()],
   build: {
     emptyOutDir: true,
     outDir: "build",
@@ -31,14 +32,6 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     port: 3000,
-    https: httpsConfig, // Apply the HTTPS configuration conditionally
-    proxy: {
-      "/api": {
-        target: "http://tolid-api:80",
-        secure: false,
-        changeOrigin: true,
-        ws: true,
-      },
-    },
+    https: true
   }
 });
