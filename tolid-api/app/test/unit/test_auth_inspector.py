@@ -108,7 +108,7 @@ class TestAuthInspector:
 
         disallowed_methods = set(
             OperatorMethod
-        ) - {OperatorMethod.PAGE}
+        ) - {OperatorMethod.PAGE, OperatorMethod.CURSOR}
 
         for op in disallowed_methods:
             with pytest.raises(ForbiddenError):

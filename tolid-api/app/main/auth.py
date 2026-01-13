@@ -2,12 +2,9 @@
 #
 # SPDX-License-Identifier: MIT
 
-from typing import Optional
-
-from tol.api_base.auth import CompositeAuthInspector
+from tol.api_base.auth import AuthInspector
 from tol.api_base.auth.error import ForbiddenError
 from tol.api_base.misc import (
-    AuthContext,
     CtxGetter,
     default_ctx_getter
 )
@@ -15,74 +12,51 @@ from tol.core.operator import OperatorMethod
 
 
 def create_auth_inspector(
-    admin_role: str = 'admin',
-    ctx_getter: CtxGetter = default_ctx_getter
-) -> CompositeAuthInspector:
+    ctx_getter: CtxGetter = default_ctx_getter,
+    admin_role: str = 'admin'
+) -> AuthInspector:
 
-    composite = CompositeAuthInspector(
-        admin_role=admin_role,
-        ctx_getter=ctx_getter
+    WRITE_METHODS = (  # noqa N806
+        OperatorMethod.DELETE,
+        OperatorMethod.INSERT,
+        OperatorMethod.UPDATE,
+        OperatorMethod.UPSERT
     )
 
-    composite.forbid('user')
-
-    composite.forbid_noauth(['specimen', 'request'])
-
-    @composite.noauth
-    def __no_write_without_auth(
-        __object_type: str,
-        op: OperatorMethod,
-        **kwargs
-    ):
-
-        __WRITE_METHODS = (  # noqa N806
-            OperatorMethod.DELETE,
-            OperatorMethod.INSERT,
-            OperatorMethod.UPDATE,
-            OperatorMethod.UPSERT,
-        )
-
-        if op in __WRITE_METHODS:
-            raise ForbiddenError()
-
-    @composite.always
-    def __no_detail_get(
+    def auth_inspector(
         object_type: str,
-        op: OperatorMethod,
+        method: OperatorMethod,
+        *args,
         **kwargs
-    ):
+    ) -> None:
 
-        if object_type in ['species', 'taxon']:
-            return
-
-        if op == OperatorMethod.DETAIL:
+        # No access to user
+        if object_type == 'user':
             raise ForbiddenError()
 
-    @composite.auth(
-        object_type=['specimen', 'request'],
-    )
-    def __specimen_request_auth(
-        __object_type: str,
-        op: OperatorMethod,
-        auth_context: Optional[AuthContext] = None
-    ):
-
-        __ALLOWED_METHODS = (  # noqa N806
-            OperatorMethod.PAGE,
-        )
-
-        if auth_context is None or auth_context.roles is None:
+        # Only detail get for species and taxon
+        if method == OperatorMethod.DETAIL and object_type not in ['species', 'taxon'] \
+                and (ctx_getter().roles is None or admin_role not in ctx_getter().roles):
             raise ForbiddenError()
 
-        if op not in __ALLOWED_METHODS:
+        # No access to writing if not authenticated
+        if not ctx_getter().authenticated and method in WRITE_METHODS:
             raise ForbiddenError()
 
-        return {
-            'user.id': {
-                'eq': {
-                    'value': auth_context.user_id
+        # No access to specimen if not authenticated
+        if object_type in ['specimen', 'request']:
+            if not ctx_getter().authenticated:
+                raise ForbiddenError()
+            if method not in [OperatorMethod.PAGE, OperatorMethod.CURSOR]:
+                raise ForbiddenError()
+            # Add filter to only see own
+            if ctx_getter().roles is None or admin_role not in ctx_getter().roles:
+                return {
+                    'user.id': {
+                        'eq': {
+                            'value': ctx_getter().user_id
+                        }
+                    }
                 }
-            }
-        }
 
-    return composite
+    return auth_inspector

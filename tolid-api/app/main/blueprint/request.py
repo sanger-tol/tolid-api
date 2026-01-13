@@ -21,7 +21,8 @@ from tol.api_client.view import (
 )
 from tol.core import (
     DataSource,
-    DataSourceFilter
+    DataSourceFilter,
+    ReqFieldsTree
 )
 from tol.core.data_source_dict import (
     DataSourceDict
@@ -44,7 +45,20 @@ def request_blueprint(
     data_source_dict = DataSourceDict(*data_sources)
     view = DefaultView(
         prefix='',
-        requested_tree={'include_all_to_ones': True},
+        requested_tree=ReqFieldsTree(
+            'request',
+            data_source_dict['request'],
+            include_all_to_ones=True
+        ),
+        hop_limit=1
+    )
+    tolid_view = DefaultView(
+        prefix='',
+        requested_tree=ReqFieldsTree(
+            'specimen',
+            data_source_dict['specimen'],
+            include_all_to_ones=True
+        ),
         hop_limit=1
     )
 
@@ -347,6 +361,6 @@ def request_blueprint(
                     ])
                 )
                 session.delete('request', [tolid_request.id])
-        return view.dump_bulk(tolids_inserted), 200
+        return tolid_view.dump_bulk(tolids_inserted), 200
 
     return request_blueprint
