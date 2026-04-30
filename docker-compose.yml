@@ -157,7 +157,7 @@ services:
       - './tolid-api/migrations/alembic/versions:/migrations/alembic/versions'
 
   tolid-dbutils:
-    image: gitlab-registry.internal.sanger.ac.uk/tol/tol-core/dbutils:1.0.4
+    image: gitlab-registry.internal.sanger.ac.uk/tol/tol-core/dbutils:1.0.10
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
