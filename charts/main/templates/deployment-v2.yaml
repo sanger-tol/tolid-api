@@ -28,6 +28,23 @@ spec:
           env:
             - name: API_PATH
               value: {{ .Values.tolcore.apiv2.path | quote }}
+            {{- if .Values.tolcore.db.enabled }}
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Subcharts.tolcore.Values.db.initdbSecretName }}
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Subcharts.tolcore.Values.db.initdbSecretName }}
+                  key: password
+            - name: DB_URI
+              value: "postgresql://$(DB_USER):$(DB_PASSWORD)@{{ include `tol-core.db.host` .Subcharts.tolcore }}:{{ include `tol-core.db.port` .Subcharts.tolcore }}/{{ include `tol-core.db.name` .Subcharts.tolcore }}"
+            {{- else }}
+            - name: DB_URI
+              value: {{ include "tol-core.db.uri" .Subcharts.tolcore }}
+            {{- end }}
           image: "{{- .Values.tolcore.image.repository }}/tolid-apiv2:{{ .Values.tolcore.image.tag }}"
           imagePullPolicy: {{ .Values.tolcore.image.pullPolicy }}
           ports:

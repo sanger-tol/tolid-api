@@ -100,14 +100,8 @@ tolcore:
     host: ""
     port: "" # specify as a string
     enabled: true
-  dbutils:
-    image:
-      repository: ""
-      tag: ""
   schemaspy:
-    image:
-      repository: ""
-      tag: ""
+    enabled: false
   apiv2:
     fullname: "tolid-apiv2"
     probe_url: '/api/v2/ui'
