@@ -51,19 +51,6 @@ def ctx_getter(
 
 
 @pytest.fixture
-def mock_obj() -> DataObject:
-    mock_obj = create_autospec(DataObject)
-    mock_obj.attributes = {}
-    mock_obj.type = 'request'
-    mock_obj.id = '999999'
-    mock_obj.specimen_id = 'ABC123'
-    mock_obj.requested_taxonomy_id = 5678
-    mock_obj.species_id = 1234
-
-    return mock_obj
-
-
-@pytest.fixture
 def mock_tolid_species() -> DataObject:
     mock_obj = create_autospec(DataObject)
     mock_obj.attributes = {}
@@ -79,7 +66,7 @@ def mock_species() -> DataObject:
     mock_obj.attributes = {}
     mock_obj.type = 'taxon'
     mock_obj.id = '1234'
-    mock_obj.rank = 'species'
+    mock_obj.taxon_rank = 'species'
     mock_obj.species = mock_obj
 
     return mock_obj
@@ -91,23 +78,47 @@ def mock_subspecies(mock_species) -> DataObject:
     mock_obj.attributes = {}
     mock_obj.type = 'taxon'
     mock_obj.id = '5678'
-    mock_obj.rank = 'subspecies'
+    mock_obj.taxon_rank = 'subspecies'
     mock_obj.species = mock_species
 
     return mock_obj
 
 
 @pytest.fixture
-def mock_ds(mock_obj: DataObject) -> DataSource:
+def mock_ds() -> DataSource:
 
     class _MockDs(
         Counter,
         DataSource,
         DetailGetter,
         Deleter,
-        PageGetter
+        PageGetter,
+        Relational
     ):
-        pass
+        @property
+        def relationship_config(self):
+            rc_specimen = RelationshipConfig()
+            rc_specimen.to_one = {
+                'species': 'species',
+                'user': 'user'
+            }
+            rc_request = RelationshipConfig()
+            rc_request.to_one = {
+                'user': 'user'
+            }
+            return {'specimen': rc_specimen, 'request': rc_request}
+
+        def get_to_one_relation(
+            self,
+            source: DataObject,
+            relationship_name: str
+        ):
+            pass
+
+        def get_to_many_relations(
+            self
+        ):
+            raise NotImplementedError()
 
     _mock = create_autospec(_MockDs, spec_set=True)
     _mock.supported_types = ['species', 'specimen', 'request']
@@ -119,37 +130,58 @@ def mock_ds(mock_obj: DataObject) -> DataSource:
 
 
 @pytest.fixture
-def mock_goat(mock_obj: DataObject) -> DataSource:
+def mock_obj(mock_ds: DataSource) -> DataObject:
+    mock_obj = mock_ds.data_object_factory(
+        'request',
+        id_='999999',
+        attributes={
+            'specimen_id': 'ABC123',
+            'requested_taxonomy_id': 5678,
+            'species_id': 1234
+        }
+    )
+    # Ensure the mocked object serializes like a real DataObject.
+    mock_obj.id = '999999'
+    mock_obj.type = 'request'
+    mock_obj.attributes = {}
+    mock_obj.to_one = {}
+    mock_obj.to_many = {}
+    mock_obj.specimen_id = 'ABC123'
+    mock_obj.requested_taxonomy_id = 5678
+    mock_obj.species_id = 1234
+    return mock_obj
+
+
+@pytest.fixture
+def mock_goat() -> DataSource:
 
     class _MockDs(
         DataSource,
         DetailGetter,
         Relational
     ):
-        pass
+        @property
+        def relationship_config(self):
+            rc_taxon = RelationshipConfig()
+            rc_taxon.to_one = {
+                'species': 'taxon'
+            }
+            return {'taxon': rc_taxon}
+
+        def get_to_one_relation(
+            self,
+            source: DataObject,
+            relationship_name: str
+        ):
+            pass
+
+        def get_to_many_relations(
+            self
+        ):
+            raise NotImplementedError()
 
     _mock = create_autospec(_MockDs, spec_set=True)
     _mock.supported_types = ['taxon']
-
-    @property
-    def relationship_config(self):
-        rc_taxon = RelationshipConfig()
-        rc_taxon.to_one = {
-            'species': 'taxon'
-        }
-        return {'taxon': rc_taxon}
-
-    def get_to_one_relation(
-        self,
-        source: DataObject,
-        relationship_name: str
-    ):
-        pass
-
-    def get_to_many_relations(
-        self
-    ):
-        raise NotImplementedError()
 
     return _mock
 
@@ -188,6 +220,7 @@ class TestRequestBlueprint:
 
         mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
         mock_session_context.insert.return_value = [mock_obj]
+        mock_session_context.get_by_ids.return_value = [mock_obj]
 
         mock_session_context.get_one.return_value = None
         mock_goat.get_one.return_value = mock_subspecies
@@ -234,6 +267,7 @@ class TestRequestBlueprint:
 
         mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
         mock_session_context.insert.return_value = [mock_obj]
+        mock_session_context.get_by_ids.return_value = [mock_obj]
 
         mock_session_context.get_one.return_value = mock_tolid_species
         mock_goat.get_one.return_value = mock_species
@@ -337,6 +371,7 @@ class TestRequestBlueprint:
 
         mock_session_context = mock_ds.get_session.return_value.__enter__.return_value
         mock_session_context.upsert.return_value = [mock_obj]
+        mock_session_context.get_by_ids.return_value = [mock_obj]
 
         response = client.patch(
             '/custom/request/reject',
@@ -422,8 +457,12 @@ class TestRequestBlueprint:
         mock_specimen3.type = 'specimen'
         mock_specimen3.species = mock_species
         mock_specimen3.specimen_id = 'ABC123'
+        mock_specimen3.attributes = {}
+        mock_specimen3.to_one = {}
+        mock_specimen3.to_many = {}
 
         mock_session_context.insert.return_value = [mock_specimen3]
+        mock_session_context.get_by_ids.return_value = [mock_specimen3]
 
         response = client.patch(
             '/custom/request/accept',
@@ -434,8 +473,7 @@ class TestRequestBlueprint:
         assert response.status_code == 200
         assert response.json == {'data': [{
             'id': 'abCdeFghi4',
-            'type': 'specimen',
-            'attributes': {}
+            'type': 'specimen'
         }]}
 
         assert mock_session_context.data_object_factory.call_count == 1
@@ -559,6 +597,19 @@ class TestRequestBlueprint:
 
         mock_session_context.insert.side_effect = [[mock_specimen3], [mock_specimen4]]
 
+        def _get_by_ids(object_type, ids, requested_tree=None):
+            if object_type == 'request':
+                return []
+            if object_type == 'specimen':
+                specimen_by_id = {
+                    mock_specimen3.id: mock_specimen3,
+                    mock_specimen4.id: mock_specimen4,
+                }
+                return [specimen_by_id[id_] for id_ in ids]
+            return []
+
+        mock_session_context.get_by_ids.side_effect = _get_by_ids
+
         mock_goat.get_one.side_effect = [mock_subspecies, mock_subspecies]
 
         response = client.post(
@@ -618,7 +669,8 @@ class TestRequestBlueprint:
         auth_context: AuthContext,
         mock_ds: DataSource,
         mock_goat: DataSource,
-        mock_tolid_species: DataObject
+        mock_tolid_species: DataObject,
+        mock_subspecies: DataObject
     ):
         auth_context.authenticated = True
         auth_context.user_id = '100'
@@ -638,6 +690,10 @@ class TestRequestBlueprint:
                                                     None, mock_tolid_species]
 
         mock_session_context.get_list.return_value = [mock_specimen1]
+        mock_session_context.get_by_ids.side_effect = (
+            lambda object_type, ids, requested_tree=None:
+            [mock_specimen1] if object_type == 'specimen' else []
+        )
 
         mock_goat.get_one.side_effect = [mock_subspecies]
 
@@ -682,6 +738,10 @@ class TestRequestBlueprint:
         mock_session_context.get_one.side_effect = [None,  # validation
                                                     None, mock_tolid_species]
         mock_session_context.get_list.return_value = [mock_obj]
+        mock_session_context.get_by_ids.side_effect = (
+            lambda object_type, ids, requested_tree=None:
+            [mock_obj] if object_type == 'request' else []
+        )
 
         mock_goat.get_one.side_effect = [mock_subspecies]
 
@@ -726,6 +786,10 @@ class TestRequestBlueprint:
         mock_session_context.get_list.return_value = []
 
         mock_session_context.insert.return_value = [mock_obj]
+        mock_session_context.get_by_ids.side_effect = (
+            lambda object_type, ids, requested_tree=None:
+            [mock_obj] if object_type == 'request' else []
+        )
 
         mock_goat.get_one.side_effect = [mock_subspecies]
 

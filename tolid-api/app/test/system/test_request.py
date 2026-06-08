@@ -20,7 +20,6 @@ def test_request_user_errors(client, api_path, sql_datasource):
     }
     for rb in sql_datasource.get_list('role_binding', f):
         sql_datasource.delete('role_binding', [rb.id])
-
     body = [
         {
             'requested_taxonomy_id': SPECIES_ID,
@@ -162,6 +161,8 @@ def test_request_creator(client, api_path, sql_datasource):
     ]
     response = client.post(api_path + '/request/create', json=body)
     assert response.status_code == 200
+    print(response.text)
+    print(response.json)
 
     obj1 = response.json['data'][0]
     assert obj1['id'] == 'abCdeFghi2'

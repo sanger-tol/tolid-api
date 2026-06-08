@@ -9,6 +9,6 @@ FROM gitlab-registry.internal.sanger.ac.uk/tol/tol-core/web-base-dev:1.0.6
 
 COPY ./app/package.json ./
 
-RUN yarn install
+RUN yarn install --dev
 
 COPY ./app/ ./
