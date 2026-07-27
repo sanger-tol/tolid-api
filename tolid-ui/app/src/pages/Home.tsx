@@ -93,24 +93,31 @@ function Home() {
     height={500}
     noConfigModal
     noDownload
-    defaultSort="primary_prefix_letter"
+    defaultSort="primary_prefix.id"
     fields={{
-      "primary_prefix.id": {
-        rename: "First Prefix",
-        cellRenderer: null
-      },
-      "letter": {
-        rename: "Second Prefix"
-      },
-      "primary_prefix.name": {
-        rename: "Covers",
-        cellRenderer: null
-      },
-      "name": {
-        rename: "Covers in detail",
-        cellRenderer: null
-      }
-    }}
+        data: {
+          "primary_prefix.id": {
+            rename: "First Prefix"
+          },
+          "letter": {
+            rename: "Second Prefix"
+          },
+          "primary_prefix.name": {
+            rename: "Covers"
+          },
+          "name": {
+            rename: "Covers in detail"
+          }
+        },
+        order: {
+          active: [
+            "primary_prefix.id",
+            "letter",
+            "primary_prefix.name",
+            "name"
+          ],
+        },
+      }}
     {...secondaryPrefixZone}
   />
   );
