@@ -4,7 +4,7 @@
   "private": true,
   "proxy": "http://tolid-api:80",
   "dependencies": {
-    "@tol/tol-ui": "2.5.1",
+    "@tol/tol-ui": "4.0.2",
     "react": "18.3.1",
     "react-bootstrap": "2.8.0",
     "react-dom": "18.3.1",
@@ -12,7 +12,6 @@
     "react-scripts": "5.0.1",
     "typescript": "5.6.3",
     "web-vitals": "^0.2.4",
-    "sass": "^1.77.8",
     "rsuite": "5.75.0",
     "vite-plugin-svgr": "3.2.0",
     "@tanstack/react-query": "^5.81.5",
@@ -28,7 +27,11 @@
     "@tanstack/react-query": "^5.81.5",
     "xlsx": "0.18.5"
   },
-
+  "resolutions": {
+    "styled-components": "~6.1.0",
+    "filelist": "1.0.4",
+    "sass": "1.77.8"
+  },
   "scripts": {
     "start": "vite",
     "build": "vite build",
