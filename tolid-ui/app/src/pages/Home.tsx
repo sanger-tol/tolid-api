@@ -19,7 +19,7 @@ function Home() {
       <p>
         If you have been using the v2 API for your ToLID requests, please start using the new v3 API
         (see documentation under "Developers" in the main menu).
-        The v2 API is still functional at species level, but will be removed in a few months.
+        The v2 API is still functional at species level, but will be removed on 31 December 2026.
       </p>
     </div>
   );
