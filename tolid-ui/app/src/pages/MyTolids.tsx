@@ -1,5 +1,3 @@
-
-
 /*
 SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 
@@ -24,7 +22,7 @@ import { DetailAttribute, TolidStatus } from "../components";
 import { SubspeciesCellRenderer } from '../components'
 
 
-function Profile() {
+function MyTolids() {
   const user = localStorage.getItem('user') || '{}';
   const userId = JSON.parse(user).id;
   const [requestedTaxonomyId, setRequestedTaxonomyId] = useState("");

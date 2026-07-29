@@ -8,8 +8,8 @@ import ReactDOM from 'react-dom';
 import {
   Home,
   AddSpecies,
+  MyTolids,
   PendingRequests,
-  Profile
 } from "./pages";
 import reportWebVitals from "./reportWebVitals";
 import { SmartApp, TPageElements } from '@tol/tol-ui';
@@ -21,7 +21,7 @@ export const PAGE_ELEMENTS: TPageElements = {
   home: <Home />,
   addSpecies: <AddSpecies />,
   pendingRequests: <PendingRequests />,
-  profile: <Profile />
+  myTolids: <MyTolids />
 };
 
 ReactDOM.render( // eslint-disable-line
@@ -29,7 +29,6 @@ ReactDOM.render( // eslint-disable-line
       id="tolid"
       brand={<img src={Logo} alt="ToLID Logo" style={{ height: 35 }} />}
       pageElements={PAGE_ELEMENTS}
-      configurableBoards
     />
 ,
   document.getElementById('root')
