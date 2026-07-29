@@ -5,11 +5,20 @@
 from sqlalchemy.orm import (
     Mapped,
     declared_attr,
+    mapped_column,
     relationship
 )
 
 
 class UserMixin:
+
+    @declared_attr
+    def name(self) -> Mapped[str]:
+        return mapped_column()
+
+    @declared_attr
+    def workplace(self) -> Mapped[str]:
+        return mapped_column()
 
     @declared_attr
     def requests(self) -> Mapped[list['Request']]:  # noqa F821
