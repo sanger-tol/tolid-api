@@ -5,7 +5,6 @@
 from sqlalchemy.orm import (
     Mapped,
     declared_attr,
-    mapped_column,
     relationship
 )
 
