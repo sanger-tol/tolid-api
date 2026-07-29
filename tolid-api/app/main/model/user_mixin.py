@@ -13,14 +13,6 @@ from sqlalchemy.orm import (
 class UserMixin:
 
     @declared_attr
-    def name(self) -> Mapped[str]:
-        return mapped_column()
-
-    @declared_attr
-    def organisation(self) -> Mapped[str]:
-        return mapped_column()
-
-    @declared_attr
     def requests(self) -> Mapped[list['Request']]:  # noqa F821
         return relationship(
             back_populates='user'
@@ -31,12 +23,3 @@ class UserMixin:
         return relationship(
             back_populates='user'
         )
-
-    def get_userinfo_ext(self) -> dict[str, str]:
-        """
-        Augments the data on `/api/v2/auth/profile`
-        """
-
-        return {
-            'name': self.name
-        }

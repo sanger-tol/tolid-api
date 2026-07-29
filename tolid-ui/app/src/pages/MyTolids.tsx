@@ -321,4 +321,4 @@ function MyTolids() {
   );
 }
 
-export default Profile;
+export default MyTolids;

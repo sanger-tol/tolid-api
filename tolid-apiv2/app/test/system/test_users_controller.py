@@ -44,7 +44,7 @@ class TestUsersController(BaseTestCase):
                     },
                     'user': {'email': self.user1.email,
                              'name': self.user1.name,
-                             'organisation': self.user1.organisation,
+                             'workplace': self.user1.workplace,
                              'roles': []}
                 }
             ]
@@ -83,7 +83,7 @@ class TestUsersController(BaseTestCase):
                     },
                     'user': {'email': self.user1.email,
                              'name': self.user1.name,
-                             'organisation': self.user1.organisation,
+                             'workplace': self.user1.workplace,
                              'roles': []}
                 },
                 {
@@ -103,7 +103,7 @@ class TestUsersController(BaseTestCase):
                     },
                     'user': {'email': self.user1.email,
                              'name': self.user1.name,
-                             'organisation': self.user1.organisation,
+                             'workplace': self.user1.workplace,
                              'roles': []}
 
                 }
@@ -143,7 +143,7 @@ class TestUsersController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100'},
             'user': {'email': self.user1.email,
                      'name': self.user1.name,
-                     'organisation': self.user1.organisation,
+                     'workplace': self.user1.workplace,
                      'roles': []}
         }]
         self.assert200(response,
@@ -178,7 +178,7 @@ class TestUsersController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000101'},
             'user': {'email': self.user1.email,
                      'name': self.user1.name,
-                     'organisation': self.user1.organisation,
+                     'workplace': self.user1.workplace,
                      'roles': []}
         }]
         self.assert200(response,
@@ -229,7 +229,7 @@ class TestUsersController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100'},
             'user': {'email': self.user1.email,
                      'name': self.user1.name,
-                     'organisation': self.user1.organisation,
+                     'workplace': self.user1.workplace,
                      'roles': []}
         }]
         self.assert200(response,
@@ -267,7 +267,7 @@ class TestUsersController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000101'},
             'user': {'email': self.user1.email,
                      'name': self.user1.name,
-                     'organisation': self.user1.organisation,
+                     'workplace': self.user1.workplace,
                      'roles': []}
         }]
         self.assert200(response,
@@ -320,7 +320,7 @@ class TestUsersController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100'},
             'user': {'email': self.user1.email,
                      'name': self.user1.name,
-                     'organisation': self.user1.organisation,
+                     'workplace': self.user1.workplace,
                      'roles': []}
         }, {
             'species': {
@@ -340,7 +340,7 @@ class TestUsersController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000101'},
             'user': {'email': self.user1.email,
                      'name': self.user1.name,
-                     'organisation': self.user1.organisation,
+                     'workplace': self.user1.workplace,
                      'roles': []}
         }]
         self.assert200(response,
@@ -371,7 +371,7 @@ class TestUsersController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000101'},
             'user': {'email': self.user2.email,
                      'name': self.user2.name,
-                     'organisation': self.user2.organisation,
+                     'workplace': self.user2.workplace,
                      'roles': [{'role': 'admin'}]}
         }]
         self.assert200(response,
@@ -558,7 +558,7 @@ class TestUsersController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester',
                 'email': 'test_user_requester@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -582,7 +582,7 @@ class TestUsersController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester',
                 'email': 'test_user_requester@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -617,7 +617,7 @@ class TestUsersController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester2',
                 'email': 'test_user_requester2@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -693,7 +693,7 @@ class TestUsersController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester',
                 'email': 'test_user_requester@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -722,7 +722,7 @@ class TestUsersController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester',
                 'email': 'test_user_requester@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -746,7 +746,7 @@ class TestUsersController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester',
                 'email': 'test_user_requester@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -813,7 +813,7 @@ class TestUsersController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester',
                 'email': 'test_user_requester@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -837,7 +837,7 @@ class TestUsersController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester',
                 'email': 'test_user_requester@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -861,7 +861,7 @@ class TestUsersController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester',
                 'email': 'test_user_requester@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -885,7 +885,7 @@ class TestUsersController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester',
                 'email': 'test_user_requester@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -949,7 +949,7 @@ class TestUsersController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester',
                 'email': 'test_user_requester@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -1001,7 +1001,7 @@ class TestUsersController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester',
                 'email': 'test_user_requester@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -1040,7 +1040,7 @@ class TestUsersController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester2',
                 'email': 'test_user_requester2@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {

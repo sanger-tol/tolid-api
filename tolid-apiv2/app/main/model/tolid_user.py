@@ -11,7 +11,7 @@ class TolidUser(Base):
     id = db.Column(db.Integer, primary_key=True)  # noqa
     name = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False, unique=True)
-    organisation = db.Column(db.String(), nullable=True)
+    workplace = db.Column(db.String(), nullable=True)
 
     _role_bindings = db.relationship(
         'TolidRoleBinding',
@@ -28,7 +28,7 @@ class TolidUser(Base):
         return {
             'name': self.name,
             'email': self.email,
-            'organisation': ('' if self.organisation is None else self.organisation),
+            'workplace': ('' if self.workplace is None else self.workplace),
             'roles': [
                 {'role': r} for r in self.role_names
             ]
