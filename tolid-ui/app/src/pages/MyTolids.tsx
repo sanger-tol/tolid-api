@@ -183,25 +183,36 @@ function MyTolids() {
         noDownload
         height={400}
         fields={{
-          'id': {
-            rename: 'ToLID'
-          },
-          'specimen_id': {},
-          'species.name': {
-            rename: 'Species',
-            cellRenderer: 'relationship'
-          },
-          'species.id': {
-            rename: 'Taxon ID',
-            cellRenderer: {
-              element: SubspeciesCellRenderer,
-              propPointers: {
-                taxonId: 'species.id',
-                requestedTaxonId: 'requested_taxonomy_id'
+          data: {
+            'id': {
+              rename: 'ToLID'
+            },
+            'specimen_id': {},
+            'species.name': {
+              rename: 'Species',
+              cellRenderer: 'relationship'
+            },
+            'species.id': {
+              rename: 'Taxon ID',
+              cellRenderer: {
+                element: SubspeciesCellRenderer,
+                propPointers: {
+                  taxonId: 'species.id',
+                  requestedTaxonId: 'requested_taxonomy_id'
+                }
               }
-            }
+            },
+            created_at: {}
           },
-          created_at: {}
+          order: {
+            active: [
+              'id',
+              'specimen_id',
+              'species.name',
+              'species.id',
+              'created_at'
+            ]
+          }
         }}
         {...specimenZone}
       />
@@ -237,60 +248,74 @@ function MyTolids() {
         defaultSort="created_at"
         forceUpdate={forceUpdate}
         fields={{
-          status: {
-            cellRenderer: {
-              element: TolidStatus,
-              propPointers: {
-                status: 'status',
-                reason: 'reason'
-              }
-            },
-          },
-          species_id: {
-            rename: "Taxon ID"
-          },
-          custom_scientific_name: {
-            rename: "Scientific Name",
-            custom: true,
-            cellRenderer: {
-              element: DetailAttribute,
-              propPointers: {
-                id: 'species_id'
+          data: {
+            status: {
+              cellRenderer: {
+                element: TolidStatus,
+                propPointers: {
+                  status: 'status',
+                  reason: 'reason'
+                }
               },
-              props: {
-                endpoint: 'taxon',
-                attribute: 'scientific_name'
-              }
             },
-            sort: false
-          },
-          requested_taxonomy_id: {
-            rename: "Requested Taxon ID"
-          },
-          custom_requested_name: {
-            rename: "Requested Scientific Name",
-            custom: true,
-            cellRenderer: {
-              element: DetailAttribute,
-              propPointers: {
-                id: 'requested_taxonomy_id'
+            species_id: {
+              rename: "Taxon ID"
+            },
+            custom_scientific_name: {
+              rename: "Scientific Name",
+              custom: true,
+              cellRenderer: {
+                element: DetailAttribute,
+                propPointers: {
+                  id: 'species_id'
+                },
+                props: {
+                  endpoint: 'taxon',
+                  attribute: 'scientific_name'
+                }
               },
-              props: {
-                endpoint: 'taxon',
-                attribute: 'scientific_name'
-              }
+              sort: false
             },
-            sort: false
+            requested_taxonomy_id: {
+              rename: "Requested Taxon ID"
+            },
+            custom_requested_name: {
+              rename: "Requested Scientific Name",
+              custom: true,
+              cellRenderer: {
+                element: DetailAttribute,
+                propPointers: {
+                  id: 'requested_taxonomy_id'
+                },
+                props: {
+                  endpoint: 'taxon',
+                  attribute: 'scientific_name'
+                }
+              },
+              sort: false
+            },
+            confirmation_name: {
+              rename: "Name Confirmation",
+              sort: false
+            },
+            specimen_id: {
+              rename: "Specimen ID",
+              sort: false
+            },
+            created_at: {}
           },
-          confirmation_name: {
-            rename: "Name Confirmation",
-            sort: false
-          },
-          specimen_id: {
-            rename: "Specimen ID",
-            sort: false
-          },
-          created_at: {}
+          order: {
+            active: [
+              'status',
+              'species_id',
+              'custom_scientific_name',
+              'requested_taxonomy_id',
+              'custom_requested_name',
+              'confirmation_name',
+              'specimen_id',
+              'created_at'
+            ]
+          }
         }}
         {...requestsZone}
       />
