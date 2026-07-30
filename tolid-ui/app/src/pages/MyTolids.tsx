@@ -200,7 +200,7 @@ function MyTolids() {
               cellRenderer: {
                 type: "subspeciesCellRenderer",
                 props: {
-                  taxonId: "${species.id}",
+                  taxonId: "${id}",
                   requestedTaxonId: "${requested_taxonomy_id}"
                 }
               }
@@ -268,13 +268,13 @@ function MyTolids() {
             species_id: {
               rename: "Taxon ID"
             },
-            custom_scientific_name: {
+            "user.name": {  // Not used
               rename: "Scientific Name",
               custom: true,
               cellRenderer: {
                 type: "detailAttribute",
                 props: {
-                  id: "${species_id}",
+                  id: "${~species_id}",
                   endpoint: 'taxon',
                   attribute: 'scientific_name'
                 }
@@ -284,13 +284,13 @@ function MyTolids() {
             requested_taxonomy_id: {
               rename: "Requested Taxon ID"
             },
-            custom_requested_name: {
+            "user.workplace": {  // Not needed
               rename: "Requested Scientific Name",
               custom: true,
               cellRenderer: {
                 type: "detailAttribute",
                 props: {
-                  id: "${requested_taxonomy_id}",
+                  id: "${~requested_taxonomy_id}",
                   endpoint: 'taxon',
                   attribute: 'scientific_name'
                 }
@@ -311,9 +311,9 @@ function MyTolids() {
             active: [
               'status',
               'species_id',
-              'custom_scientific_name',
+              'user.name',
               'requested_taxonomy_id',
-              'custom_requested_name',
+              'user.workplace',
               'confirmation_name',
               'specimen_id',
               'created_at'

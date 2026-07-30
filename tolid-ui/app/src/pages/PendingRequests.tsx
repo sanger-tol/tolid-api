@@ -35,6 +35,10 @@ function PendingRequests() {
       noConfigModal
       forceUpdate={forceUpdate}
       defaultSort="created_at"
+      cellRenderers={{
+        detailAttribute: DetailAttribute,
+        actionButtons: ActionButtons,
+      }}
       fields={{
         data: {
           species_id: {
@@ -42,15 +46,13 @@ function PendingRequests() {
             sort: true,
             width: 100
           },
-          custom_prefix: {
+          status: {  // Not used
             rename: "Prefix",
             custom: true,
             cellRenderer: {
-              element: DetailAttribute,
-              propPointers: {
-                id: 'species_id'
-              },
+              type: "detailAttribute",
               props: {
+                id: "${species_id}",
                 endpoint: 'species',
                 attribute: 'prefix'
               }
@@ -61,30 +63,26 @@ function PendingRequests() {
             rename: "Requested Taxon ID",
             sort: true
           },
-          custom_scientific_name: {
+          created_at: {  // Not used
             rename: "Scientific Name",
             custom: true,
             cellRenderer: {
-              element: DetailAttribute,
-              propPointers: {
-                id: 'species_id'
-              },
+              type: "detailAttribute",
               props: {
+                id: "${species_id}",
                 endpoint: 'species',
                 attribute: 'name'
               }
             },
             sort: false
           },
-          custom_scientific_name_goat: {
+          "user.id": {  // Not used
             rename: "Scientific Name (GOAT)",
             custom: true,
             cellRenderer: {
-              element: DetailAttribute,
-              propPointers: {
-                id: 'species_id'
-              },
+              type: "detailAttribute",
               props: {
+                id: "${~species_id}",
                 endpoint: 'taxon',
                 attribute: 'scientific_name'
               }
@@ -104,17 +102,15 @@ function PendingRequests() {
             sort: true
           },
           // next tolid
-          custom_action: {
+          "id": {
             rename: "Action",
             width: 184,
             custom: true,
             cellRenderer: {
-              element: ActionButtons,
-              propPointers: {
-                requestId: 'id',
-                speciesId: 'species_id'
-              },
+              type: "actionButtons",
               props: {
+                requestId: "${id}",
+                speciesId: "${species_id}",
                 // @ts-ignore
                 forceUpdate: forceUpdate,
                 // @ts-ignore
@@ -127,14 +123,14 @@ function PendingRequests() {
         order: {
           active: [
             "species_id",
-            "custom_prefix",
+            "status",
             "requested_taxonomy_id",
-            "custom_scientific_name",
-            "custom_scientific_name_goat",
+            "created_at",
+            "user.id",
             "confirmation_name",
             "specimen_id",
             "user.name",
-            "custom_action"
+            "id"
           ]
         }
       }}
