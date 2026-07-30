@@ -285,9 +285,8 @@ function MyTolids() {
             requested_taxonomy_id: {
               rename: "Requested Taxon ID"
             },
-            "user.workplace": {  // Not needed
+            "user.id": {  // Not needed
               rename: "Requested Scientific Name",
-              custom: true,
               cellRenderer: {
                 type: "detailAttribute",
                 props: {
@@ -315,7 +314,7 @@ function MyTolids() {
               'species_id',
               'user.name',
               'requested_taxonomy_id',
-              'user.workplace',
+              'user.id',
               'confirmation_name',
               'specimen_id',
               'created_at'

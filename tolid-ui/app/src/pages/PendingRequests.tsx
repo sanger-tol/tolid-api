@@ -56,7 +56,6 @@ function PendingRequests() {
           },
           status: {  // Not used
             rename: "Prefix",
-            custom: true,
             cellRenderer: {
               type: "detailAttribute",
               props: {
@@ -72,23 +71,21 @@ function PendingRequests() {
             rename: "Requested Taxon ID",
             sort: true
           },
-          created_at: {  // Not used
+          "user.id": {  // Not used
             rename: "Scientific Name",
-            custom: true,
             cellRenderer: {
               type: "detailAttribute",
               props: {
-                id: "${species_id}",
+                id: "${~species_id}",
                 endpoint: 'species',
-                attribute: 'name'
+                attribute: 'name',
               }
             },
             sort: false,
             filter: false
           },
-          "user.id": {  // Not used
+          "user.email": {  // Not used
             rename: "Scientific Name (GOAT)",
-            custom: true,
             cellRenderer: {
               type: "detailAttribute",
               props: {
@@ -132,8 +129,8 @@ function PendingRequests() {
             "species_id",
             "status",
             "requested_taxonomy_id",
-            "created_at",
             "user.id",
+            "user.email",
             "confirmation_name",
             "specimen_id",
             "user.name",

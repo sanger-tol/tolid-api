@@ -4,13 +4,13 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import ReactDOM from 'react-dom';
 import {
   Home,
   AddSpecies,
   MyTolids,
   PendingRequests,
 } from "./pages";
+import { createRoot } from 'react-dom/client';
 import reportWebVitals from "./reportWebVitals";
 import { SmartApp, TPageElements } from '@tol/tol-ui';
 import Logo from './assets/logo.png';
@@ -24,14 +24,13 @@ export const PAGE_ELEMENTS: TPageElements = {
   myTolids: <MyTolids />
 };
 
-ReactDOM.render( // eslint-disable-line
+const root = createRoot(document.getElementById("root")!);
+root.render(
     <SmartApp
       id="tolid"
       brand={<img src={Logo} alt="ToLID Logo" style={{ height: 35 }} />}
       pageElements={PAGE_ELEMENTS}
     />
-,
-  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

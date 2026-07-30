@@ -28,7 +28,7 @@ function ActionButtons(props: Props) {
 
   useEffect (() => {
     fetchDetail(speciesId, 'species').then((res: any) => {
-      setCanAccept('data' in res && 'id' in res.data.data);
+      setCanAccept(res !== null && 'data' in res && 'id' in res.data.data);
       setLoading(false);
     });
   }, [forceUpdate, speciesId]);
