@@ -161,8 +161,6 @@ def test_request_creator(client, api_path, sql_datasource):
     ]
     response = client.post(api_path + '/request/create', json=body)
     assert response.status_code == 200
-    print(response.text)
-    print(response.json)
 
     obj1 = response.json['data'][0]
     assert obj1['id'] == 'abCdeFghi2'
