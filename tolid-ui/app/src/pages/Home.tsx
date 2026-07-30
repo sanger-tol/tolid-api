@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { Header, RemoteTable, Widgets, TsDataSource, useZone } from '@tol/tol-ui';
+import { RemoteTable, Widgets, TsDataSource, useZone } from '@tol/tol-ui';
 
 
 function Home() {
@@ -156,9 +156,6 @@ function Home() {
 
   return (
     <div className="home">
-      <Header
-        title="Welcome to ToLID"
-      />
       <Widgets
         components={components}
       />
