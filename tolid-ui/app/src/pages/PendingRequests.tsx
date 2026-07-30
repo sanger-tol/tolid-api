@@ -36,92 +36,106 @@ function PendingRequests() {
       forceUpdate={forceUpdate}
       defaultSort="created_at"
       fields={{
-        species_id: {
-          rename: "Taxon ID",
-          sort: true,
-          width: 100
-        },
-        custom_prefix: {
-          rename: "Prefix",
-          custom: true,
-          cellRenderer: {
-            element: DetailAttribute,
-            propPointers: {
-              id: 'species_id'
-            },
-            props: {
-              endpoint: 'species',
-              attribute: 'prefix'
-            }
+        data: {
+          species_id: {
+            rename: "Taxon ID",
+            sort: true,
+            width: 100
           },
-          sort: false
-        },
-        requested_taxonomy_id: {
-          rename: "Requested Taxon ID",
-          sort: true
-        },
-        custom_scientific_name: {
-          rename: "Scientific Name",
-          custom: true,
-          cellRenderer: {
-            element: DetailAttribute,
-            propPointers: {
-              id: 'species_id'
+          custom_prefix: {
+            rename: "Prefix",
+            custom: true,
+            cellRenderer: {
+              element: DetailAttribute,
+              propPointers: {
+                id: 'species_id'
+              },
+              props: {
+                endpoint: 'species',
+                attribute: 'prefix'
+              }
             },
-            props: {
-              endpoint: 'species',
-              attribute: 'name'
-            }
+            sort: false
           },
-          sort: false
-        },
-        custom_scientific_name_goat: {
-          rename: "Scientific Name (GOAT)",
-          custom: true,
-          cellRenderer: {
-            element: DetailAttribute,
-            propPointers: {
-              id: 'species_id'
+          requested_taxonomy_id: {
+            rename: "Requested Taxon ID",
+            sort: true
+          },
+          custom_scientific_name: {
+            rename: "Scientific Name",
+            custom: true,
+            cellRenderer: {
+              element: DetailAttribute,
+              propPointers: {
+                id: 'species_id'
+              },
+              props: {
+                endpoint: 'species',
+                attribute: 'name'
+              }
             },
-            props: {
-              endpoint: 'taxon',
-              attribute: 'scientific_name'
-            }
+            sort: false
           },
-          sort: false
-        },
-        confirmation_name: {
-          rename: "Name Confirmation",
-          sort: true
-        },
-        specimen_id: {
-          rename: "Specimen ID",
-          sort: true
-
-        },
-        "user.name": {
-          rename: "Requester",
-          sort: true
-        },
-        // next tolid
-        custom_action: {
-          rename: "Action",
-          width: 184,
-          custom: true,
-          cellRenderer: {
-            element: ActionButtons,
-            propPointers: {
-              requestId: 'id',
-              speciesId: 'species_id'
+          custom_scientific_name_goat: {
+            rename: "Scientific Name (GOAT)",
+            custom: true,
+            cellRenderer: {
+              element: DetailAttribute,
+              propPointers: {
+                id: 'species_id'
+              },
+              props: {
+                endpoint: 'taxon',
+                attribute: 'scientific_name'
+              }
             },
-            props: {
-              // @ts-ignore
-              forceUpdate: forceUpdate,
-              // @ts-ignore
-              setForceUpdate: setForceUpdate
-            }
+            sort: false
           },
-          sort: false
+          confirmation_name: {
+            rename: "Name Confirmation",
+            sort: true
+          },
+          specimen_id: {
+            rename: "Specimen ID",
+            sort: true
+          },
+          "user.name": {
+            rename: "Requester",
+            sort: true
+          },
+          // next tolid
+          custom_action: {
+            rename: "Action",
+            width: 184,
+            custom: true,
+            cellRenderer: {
+              element: ActionButtons,
+              propPointers: {
+                requestId: 'id',
+                speciesId: 'species_id'
+              },
+              props: {
+                // @ts-ignore
+                forceUpdate: forceUpdate,
+                // @ts-ignore
+                setForceUpdate: setForceUpdate
+              }
+            },
+            sort: false
+          }
+        },
+        order: {
+          active: [
+            "species_id",
+            "custom_prefix",
+            "requested_taxonomy_id",
+            "custom_scientific_name",
+            "custom_scientific_name_goat",
+            "confirmation_name",
+            "specimen_id",
+            "user.name",
+            "custom_action"
+          ]
         }
       }}
       {...tolidZone}
