@@ -270,7 +270,6 @@ function MyTolids() {
             },
             "user.name": {  // Not used
               rename: "Scientific Name",
-              custom: true,
               cellRenderer: {
                 type: "detailAttribute",
                 props: {
