@@ -5,4 +5,5 @@
 --extra-index-url=https://gitlab.internal.sanger.ac.uk/api/v4/projects/3429/packages/pypi/simple
 
 tol-sdk[api-base,postgresql,sheets,s3] == 2.4.3
+flask-cors == 4.0.0
 alembic == 1.13.1
