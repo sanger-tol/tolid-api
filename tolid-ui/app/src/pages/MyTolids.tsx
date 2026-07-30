@@ -182,6 +182,9 @@ function MyTolids() {
         noConfigModal
         noDownload
         height={400}
+        cellRenderers={{
+          subspeciesCellRenderer: SubspeciesCellRenderer,
+        }}
         fields={{
           data: {
             'id': {
@@ -195,10 +198,10 @@ function MyTolids() {
             'species.id': {
               rename: 'Taxon ID',
               cellRenderer: {
-                element: SubspeciesCellRenderer,
-                propPointers: {
-                  taxonId: 'species.id',
-                  requestedTaxonId: 'requested_taxonomy_id'
+                type: "subspeciesCellRenderer",
+                props: {
+                  taxonId: "${species.id}",
+                  requestedTaxonId: "${requested_taxonomy_id}"
                 }
               }
             },
@@ -247,14 +250,18 @@ function MyTolids() {
         height={400}
         defaultSort="created_at"
         forceUpdate={forceUpdate}
+        cellRenderers={{
+          tolidStatus: TolidStatus,
+          detailAttribute: DetailAttribute,
+        }}
         fields={{
           data: {
             status: {
               cellRenderer: {
-                element: TolidStatus,
-                propPointers: {
-                  status: 'status',
-                  reason: 'reason'
+                type: "tolidStatus",
+                props: {
+                  status: "${status}",
+                  reason: "${reason}"
                 }
               },
             },
@@ -265,11 +272,9 @@ function MyTolids() {
               rename: "Scientific Name",
               custom: true,
               cellRenderer: {
-                element: DetailAttribute,
-                propPointers: {
-                  id: 'species_id'
-                },
+                type: "detailAttribute",
                 props: {
+                  id: "${species_id}",
                   endpoint: 'taxon',
                   attribute: 'scientific_name'
                 }
@@ -283,11 +288,9 @@ function MyTolids() {
               rename: "Requested Scientific Name",
               custom: true,
               cellRenderer: {
-                element: DetailAttribute,
-                propPointers: {
-                  id: 'requested_taxonomy_id'
-                },
+                type: "detailAttribute",
                 props: {
+                  id: "${requested_taxonomy_id}",
                   endpoint: 'taxon',
                   attribute: 'scientific_name'
                 }
