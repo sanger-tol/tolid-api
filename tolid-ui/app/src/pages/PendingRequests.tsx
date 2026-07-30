@@ -11,6 +11,14 @@ import { useState } from "react";
 function PendingRequests() {
   const [forceUpdate, setForceUpdate] = useState(false);
 
+  const BoundActionButtons = (props: any) => (
+    <ActionButtons
+      {...props}
+      forceUpdate={forceUpdate}
+      setForceUpdate={setForceUpdate}
+    />
+  );
+
   const tolidZone = useZone({
     objectType: 'request',
     dataSource: new TsDataSource(),
@@ -37,7 +45,7 @@ function PendingRequests() {
       defaultSort="created_at"
       cellRenderers={{
         detailAttribute: DetailAttribute,
-        actionButtons: ActionButtons,
+        actionButtons: BoundActionButtons,
       }}
       fields={{
         data: {
@@ -57,7 +65,8 @@ function PendingRequests() {
                 attribute: 'prefix'
               }
             },
-            sort: false
+            sort: false,
+            filter: false
           },
           requested_taxonomy_id: {
             rename: "Requested Taxon ID",
@@ -74,7 +83,8 @@ function PendingRequests() {
                 attribute: 'name'
               }
             },
-            sort: false
+            sort: false,
+            filter: false
           },
           "user.id": {  // Not used
             rename: "Scientific Name (GOAT)",
@@ -87,7 +97,8 @@ function PendingRequests() {
                 attribute: 'scientific_name'
               }
             },
-            sort: false
+            sort: false,
+            filter: false
           },
           confirmation_name: {
             rename: "Name Confirmation",
@@ -109,15 +120,11 @@ function PendingRequests() {
             cellRenderer: {
               type: "actionButtons",
               props: {
-                requestId: "${id}",
-                speciesId: "${species_id}",
-                // @ts-ignore
-                forceUpdate: forceUpdate,
-                // @ts-ignore
-                setForceUpdate: setForceUpdate
+                requestId: "${~id}",
+                speciesId: "${~species_id}",
               }
             },
-            sort: false
+            sort: false, filter: false
           }
         },
         order: {

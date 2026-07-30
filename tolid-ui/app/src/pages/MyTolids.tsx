@@ -201,7 +201,7 @@ function MyTolids() {
                 type: "subspeciesCellRenderer",
                 props: {
                   taxonId: "${id}",
-                  requestedTaxonId: "${requested_taxonomy_id}"
+                  requestedTaxonId: "${~requested_taxonomy_id}"
                 }
               }
             },
@@ -279,7 +279,8 @@ function MyTolids() {
                   attribute: 'scientific_name'
                 }
               },
-              sort: false
+              sort: false,
+              filter: false
             },
             requested_taxonomy_id: {
               rename: "Requested Taxon ID"
@@ -295,7 +296,8 @@ function MyTolids() {
                   attribute: 'scientific_name'
                 }
               },
-              sort: false
+              sort: false,
+              filter: false
             },
             confirmation_name: {
               rename: "Name Confirmation",
