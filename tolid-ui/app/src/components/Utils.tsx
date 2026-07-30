@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 */
 
 import { Loader, httpClient } from '@tol/tol-ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 async function fetchData(id: string, endpoint: string, baseUrl?: string) {
@@ -54,25 +54,26 @@ export function DetailAttribute(props: Props) {
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(true);
 
-  fetchDetail(
-    id,
-    endpoint,
-    baseUrl
-  ).then((res: any) => {
-    if ('data' in res
-      && 'data' in res.data
-      && 'attributes' in res.data.data
-    ) {
-      if (attribute === 'id') {
-        setText(res.data.data.id);
+  useEffect(() => {
+    let cancelled = false;
+    fetchDetail(id, endpoint, baseUrl).then((res: any) => {
+      if (cancelled) return;
+      if ('data' in res
+        && 'data' in res.data
+        && 'attributes' in res.data.data
+      ) {
+        if (attribute === 'id') {
+          setText(res.data.data.id);
+        } else {
+          setText(res.data.data.attributes[attribute]);
+        }
       } else {
-        setText(res.data.data.attributes[attribute]);
+        setText('');
       }
-    } else {
-      setText('');
-    }
-    setLoading(false);
-  });
+      setLoading(false);
+    });
+    return () => { cancelled = true; };
+  }, [id, endpoint, baseUrl, attribute]);
 
   return (
     <div className='loading-cell'>
