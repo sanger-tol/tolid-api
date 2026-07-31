@@ -100,12 +100,15 @@ services:
       - REACT_APP_PORTAL_URL=${PORTAL_URL}
       - REACT_APP_PORTAL_API_PATH=${PORTAL_API_PATH}
       - REACT_APP_PORTAL_API_DATA_PATH=${PORTAL_API_DATA_PATH}
+      - REACT_APP_BOARDS_API_DATA_PATH=${BOARDS_API_DATA_PATH}
       - REACT_APP_MATOMO_SITE_ID=${MATOMO_SITE_ID}
+      - LOCAL_TOLUI=${LOCAL_TOLUI}
     ports:
       - "3002:3000"
     volumes:
       - './tolid-ui/app:/usr/src/app'
       - '/usr/src/app/node_modules'
+      - '../components/components-ui/app/src/tol-ui:/usr/src/app/src/tol-ui'
     
   tolid-apiv2-test:
     build: 

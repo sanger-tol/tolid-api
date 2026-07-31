@@ -11,6 +11,14 @@ import { useState } from "react";
 function PendingRequests() {
   const [forceUpdate, setForceUpdate] = useState(false);
 
+  const BoundActionButtons = (props: any) => (
+    <ActionButtons
+      {...props}
+      forceUpdate={forceUpdate}
+      setForceUpdate={setForceUpdate}
+    />
+  );
+
   const tolidZone = useZone({
     objectType: 'request',
     dataSource: new TsDataSource(),
@@ -35,93 +43,99 @@ function PendingRequests() {
       noConfigModal
       forceUpdate={forceUpdate}
       defaultSort="created_at"
+      cellRenderers={{
+        detailAttribute: DetailAttribute,
+        actionButtons: BoundActionButtons,
+      }}
       fields={{
-        species_id: {
-          rename: "Taxon ID",
-          sort: true,
-          width: 100
-        },
-        custom_prefix: {
-          rename: "Prefix",
-          custom: true,
-          cellRenderer: {
-            element: DetailAttribute,
-            propPointers: {
-              id: 'species_id'
-            },
-            props: {
-              endpoint: 'species',
-              attribute: 'prefix'
-            }
+        data: {
+          species_id: {
+            rename: "Taxon ID",
+            sort: true,
+            width: 100
           },
-          sort: false
-        },
-        requested_taxonomy_id: {
-          rename: "Requested Taxon ID",
-          sort: true
-        },
-        custom_scientific_name: {
-          rename: "Scientific Name",
-          custom: true,
-          cellRenderer: {
-            element: DetailAttribute,
-            propPointers: {
-              id: 'species_id'
+          status: {  // Not used
+            rename: "Prefix",
+            cellRenderer: {
+              type: "detailAttribute",
+              props: {
+                id: "${species_id}",
+                endpoint: 'species',
+                attribute: 'prefix'
+              }
             },
-            props: {
-              endpoint: 'species',
-              attribute: 'name'
-            }
+            sort: false,
+            filter: false
           },
-          sort: false
-        },
-        custom_scientific_name_goat: {
-          rename: "Scientific Name (GOAT)",
-          custom: true,
-          cellRenderer: {
-            element: DetailAttribute,
-            propPointers: {
-              id: 'species_id'
+          requested_taxonomy_id: {
+            rename: "Requested Taxon ID",
+            sort: true
+          },
+          "user.id": {  // Not used
+            rename: "Scientific Name",
+            cellRenderer: {
+              type: "detailAttribute",
+              props: {
+                id: "${~species_id}",
+                endpoint: 'species',
+                attribute: 'name',
+              }
             },
-            props: {
-              endpoint: 'taxon',
-              attribute: 'scientific_name'
-            }
+            sort: false,
+            filter: false
           },
-          sort: false
-        },
-        confirmation_name: {
-          rename: "Name Confirmation",
-          sort: true
-        },
-        specimen_id: {
-          rename: "Specimen ID",
-          sort: true
-
-        },
-        "user.name": {
-          rename: "Requester",
-          sort: true
-        },
-        // next tolid
-        custom_action: {
-          rename: "Action",
-          width: 184,
-          custom: true,
-          cellRenderer: {
-            element: ActionButtons,
-            propPointers: {
-              requestId: 'id',
-              speciesId: 'species_id'
+          "user.email": {  // Not used
+            rename: "Scientific Name (GOAT)",
+            cellRenderer: {
+              type: "detailAttribute",
+              props: {
+                id: "${~species_id}",
+                endpoint: 'taxon',
+                attribute: 'scientific_name'
+              }
             },
-            props: {
-              // @ts-ignore
-              forceUpdate: forceUpdate,
-              // @ts-ignore
-              setForceUpdate: setForceUpdate
-            }
+            sort: false,
+            filter: false
           },
-          sort: false
+          confirmation_name: {
+            rename: "Name Confirmation",
+            sort: true
+          },
+          specimen_id: {
+            rename: "Specimen ID",
+            sort: true
+          },
+          "user.name": {
+            rename: "Requester",
+            sort: true
+          },
+          // next tolid
+          "id": {
+            rename: "Action",
+            width: 184,
+            custom: true,
+            cellRenderer: {
+              type: "actionButtons",
+              props: {
+                requestId: "${~id}",
+                speciesId: "${~species_id}",
+              }
+            },
+            sort: false, filter: false
+          }
+        },
+        order: {
+          active: [
+            "species_id",
+            "status",
+            "requested_taxonomy_id",
+            "user.id",
+            "user.email",
+            "confirmation_name",
+            "specimen_id",
+            "user.name",
+            "id"
+          ]
         }
       }}
       {...tolidZone}

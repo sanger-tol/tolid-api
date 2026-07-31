@@ -100,7 +100,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100'},
             'user': {'email': self.user3.email,
                      'name': self.user3.name,
-                     'organisation': self.user3.organisation,
+                     'workplace': self.user3.workplace,
                      'roles': [{'role': 'creator'}]}
         }]
         self.assert200(response,
@@ -133,7 +133,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100xxxxx'},
             'user': {'email': self.user3.email,
                      'name': self.user3.name,
-                     'organisation': self.user3.organisation,
+                     'workplace': self.user3.workplace,
                      'roles': [{'role': 'creator'}]}
         }]
         self.assert200(response,
@@ -166,7 +166,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000999xxxxx'},
             'user': {'email': self.user3.email,
                      'name': self.user3.name,
-                     'organisation': self.user3.organisation,
+                     'workplace': self.user3.workplace,
                      'roles': [{'role': 'creator'}]}
         }]
         self.assert200(response,
@@ -199,7 +199,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100'},
             'user': {'email': self.user1.email,
                      'name': self.user1.name,
-                     'organisation': self.user1.organisation,
+                     'workplace': self.user1.workplace,
                      'roles': []}
         }]
         self.assert200(response,
@@ -257,7 +257,7 @@ class TestCreatorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         expect = [{'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
                                  'name': 'test_user_creator',
-                                 'organisation': 'Sanger Institute',
+                                 'workplace': 'Sanger Institute',
                                  'roles': [{'role': 'creator'}]},
                    'reason': None,
                    'requestId': 1,
@@ -305,7 +305,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100xxxxx'},
             'user': {'email': self.user3.email,
                      'name': self.user3.name,
-                     'organisation': self.user3.organisation,
+                     'workplace': self.user3.workplace,
                      'roles': [{'role': 'creator'}]}
         }, {
             'species': {
@@ -325,7 +325,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100xxxxx'},
             'user': {'email': self.user3.email,
                      'name': self.user3.name,
-                     'organisation': self.user3.organisation,
+                     'workplace': self.user3.workplace,
                      'roles': [{'role': 'creator'}]}
         }]
         self.assert200(response,
@@ -358,7 +358,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100'},
             'user': {'email': self.user1.email,
                      'name': self.user1.name,
-                     'organisation': self.user1.organisation,
+                     'workplace': self.user1.workplace,
                      'roles': []}
         }]
         self.assert200(response,
@@ -393,7 +393,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100'},
             'user': {'email': self.user1.email,
                      'name': self.user1.name,
-                     'organisation': self.user1.organisation,
+                     'workplace': self.user1.workplace,
                      'roles': []}
         }, {
             'species': {
@@ -413,7 +413,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100wwwww'},
             'user': {'email': self.user3.email,
                      'name': self.user3.name,
-                     'organisation': self.user3.organisation,
+                     'workplace': self.user3.workplace,
                      'roles': [{'role': 'creator'}]}
         }]
         self.assert200(response,
@@ -450,7 +450,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100'},
             'user': {'email': self.user1.email,
                      'name': self.user1.name,
-                     'organisation': self.user1.organisation,
+                     'workplace': self.user1.workplace,
                      'roles': []}
         }, {
             'species': {
@@ -470,7 +470,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100ppppp'},
             'user': {'email': self.user3.email,
                      'name': self.user3.name,
-                     'organisation': self.user3.organisation,
+                     'workplace': self.user3.workplace,
                      'roles': [{'role': 'creator'}]}
         }, {
             'species': {
@@ -490,7 +490,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100qqqqq'},
             'user': {'email': self.user3.email,
                      'name': self.user3.name,
-                     'organisation': self.user3.organisation,
+                     'workplace': self.user3.workplace,
                      'roles': [{'role': 'creator'}]}
         }]
         self.assert200(response,
@@ -529,7 +529,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100'},
             'user': {'email': self.user1.email,
                      'name': self.user1.name,
-                     'organisation': self.user1.organisation,
+                     'workplace': self.user1.workplace,
                      'roles': []}
         }, {
             'species': {
@@ -549,7 +549,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100rrrrr'},
             'user': {'email': self.user3.email,
                      'name': self.user3.name,
-                     'organisation': self.user3.organisation,
+                     'workplace': self.user3.workplace,
                      'roles': [{'role': 'creator'}]}
         }, {
             'species': {
@@ -569,7 +569,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100'},
             'user': {'email': self.user1.email,
                      'name': self.user1.name,
-                     'organisation': self.user1.organisation,
+                     'workplace': self.user1.workplace,
                      'roles': []}
         }, {
             'species': {
@@ -589,7 +589,7 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100rrrrr'},
             'user': {'email': self.user3.email,
                      'name': self.user3.name,
-                     'organisation': self.user3.organisation,
+                     'workplace': self.user3.workplace,
                      'roles': [{'role': 'creator'}]}
         }]
 
@@ -628,12 +628,12 @@ class TestCreatorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000100bbbbb'},
             'user': {'email': self.user3.email,
                      'name': self.user3.name,
-                     'organisation': self.user3.organisation,
+                     'workplace': self.user3.workplace,
                      'roles': [{'role': 'creator'}]}
         }, {
             'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
                           'name': 'test_user_creator',
-                          'organisation': 'Sanger Institute',
+                          'workplace': 'Sanger Institute',
                           'roles': [{'role': 'creator'}]},
             'reason': None,
             'requestId': 2,
@@ -665,7 +665,7 @@ class TestCreatorsController(BaseTestCase):
                  'tolId': 'wuAreMari8',
                  'user': {'email': self.user3.email,
                           'name': self.user3.name,
-                          'organisation': self.user3.organisation,
+                          'workplace': self.user3.workplace,
                           'roles': [{'role': 'creator'}]}}
             ]
         }]
@@ -678,7 +678,7 @@ class TestCreatorsController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         expect = [{'createdBy': {'email': 'test_user_creator@sanger.ac.uk',
                                  'name': 'test_user_creator',
-                                 'organisation': 'Sanger Institute',
+                                 'workplace': 'Sanger Institute',
                                  'roles': [{'role': 'creator'}]},
                    'reason': None,
                    'requestId': 2,

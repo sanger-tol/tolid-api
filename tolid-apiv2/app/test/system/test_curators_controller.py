@@ -457,7 +457,7 @@ class TestCuratorsController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester',
                 'email': 'test_user_requester@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -481,7 +481,7 @@ class TestCuratorsController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester2',
                 'email': 'test_user_requester2@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -566,7 +566,7 @@ class TestCuratorsController(BaseTestCase):
             'specimen': {'specimenId': 'SAN0000101'},
             'user': {'email': self.user4.email,
                      'name': self.user4.name,
-                     'organisation': self.user4.organisation,
+                     'workplace': self.user4.workplace,
                      'roles': []}
         }]
         self.assert200(response,
@@ -617,7 +617,7 @@ class TestCuratorsController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester',
                 'email': 'test_user_requester@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {
@@ -642,7 +642,7 @@ class TestCuratorsController(BaseTestCase):
             'createdBy': {
                 'name': 'test_user_requester2',
                 'email': 'test_user_requester2@sanger.ac.uk',
-                'organisation': 'Sanger Institute',
+                'workplace': 'Sanger Institute',
                 'roles': []
             },
             'species': {

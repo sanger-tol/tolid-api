@@ -1,5 +1,3 @@
-
-
 /*
 SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 
@@ -24,7 +22,7 @@ import { DetailAttribute, TolidStatus } from "../components";
 import { SubspeciesCellRenderer } from '../components'
 
 
-function Profile() {
+function MyTolids() {
   const user = localStorage.getItem('user') || '{}';
   const userId = JSON.parse(user).id;
   const [requestedTaxonomyId, setRequestedTaxonomyId] = useState("");
@@ -184,26 +182,40 @@ function Profile() {
         noConfigModal
         noDownload
         height={400}
+        cellRenderers={{
+          subspeciesCellRenderer: SubspeciesCellRenderer,
+        }}
         fields={{
-          'id': {
-            rename: 'ToLID'
-          },
-          'specimen_id': {},
-          'species.name': {
-            rename: 'Species',
-            cellRenderer: 'relationship'
-          },
-          'species.id': {
-            rename: 'Taxon ID',
-            cellRenderer: {
-              element: SubspeciesCellRenderer,
-              propPointers: {
-                taxonId: 'species.id',
-                requestedTaxonId: 'requested_taxonomy_id'
+          data: {
+            'id': {
+              rename: 'ToLID'
+            },
+            'specimen_id': {},
+            'species.name': {
+              rename: 'Species',
+              cellRenderer: 'relationship'
+            },
+            'species.id': {
+              rename: 'Taxon ID',
+              cellRenderer: {
+                type: "subspeciesCellRenderer",
+                props: {
+                  taxonId: "${id}",
+                  requestedTaxonId: "${~requested_taxonomy_id}"
+                }
               }
-            }
+            },
+            created_at: {}
           },
-          created_at: {}
+          order: {
+            active: [
+              'id',
+              'specimen_id',
+              'species.name',
+              'species.id',
+              'created_at'
+            ]
+          }
         }}
         {...specimenZone}
       />
@@ -238,61 +250,75 @@ function Profile() {
         height={400}
         defaultSort="created_at"
         forceUpdate={forceUpdate}
+        cellRenderers={{
+          tolidStatus: TolidStatus,
+          detailAttribute: DetailAttribute,
+        }}
         fields={{
-          status: {
-            cellRenderer: {
-              element: TolidStatus,
-              propPointers: {
-                status: 'status',
-                reason: 'reason'
-              }
-            },
-          },
-          species_id: {
-            rename: "Taxon ID"
-          },
-          custom_scientific_name: {
-            rename: "Scientific Name",
-            custom: true,
-            cellRenderer: {
-              element: DetailAttribute,
-              propPointers: {
-                id: 'species_id'
+          data: {
+            status: {
+              cellRenderer: {
+                type: "tolidStatus",
+                props: {
+                  status: "${status}",
+                  reason: "${reason}"
+                }
               },
-              props: {
-                endpoint: 'taxon',
-                attribute: 'scientific_name'
-              }
             },
-            sort: false
-          },
-          requested_taxonomy_id: {
-            rename: "Requested Taxon ID"
-          },
-          custom_requested_name: {
-            rename: "Requested Scientific Name",
-            custom: true,
-            cellRenderer: {
-              element: DetailAttribute,
-              propPointers: {
-                id: 'requested_taxonomy_id'
+            species_id: {
+              rename: "Taxon ID"
+            },
+            "user.name": {  // Not used
+              rename: "Scientific Name",
+              cellRenderer: {
+                type: "detailAttribute",
+                props: {
+                  id: "${~species_id}",
+                  endpoint: 'taxon',
+                  attribute: 'scientific_name'
+                }
               },
-              props: {
-                endpoint: 'taxon',
-                attribute: 'scientific_name'
-              }
+              sort: false,
+              filter: false
             },
-            sort: false
+            requested_taxonomy_id: {
+              rename: "Requested Taxon ID"
+            },
+            "user.id": {  // Not needed
+              rename: "Requested Scientific Name",
+              cellRenderer: {
+                type: "detailAttribute",
+                props: {
+                  id: "${~requested_taxonomy_id}",
+                  endpoint: 'taxon',
+                  attribute: 'scientific_name'
+                }
+              },
+              sort: false,
+              filter: false
+            },
+            confirmation_name: {
+              rename: "Name Confirmation",
+              sort: false
+            },
+            specimen_id: {
+              rename: "Specimen ID",
+              sort: false
+            },
+            created_at: {}
           },
-          confirmation_name: {
-            rename: "Name Confirmation",
-            sort: false
-          },
-          specimen_id: {
-            rename: "Specimen ID",
-            sort: false
-          },
-          created_at: {}
+          order: {
+            active: [
+              'status',
+              'species_id',
+              'user.name',
+              'requested_taxonomy_id',
+              'user.id',
+              'confirmation_name',
+              'specimen_id',
+              'created_at'
+            ]
+          }
         }}
         {...requestsZone}
       />
@@ -323,4 +349,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default MyTolids;

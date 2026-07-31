@@ -27,7 +27,7 @@ class BaseTestCase(TestCase):
         self.user1 = TolidUser(id=100,
                                name='test_user_requester',
                                email='test_user_requester@sanger.ac.uk',
-                               organisation='Sanger Institute')
+                               workplace='Sanger Institute')
         self.token1 = TolidToken(
             id=100,
             token='AnyThingBecAuseThIsIsATEST123456',
@@ -40,7 +40,7 @@ class BaseTestCase(TestCase):
         self.user2 = TolidUser(id=200,
                                name='test_user_admin',
                                email='test_user_admin@sanger.ac.uk',
-                               organisation='Sanger Institute')
+                               workplace='Sanger Institute')
         self.token2 = TolidToken(
             id=200,
             token='AnyThingBecAuseThIsIsATEST567890',
@@ -53,7 +53,7 @@ class BaseTestCase(TestCase):
         self.user3 = TolidUser(id=300,
                                name='test_user_creator',
                                email='test_user_creator@sanger.ac.uk',
-                               organisation='Sanger Institute')
+                               workplace='Sanger Institute')
         self.token3 = TolidToken(
             id=300,
             token='AnyThingBecAuseThIsIsATEST24680',
@@ -66,7 +66,7 @@ class BaseTestCase(TestCase):
         self.user4 = TolidUser(id=400,
                                name='test_user_requester2',
                                email='test_user_requester2@sanger.ac.uk',
-                               organisation='Sanger Institute')
+                               workplace='Sanger Institute')
         self.token4 = TolidToken(
             id=400,
             token='AnyThingBecAuseThIsIsATEST13579',

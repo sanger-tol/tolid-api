@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2024 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { Header, RemoteTable, Widgets, TsDataSource, useZone } from '@tol/tol-ui';
+import { RemoteTable, Widgets, TsDataSource, useZone } from '@tol/tol-ui';
 
 
 function Home() {
@@ -19,7 +19,7 @@ function Home() {
       <p>
         If you have been using the v2 API for your ToLID requests, please start using the new v3 API
         (see documentation under "Developers" in the main menu).
-        The v2 API is still functional at species level, but will be removed in a few months.
+        The v2 API is still functional at species level, but will be removed on 31 December 2026.
       </p>
     </div>
   );
@@ -93,24 +93,31 @@ function Home() {
     height={500}
     noConfigModal
     noDownload
-    defaultSort="primary_prefix_letter"
+    defaultSort="primary_prefix.id"
     fields={{
-      "primary_prefix.id": {
-        rename: "First Prefix",
-        cellRenderer: null
-      },
-      "letter": {
-        rename: "Second Prefix"
-      },
-      "primary_prefix.name": {
-        rename: "Covers",
-        cellRenderer: null
-      },
-      "name": {
-        rename: "Covers in detail",
-        cellRenderer: null
-      }
-    }}
+        data: {
+          "primary_prefix.id": {
+            rename: "First Prefix"
+          },
+          "letter": {
+            rename: "Second Prefix"
+          },
+          "primary_prefix.name": {
+            rename: "Covers"
+          },
+          "name": {
+            rename: "Covers in detail"
+          }
+        },
+        order: {
+          active: [
+            "primary_prefix.id",
+            "letter",
+            "primary_prefix.name",
+            "name"
+          ],
+        },
+      }}
     {...secondaryPrefixZone}
   />
   );
@@ -149,9 +156,6 @@ function Home() {
 
   return (
     <div className="home">
-      <Header
-        title="Welcome to ToLID"
-      />
       <Widgets
         components={components}
       />

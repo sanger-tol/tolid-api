@@ -17,7 +17,7 @@ class UserMixin:
         return mapped_column()
 
     @declared_attr
-    def organisation(self) -> Mapped[str]:
+    def workplace(self) -> Mapped[str]:
         return mapped_column()
 
     @declared_attr
@@ -31,12 +31,3 @@ class UserMixin:
         return relationship(
             back_populates='user'
         )
-
-    def get_userinfo_ext(self) -> dict[str, str]:
-        """
-        Augments the data on `/api/v2/auth/profile`
-        """
-
-        return {
-            'name': self.name
-        }

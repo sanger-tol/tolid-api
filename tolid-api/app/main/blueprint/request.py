@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
+import itertools
 from datetime import datetime
 
 from flask import Blueprint, request
@@ -21,7 +22,8 @@ from tol.api_client.view import (
 )
 from tol.core import (
     DataSource,
-    DataSourceFilter
+    DataSourceFilter,
+    ReqFieldsTree
 )
 from tol.core.data_source_dict import (
     DataSourceDict
@@ -42,9 +44,24 @@ def request_blueprint(
     )
 
     data_source_dict = DataSourceDict(*data_sources)
-    view = DefaultView(
+    request_requested_tree = ReqFieldsTree(
+        'request',
+        data_source_dict['request'],
+        requested_fields=['user'],
+        include_all_to_ones=True
+    )
+    tolid_requested_tree = ReqFieldsTree(
+        'specimen',
+        data_source_dict['specimen'],
+        requested_fields=['user', 'species'],
+        include_all_to_ones=True
+    )
+    # We are going to use this view to dump out both requests and specimens. This is a bit of
+    # a fudge, and it works because user is in both object types and species only in specimen,
+    # which is ignored when dumping requests.
+    tolid_view = DefaultView(
         prefix='',
-        include_all_to_ones=True,
+        requested_tree=tolid_requested_tree,
         hop_limit=1
     )
 
@@ -98,7 +115,7 @@ def request_blueprint(
                         'detail': f'Requested taxonomy {requested_taxonomy_id} does not exist'
                     }
                 )
-            if requested_species.taxon_rank not in ['species', 'subspecies']:
+            elif requested_species.taxon_rank not in ['species', 'subspecies']:
                 errors.append(
                     {
                         'detail': f'{requested_taxonomy_id} is not of rank species or subspecies'
@@ -188,7 +205,14 @@ def request_blueprint(
                     'errors': errors
                 }, 400
             requests_inserted = session.insert('request', requests_to_insert)
-        return view.dump_bulk(requests_inserted), 200
+            # Here we fetch from the database to ensure that related objects
+            # are correctly populated
+            requests_to_return = session.get_by_ids(
+                'request',
+                [obj.id for obj in requests_inserted],
+                requested_tree=request_requested_tree
+            )
+            return tolid_view.dump_bulk(requests_to_return), 200
 
     def __create_request_creator(user_id, request):
         data_source = data_source_dict['specimen']
@@ -269,7 +293,29 @@ def request_blueprint(
                             )
                         ])
                     )
-        return view.dump_bulk(ret), 200
+            # We have a mixture of requests and specimens in ret, so we fetch them
+            # separately to ensure related objects are correctly populated
+            requests_to_return = session.get_by_ids(
+                'request',
+                [obj.id for obj in ret if obj.type == 'request'],
+                requested_tree=request_requested_tree
+            )
+            specimens_to_return = session.get_by_ids(
+                'specimen',
+                [obj.id for obj in ret if obj.type == 'specimen'],
+                requested_tree=tolid_requested_tree
+            )
+            by_type_and_id = {
+                (obj.type, obj.id): obj
+                for obj in itertools.chain(requests_to_return, specimens_to_return)
+            }
+            ordered_objects = [
+                by_type_and_id[(obj.type, obj.id)]
+                for obj in ret
+                if (obj.type, obj.id) in by_type_and_id
+            ]
+
+            return tolid_view.dump_bulk(ordered_objects), 200
 
     @request_blueprint.route('/reject', methods=['PATCH'])
     @require_auth(role='admin', ctx_getter=ctx_getter)
@@ -303,7 +349,12 @@ def request_blueprint(
                     )
                 )
             requests_upserted = session.upsert('request', requests_to_upsert)
-        return view.dump_bulk(requests_upserted), 200
+            requests_to_return = session.get_by_ids(
+                'request',
+                [obj.id for obj in requests_upserted],
+                requested_tree=request_requested_tree
+            )
+            return tolid_view.dump_bulk(requests_to_return), 200
 
     @request_blueprint.route('/accept', methods=['PATCH'])
     @require_auth(role='admin', ctx_getter=ctx_getter)
@@ -347,6 +398,11 @@ def request_blueprint(
                     ])
                 )
                 session.delete('request', [tolid_request.id])
-        return view.dump_bulk(tolids_inserted), 200
+            tolids_to_return = session.get_by_ids(
+                'specimen',
+                [obj.id for obj in tolids_inserted],
+                requested_tree=tolid_requested_tree
+            )
+            return tolid_view.dump_bulk(tolids_to_return), 200
 
     return request_blueprint

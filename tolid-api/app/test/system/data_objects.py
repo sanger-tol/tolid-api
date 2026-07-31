@@ -22,7 +22,7 @@ def create_test_data(ds: OperableDataSource, token: str):
                     attributes={
                         'email': 'test@sanger.ac.uk',
                         'name': 'Test Creator User',
-                        'organisation': 'Test Organisation'
+                        'workplace': 'Test Organisation'
                     }
                 ),
                 ds.data_object_factory(
@@ -31,7 +31,7 @@ def create_test_data(ds: OperableDataSource, token: str):
                     attributes={
                         'email': 'test2@sanger.ac.uk',
                         'name': 'Test User',
-                        'organisation': 'Test Organisation'
+                        'workplace': 'Test Organisation'
                     }
                 )
             ]

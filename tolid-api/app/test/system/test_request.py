@@ -20,7 +20,6 @@ def test_request_user_errors(client, api_path, sql_datasource):
     }
     for rb in sql_datasource.get_list('role_binding', f):
         sql_datasource.delete('role_binding', [rb.id])
-
     body = [
         {
             'requested_taxonomy_id': SPECIES_ID,

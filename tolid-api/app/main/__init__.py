@@ -6,6 +6,8 @@ import os
 
 from flask import Flask
 
+from flask_cors import CORS
+
 from main.blueprint import request_blueprint
 from main.model import Base, UserMixin, main_models
 
@@ -39,6 +41,7 @@ def application(
 ) -> Flask:
 
     app = Flask(__name__)
+    CORS(app, resources={r'/api/*': {'origins': '*'}})
 
     db_uri = os.environ['DB_URI']
     api_path = os.getenv('API_PATH', '/api/v3')

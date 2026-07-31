@@ -5,41 +5,25 @@ SPDX-License-Identifier: MIT
 */
 
 import { Loader, httpClient } from '@tol/tol-ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+const cache = new Map<string, Promise<any>>();
 
-async function fetchData(id: string, endpoint: string, baseUrl?: string) {
-  return await httpClient().get('/' + endpoint + '/' + id, {
-    baseURL: baseUrl
-  }).then((res: any) => {
-    return res;
-  }).catch((error: any) => {
-    return error;
-  });
+function fetchCached(id: string, endpoint: string, baseUrl?: string): Promise<any> {
+  const key = `${endpoint}:${id}`;
+  if (!cache.has(key)) {
+    cache.set(
+      key,
+      httpClient()
+        .get(`/${endpoint}/${id}`, { baseURL: baseUrl })
+        .catch(() => null)
+    );
+  }
+  return cache.get(key)!;
 }
 
-const pendingPromises: {
-  [endpoint: string]: Promise<object>
-} = {};
-
-const data: {
-  [key: string]: {
-    [key: string]: number
-  }
-} = {};
-
-export async function fetchDetail(id: string, endpoint: string, baseUrl?: string): Promise<object> {
-  if (!pendingPromises[endpoint]) {
-    pendingPromises[endpoint] = Promise.resolve({});
-  }
-  pendingPromises[endpoint] = pendingPromises[endpoint].then(async () => {
-    if (!(endpoint in data)) data[endpoint] = {};
-    if (id in data[endpoint]) return data[endpoint][id];
-    const retrievedData = await fetchData(id, endpoint, baseUrl);
-    data[endpoint][id] = retrievedData;
-    return retrievedData;
-  });
-  return pendingPromises[endpoint];
+export function fetchDetail(id: string, endpoint: string, baseUrl?: string): Promise<any> {
+  return fetchCached(id, endpoint, baseUrl);
 }
 
 interface Props {
@@ -54,34 +38,30 @@ export function DetailAttribute(props: Props) {
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(true);
 
-  fetchDetail(
-    id,
-    endpoint,
-    baseUrl
-  ).then((res: any) => {
-    if ('data' in res
-      && 'data' in res.data
-      && 'attributes' in res.data.data
-    ) {
-      if (attribute === 'id') {
-        setText(res.data.data.id);
-      } else {
-        setText(res.data.data.attributes[attribute]);
-      }
-    } else {
-      setText('');
+  useEffect(() => {
+    if (!id) {
+      setLoading(false);
+      return;
     }
-    setLoading(false);
-  });
+    let cancelled = false;
+    fetchCached(id, endpoint, baseUrl)
+      .then((res: any) => {
+        if (cancelled) return;
+        const d = res?.data?.data;
+        if (attribute === 'id') {
+          setText(d?.id ?? '');
+        } else {
+          setText(d?.attributes?.[attribute] ?? '');
+        }
+        setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [id, endpoint, baseUrl, attribute]);
 
   return (
     <div className='loading-cell'>
       {loading ?
-        <Loader
-          size="sm"
-          role="status"
-          aria-hidden
-        />
+        <Loader size="sm" role="status" aria-hidden />
       :
         text
       }

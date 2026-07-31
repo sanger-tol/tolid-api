@@ -122,6 +122,7 @@ tolcore:
     fullname: "tolid-api"
     probe_url: '/api/v3/system/healthz'
     path: '/api/v3'
+    auth_path: '/auth'
     data_path: ''
     custom_path: ''
     system_path: '/system'
@@ -137,6 +138,7 @@ tolcore:
       TOLID_URL: public_url.tolid
       API_PATH: api.path
       API_DATA_PATH: api.data_path
+      API_AUTH_PATH: api.auth_path
       API_CUSTOM_PATH: api.custom_path
       API_SYSTEM_PATH: api.system_path
       API_AUTH_PATH: api.auth_path
@@ -150,10 +152,12 @@ tolcore:
     extra_env:
       REACT_APP_API_PATH: api.path
       REACT_APP_API_DATA_PATH: api.data_path
+      REACT_APP_AUTH_API_DATA_PATH: api.auth_path
       REACT_APP_API_CUSTOM_PATH: api.custom_path
       REACT_APP_PORTAL_URL: portal.url
       REACT_APP_PORTAL_API_PATH: portal.api_path
       REACT_APP_PORTAL_API_DATA_PATH: portal.api_data_path
+      REACT_APP_BOARDS_API_DATA_PATH: portal.boards_api_data_path
   backup:
     uri: ""
     access_key: ""
@@ -188,6 +192,7 @@ tolcore:
     url: https://portal.tol.sanger.ac.uk
     api_path: /api/v1
     api_data_path: /data
+    boards_api_data_path: /boards
   goat:
     url: https://goat.genomehubs.org
     api_path: /api/v2
