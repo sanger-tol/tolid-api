@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2026 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import type { Schema } from "rsuite";
+import { Schema } from "rsuite";
 
 import type { IFormConfig } from "@tol/tol-ui";
 
@@ -23,7 +23,10 @@ export const REQUEST_FORM_CONFIG: IFormConfig = {
       type: "text",
       label: "Specimen ID",
       placeholder: "Specimen ID",
-      helpText: "The internal ID of the specimen. This is only used in the ToLID system and should be how you refer to the specimen in your lab",
+      helpText: (
+        "The internal ID of the specimen. " +
+        "This is only used in the ToLID system and should be how you refer to the specimen in your lab"
+      ),
       required: true,
     },
   ],
