@@ -18,11 +18,9 @@ import {
   TMessageType,
 } from '@tol/tol-ui';
 import { useState } from 'react';
+import { Schema } from "rsuite";
 import { DetailAttribute, SubspeciesCellRenderer, TolidStatus } from "../components";
-import {
-  REQUEST_FORM_CONFIG,
-  REQUEST_FORM_MODEL,
-} from "../constants";
+import { REQUEST_FORM_CONFIG } from "../constants";
 import type { IRequestFormData } from "../interfaces";
 
 
@@ -38,6 +36,12 @@ function MyTolids() {
   const [open, setOpen] = useState(false);
   const [forceUpdate, setForceUpdate] = useState(false);
   const [requestFormKey, setRequestFormKey] = useState(0);
+
+  const { StringType } = Schema.Types;
+  const REQUEST_FORM_MODEL = Schema.Model({
+    requestedTaxonomyId: StringType().isRequired("This field is required"),
+    specimenId: StringType().isRequired("This field is required"),
+  });
 
   const clearAll = () => {
     setRequestedTaxonomyId("");

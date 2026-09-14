@@ -4,8 +4,6 @@ SPDX-FileCopyrightText: 2026 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { Schema } from "rsuite";
-
 import type { IFormConfig } from "@tol/tol-ui";
 
 export const REQUEST_FORM_CONFIG: IFormConfig = {
@@ -36,9 +34,3 @@ export const REQUEST_FORM_CONFIG: IFormConfig = {
     }],
   },
 };
-
-const { StringType } = Schema.Types;
-export const REQUEST_FORM_MODEL = Schema.Model({
-  requestedTaxonomyId: StringType().isRequired("This field is required"),
-  specimenId: StringType().isRequired("This field is required"),
-});
