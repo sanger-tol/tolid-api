@@ -18,7 +18,7 @@ import "./scss/styling.scss";
 
 
 export const PAGE_ELEMENTS: TPageElements = {
-  home: <MyTolids />,
+  home: <Home />,
   addSpecies: <AddSpecies />,
   pendingRequests: <PendingRequests />,
   myTolids: <MyTolids />
