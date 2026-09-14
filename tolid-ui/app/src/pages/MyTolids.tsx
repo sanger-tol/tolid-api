@@ -22,7 +22,7 @@ import { DetailAttribute, SubspeciesCellRenderer, TolidStatus } from "../compone
 import {
   REQUEST_FORM_CONFIG,
   REQUEST_FORM_MODEL,
-} from '../constants';
+} from "../constants";
 import type { IRequestFormData } from "../interfaces";
 
 

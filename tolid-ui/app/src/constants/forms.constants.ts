@@ -4,8 +4,9 @@ SPDX-FileCopyrightText: 2026 Genome Research Ltd.
 SPDX-License-Identifier: MIT
 */
 
-import { IFormConfig } from '@tol/tol-ui';
-import { Schema } from 'rsuite';
+import type { Schema } from "rsuite";
+
+import type { IFormConfig } from "@tol/tol-ui";
 
 export const REQUEST_FORM_CONFIG: IFormConfig = {
   fields: [
