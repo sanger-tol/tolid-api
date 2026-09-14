@@ -6,12 +6,9 @@ FROM python:3.12
 
 WORKDIR /app
 
-ENV FLASK_ENV=development
-ENV PYTHONPATH=/app
-ENV PYTHONDONTWRITEBYTECODE 1
-
-RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install -y python3-pip
+ENV FLASK_ENV = development
+ENV PYTHONPATH = /app
+ENV PYTHONDONTWRITEBYTECODE = 1
 
 COPY ./app/requirements.txt .
 RUN pip3 --no-cache-dir install -r requirements.txt
