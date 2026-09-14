@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 import type { IFormConfig } from "@tol/tol-ui";
 
-export const REQUEST_FORM_CONFIG: IFormConfig = {
+export const REQUEST_FORM_CONFIG = (hasUnsavedChanges: boolean): IFormConfig => ({
   fields: [
     {
       name: "requestedTaxonomyId",
@@ -31,6 +31,7 @@ export const REQUEST_FORM_CONFIG: IFormConfig = {
   buttonConfig: {
     buttons: [{
       text: "Request",
+      disabled: !hasUnsavedChanges,
     }],
   },
-};
+});

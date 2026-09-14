@@ -36,6 +36,7 @@ function MyTolids() {
   const [open, setOpen] = useState(false);
   const [forceUpdate, setForceUpdate] = useState(false);
   const [requestFormKey, setRequestFormKey] = useState(0);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   const { StringType } = Schema.Types;
   const REQUEST_FORM_MODEL = Schema.Model({
@@ -127,8 +128,9 @@ function MyTolids() {
       <h2 className="sub-heading">Request a ToLID</h2>
       <FormAllInOne
         key={requestFormKey}
-        formConfig={REQUEST_FORM_CONFIG}
+        formConfig={REQUEST_FORM_CONFIG(hasUnsavedChanges)}
         model={REQUEST_FORM_MODEL}
+        onUnsavedChanges={(hasChanges: boolean) => setHasUnsavedChanges(hasChanges)}
         onValidate={() => null}
         onSubmit={(formData, isValid) => {
           if (!isValid) {
