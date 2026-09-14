@@ -20,7 +20,7 @@ import {
 import { useState } from 'react';
 import { Schema } from "rsuite";
 import { DetailAttribute, SubspeciesCellRenderer, TolidStatus } from "../components";
-import { REQUEST_FORM_CONFIG } from "../constants";
+import { REQUEST_FORM_CONFIG } from "../config";
 import type { IRequestFormData } from "../interfaces";
 
 
