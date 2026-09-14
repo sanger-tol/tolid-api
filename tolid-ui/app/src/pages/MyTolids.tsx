@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 import {
   Button,
-  Form,
+  FormAllInOne,
   Modal,
   PopUpMessage,
   RemoteTable,
@@ -18,8 +18,12 @@ import {
   TMessageType,
 } from '@tol/tol-ui';
 import { useState } from 'react';
-import { DetailAttribute, TolidStatus } from "../components";
-import { SubspeciesCellRenderer } from '../components'
+import { DetailAttribute, SubspeciesCellRenderer, TolidStatus } from "../components";
+import {
+  REQUEST_FORM_CONFIG,
+  REQUEST_FORM_MODEL,
+} from '../constants';
+import type { IRequestFormData } from "../interfaces";
 
 
 function MyTolids() {
@@ -33,35 +37,37 @@ function MyTolids() {
 
   const [open, setOpen] = useState(false);
   const [forceUpdate, setForceUpdate] = useState(false);
+  const [requestFormKey, setRequestFormKey] = useState(0);
 
   const clearAll = () => {
     setRequestedTaxonomyId("");
     setSpecimenId("");
     setSpeciesTaxonomyId("");
     setSpeciesName("");
+    setRequestFormKey((key) => key + 1);
   }
 
   const openModal = () => {
     setOpen(true);
   };
 
-  const getTolidTaxonInfo = () => {
+  const getTolidTaxonInfo = (requestedId: string) => {
     setSpeciesTaxonomyId("");
     setSpeciesName("");
-    httpClient().get('/species/' + requestedTaxonomyId, {})
+    httpClient().get('/species/' + requestedId, {})
     .then((res: any) => {
       const data = res.data.data;
       setSpeciesTaxonomyId(data?.id || '');
       setSpeciesName(data?.attributes?.name || '');
       openModal();
     }).catch(() => {
-      getGoatTaxonInfo();
+      getGoatTaxonInfo(requestedId);
     });
   };
 
-  const getGoatTaxonInfo = () => {
+  const getGoatTaxonInfo = (requestedId: string) => {
     let newSpeciesTaxonomyId = "";
-    httpClient().get('/taxon/' + requestedTaxonomyId, {})
+    httpClient().get('/taxon/' + requestedId, {})
     .then((res: any) => {
       const relationships = res.data.data.relationships;
       newSpeciesTaxonomyId = relationships?.species?.data?.id || '';
@@ -115,24 +121,21 @@ function MyTolids() {
   const createRequest = (
     <div>
       <h2 className="sub-heading">Request a ToLID</h2>
-      <Form>
-        <Form.Group>
-          <Form.Control
-            value={requestedTaxonomyId}
-            onChange={(e) => setRequestedTaxonomyId(e.target.value)}
-            placeholder="NCBI Taxonomy ID"
-          />
-          <p className="form-info">The Taxonomy ID as registered at NCBI. This must be a species-level taxonomy ID.</p>
-          <Form.Control
-            value={specimenId}
-            onChange={(e) => setSpecimenId(e.target.value)}
-            id="specimenId"
-            placeholder="Specimen ID"
-          />
-          <p className="form-info">The internal ID of the specimen. This is only used in the ToLID system and should be how you refer to the specimen in your lab</p>
-        </Form.Group>
-        <Button disabled={requestedTaxonomyId === "" || specimenId === ""} onClick={() => getTolidTaxonInfo()} text={'Request'}/>
-      </Form>
+      <FormAllInOne
+        key={requestFormKey}
+        formConfig={REQUEST_FORM_CONFIG}
+        model={REQUEST_FORM_MODEL}
+        onValidate={() => null}
+        onSubmit={(formData, isValid) => {
+          if (!isValid) {
+            return;
+          }
+          const data = formData as IRequestFormData;
+          setRequestedTaxonomyId(data.requestedTaxonomyId);
+          setSpecimenId(data.specimenId);
+          getTolidTaxonInfo(data.requestedTaxonomyId);
+        }}
+      />
       <Modal
         size='md'
         open={open}
