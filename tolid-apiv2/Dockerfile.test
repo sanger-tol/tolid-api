@@ -6,11 +6,10 @@ FROM python:3.10
 
 WORKDIR /app
 
-ENV FLASK_ENV=development
-ENV PYTHONPATH=/app
-ENV PYTHONDONTWRITEBYTECODE 1
+ENV FLASK_ENV = development
+ENV PYTHONPATH = /app
+ENV PYTHONDONTWRITEBYTECODE = 1
 
-RUN apt-get update -y
 RUN apt-get install -y python3-pip python3-setuptools
 
 RUN pip3 install --upgrade setuptools
