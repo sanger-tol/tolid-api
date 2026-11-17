@@ -4,7 +4,7 @@
 
 # This is used for local development only.
 
-FROM gitlab-registry.internal.sanger.ac.uk/tol/tol-core/web-base-dev:1.0.6
+FROM gitlab-registry.internal.sanger.ac.uk/tol/tol-core/web-base-dev:1.0.8
 
 COPY ./app/package.json ./
 
