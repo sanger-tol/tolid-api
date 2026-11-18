@@ -123,6 +123,7 @@ def validate_manifest(excel_file=None, species_column_heading='scientific_name')
     if validated:
         # Stream out the validated Excel file and remove
         return send_from_directory(dir_.name, filename=updated_filename,
+                                   mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                                    as_attachment=True)
     else:
         # Return the error
