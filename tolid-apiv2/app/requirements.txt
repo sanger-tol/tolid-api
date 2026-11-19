@@ -8,7 +8,7 @@ python_dateutil == 2.8.1
 setuptools == 53.0.0
 Werkzeug == 1.0.1
 Flask-SQLAlchemy == 2.4.4
-psycopg2-binary == 2.8.6
+psycopg2-binary == 2.9.11
 openpyxl == 3.0.6
 markupsafe==2.0.1
 jwt

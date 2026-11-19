@@ -2,12 +2,9 @@
 #
 # SPDX-License-Identifier: MIT
 
-# This is used for local development only
-version: '3.1'
-
 services:
   tolid-db:
-    image: postgres:14
+    image: postgres:18
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
@@ -97,9 +94,10 @@ services:
       - REACT_APP_API_CUSTOM_PATH=${API_CUSTOM_PATH}
       - REACT_APP_API_SYSTEM_PATH=${API_SYSTEM_PATH}
       - REACT_APP_API_AUTH_PATH=${API_AUTH_PATH}
-      - REACT_APP_PORTAL_URL=${PORTAL_URL}
-      - REACT_APP_PORTAL_API_PATH=${PORTAL_API_PATH}
-      - REACT_APP_PORTAL_API_DATA_PATH=${PORTAL_API_DATA_PATH}
+      - REACT_APP_QUASAR_URL=${QUASAR_URL}
+      - REACT_APP_QUASAR_API_PATH=${QUASAR_API_PATH}
+      - REACT_APP_QUASAR_API_DATA_PATH=${QUASAR_API_DATA_PATH}
+      - REACT_APP_QUASAR_DATASPACE=${QUASAR_DATASPACE}
       - REACT_APP_BOARDS_API_DATA_PATH=${BOARDS_API_DATA_PATH}
       - REACT_APP_MATOMO_SITE_ID=${MATOMO_SITE_ID}
       - LOCAL_TOLUI=${LOCAL_TOLUI}
@@ -158,7 +156,7 @@ services:
       - './tolid-api/migrations/alembic/versions:/migrations/alembic/versions'
 
   tolid-dbutils:
-    image: gitlab-registry.internal.sanger.ac.uk/tol/tol-core/dbutils:1.0.10
+    image: gitlab-registry.internal.sanger.ac.uk/tol/tol-core/dbutils:1.1.0
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD

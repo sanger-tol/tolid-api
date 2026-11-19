@@ -88,8 +88,8 @@ def full_models_list(
     __set_up(db_uri)
 
     return [
-        *main_models,
-        *auth_bp.models,
+        model for model in (*main_models, *auth_bp.models)
+        if model is not None
     ]
 
 
